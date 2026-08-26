@@ -600,29 +600,6 @@
       font-weight: 800;
     }
 
-    .status-banner {
-      display: flex;
-      align-items: flex-start;
-      gap: 12px;
-      margin-top: 22px;
-      padding: 16px 18px;
-      border: 1px solid rgba(212, 175, 55, 0.13);
-      border-radius: 14px;
-      color: var(--muted);
-      background: rgba(255, 255, 255, 0.015);
-      font-size: 12px;
-    }
-
-    .status-dot {
-      flex: 0 0 auto;
-      width: 8px;
-      height: 8px;
-      margin-top: 5px;
-      border-radius: 50%;
-      background: var(--gold);
-      box-shadow: 0 0 14px rgba(212, 175, 55, 0.5);
-    }
-
     .site-footer {
       margin-top: 12px;
       padding: 34px 24px 38px;
@@ -2486,113 +2463,6 @@
       }
     }
 
-
-    /* ============================================================
-       CONEXÃO COM OS MATERIAIS DA CURADORIA
-       ============================================================ */
-
-    .materials-bridge {
-      margin-top: 30px;
-      padding: 30px;
-      border: 1px solid rgba(212, 175, 55, 0.34);
-      border-radius: var(--radius-lg);
-      background:
-        radial-gradient(circle at 12% 0%, rgba(212, 175, 55, 0.10), transparent 34%),
-        linear-gradient(145deg, rgba(23, 20, 12, 0.96), rgba(8, 8, 8, 0.97));
-      box-shadow: 0 22px 54px rgba(0, 0, 0, 0.30);
-    }
-
-    .materials-bridge[hidden] {
-      display: none;
-    }
-
-    .materials-bridge-kicker {
-      display: block;
-      margin-bottom: 10px;
-      color: var(--muted-2);
-      font-size: 11px;
-      font-weight: 800;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-    }
-
-    .materials-bridge h3 {
-      margin: 0;
-      color: var(--gold);
-      font-family: Georgia, "Times New Roman", serif;
-      font-size: clamp(27px, 4vw, 38px);
-      line-height: 1.15;
-    }
-
-    .materials-bridge-copy {
-      max-width: 920px;
-      margin-top: 16px;
-      color: var(--text);
-      font-size: 15px;
-      line-height: 1.75;
-    }
-
-    .materials-bridge-copy p {
-      margin: 0 0 10px;
-    }
-
-    .materials-category-list {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 9px;
-      margin-top: 18px;
-    }
-
-    .materials-category-pill {
-      display: inline-flex;
-      align-items: center;
-      min-height: 32px;
-      padding: 0 11px;
-      border: 1px solid rgba(212, 175, 55, 0.20);
-      border-radius: 999px;
-      color: #e6d7a0;
-      background: rgba(212, 175, 55, 0.055);
-      font-size: 11px;
-      font-weight: 700;
-    }
-
-    .materials-bridge-action {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      min-height: 52px;
-      margin-top: 22px;
-      padding: 0 22px;
-      border: 1px solid rgba(212, 175, 55, 0.52);
-      border-radius: 15px;
-      color: #111;
-      background: linear-gradient(180deg, #d4af37, #a57b24);
-      font-weight: 800;
-      box-shadow: 0 12px 30px rgba(165, 123, 36, 0.16);
-    }
-
-    .materials-bridge-action:hover,
-    .materials-bridge-action:focus-visible {
-      filter: brightness(1.06);
-    }
-
-    .materials-bridge-status {
-      margin-top: 12px;
-      color: var(--muted-2);
-      font-size: 10px;
-    }
-
-    @media (max-width: 720px) {
-      .materials-bridge {
-        padding: 22px 20px;
-      }
-
-      .materials-bridge-action {
-        width: 100%;
-        text-align: center;
-      }
-    }
-
   </style>
 </head>
 
@@ -2672,15 +2542,8 @@
               <option value="gramado">Gramado, Brasil</option>
               <option value="belo-horizonte">Belo Horizonte, Brasil</option>
               <option value="brasilia">Brasília, Brasil</option>
-              <option value="new-york">Nova York, Estados Unidos</option>
-              <option value="miami">Miami, Estados Unidos</option>
-              <option value="orlando" disabled>Orlando, Estados Unidos — em preparação</option>
-              <option value="cidade-do-mexico" disabled>Cidade do México, México — em preparação</option>
-              <option value="madrid" disabled>Madrid, Espanha — em preparação</option>
-              <option value="barcelona" disabled>Barcelona, Espanha — em preparação</option>
               <option value="paris" disabled>Paris, França — em preparação</option>
-              <option value="roma" disabled>Roma, Itália — em preparação</option>
-              <option value="buenos-aires" disabled>Buenos Aires, Argentina — em preparação</option>
+              <option value="new-york">Nova York, Estados Unidos</option>
             </select>
             <button id="showDestinationButton" class="primary-button" type="button">
               Explorar a malha
@@ -2807,51 +2670,6 @@
               <span class="practical-cta">Abrir canais →</span>
             </article>
           </section>
-
-          <div class="status-banner">
-            <span class="status-dot" aria-hidden="true"></span>
-            <span>
-              Esta versão fecha a estrutura visual da ferramenta. A integração com o Supabase,
-              os demais destinos e a atualização automatizada serão trabalhados depois.
-            </span>
-          </div>
-
-          <section
-            class="materials-bridge"
-            id="materialsBridge"
-            aria-live="polite"
-            aria-busy="true"
-          >
-            <span class="materials-bridge-kicker">Curadoria do destino</span>
-            <h3 id="materialsBridgeTitle">Verificando materiais disponíveis...</h3>
-
-            <div class="materials-bridge-copy" id="materialsBridgeCopy">
-              <p>
-                Estamos consultando a Curadoria para identificar os materiais
-                disponíveis para este destino.
-              </p>
-            </div>
-
-            <div
-              class="materials-category-list"
-              id="materialsCategoryList"
-              aria-label="Categorias disponíveis"
-              hidden
-            ></div>
-
-            <a
-              class="materials-bridge-action"
-              id="materialsBridgeAction"
-              href="index.html?secao=curadoria#curadoria"
-              hidden
-            >
-              Ver materiais disponíveis
-            </a>
-
-            <div class="materials-bridge-status" id="materialsBridgeStatus">
-              Consulta automática em andamento.
-            </div>
-          </section>
         </div>
       </div>
     </section>
@@ -2877,8 +2695,6 @@
       <div class="modal-body" id="modalBody"></div>
     </div>
   </div>
-
-  <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
 
   <script src="transport-data/sao-paulo/network.js"></script>
   <script src="transport-data/sao-paulo/fares.js"></script>
@@ -2928,13 +2744,6 @@
   <script src="transport-data/new-york/onibus.js"></script>
   <script src="transport-data/new-york/planner.js"></script>
   <script src="transport-data/new-york/index.js"></script>
-
-  <script src="transport-data/miami/network.js"></script>
-  <script src="transport-data/miami/fares.js"></script>
-  <script src="transport-data/miami/pagamento.js"></script>
-  <script src="transport-data/miami/onibus.js"></script>
-  <script src="transport-data/miami/planner.js"></script>
-  <script src="transport-data/miami/index.js"></script>
 
   <script>
 
@@ -2987,297 +2796,6 @@
     }
 
 
-    const CURADORIA_SUPABASE_URL = "https://lnyoqoezezisakghtmim.supabase.co";
-    const CURADORIA_SUPABASE_ANON_KEY = "sb_publishable_7NB9Y784asZcGohMBz1ePA_ZDYhwEqf";
-
-    const DESTINATION_MATERIAL_CONFIG = {
-      "sao-paulo": {
-        cityName: "São Paulo",
-        cityLabel: "São Paulo",
-        fallbackCategories: [
-          "City Guide",
-          "Gastronomia",
-          "Atrações Turísticas",
-          "Vida Noturna",
-          "Endereços para Compras",
-          "Sugestão de Presentes"
-        ]
-      },
-
-      "rio": {
-        cityName: "Rio de Janeiro",
-        cityLabel: "Rio de Janeiro",
-        fallbackCategories: [
-          "City Guide",
-          "Gastronomia",
-          "Atrações Turísticas",
-          "Vida Noturna",
-          "Endereços para Compras",
-          "Sugestão de Presentes"
-        ]
-      },
-
-      "salvador": {
-        cityName: "Salvador",
-        cityLabel: "Salvador",
-        fallbackCategories: [
-          "City Guide",
-          "Gastronomia",
-          "Atrações Turísticas",
-          "Vida Noturna",
-          "Endereços para Compras",
-          "Sugestão de Presentes"
-        ]
-      },
-
-      "gramado": {
-        cityName: "Gramado",
-        cityLabel: "Gramado",
-        fallbackCategories: [
-          "City Guide",
-          "Gastronomia",
-          "Atrações Turísticas",
-          "Vida Noturna",
-          "Endereços para Compras",
-          "Sugestão de Presentes"
-        ]
-      },
-
-      "belo-horizonte": {
-        cityName: "Belo Horizonte",
-        cityLabel: "Belo Horizonte",
-        fallbackCategories: []
-      },
-
-      "brasilia": {
-        cityName: "Brasília",
-        cityLabel: "Brasília",
-        fallbackCategories: []
-      },
-
-      "new-york": {
-        cityName: "Nova York",
-        cityLabel: "Nova York",
-        fallbackCategories: [
-          "City Guide",
-          "Gastronomia",
-          "Atrações Turísticas",
-          "Vida Noturna",
-          "Endereços para Compras",
-          "Sugestão de Presentes"
-        ]
-      },
-
-      "miami": {
-        cityName: "Miami",
-        cityLabel: "Miami",
-        fallbackCategories: [
-          "City Guide",
-          "Gastronomia",
-          "Atrações Turísticas",
-          "Vida Noturna",
-          "Endereços para Compras",
-          "Sugestão de Presentes"
-        ]
-      },
-
-      "orlando": { cityName: "Orlando", cityLabel: "Orlando", fallbackCategories: [] },
-      "cidade-do-mexico": { cityName: "Cidade do México", cityLabel: "Cidade do México", fallbackCategories: [] },
-      "madrid": { cityName: "Madrid", cityLabel: "Madrid", fallbackCategories: [] },
-      "barcelona": { cityName: "Barcelona", cityLabel: "Barcelona", fallbackCategories: [] },
-      "paris": { cityName: "Paris", cityLabel: "Paris", fallbackCategories: [] },
-      "roma": { cityName: "Roma", cityLabel: "Roma", fallbackCategories: [] },
-      "buenos-aires": { cityName: "Buenos Aires", cityLabel: "Buenos Aires", fallbackCategories: [] }
-    };
-
-    let curadoriaSupabaseClient = null;
-
-    function normalizeMaterialText(value) {
-      return String(value || "")
-        .trim()
-        .toLowerCase()
-        .normalize("NFD")
-        .replace(/[\u0300-\u036f]/g, "")
-        .replace(/\s+/g, " ");
-    }
-
-    function getCuradoriaSupabase() {
-      if (curadoriaSupabaseClient) return curadoriaSupabaseClient;
-      if (!window.supabase) return null;
-
-      curadoriaSupabaseClient = window.supabase.createClient(
-        CURADORIA_SUPABASE_URL,
-        CURADORIA_SUPABASE_ANON_KEY
-      );
-
-      return curadoriaSupabaseClient;
-    }
-
-    function getSelectedDestinationConfig() {
-      const select = document.getElementById("destinationSelect");
-      const key = select ? select.value : "sao-paulo";
-
-      return {
-        key,
-        ...(DESTINATION_MATERIAL_CONFIG[key] || DESTINATION_MATERIAL_CONFIG["sao-paulo"])
-      };
-    }
-
-    function renderMaterialCategories(categories) {
-      const list = document.getElementById("materialsCategoryList");
-      if (!list) return;
-
-      list.innerHTML = "";
-
-      (categories || []).forEach((category) => {
-        const item = document.createElement("span");
-        item.className = "materials-category-pill";
-        item.textContent = category;
-        list.appendChild(item);
-      });
-
-      list.hidden = !categories || categories.length === 0;
-    }
-
-    function renderMaterialsAvailable(config, categories, sourceText) {
-      const bridge = document.getElementById("materialsBridge");
-      const title = document.getElementById("materialsBridgeTitle");
-      const copy = document.getElementById("materialsBridgeCopy");
-      const action = document.getElementById("materialsBridgeAction");
-      const status = document.getElementById("materialsBridgeStatus");
-
-      if (!bridge || !title || !copy || !action || !status) return;
-
-      title.textContent = "Continue sua preparação para a viagem";
-      copy.innerHTML = `
-        <p>
-          Além das informações sobre mobilidade, a Curadoria Elite Travel reúne
-          materiais organizados por categoria para ajudar você a decidir melhor
-          durante a viagem — com mais clareza, praticidade e menos desgaste ao planejar.
-        </p>
-        <p>
-          Para ${config.cityName}, estão disponíveis as categorias apresentadas abaixo.
-        </p>
-      `;
-
-      renderMaterialCategories(categories);
-
-      action.textContent = `Explorar materiais de ${config.cityName}`;
-      action.href =
-        `index.html?secao=curadoria&cidade=${encodeURIComponent(config.cityLabel)}#curadoria`;
-      action.hidden = false;
-
-      status.textContent = sourceText || "Disponibilidade consultada na Curadoria.";
-      bridge.setAttribute("aria-busy", "false");
-    }
-
-    function renderMaterialsInDevelopment(config, sourceText) {
-      const bridge = document.getElementById("materialsBridge");
-      const title = document.getElementById("materialsBridgeTitle");
-      const copy = document.getElementById("materialsBridgeCopy");
-      const action = document.getElementById("materialsBridgeAction");
-      const status = document.getElementById("materialsBridgeStatus");
-
-      if (!bridge || !title || !copy || !action || !status) return;
-
-      title.textContent = "Este destino está em desenvolvimento";
-      copy.innerHTML = `
-        <p>As informações essenciais da malha de transporte já estão disponíveis aqui.</p>
-        <p>
-          A Curadoria Elite Travel está estruturando materiais completos para
-          ${config.cityName}, com o mesmo nível de critério e organização.
-        </p>
-      `;
-
-      renderMaterialCategories([]);
-
-      action.textContent = "Ver destinos disponíveis";
-      action.href = "index.html?secao=curadoria#curadoria";
-      action.hidden = false;
-
-      status.textContent = sourceText || "Ainda não há materiais ativos para este destino.";
-      bridge.setAttribute("aria-busy", "false");
-    }
-
-    async function updateMaterialsBridge() {
-      const config = getSelectedDestinationConfig();
-      const bridge = document.getElementById("materialsBridge");
-      const title = document.getElementById("materialsBridgeTitle");
-      const copy = document.getElementById("materialsBridgeCopy");
-      const action = document.getElementById("materialsBridgeAction");
-      const status = document.getElementById("materialsBridgeStatus");
-
-      if (!bridge || !title || !copy || !action || !status) return;
-
-      bridge.setAttribute("aria-busy", "true");
-      title.textContent = "Verificando materiais disponíveis...";
-      copy.innerHTML = `
-        <p>
-          Estamos consultando a Curadoria para identificar os materiais
-          disponíveis para ${config.cityName}.
-        </p>
-      `;
-      renderMaterialCategories([]);
-      action.hidden = true;
-      status.textContent = "Consulta automática em andamento.";
-
-      try {
-        const client = getCuradoriaSupabase();
-        if (!client) throw new Error("Biblioteca do Supabase indisponível.");
-
-        const { data, error } = await client
-          .from("curadoria_materials")
-          .select("category, city_label")
-          .eq("is_active", true)
-          .limit(1000);
-
-        if (error) throw error;
-
-        const destinationKey = normalizeMaterialText(config.cityLabel);
-
-        const categories = Array.from(
-          new Set(
-            (data || [])
-              .filter((item) => {
-                const city = normalizeMaterialText(item.city_label);
-                return city === destinationKey || city.startsWith(destinationKey + ",") ||
-                  city.startsWith(destinationKey + " -");
-              })
-              .map((item) => String(item.category || "").trim())
-              .filter(Boolean)
-          )
-        ).sort((a, b) => a.localeCompare(b, "pt-BR"));
-
-        if (categories.length > 0) {
-          renderMaterialsAvailable(
-            config,
-            categories,
-            "Categorias carregadas automaticamente a partir dos materiais ativos."
-          );
-        } else {
-          renderMaterialsInDevelopment(
-            config,
-            "Nenhum material ativo foi encontrado para este destino."
-          );
-        }
-      } catch (error) {
-        console.error("Falha ao consultar materiais do destino:", error);
-
-        if (config.fallbackCategories && config.fallbackCategories.length > 0) {
-          renderMaterialsAvailable(
-            config,
-            config.fallbackCategories,
-            "Exibindo a disponibilidade conhecida enquanto a consulta automática não responde."
-          );
-        } else {
-          renderMaterialsInDevelopment(
-            config,
-            "Não foi possível confirmar novos materiais agora."
-          );
-        }
-      }
-    }
-
     function getActiveModalContent() {
       const select = document.getElementById("destinationSelect");
 
@@ -3303,10 +2821,6 @@
 
       if (select && select.value === "new-york") {
         return window.NEW_YORK_TRANSPORT_MODULES || {};
-      }
-
-      if (select && select.value === "miami") {
-        return window.MIAMI_TRANSPORT_MODULES || {};
       }
 
       return window.SP_TRANSPORT_MODULES || {};
@@ -3563,32 +3077,6 @@
         };
       }
 
-      if (value === "miami") {
-        return {
-          cityName: "Miami",
-          locationLabel: "Miami, Estados Unidos",
-          summary:
-            "Entenda Metrorail, Metromover, Metrobus, Metro Express, Tri-Rail, Brightline, tarifas, integrações e meios de pagamento antes de circular por Miami.",
-          updatedAt: "Modelo visual · agosto de 2026",
-          networkTitle: "Rede de Transporte",
-          networkDescription:
-            "Veja como Metrorail, Metromover, Metrobus, Metro Express, Tri-Rail e Brightline se organizam e se conectam na região de Miami.",
-          networkPoints: [
-            "Metrorail",
-            "Metromover",
-            "Metrobus",
-            "Tri-Rail",
-            "Brightline"
-          ],
-          cards: {
-            fares: { title: "Tarifas e integração", description: "Tarifas de Metrorail e Metrobus, Metromover gratuito, passes, fare capping e diferenças para Tri-Rail e Brightline." },
-            card: { title: "Como pagar", description: "Contactless, EASY Card, EASY Ticket, passes móveis, dinheiro e meios aceitos nos diferentes sistemas." },
-            bus: { title: "Ônibus", description: "Metrobus, Better Bus Network, Metro Express BRT, conexões com MIA e Miami Beach, pagamento e embarque." },
-            planner: { title: "Planeje o trajeto", description: "Compare Metrorail, Metromover, Metrobus, Metro Express, Tri-Rail e Brightline antes de escolher o percurso." }
-          }
-        };
-      }
-
       return {
         cityName: "São Paulo",
         summary:
@@ -3662,7 +3150,6 @@
         if (description) description.textContent = card.description;
       });
 
-      updateMaterialsBridge();
     }
 
     function createLineCard(color, title, route, operator, description) {
