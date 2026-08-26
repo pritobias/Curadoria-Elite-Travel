@@ -2542,8 +2542,15 @@
               <option value="gramado">Gramado, Brasil</option>
               <option value="belo-horizonte">Belo Horizonte, Brasil</option>
               <option value="brasilia">Brasília, Brasil</option>
-              <option value="paris" disabled>Paris, França — em preparação</option>
               <option value="new-york">Nova York, Estados Unidos</option>
+              <option value="miami">Miami, Estados Unidos</option>
+              <option value="orlando" disabled>Orlando, Estados Unidos — em preparação</option>
+              <option value="cidade-do-mexico" disabled>Cidade do México, México — em preparação</option>
+              <option value="madrid" disabled>Madrid, Espanha — em preparação</option>
+              <option value="barcelona" disabled>Barcelona, Espanha — em preparação</option>
+              <option value="paris" disabled>Paris, França — em preparação</option>
+              <option value="roma" disabled>Roma, Itália — em preparação</option>
+              <option value="buenos-aires" disabled>Buenos Aires, Argentina — em preparação</option>
             </select>
             <button id="showDestinationButton" class="primary-button" type="button">
               Explorar a malha
@@ -2745,6 +2752,13 @@
   <script src="transport-data/new-york/planner.js"></script>
   <script src="transport-data/new-york/index.js"></script>
 
+  <script src="transport-data/miami/network.js"></script>
+  <script src="transport-data/miami/fares.js"></script>
+  <script src="transport-data/miami/pagamento.js"></script>
+  <script src="transport-data/miami/onibus.js"></script>
+  <script src="transport-data/miami/planner.js"></script>
+  <script src="transport-data/miami/index.js"></script>
+
   <script>
 
     const TRANSPORT_CINEMA_VERSION = "20260724-1";
@@ -2821,6 +2835,10 @@
 
       if (select && select.value === "new-york") {
         return window.NEW_YORK_TRANSPORT_MODULES || {};
+      }
+
+      if (select && select.value === "miami") {
+        return window.MIAMI_TRANSPORT_MODULES || {};
       }
 
       return window.SP_TRANSPORT_MODULES || {};
@@ -3073,6 +3091,32 @@
               description:
                 "Compare subway, ônibus, PATH, LIRR, Metro-North, ferries e conexões com os aeroportos."
             }
+          }
+        };
+      }
+
+      if (value === "miami") {
+        return {
+          cityName: "Miami",
+          locationLabel: "Miami, Estados Unidos",
+          summary:
+            "Entenda Metrorail, Metromover, Metrobus, Metro Express, Tri-Rail, Brightline, tarifas, integrações e meios de pagamento antes de circular por Miami.",
+          updatedAt: "Modelo visual · agosto de 2026",
+          networkTitle: "Rede de Transporte",
+          networkDescription:
+            "Veja como Metrorail, Metromover, Metrobus, Metro Express, Tri-Rail e Brightline se organizam e se conectam na região de Miami.",
+          networkPoints: [
+            "Metrorail",
+            "Metromover",
+            "Metrobus",
+            "Tri-Rail",
+            "Brightline"
+          ],
+          cards: {
+            fares: { title: "Tarifas e integração", description: "Tarifas de Metrorail e Metrobus, Metromover gratuito, passes, fare capping e diferenças para Tri-Rail e Brightline." },
+            card: { title: "Como pagar", description: "Contactless, EASY Card, EASY Ticket, passes móveis, dinheiro e meios aceitos nos diferentes sistemas." },
+            bus: { title: "Ônibus", description: "Metrobus, Better Bus Network, Metro Express BRT, conexões com MIA e Miami Beach, pagamento e embarque." },
+            planner: { title: "Planeje o trajeto", description: "Compare Metrorail, Metromover, Metrobus, Metro Express, Tri-Rail e Brightline antes de escolher o percurso." }
           }
         };
       }
