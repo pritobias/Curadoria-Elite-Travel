@@ -2544,7 +2544,7 @@
               <option value="brasilia">Brasília, Brasil</option>
               <option value="new-york">Nova York, Estados Unidos</option>
               <option value="miami">Miami, Estados Unidos</option>
-              <option value="orlando" disabled>Orlando, Estados Unidos — em preparação</option>
+              <option value="orlando">Orlando, Estados Unidos</option>
               <option value="cidade-do-mexico" disabled>Cidade do México, México — em preparação</option>
               <option value="madrid" disabled>Madrid, Espanha — em preparação</option>
               <option value="barcelona" disabled>Barcelona, Espanha — em preparação</option>
@@ -2759,6 +2759,13 @@
   <script src="transport-data/miami/planner.js"></script>
   <script src="transport-data/miami/index.js"></script>
 
+  <script src="transport-data/orlando/network.js"></script>
+  <script src="transport-data/orlando/fares.js"></script>
+  <script src="transport-data/orlando/pagamento.js"></script>
+  <script src="transport-data/orlando/onibus.js"></script>
+  <script src="transport-data/orlando/planner.js"></script>
+  <script src="transport-data/orlando/index.js"></script>
+
   <script>
 
     const TRANSPORT_CINEMA_VERSION = "20260724-1";
@@ -2839,6 +2846,10 @@
 
       if (select && select.value === "miami") {
         return window.MIAMI_TRANSPORT_MODULES || {};
+      }
+
+      if (select && select.value === "orlando") {
+        return window.ORLANDO_TRANSPORT_MODULES || {};
       }
 
       return window.SP_TRANSPORT_MODULES || {};
@@ -3117,6 +3128,48 @@
             card: { title: "Como pagar", description: "Contactless, EASY Card, EASY Ticket, passes móveis, dinheiro e meios aceitos nos diferentes sistemas." },
             bus: { title: "Ônibus", description: "Metrobus, Better Bus Network, Metro Express BRT, conexões com MIA e Miami Beach, pagamento e embarque." },
             planner: { title: "Planeje o trajeto", description: "Compare Metrorail, Metromover, Metrobus, Metro Express, Tri-Rail e Brightline antes de escolher o percurso." }
+          }
+        };
+      }
+
+      if (value === "orlando") {
+        return {
+          cityName: "Orlando",
+          locationLabel: "Orlando, Estados Unidos",
+          summary:
+            "Entenda LYNX, LYMMO, SunRail, NeighborLink, conexões com o aeroporto, parques, atrações, tarifas e meios de pagamento antes de circular por Orlando.",
+          updatedAt: "Modelo visual · agosto de 2026",
+          networkTitle: "Rede de Transporte",
+          networkDescription:
+            "Veja como LYNX, LYMMO, SunRail, NeighborLink e as principais conexões turísticas se organizam na região de Orlando.",
+          networkPoints: [
+            "LYNX",
+            "LYMMO",
+            "SunRail",
+            "NeighborLink",
+            "MCO e parques"
+          ],
+          cards: {
+            fares: {
+              title: "Tarifas e integração",
+              description:
+                "Tarifas do LYNX, passes, transferências, LYMMO gratuito, SunRail por zonas e integração entre ônibus e trem."
+            },
+            card: {
+              title: "Como pagar",
+              description:
+                "Tap to Pay no LYNX, dinheiro, passes, SunRail App, SunCard, bilhetes físicos e validação."
+            },
+            bus: {
+              title: "Ônibus",
+              description:
+                "LYNX, LYMMO, FastLink e NeighborLink, com conexões para MCO, International Drive, parques e outlets."
+            },
+            planner: {
+              title: "Planeje o trajeto",
+              description:
+                "Compare LYNX, LYMMO, SunRail, shuttles e conexões com MCO, Downtown, International Drive e parques."
+            }
           }
         };
       }
