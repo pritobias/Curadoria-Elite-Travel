@@ -9,7 +9,7 @@ window.NEW_YORK_TRANSPORT_MODULES =
 
 
 const NEW_YORK_MAP_URL =
-  "/images/mapa-transporte-new-york.png";
+  "/images/mapa-transporte-new-york.jpg";
 
 
 // ============================================================
@@ -315,12 +315,12 @@ window.NEW_YORK_TRANSPORT_MODULES["network"] = {
           </h4>
 
           <p class="panel-intro">
-            O mapa da MTA
-            mostra os serviços do subway,
+            O mapa mostra
+            os serviços do subway,
             estações,
             transferências
-            e algumas conexões
-            com outros sistemas.
+            e conexões importantes
+            da rede de Nova York.
           </p>
 
           <div
@@ -335,7 +335,7 @@ window.NEW_YORK_TRANSPORT_MODULES["network"] = {
             <img
               class="official-map-image"
               src="${NEW_YORK_MAP_URL}"
-              alt="Mapa oficial do Subway de Nova York"
+              alt="Mapa do Subway de Nova York"
               loading="lazy"
               style="
                 display:block;
@@ -596,9 +596,9 @@ window.NEW_YORK_TRANSPORT_MODULES["network"] = {
           </h4>
 
           <p class="panel-intro">
-            Estes são os grupos
-            que aparecem no mapa
-            oficial da MTA.
+            Estes são os principais
+            grupos de serviços
+            que aparecem no mapa.
 
             Dentro de cada grupo,
             confira o serviço específico
@@ -1527,12 +1527,12 @@ window.NEW_YORK_TRANSPORT_MODULES["network"] = {
 
           <p class="panel-intro">
             A rede hidroviária
-            conecta Manhattan,
+            conecta diferentes áreas
+            de Manhattan,
             Brooklyn,
             Queens,
             Bronx
-            e Staten Island
-            por diferentes rotas.
+            e Staten Island.
           </p>
 
           <div class="payment-choice-grid">
@@ -1591,10 +1591,8 @@ window.NEW_YORK_TRANSPORT_MODULES["network"] = {
               </strong>
 
               <p>
-                Liga Rockaway,
-                Brooklyn,
-                Manhattan
-                e Bronx.
+                Atende diferentes áreas
+                da rede hidroviária.
               </p>
 
             </article>
@@ -1608,9 +1606,8 @@ window.NEW_YORK_TRANSPORT_MODULES["network"] = {
 
               <p>
                 Conecta Staten Island
-                a Brooklyn
-                e diferentes áreas
-                de Manhattan.
+                a pontos da rede
+                do NYC Ferry.
               </p>
 
             </article>
@@ -1623,8 +1620,8 @@ window.NEW_YORK_TRANSPORT_MODULES["network"] = {
               </strong>
 
               <p>
-                Serviço sazonal
-                conforme a programação
+                Serviço sujeito
+                à programação
                 publicada.
               </p>
 
@@ -1636,15 +1633,13 @@ window.NEW_YORK_TRANSPORT_MODULES["network"] = {
           <div class="visitor-alert">
 
             <strong>
-              As rotas podem mudar
-              conforme a temporada.
+              Horários e rotas
+              podem sofrer alterações.
             </strong>
 
-            O NYC Ferry publica
-            horários de primavera,
-            verão,
-            outono
-            e inverno.
+            Confira a programação
+            atual do NYC Ferry
+            antes da viagem.
 
           </div>
 
@@ -1710,8 +1705,10 @@ window.NEW_YORK_TRANSPORT_MODULES["network"] = {
           </div>
 
 
-          <div class="fare-highlight-grid"
-               style="margin-top:14px;">
+          <div
+            class="fare-highlight-grid"
+            style="margin-top:14px;"
+          >
 
             <article class="fare-highlight">
 
@@ -1873,7 +1870,7 @@ window.NEW_YORK_TRANSPORT_MODULES["network"] = {
               </strong>
 
               <p>
-                A rota Astoria
+                A rede hidroviária
                 também atende
                 Roosevelt Island.
               </p>
@@ -1975,7 +1972,7 @@ window.NEW_YORK_TRANSPORT_MODULES["network"] = {
 
 
         <!-- ==================================================
-             O QUE ESTÁ INTEGRADO
+             INTEGRAÇÃO TARIFÁRIA
         =================================================== -->
 
         <section class="panel-box network-full">
@@ -2424,7 +2421,7 @@ window.NEW_YORK_TRANSPORT_MODULES["network"] = {
               <p>
                 Rota,
                 horário
-                e programação sazonal.
+                e programação atual.
               </p>
 
             </article>
