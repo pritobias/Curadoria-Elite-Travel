@@ -41,12 +41,14 @@ window.ORLANDO_TRANSPORT_MODULES["card"] = {
             <p>
               No LYNX,
               você pode pagar
-              diretamente no ônibus.
+              diretamente no ônibus
+              ou usar passes digitais.
 
               No SunRail,
-              compre ou valide
-              sua tarifa antes
-              de embarcar.
+              use o aplicativo,
+              uma Ticket Vending Machine,
+              um bilhete físico
+              ou SunCard.
             </p>
 
           </div>
@@ -77,14 +79,14 @@ window.ORLANDO_TRANSPORT_MODULES["card"] = {
               </strong>
 
               <span class="payment-status available">
-                Tap to Pay
+                Várias opções
               </span>
 
               <small>
-                Cartão,
-                dispositivo compatível
-                ou outros meios
-                aceitos no farebox.
+                Tap to Pay,
+                dinheiro,
+                passe físico
+                ou Paw Pass.
               </small>
 
             </article>
@@ -105,9 +107,8 @@ window.ORLANDO_TRANSPORT_MODULES["card"] = {
               </span>
 
               <small>
-                Não exige
-                pagamento
-                para embarcar.
+                Nenhum pagamento
+                é necessário.
               </small>
 
             </article>
@@ -124,7 +125,7 @@ window.ORLANDO_TRANSPORT_MODULES["card"] = {
               </strong>
 
               <span class="payment-status available">
-                Bilhete próprio
+                Sistema próprio
               </span>
 
               <small>
@@ -151,8 +152,8 @@ window.ORLANDO_TRANSPORT_MODULES["card"] = {
               </span>
 
               <small>
-                Segue a estrutura
-                tarifária
+                Segue
+                a estrutura tarifária
                 do serviço LYNX.
               </small>
 
@@ -164,7 +165,7 @@ window.ORLANDO_TRANSPORT_MODULES["card"] = {
 
 
         <!-- ==================================================
-             LYNX TAP TO PAY
+             TAP TO PAY LYNX
         =================================================== -->
 
         <section class="panel-box network-full">
@@ -176,19 +177,115 @@ window.ORLANDO_TRANSPORT_MODULES["card"] = {
           <div class="answer-block">
 
             <strong>
-              Você pode pagar
-              diretamente no farebox.
+              Para uma viagem simples,
+              você pode pagar
+              diretamente no ônibus.
             </strong>
 
             <p>
-              Use cartão de crédito,
+              Aproxime
+              um cartão de crédito,
               débito
               ou dispositivo compatível
-              com pagamento por aproximação.
+              do leitor
+              no farebox.
             </p>
 
           </div>
 
+
+          <div class="payment-choice-grid">
+
+            <article class="payment-choice">
+
+              <strong>
+                Visa
+              </strong>
+
+              <p>
+                Cartão de crédito
+                ou débito
+                compatível.
+              </p>
+
+            </article>
+
+
+            <article class="payment-choice">
+
+              <strong>
+                Mastercard
+              </strong>
+
+              <p>
+                Cartão de crédito
+                ou débito
+                compatível.
+              </p>
+
+            </article>
+
+
+            <article class="payment-choice">
+
+              <strong>
+                Discover
+              </strong>
+
+              <p>
+                Também aceito
+                para Single Ride.
+              </p>
+
+            </article>
+
+
+            <article class="payment-choice">
+
+              <strong>
+                Wearables
+              </strong>
+
+              <p>
+                Dispositivos
+                compatíveis
+                com pagamento
+                por aproximação.
+              </p>
+
+            </article>
+
+          </div>
+
+
+          <div class="visitor-alert">
+
+            <strong>
+              Tap to Pay é para Single Ride.
+            </strong>
+
+            Não use o pagamento
+            por aproximação
+            esperando comprar
+            automaticamente
+            um All-Day Pass,
+            7-Day Pass
+            ou 30-Day Pass.
+
+          </div>
+
+        </section>
+
+
+        <!-- ==================================================
+             COMO USAR TAP TO PAY
+        =================================================== -->
+
+        <section class="panel-box network-full">
+
+          <h4 class="panel-title">
+            Como usar Tap to Pay
+          </h4>
 
           <div class="bus-use-flow">
 
@@ -197,13 +294,11 @@ window.ORLANDO_TRANSPORT_MODULES["card"] = {
               <span>1</span>
 
               <strong>
-                Embarque
+                Entre no ônibus
               </strong>
 
               <p>
-                Entre pela porta
-                de embarque
-                e localize
+                Localize
                 o farebox.
               </p>
 
@@ -219,10 +314,10 @@ window.ORLANDO_TRANSPORT_MODULES["card"] = {
               </strong>
 
               <p>
-                Toque seu cartão
+                Encoste
+                o cartão
                 ou dispositivo
-                no alvo
-                Tap to Pay.
+                no alvo Tap to Pay.
               </p>
 
             </article>
@@ -237,8 +332,8 @@ window.ORLANDO_TRANSPORT_MODULES["card"] = {
               </strong>
 
               <p>
-                Espere a confirmação
-                do pagamento
+                Espere
+                a confirmação
                 antes de seguir.
               </p>
 
@@ -250,13 +345,14 @@ window.ORLANDO_TRANSPORT_MODULES["card"] = {
               <span>4</span>
 
               <strong>
-                Peça transferência
+                Precisa transferir?
               </strong>
 
               <p>
-                Se precisar,
-                solicite ao motorista
-                antes de se afastar.
+                Solicite
+                a transferência
+                ao operador
+                durante o embarque.
               </p>
 
             </article>
@@ -267,7 +363,7 @@ window.ORLANDO_TRANSPORT_MODULES["card"] = {
 
 
         <!-- ==================================================
-             COMO A COBRANÇA APARECE
+             COBRANÇAS AGRUPADAS
         =================================================== -->
 
         <section class="panel-box network-full">
@@ -280,14 +376,16 @@ window.ORLANDO_TRANSPORT_MODULES["card"] = {
 
             <strong>
               Nem sempre cada viagem
-              aparece imediatamente
-              como uma cobrança separada.
+              aparece separadamente
+              no extrato.
             </strong>
 
-            O LYNX pode agrupar
-            transações Tap to Pay
-            e lançar a cobrança
-            quando o total devido
+            As transações
+            Tap to Pay
+            podem ser agrupadas.
+
+            A cobrança é processada
+            quando o saldo devido
             chega a US$ 10
             ou a cada três dias,
             o que acontecer primeiro.
@@ -298,12 +396,14 @@ window.ORLANDO_TRANSPORT_MODULES["card"] = {
           <div class="answer-block">
 
             <strong>
-              No extrato
+              No extrato bancário
             </strong>
 
             <p>
-              A identificação
-              pode aparecer como
+              A transação
+              pode aparecer identificada
+              como:
+
               “LYNX Open Payment Fare”.
             </p>
 
@@ -313,7 +413,7 @@ window.ORLANDO_TRANSPORT_MODULES["card"] = {
 
 
         <!-- ==================================================
-             DINHEIRO LYNX
+             DINHEIRO
         =================================================== -->
 
         <section class="panel-box network-full">
@@ -325,130 +425,430 @@ window.ORLANDO_TRANSPORT_MODULES["card"] = {
           <div class="answer-block">
 
             <strong>
-              Também é possível
-              pagar em dinheiro.
+              Dinheiro continua aceito.
             </strong>
 
             <p>
-              Insira o valor
-              no farebox
+              Para uma Single Ride,
+              tenha a tarifa exata
+              preparada
+              antes de embarcar.
+            </p>
+
+          </div>
+
+
+          <div class="payment-choice-grid">
+
+            <article class="payment-choice">
+
+              <strong>
+                US$ 1
+              </strong>
+
+              <p>
+                Cédulas aceitas
+                pelo farebox.
+              </p>
+
+            </article>
+
+
+            <article class="payment-choice">
+
+              <strong>
+                US$ 5
+              </strong>
+
+              <p>
+                Também aceitas.
+              </p>
+
+            </article>
+
+
+            <article class="payment-choice">
+
+              <strong>
+                Moedas
+              </strong>
+
+              <p>
+                Use conforme
+                necessário
+                para completar
+                a tarifa.
+              </p>
+
+            </article>
+
+          </div>
+
+
+          <div class="visitor-alert">
+
+            <strong>
+              O motorista não dá troco.
+            </strong>
+
+            Se pagar
+            em dinheiro,
+            tenha o valor correto.
+
+          </div>
+
+        </section>
+
+
+        <!-- ==================================================
+             ALL DAY
+        =================================================== -->
+
+        <section class="panel-box network-full">
+
+          <h4 class="panel-title">
+            All-Day Pass comprado no ônibus
+          </h4>
+
+          <div class="payment-recommendation">
+
+            <span class="payment-eyebrow">
+              Atenção
+            </span>
+
+            <h4>
+              Avise antes
+              e pague em dinheiro.
+            </h4>
+
+            <p>
+              O All-Day Pass
+              custa US$ 4,50
+              e pode ser comprado
+              diretamente
+              com o motorista.
+
+              Para essa compra
+              no ônibus,
+              o pagamento é
+              em dinheiro.
+            </p>
+
+          </div>
+
+
+          <div class="bus-use-flow">
+
+            <article class="bus-use-step">
+
+              <span>1</span>
+
+              <strong>
+                Avise
+              </strong>
+
+              <p>
+                Diga ao motorista
+                que deseja
+                um All-Day Pass.
+              </p>
+
+            </article>
+
+
+            <article class="bus-use-step">
+
+              <span>2</span>
+
+              <strong>
+                Faça isso antes
+              </strong>
+
+              <p>
+                Não coloque dinheiro
+                no farebox
+                antes de avisar.
+              </p>
+
+            </article>
+
+
+            <article class="bus-use-step">
+
+              <span>3</span>
+
+              <strong>
+                Pague em dinheiro
+              </strong>
+
+              <p>
+                O passe diário
+                comprado no ônibus
+                é cash only.
+              </p>
+
+            </article>
+
+          </div>
+
+
+          <div class="visitor-alert">
+
+            <strong>
+              Cartão de crédito
+              ou débito
+              não compra o All-Day Pass
+              diretamente no farebox.
+            </strong>
+
+            Para produtos digitais,
+            considere
+            o LYNX Paw Pass.
+
+          </div>
+
+        </section>
+
+
+        <!-- ==================================================
+             PAW PASS
+        =================================================== -->
+
+        <section class="panel-box network-full">
+
+          <h4 class="panel-title">
+            LYNX Paw Pass
+          </h4>
+
+          <div class="answer-block">
+
+            <strong>
+              É a opção digital
+              da rede LYNX.
+            </strong>
+
+            <p>
+              Pelo aplicativo,
+              você pode comprar
+              produtos tarifários
+              no celular
+              sem depender
+              de um passe físico.
+            </p>
+
+          </div>
+
+
+          <div class="purchase-grid">
+
+            <article class="purchase-card">
+
+              <span>1</span>
+
+              <strong>
+                Single Ride
+              </strong>
+
+              <p>
+                Disponível
+                digitalmente.
+              </p>
+
+            </article>
+
+
+            <article class="purchase-card">
+
+              <span>1D</span>
+
+              <strong>
+                All-Day Pass
+              </strong>
+
+              <p>
+                Pode ser comprado
+                pelo aplicativo.
+              </p>
+
+            </article>
+
+
+            <article class="purchase-card">
+
+              <span>7D</span>
+
+              <strong>
+                7-Day Pass
+              </strong>
+
+              <p>
+                Passe digital
+                de sete dias.
+              </p>
+
+            </article>
+
+
+            <article class="purchase-card">
+
+              <span>30D</span>
+
+              <strong>
+                30-Day Pass
+              </strong>
+
+              <p>
+                Passe digital
+                de trinta dias.
+              </p>
+
+            </article>
+
+          </div>
+
+
+          <div class="visitor-alert">
+
+            <strong>
+              Passe físico comprado online
+              não migra automaticamente
+              para o Paw Pass.
+            </strong>
+
+            São formatos
+            de produto
+            diferentes.
+
+          </div>
+
+        </section>
+
+
+        <!-- ==================================================
+             PASSES FÍSICOS
+        =================================================== -->
+
+        <section class="panel-box network-full">
+
+          <h4 class="panel-title">
+            Passes físicos do LYNX
+          </h4>
+
+          <div class="purchase-grid">
+
+            <article class="purchase-card">
+
+              <span>🏢</span>
+
+              <strong>
+                LYNX Central Station
+              </strong>
+
+              <p>
+                Ponto oficial
+                de venda.
+              </p>
+
+            </article>
+
+
+            <article class="purchase-card">
+
+              <span>📍</span>
+
+              <strong>
+                Pass Partners
+              </strong>
+
+              <p>
+                Comerciantes
+                parceiros
+                vendem determinados
+                produtos.
+              </p>
+
+            </article>
+
+
+            <article class="purchase-card">
+
+              <span>🌐</span>
+
+              <strong>
+                Online
+              </strong>
+
+              <p>
+                Passes físicos
+                também podem
+                ser comprados
+                pelo site LYNX.
+              </p>
+
+            </article>
+
+          </div>
+
+
+          <div class="fare-note">
+
+            Nem todo ponto de venda
+            oferece todos
+            os tipos de passe.
+
+            Se for comprar
+            em um parceiro,
+            confirme antes
+            se ele possui
+            o produto desejado.
+
+          </div>
+
+        </section>
+
+
+        <!-- ==================================================
+             TRANSFERÊNCIA LYNX
+        =================================================== -->
+
+        <section class="panel-box network-full">
+
+          <h4 class="panel-title">
+            Transferência LYNX
+          </h4>
+
+          <div class="answer-block">
+
+            <strong>
+              Solicite ao motorista
               durante o embarque.
-            </p>
-
-          </div>
-
-
-          <div class="visitor-alert">
-
-            <strong>
-              Tenha o valor correto.
-            </strong>
-
-            O farebox
-            não deve ser tratado
-            como caixa de comércio
-            para depender de troco.
-
-            Para o visitante,
-            Tap to Pay
-            tende a ser mais simples.
-          </div>
-
-        </section>
-
-
-        <!-- ==================================================
-             ALL DAY PASS
-        =================================================== -->
-
-        <section class="panel-box network-full">
-
-          <h4 class="panel-title">
-            All-Day Pass
-          </h4>
-
-          <div class="answer-block">
-
-            <strong>
-              Avise o motorista
-              antes de pagar.
-            </strong>
-
-            <p>
-              Se você pretende
-              comprar o passe diário
-              diretamente no ônibus,
-              informe isso
-              antes de completar
-              o pagamento.
-            </p>
-
-          </div>
-
-
-          <div class="visitor-alert">
-
-            <strong>
-              Não pague primeiro
-              e peça o passe depois.
-            </strong>
-
-            O produto precisa
-            ser selecionado
-            corretamente
-            no momento do embarque.
-
-          </div>
-
-        </section>
-
-
-        <!-- ==================================================
-             TRANSFERÊNCIA
-        =================================================== -->
-
-        <section class="panel-box network-full">
-
-          <h4 class="panel-title">
-            Precisa fazer transferência?
-          </h4>
-
-          <div class="answer-block">
-
-            <strong>
-              Peça ao motorista.
             </strong>
 
             <p>
               Transferências elegíveis
-              do LYNX
-              têm validade limitada
-              e precisam ser emitidas
-              para a sequência
-              da viagem.
+              são gratuitas
+              e possuem
+              uma janela
+              de 90 minutos.
             </p>
 
           </div>
 
 
-          <div class="fare-highlight-grid">
+          <div class="visitor-alert">
 
-            <article class="fare-highlight">
+            <strong>
+              Não vale
+              para a mesma linha
+              nem para viagem de volta.
+            </strong>
 
-              <span>
-                Validade
-              </span>
-
-              <strong>
-                90 min
-              </strong>
-
-              <p>
-                Conforme as regras
-                da rede LYNX.
-              </p>
-
-            </article>
+            A transferência existe
+            para continuar
+            o trajeto,
+            não para transformar
+            ida e volta
+            em uma única tarifa.
 
           </div>
 
@@ -481,8 +881,8 @@ window.ORLANDO_TRANSPORT_MODULES["card"] = {
 
               Você não precisa
               comprar bilhete,
-              usar cartão,
-              aplicativo
+              usar aplicativo,
+              cartão
               ou dinheiro
               para embarcar.
             </p>
@@ -513,10 +913,8 @@ window.ORLANDO_TRANSPORT_MODULES["card"] = {
               </strong>
 
               <p>
-                Compre
-                tickets
-                e passes
-                pelo celular.
+                Bilhetes
+                e passes digitais.
               </p>
 
             </article>
@@ -531,9 +929,9 @@ window.ORLANDO_TRANSPORT_MODULES["card"] = {
               </strong>
 
               <p>
-                Máquinas disponíveis
-                nas estações
-                do SunRail.
+                Máquinas
+                em todas
+                as 17 estações.
               </p>
 
             </article>
@@ -549,8 +947,8 @@ window.ORLANDO_TRANSPORT_MODULES["card"] = {
 
               <p>
                 Cartão recarregável
-                com stored value
-                ou passes.
+                para passes
+                e stored value.
               </p>
 
             </article>
@@ -561,13 +959,13 @@ window.ORLANDO_TRANSPORT_MODULES["card"] = {
               <span>🎫</span>
 
               <strong>
-                Bilhete de papel
+                Paper Ticket
               </strong>
 
               <p>
-                One-way
-                ou round-trip
-                comprado na TVM.
+                Bilhete
+                one-way
+                ou round-trip.
               </p>
 
             </article>
@@ -578,7 +976,7 @@ window.ORLANDO_TRANSPORT_MODULES["card"] = {
 
 
         <!-- ==================================================
-             SUNRAIL APP
+             APP SUNRAIL
         =================================================== -->
 
         <section class="panel-box network-full">
@@ -590,127 +988,34 @@ window.ORLANDO_TRANSPORT_MODULES["card"] = {
           <div class="answer-block">
 
             <strong>
-              É uma das opções
-              mais simples
-              para o visitante.
+              Para uma viagem ocasional,
+              pode ser a opção
+              mais simples.
             </strong>
 
             <p>
-              O app permite
-              comprar bilhetes,
-              passes
-              e gerenciar
-              produtos tarifários
-              pelo celular.
+              O aplicativo permite
+              comprar bilhetes
+              e passes
+              usando o celular
+              como mídia de viagem.
             </p>
 
           </div>
 
-
-          <div class="payment-choice-grid">
-
-            <article class="payment-choice">
-
-              <strong>
-                Crédito
-              </strong>
-
-              <p>
-                Cartões de crédito
-                válidos.
-              </p>
-
-            </article>
-
-
-            <article class="payment-choice">
-
-              <strong>
-                Débito
-              </strong>
-
-              <p>
-                Cartões de débito
-                válidos.
-              </p>
-
-            </article>
-
-
-            <article class="payment-choice">
-
-              <strong>
-                Apple Pay
-              </strong>
-
-              <p>
-                Aceito
-                para compras
-                no app.
-              </p>
-
-            </article>
-
-
-            <article class="payment-choice">
-
-              <strong>
-                Google Pay
-              </strong>
-
-              <p>
-                Também aceito
-                no aplicativo.
-              </p>
-
-            </article>
-
-          </div>
-
-        </section>
-
-
-        <!-- ==================================================
-             MOBILE TICKET
-        =================================================== -->
-
-        <section class="panel-box network-full">
-
-          <h4 class="panel-title">
-            Comprou pelo aplicativo?
-          </h4>
 
           <div class="visitor-alert">
 
             <strong>
-              Ative o bilhete
-              antes de embarcar.
-            </strong>
-
-            O passageiro precisa
-            estar com tarifa válida
-            e ativada
-            durante a viagem.
-
-          </div>
-
-
-          <div class="answer-block">
-
-            <strong>
               Mobile ticket
-              não exige tap on
-              nem tap off.
+              não exige Tap On
+              nem Tap Off.
             </strong>
 
-            <p>
-              Depois de ativado
-              corretamente,
-              o bilhete digital
-              funciona como
-              sua comprovação
-              de pagamento.
-            </p>
+            Esse comportamento
+            é diferente
+            do SunCard
+            e do bilhete físico.
 
           </div>
 
@@ -724,13 +1029,15 @@ window.ORLANDO_TRANSPORT_MODULES["card"] = {
         <section class="panel-box network-full">
 
           <h4 class="panel-title">
-            Ticket Vending Machines
+            Ticket Vending Machines · SunRail
           </h4>
 
           <p class="panel-intro">
-            As máquinas
+            As TVMs
             ficam nas plataformas
-            das estações SunRail.
+            de todas
+            as 17 estações
+            do SunRail.
           </p>
 
           <div class="payment-method-grid">
@@ -750,9 +1057,8 @@ window.ORLANDO_TRANSPORT_MODULES["card"] = {
               </span>
 
               <small>
-                Para compra
-                e recarga
-                elegível.
+                Compra de produtos
+                elegíveis.
               </small>
 
             </article>
@@ -795,7 +1101,8 @@ window.ORLANDO_TRANSPORT_MODULES["card"] = {
               </span>
 
               <small>
-                Também disponível.
+                Cartões
+                compatíveis.
               </small>
 
             </article>
@@ -808,7 +1115,7 @@ window.ORLANDO_TRANSPORT_MODULES["card"] = {
               </span>
 
               <strong>
-                Digital Wallet
+                Carteira digital
               </strong>
 
               <span class="payment-status available">
@@ -819,7 +1126,7 @@ window.ORLANDO_TRANSPORT_MODULES["card"] = {
                 Apple Pay,
                 Google Pay,
                 Samsung Pay
-                e compatíveis.
+                e outras compatíveis.
               </small>
 
             </article>
@@ -852,9 +1159,9 @@ window.ORLANDO_TRANSPORT_MODULES["card"] = {
               </strong>
 
               <p>
-                Custo único
-                não reembolsável
-                do cartão físico.
+                Taxa única
+                e não reembolsável
+                pelo cartão plástico.
               </p>
 
               <span class="route-compare-result">
@@ -871,19 +1178,19 @@ window.ORLANDO_TRANSPORT_MODULES["card"] = {
               </span>
 
               <strong>
-                Sem custo do cartão
+                US$ 0
               </strong>
 
               <p>
-                A versão virtual
-                dentro do app
+                O SunCard virtual
+                dentro do aplicativo
                 não cobra
                 a taxa física
-                do SunCard.
+                de US$ 5.
               </p>
 
               <span class="route-compare-result">
-                App
+                Digital
               </span>
 
             </article>
@@ -894,19 +1201,143 @@ window.ORLANDO_TRANSPORT_MODULES["card"] = {
           <div class="answer-block">
 
             <strong>
-              O SunCard
-              pode guardar
-              saldo ou passes.
+              O cartão pode receber
+              Stored Value
+              ou Travel Pass.
             </strong>
 
             <p>
-              Também pode ser
-              registrado online
-              para proteção
-              de saldo
-              em caso de perda
-              ou dano.
+              O SunCard
+              pode ser recarregado
+              e utilizado
+              em viagens futuras.
             </p>
+
+          </div>
+
+        </section>
+
+
+        <!-- ==================================================
+             STORED VALUE
+        =================================================== -->
+
+        <section class="panel-box network-full">
+
+          <h4 class="panel-title">
+            Stored Value no SunCard
+          </h4>
+
+          <div class="answer-block">
+
+            <strong>
+              Há bônus de 10%
+              sobre o valor carregado.
+            </strong>
+
+            <p>
+              Esse bônus
+              é aplicado
+              aos níveis
+              de stored value
+              publicados pelo SunRail.
+            </p>
+
+          </div>
+
+
+          <div class="fare-scenario-grid">
+
+            <article class="fare-scenario">
+
+              <span class="fare-scenario-kicker">
+                Carregue
+              </span>
+
+              <strong>
+                US$ 10
+              </strong>
+
+              <p>
+                Receba
+                US$ 1
+                adicional.
+              </p>
+
+              <span class="fare-scenario-result">
+                US$ 11
+              </span>
+
+            </article>
+
+
+            <article class="fare-scenario">
+
+              <span class="fare-scenario-kicker">
+                Carregue
+              </span>
+
+              <strong>
+                US$ 25
+              </strong>
+
+              <p>
+                Receba
+                US$ 2,50
+                adicionais.
+              </p>
+
+              <span class="fare-scenario-result">
+                US$ 27,50
+              </span>
+
+            </article>
+
+
+            <article class="fare-scenario">
+
+              <span class="fare-scenario-kicker">
+                Carregue
+              </span>
+
+              <strong>
+                US$ 50
+              </strong>
+
+              <p>
+                Receba
+                US$ 5
+                adicionais.
+              </p>
+
+              <span class="fare-scenario-result">
+                US$ 55
+              </span>
+
+            </article>
+
+
+            <article class="fare-scenario">
+
+              <span class="fare-scenario-kicker">
+                Carregue
+              </span>
+
+              <strong>
+                US$ 100
+              </strong>
+
+              <p>
+                Receba
+                US$ 10
+                adicionais.
+              </p>
+
+              <span class="fare-scenario-result">
+                US$ 110
+              </span>
+
+            </article>
 
           </div>
 
@@ -920,7 +1351,7 @@ window.ORLANDO_TRANSPORT_MODULES["card"] = {
         <section class="panel-box network-full">
 
           <h4 class="panel-title">
-            SunCard e bilhete físico:
+            SunCard ou bilhete físico:
             Tap On + Tap Off
           </h4>
 
@@ -931,7 +1362,7 @@ window.ORLANDO_TRANSPORT_MODULES["card"] = {
               <span>1</span>
 
               <strong>
-                Antes do trem
+                Antes de embarcar
               </strong>
 
               <p>
@@ -952,10 +1383,9 @@ window.ORLANDO_TRANSPORT_MODULES["card"] = {
               </strong>
 
               <p>
-                Aproxime
-                ou escaneie
-                sua mídia
-                antes de embarcar.
+                Valide
+                o SunCard
+                ou bilhete físico.
               </p>
 
             </article>
@@ -971,9 +1401,8 @@ window.ORLANDO_TRANSPORT_MODULES["card"] = {
 
               <p>
                 Mantenha
-                sua comprovação
-                de tarifa
-                durante o trajeto.
+                sua mídia
+                com você.
               </p>
 
             </article>
@@ -990,56 +1419,62 @@ window.ORLANDO_TRANSPORT_MODULES["card"] = {
               <p>
                 Valide novamente
                 ao chegar
-                à estação de destino.
+                ao destino.
               </p>
 
             </article>
 
           </div>
 
+
+          <div class="visitor-alert">
+
+            <strong>
+              Não esqueça o Tap Off.
+            </strong>
+
+            A tarifa do SunRail
+            depende da distância
+            percorrida.
+
+            O sistema utiliza
+            a entrada
+            e a saída
+            para identificar
+            corretamente a viagem.
+
+          </div>
+
         </section>
 
 
         <!-- ==================================================
-             POR QUE TAP OFF
+             SE NÃO VALIDAR
         =================================================== -->
 
         <section class="panel-box network-full">
 
           <h4 class="panel-title">
-            Por que o Tap Off importa?
+            Esquecer de validar
+            pode invalidar o SunCard
           </h4>
-
-          <div class="answer-block">
-
-            <strong>
-              A tarifa do SunRail
-              depende das zonas percorridas.
-            </strong>
-
-            <p>
-              O sistema precisa saber
-              onde sua viagem terminou
-              para aplicar corretamente
-              a tarifa correspondente.
-            </p>
-
-          </div>
-
 
           <div class="visitor-alert">
 
             <strong>
-              Não saia da estação
-              sem validar.
+              Tap On e Tap Off
+              não são opcionais
+              para SunCard.
             </strong>
 
-            Se estiver usando
-            SunCard
-            ou mídia física
-            que exige validação,
-            lembre-se
-            do Tap Off.
+            Se o passageiro
+            não seguir
+            o processo de validação,
+            o cartão pode
+            ficar bloqueado
+            e ser considerado
+            sem tarifa válida
+            durante uma inspeção.
 
           </div>
 
@@ -1047,55 +1482,7 @@ window.ORLANDO_TRANSPORT_MODULES["card"] = {
 
 
         <!-- ==================================================
-             PAPER TICKET
-        =================================================== -->
-
-        <section class="panel-box network-full">
-
-          <h4 class="panel-title">
-            Bilhete de papel do SunRail
-          </h4>
-
-          <div class="answer-block">
-
-            <strong>
-              One-way
-              e round-trip
-              podem ser comprados
-              nas TVMs.
-            </strong>
-
-            <p>
-              O bilhete precisa
-              corresponder
-              à data da viagem
-              e às zonas
-              que serão percorridas.
-            </p>
-
-          </div>
-
-
-          <div class="visitor-alert">
-
-            <strong>
-              Valide antes
-              de embarcar.
-            </strong>
-
-            O bilhete físico
-            precisa ser escaneado
-            no validador
-            conforme as regras
-            do SunRail.
-
-          </div>
-
-        </section>
-
-
-        <!-- ==================================================
-             INSPEÇÃO
+             PROOF OF PAYMENT
         =================================================== -->
 
         <section class="panel-box network-full">
@@ -1104,21 +1491,22 @@ window.ORLANDO_TRANSPORT_MODULES["card"] = {
             Guarde sua comprovação
           </h4>
 
-          <div class="visitor-alert">
+          <div class="answer-block">
 
             <strong>
-              O SunRail utiliza
-              proof of payment.
+              SunRail trabalha
+              com proof of payment.
             </strong>
 
-            Durante a viagem,
-            você pode precisar
-            apresentar
-            seu bilhete,
-            passe
-            ou SunCard
-            válido
-            para inspeção.
+            <p>
+              Durante a viagem,
+              você pode precisar
+              apresentar
+              bilhete,
+              passe
+              ou SunCard válido
+              para inspeção.
+            </p>
 
           </div>
 
@@ -1132,8 +1520,7 @@ window.ORLANDO_TRANSPORT_MODULES["card"] = {
         <section class="panel-box network-full">
 
           <h4 class="panel-title">
-            Transferindo do LYNX
-            para o SunRail
+            LYNX → SunRail
           </h4>
 
           <div class="bus-use-flow">
@@ -1148,9 +1535,8 @@ window.ORLANDO_TRANSPORT_MODULES["card"] = {
 
               <p>
                 Solicite
-                ao motorista LYNX
-                antes de sair
-                do ônibus.
+                ao operador LYNX
+                no embarque.
               </p>
 
             </article>
@@ -1178,12 +1564,12 @@ window.ORLANDO_TRANSPORT_MODULES["card"] = {
               <span>3</span>
 
               <strong>
-                Selecione LYNX Transfer
+                Escolha LYNX Transfer
               </strong>
 
               <p>
-                Use a opção
-                indicada
+                Selecione
+                a opção correspondente
                 na tela.
               </p>
 
@@ -1195,13 +1581,14 @@ window.ORLANDO_TRANSPORT_MODULES["card"] = {
               <span>4</span>
 
               <strong>
-                Emita a tarifa
+                Siga as instruções
               </strong>
 
               <p>
-                Siga as instruções
-                para obter
-                a viagem correspondente.
+                Emita
+                o bilhete
+                correspondente
+                à sua viagem.
               </p>
 
             </article>
@@ -1225,18 +1612,36 @@ window.ORLANDO_TRANSPORT_MODULES["card"] = {
 
             <strong>
               Apresente
-              sua tarifa válida
-              ao motorista.
+              sua tarifa SunRail válida
+              ao operador.
             </strong>
 
             <p>
-              Nas linhas alimentadoras
+              Em linhas alimentadoras
               participantes,
-              mostre seu bilhete
-              ou SunCard
-              ao embarcar
-              no ônibus LYNX.
+              o SunCard
+              ou bilhete válido
+              pode permitir
+              a transferência
+              para o ônibus.
             </p>
+
+          </div>
+
+
+          <div class="visitor-alert">
+
+            <strong>
+              Não é uma gratuidade
+              para qualquer ônibus LYNX
+              em qualquer lugar.
+            </strong>
+
+            A integração
+            é vinculada
+            às conexões
+            participantes
+            do SunRail.
 
           </div>
 
@@ -1258,13 +1663,14 @@ window.ORLANDO_TRANSPORT_MODULES["card"] = {
             <article class="payment-choice">
 
               <strong>
-                Poucas viagens de ônibus
+                Uma viagem LYNX
               </strong>
 
               <p>
                 Tap to Pay
-                evita comprar
-                uma mídia adicional.
+                é a opção
+                mais direta
+                para Single Ride.
               </p>
 
             </article>
@@ -1273,13 +1679,29 @@ window.ORLANDO_TRANSPORT_MODULES["card"] = {
             <article class="payment-choice">
 
               <strong>
-                Muitas viagens LYNX
+                Várias viagens LYNX
               </strong>
 
               <p>
                 Compare
-                os passes
-                disponíveis.
+                Paw Pass
+                e passes
+                por período.
+              </p>
+
+            </article>
+
+
+            <article class="payment-choice">
+
+              <strong>
+                All-Day no ônibus
+              </strong>
+
+              <p>
+                Avise antes
+                e tenha
+                dinheiro.
               </p>
 
             </article>
@@ -1292,8 +1714,8 @@ window.ORLANDO_TRANSPORT_MODULES["card"] = {
               </strong>
 
               <p>
-                App
-                ou bilhete físico
+                Mobile ticket
+                ou paper ticket
                 podem ser suficientes.
               </p>
 
@@ -1308,8 +1730,8 @@ window.ORLANDO_TRANSPORT_MODULES["card"] = {
 
               <p>
                 SunCard
-                pode oferecer
-                mais praticidade.
+                pode ser
+                mais conveniente.
               </p>
 
             </article>
@@ -1323,8 +1745,7 @@ window.ORLANDO_TRANSPORT_MODULES["card"] = {
 
               <p>
                 LYMMO
-                não exige
-                nenhum pagamento.
+                é gratuito.
               </p>
 
             </article>
@@ -1335,7 +1756,7 @@ window.ORLANDO_TRANSPORT_MODULES["card"] = {
 
 
         <!-- ==================================================
-             RESUMO
+             RESUMO FINAL
         =================================================== -->
 
         <section class="panel-box network-full">
@@ -1348,16 +1769,46 @@ window.ORLANDO_TRANSPORT_MODULES["card"] = {
 
             <article class="planner-check-card">
 
-              <span>🚌</span>
+              <span>💳</span>
 
               <strong>
-                LYNX
+                LYNX Single Ride
               </strong>
 
               <p>
-                Tap to Pay
-                ou meios aceitos
-                no ônibus.
+                Cash
+                ou Tap to Pay.
+              </p>
+
+            </article>
+
+
+            <article class="planner-check-card">
+
+              <span>📱</span>
+
+              <strong>
+                Paw Pass
+              </strong>
+
+              <p>
+                Single Ride
+                e passes digitais.
+              </p>
+
+            </article>
+
+
+            <article class="planner-check-card">
+
+              <span>💵</span>
+
+              <strong>
+                All-Day no ônibus
+              </strong>
+
+              <p>
+                Cash only.
               </p>
 
             </article>
@@ -1387,40 +1838,8 @@ window.ORLANDO_TRANSPORT_MODULES["card"] = {
               </strong>
 
               <p>
-                Tickets
-                e passes digitais.
-              </p>
-
-            </article>
-
-
-            <article class="planner-check-card">
-
-              <span>▣</span>
-
-              <strong>
-                SunCard
-              </strong>
-
-              <p>
-                Cartão recarregável.
-              </p>
-
-            </article>
-
-
-            <article class="planner-check-card">
-
-              <span>🏧</span>
-
-              <strong>
-                TVM
-              </strong>
-
-              <p>
-                Dinheiro,
-                cartão
-                e carteira digital.
+                Sem Tap On
+                ou Tap Off.
               </p>
 
             </article>
@@ -1431,12 +1850,12 @@ window.ORLANDO_TRANSPORT_MODULES["card"] = {
               <span>⇄</span>
 
               <strong>
-                SunRail físico
+                SunCard / papel
               </strong>
 
               <p>
                 Tap On
-                e Tap Off.
+                + Tap Off.
               </p>
 
             </article>
@@ -1454,6 +1873,16 @@ window.ORLANDO_TRANSPORT_MODULES["card"] = {
 
           <a
             class="official-link"
+            href="https://www.golynx.com/fares-passes/"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Tarifas e passes · LYNX
+          </a>
+
+
+          <a
+            class="official-link"
             href="https://www.golynx.com/fares-passes/open-payment-guidelines.stml"
             target="_blank"
             rel="noopener noreferrer"
@@ -1464,11 +1893,11 @@ window.ORLANDO_TRANSPORT_MODULES["card"] = {
 
           <a
             class="official-link"
-            href="https://www.golynx.com/fares-passes/"
+            href="https://www.golynx.com/fares-passes/where-buy-passes.stml"
             target="_blank"
             rel="noopener noreferrer"
           >
-            Bilhetes e passes · LYNX
+            Onde comprar passes · LYNX
           </a>
 
 
@@ -1478,7 +1907,7 @@ window.ORLANDO_TRANSPORT_MODULES["card"] = {
             target="_blank"
             rel="noopener noreferrer"
           >
-            Bilhetes · SunRail
+            Bilhetes e passes · SunRail
           </a>
 
 
@@ -1488,17 +1917,17 @@ window.ORLANDO_TRANSPORT_MODULES["card"] = {
             target="_blank"
             rel="noopener noreferrer"
           >
-            SunCard
+            SunCard · SunRail
           </a>
 
 
           <a
             class="official-link"
-            href="https://sunrail.com/riding-sunrail/using-sunrail/"
+            href="https://sunrail.com/help-center/support/fares-passes/how-do-i-pay-for-my-ride/"
             target="_blank"
             rel="noopener noreferrer"
           >
-            Como usar · SunRail
+            Como pagar · SunRail
           </a>
 
         </div>
