@@ -9,7 +9,7 @@ window.ORLANDO_TRANSPORT_MODULES =
 
 
 const ORLANDO_MAP_URL =
-  "/imagens/mapa-transporte-orlando.jpg";
+  "/images/mapa-transporte-orlando.jpg";
 
 
 // ============================================================
