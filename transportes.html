@@ -2545,7 +2545,7 @@
               <option value="new-york">Nova York, Estados Unidos</option>
               <option value="miami">Miami, Estados Unidos</option>
               <option value="orlando">Orlando, Estados Unidos</option>
-              <option value="cidade-do-mexico" disabled>Cidade do México, México — em preparação</option>
+              <option value="cidade-do-mexico">Cidade do México, México</option>
               <option value="madrid" disabled>Madrid, Espanha — em preparação</option>
               <option value="barcelona" disabled>Barcelona, Espanha — em preparação</option>
               <option value="paris" disabled>Paris, França — em preparação</option>
@@ -2766,6 +2766,13 @@
   <script src="transport-data/orlando/planner.js"></script>
   <script src="transport-data/orlando/index.js"></script>
 
+  <script src="transport-data/cidade-do-mexico/network.js"></script>
+  <script src="transport-data/cidade-do-mexico/fares.js"></script>
+  <script src="transport-data/cidade-do-mexico/payment.js"></script>
+  <script src="transport-data/cidade-do-mexico/bus.js"></script>
+  <script src="transport-data/cidade-do-mexico/planner.js"></script>
+  <script src="transport-data/cidade-do-mexico/index.js"></script>
+
   <script>
 
     const TRANSPORT_CINEMA_VERSION = "20260724-1";
@@ -2850,6 +2857,19 @@
 
       if (select && select.value === "orlando") {
         return window.ORLANDO_TRANSPORT_MODULES || {};
+      }
+
+      if (select && select.value === "cidade-do-mexico") {
+        const modules =
+          window.MEXICO_CITY_TRANSPORT_MODULES || {};
+
+        return {
+          ...modules,
+          card:
+            modules.payment ||
+            modules.card ||
+            null
+        };
       }
 
       return window.SP_TRANSPORT_MODULES || {};
@@ -3169,6 +3189,48 @@
               title: "Planeje o trajeto",
               description:
                 "Compare LYNX, LYMMO, SunRail, shuttles e conexões com MCO, Downtown, International Drive e parques."
+            }
+          }
+        };
+      }
+
+      if (value === "cidade-do-mexico") {
+        return {
+          cityName: "Cidade do México",
+          locationLabel: "Cidade do México, México",
+          summary:
+            "Entenda Metro, Metrobús, Trolebús, RTP, Tren Ligero, Cablebús, conexões aeroportuárias, tarifas e meios de pagamento antes de circular pela Cidade do México.",
+          updatedAt: "Modelo visual · agosto de 2026",
+          networkTitle: "Rede de Transporte",
+          networkDescription:
+            "Veja como Metro, Metrobús, Trolebús, RTP, Tren Ligero, Cablebús e as principais conexões da cidade se organizam e se complementam.",
+          networkPoints: [
+            "Metro",
+            "Metrobús",
+            "Trolebús",
+            "Tren Ligero",
+            "Cablebús"
+          ],
+          cards: {
+            fares: {
+              title: "Tarifas e integração",
+              description:
+                "Tarifas do Metro, Metrobús, Tren Ligero, Cablebús, RTP e diferenças de cobrança entre os sistemas."
+            },
+            card: {
+              title: "Como pagar",
+              description:
+                "Tarjeta de Movilidad Integrada, recargas, contactless no Metrobús e meios de pagamento dos principais sistemas."
+            },
+            bus: {
+              title: "Ônibus",
+              description:
+                "Metrobús, RTP e Trolebús, com diferenças de funcionamento, embarque, pagamento e principais corredores."
+            },
+            planner: {
+              title: "Planeje o trajeto",
+              description:
+                "Compare Metro, Metrobús, RTP, Trolebús, Tren Ligero, Cablebús e conexões com AICM e AIFA."
             }
           }
         };
