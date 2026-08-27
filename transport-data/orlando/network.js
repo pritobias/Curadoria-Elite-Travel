@@ -469,86 +469,52 @@ window.ORLANDO_TRANSPORT_MODULES["network"] = {
           <div class="planner-check-grid">
 
             <article class="planner-check-card">
-
               <span>🏙️</span>
-
-              <strong>
-                Downtown
-              </strong>
-
+              <strong>Downtown</strong>
               <p>
                 Diversas linhas
                 convergem
                 para o centro.
               </p>
-
             </article>
 
-
             <article class="planner-check-card">
-
               <span>✈️</span>
-
-              <strong>
-                MCO
-              </strong>
-
+              <strong>MCO</strong>
               <p>
                 O aeroporto
                 é atendido
                 por diversas linhas.
               </p>
-
             </article>
 
-
             <article class="planner-check-card">
-
               <span>🎢</span>
-
-              <strong>
-                Atrações
-              </strong>
-
+              <strong>Atrações</strong>
               <p>
                 Linhas atendem
                 diferentes corredores
                 turísticos.
               </p>
-
             </article>
 
-
             <article class="planner-check-card">
-
               <span>🛍️</span>
-
-              <strong>
-                Compras
-              </strong>
-
+              <strong>Compras</strong>
               <p>
                 Outlets
                 e shopping centers
                 possuem conexões LYNX.
               </p>
-
             </article>
 
-
             <article class="planner-check-card">
-
               <span>🚆</span>
-
-              <strong>
-                SunRail
-              </strong>
-
+              <strong>SunRail</strong>
               <p>
                 Diversas estações
                 possuem linhas alimentadoras.
               </p>
-
             </article>
 
           </div>
@@ -586,26 +552,16 @@ window.ORLANDO_TRANSPORT_MODULES["network"] = {
           <div class="comparison-grid">
 
             <article class="comparison-card">
-
-              <strong>
-                LYNX
-              </strong>
-
+              <strong>LYNX</strong>
               <p>
                 Grande número
                 de conexões
                 rodoviárias.
               </p>
-
             </article>
 
-
             <article class="comparison-card">
-
-              <strong>
-                SunRail
-              </strong>
-
+              <strong>SunRail</strong>
               <p>
                 A estação
                 LYNX Central
@@ -613,22 +569,15 @@ window.ORLANDO_TRANSPORT_MODULES["network"] = {
                 fica integrada
                 ao complexo.
               </p>
-
             </article>
 
-
             <article class="comparison-card">
-
-              <strong>
-                LYMMO
-              </strong>
-
+              <strong>LYMMO</strong>
               <p>
                 A rede gratuita
                 atende
                 Downtown Orlando.
               </p>
-
             </article>
 
           </div>
@@ -670,20 +619,12 @@ window.ORLANDO_TRANSPORT_MODULES["network"] = {
           <div class="fare-highlight-grid">
 
             <article class="fare-highlight">
-
-              <span>
-                Tarifa
-              </span>
-
-              <strong>
-                Grátis
-              </strong>
-
+              <span>Tarifa</span>
+              <strong>Grátis</strong>
               <p>
                 Não é necessário
                 comprar bilhete.
               </p>
-
             </article>
 
           </div>
@@ -864,47 +805,30 @@ window.ORLANDO_TRANSPORT_MODULES["network"] = {
           <div class="payment-choice-grid">
 
             <article class="payment-choice">
-
-              <strong>
-                Link 11
-              </strong>
-
+              <strong>Link 11</strong>
               <p>
                 Sand Lake Road
                 e MCO.
               </p>
-
             </article>
 
-
             <article class="payment-choice">
-
-              <strong>
-                Link 42
-              </strong>
-
+              <strong>Link 42</strong>
               <p>
                 International Drive,
                 Sand Lake Road
                 e MCO.
               </p>
-
             </article>
 
-
             <article class="payment-choice">
-
-              <strong>
-                Link 311
-              </strong>
-
+              <strong>Link 311</strong>
               <p>
                 Disney Springs,
                 Epic Universe,
                 Sand Lake Road
                 e MCO.
               </p>
-
             </article>
 
           </div>
@@ -926,13 +850,9 @@ window.ORLANDO_TRANSPORT_MODULES["network"] = {
 
             <article class="route-compare-card">
 
-              <span>
-                Trem
-              </span>
+              <span>Trem</span>
 
-              <strong>
-                SunRail
-              </strong>
+              <strong>SunRail</strong>
 
               <p>
                 Viaje
@@ -945,16 +865,11 @@ window.ORLANDO_TRANSPORT_MODULES["network"] = {
 
             </article>
 
-
             <article class="route-compare-card">
 
-              <span>
-                Ônibus
-              </span>
+              <span>Ônibus</span>
 
-              <strong>
-                LYNX
-              </strong>
+              <strong>LYNX</strong>
 
               <p>
                 Continue
@@ -1134,59 +1049,36 @@ window.ORLANDO_TRANSPORT_MODULES["network"] = {
           <div class="payment-choice-grid">
 
             <article class="payment-choice">
-
-              <strong>
-                Link 21
-              </strong>
-
+              <strong>Link 21</strong>
               <p>
                 Kirkman Road
                 / Universal Orlando.
               </p>
-
             </article>
 
-
             <article class="payment-choice">
-
-              <strong>
-                Link 38
-              </strong>
-
+              <strong>Link 38</strong>
               <p>
                 Universal Orlando
                 / International Drive.
               </p>
-
             </article>
 
-
             <article class="payment-choice">
-
-              <strong>
-                Link 40
-              </strong>
-
+              <strong>Link 40</strong>
               <p>
                 Americana Boulevard
                 / Universal Orlando.
               </p>
-
             </article>
 
-
             <article class="payment-choice">
-
-              <strong>
-                Link 311
-              </strong>
-
+              <strong>Link 311</strong>
               <p>
                 Epic Universe
                 / Disney Springs
                 / MCO.
               </p>
-
             </article>
 
           </div>
@@ -1224,9 +1116,7 @@ window.ORLANDO_TRANSPORT_MODULES["network"] = {
 
             <article class="comparison-card">
 
-              <strong>
-                Link 8
-              </strong>
+              <strong>Link 8</strong>
 
               <p>
                 Corredor
@@ -1236,12 +1126,9 @@ window.ORLANDO_TRANSPORT_MODULES["network"] = {
 
             </article>
 
-
             <article class="comparison-card">
 
-              <strong>
-                Link 350
-              </strong>
+              <strong>Link 350</strong>
 
               <p>
                 Destination Parkway
@@ -1283,7 +1170,6 @@ window.ORLANDO_TRANSPORT_MODULES["network"] = {
 
             </article>
 
-
             <article class="comparison-card">
 
               <strong>
@@ -1299,7 +1185,6 @@ window.ORLANDO_TRANSPORT_MODULES["network"] = {
 
             </article>
 
-
             <article class="comparison-card">
 
               <strong>
@@ -1312,7 +1197,6 @@ window.ORLANDO_TRANSPORT_MODULES["network"] = {
               </p>
 
             </article>
-
 
             <article class="comparison-card">
 
@@ -1424,104 +1308,63 @@ window.ORLANDO_TRANSPORT_MODULES["network"] = {
           <div class="bus-system-grid">
 
             <article class="bus-system-card">
-
               <span>🏙️</span>
-
-              <strong>
-                LYNX Central Station
-              </strong>
-
+              <strong>LYNX Central Station</strong>
               <p>
                 LYNX,
                 LYMMO
                 e SunRail.
               </p>
-
             </article>
 
-
             <article class="bus-system-card">
-
               <span>✈️</span>
-
-              <strong>
-                Sand Lake Road
-              </strong>
-
+              <strong>Sand Lake Road</strong>
               <p>
                 SunRail
                 + LYNX
                 para MCO.
               </p>
-
             </article>
 
-
             <article class="bus-system-card">
-
               <span>🎢</span>
-
-              <strong>
-                Destination Parkway
-              </strong>
-
+              <strong>Destination Parkway</strong>
               <p>
                 International Drive,
                 Convention Center,
                 Epic Universe
                 e outras conexões.
               </p>
-
             </article>
 
-
             <article class="bus-system-card">
-
               <span>🛍️</span>
-
-              <strong>
-                Florida Mall
-              </strong>
-
+              <strong>Florida Mall</strong>
               <p>
                 Importante
                 ponto de conexão
                 da rede LYNX.
               </p>
-
             </article>
 
-
             <article class="bus-system-card">
-
               <span>🏰</span>
-
-              <strong>
-                Disney Springs
-              </strong>
-
+              <strong>Disney Springs</strong>
               <p>
                 Diversas linhas
                 relacionadas
                 ao complexo Disney.
               </p>
-
             </article>
 
-
             <article class="bus-system-card">
-
               <span>🚆</span>
-
-              <strong>
-                Kissimmee
-              </strong>
-
+              <strong>Kissimmee</strong>
               <p>
                 SunRail
                 e conexões LYNX.
               </p>
-
             </article>
 
           </div>
@@ -1564,7 +1407,6 @@ window.ORLANDO_TRANSPORT_MODULES["network"] = {
 
             </article>
 
-
             <article class="fare-scenario">
 
               <span class="fare-scenario-kicker">
@@ -1587,7 +1429,6 @@ window.ORLANDO_TRANSPORT_MODULES["network"] = {
 
             </article>
 
-
             <article class="fare-scenario">
 
               <span class="fare-scenario-kicker">
@@ -1608,7 +1449,6 @@ window.ORLANDO_TRANSPORT_MODULES["network"] = {
               </span>
 
             </article>
-
 
             <article class="fare-scenario">
 
@@ -1631,7 +1471,6 @@ window.ORLANDO_TRANSPORT_MODULES["network"] = {
               </span>
 
             </article>
-
 
             <article class="fare-scenario">
 
@@ -1673,103 +1512,64 @@ window.ORLANDO_TRANSPORT_MODULES["network"] = {
           <div class="planner-check-grid">
 
             <article class="planner-check-card">
-
               <span>🏙️</span>
-
-              <strong>
-                Downtown
-              </strong>
-
+              <strong>Downtown</strong>
               <p>
                 LYMMO,
                 LYNX
                 e SunRail.
               </p>
-
             </article>
 
-
             <article class="planner-check-card">
-
               <span>✈️</span>
-
-              <strong>
-                MCO
-              </strong>
-
+              <strong>MCO</strong>
               <p>
                 LYNX direto
                 ou SunRail
                 + LYNX.
               </p>
-
             </article>
 
-
             <article class="planner-check-card">
-
               <span>🎢</span>
-
-              <strong>
-                International Drive
-              </strong>
-
+              <strong>International Drive</strong>
               <p>
                 Principalmente
                 LYNX.
               </p>
-
             </article>
 
-
             <article class="planner-check-card">
-
               <span>🏰</span>
-
-              <strong>
-                Disney
-              </strong>
-
+              <strong>Disney</strong>
               <p>
                 LYNX
                 + transporte
                 interno Disney,
                 conforme a viagem.
               </p>
-
             </article>
 
-
             <article class="planner-check-card">
-
               <span>🚆</span>
-
               <strong>
                 Winter Park / Sanford / Kissimmee
               </strong>
-
               <p>
                 Compare SunRail
                 com a conexão final.
               </p>
-
             </article>
 
-
             <article class="planner-check-card">
-
               <span>🏨</span>
-
-              <strong>
-                Hotel
-              </strong>
-
+              <strong>Hotel</strong>
               <p>
                 Confira
                 se existe
                 shuttle próprio.
               </p>
-
             </article>
 
           </div>
@@ -1790,93 +1590,58 @@ window.ORLANDO_TRANSPORT_MODULES["network"] = {
           <div class="payment-choice-grid">
 
             <article class="payment-choice">
-
-              <strong>
-                LYNX
-              </strong>
-
+              <strong>LYNX</strong>
               <p>
                 Linha,
                 horário,
                 parada
                 e eventuais desvios.
               </p>
-
             </article>
 
-
             <article class="payment-choice">
-
-              <strong>
-                SunRail
-              </strong>
-
+              <strong>SunRail</strong>
               <p>
                 Operação,
                 horário
                 e estação
                 da viagem.
               </p>
-
             </article>
 
-
             <article class="payment-choice">
-
-              <strong>
-                MCO
-              </strong>
-
+              <strong>MCO</strong>
               <p>
                 Terminal
                 e conexão LYNX.
               </p>
-
             </article>
 
-
             <article class="payment-choice">
-
-              <strong>
-                Parques
-              </strong>
-
+              <strong>Parques</strong>
               <p>
                 Ponto correto
                 e horário
                 da volta.
               </p>
-
             </article>
 
-
             <article class="payment-choice">
-
-              <strong>
-                Shuttle
-              </strong>
-
+              <strong>Shuttle</strong>
               <p>
                 Reserva,
                 disponibilidade
                 e horários.
               </p>
-
             </article>
 
-
             <article class="payment-choice">
-
-              <strong>
-                Trânsito
-              </strong>
-
+              <strong>Trânsito</strong>
               <p>
                 Pode alterar
                 significativamente
                 o tempo de ônibus.
               </p>
-
             </article>
 
           </div>
