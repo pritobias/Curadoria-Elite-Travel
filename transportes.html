@@ -305,8 +305,19 @@
       filter: brightness(1.06);
     }
 
+    .primary-button:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      filter: none;
+    }
+
     .content {
+      display: none;
       padding: 28px;
+    }
+
+    .content.active {
+      display: block;
     }
 
     .destination-summary {
@@ -2569,7 +2580,6 @@
     <section class="page-shell">
       <div class="tool-panel">
         <div class="tool-top">
-          <div class="breadcrumbs">Ferramentas &gt; Transportes</div>
           <h2>Escolha o destino</h2>
           <p>
             Selecione uma cidade para entender a rede, as tarifas, os cartões,
@@ -2604,7 +2614,7 @@
                 <option value="roma" disabled>Roma, Itália — em preparação</option>
               </optgroup>
             </select>
-            <button id="showDestinationButton" class="primary-button" type="button">
+            <button id="showDestinationButton" class="primary-button" type="button" disabled>
               Explorar a malha
             </button>
           </div>
@@ -3572,22 +3582,50 @@
       }
     });
 
-    document.getElementById("showDestinationButton").addEventListener("click", () => {
+    const destinationSelect = document.getElementById("destinationSelect");
+    const showDestinationButton = document.getElementById("showDestinationButton");
+    const destinationContent = document.querySelector(".content");
+
+    function showSelectedDestination() {
+      if (!destinationSelect || !destinationSelect.value) return;
+
       renderActiveDestination();
 
-      const summary = document.querySelector(".destination-summary");
-
-      if (summary) {
-        summary.scrollIntoView({
-          behavior: "smooth",
-          block: "start"
-        });
+      if (destinationContent) {
+        destinationContent.classList.add("active");
       }
-    });
+    }
 
-    document.getElementById("destinationSelect").addEventListener("change", () => {
-      renderActiveDestination();
-    });
+    if (showDestinationButton) {
+      showDestinationButton.addEventListener("click", () => {
+        if (!destinationSelect || !destinationSelect.value) return;
+
+        showSelectedDestination();
+
+        const summary = document.querySelector(".destination-summary");
+
+        if (summary) {
+          summary.scrollIntoView({
+            behavior: "smooth",
+            block: "start"
+          });
+        }
+      });
+    }
+
+    if (destinationSelect) {
+      destinationSelect.addEventListener("change", () => {
+        if (showDestinationButton) {
+          showDestinationButton.disabled = !destinationSelect.value;
+        }
+
+        if (destinationSelect.value) {
+          showSelectedDestination();
+        } else if (destinationContent) {
+          destinationContent.classList.remove("active");
+        }
+      });
+    }
 
     const siteHeader = document.getElementById("siteHeader");
     const navToggle = document.getElementById("navToggle");
@@ -3619,7 +3657,6 @@
     });
 
     startTransportCinema();
-    renderActiveDestination();
 
     document.addEventListener("keydown", (event) => {
       if (event.key === "Escape" && siteHeader && siteHeader.classList.contains("nav-open")) {
