@@ -250,7 +250,7 @@ function openBhMetroMap() {
 window.BELO_HORIZONTE_TRANSPORT_MODULES["network"] = {
 
   kicker:
-    "Belo Horizonte · visão completa",
+    "Belo Horizonte · visão da rede",
 
   title:
     "Rede de Transporte",
@@ -263,113 +263,7 @@ window.BELO_HORIZONTE_TRANSPORT_MODULES["network"] = {
 
 
         <!-- ==================================================
-             ENTENDA A REDE
-        =================================================== -->
-
-        <section class="panel-box network-full">
-
-          <h4 class="panel-title">
-            Entenda a rede de Belo Horizonte
-          </h4>
-
-          <p class="panel-intro">
-            A mobilidade da capital combina
-            metrô, MOVE, ônibus convencionais,
-            linhas suplementares
-            e transporte metropolitano.
-          </p>
-
-          <div class="legend-grid">
-
-            ${createBhLegendItem(
-              "M",
-              "Metrô",
-              "A Linha 1 conecta Contagem a Belo Horizonte e atende importantes pontos de integração da rede."
-            )}
-
-            ${createBhLegendItem(
-              "MOVE",
-              "MOVE",
-              "Sistema BRT municipal com linhas troncais, alimentadoras, estações de integração e transferência."
-            )}
-
-            ${createBhLegendItem(
-              "🚌",
-              "Ônibus convencionais",
-              "Ampla rede municipal que atende bairros, Centro e diferentes regiões da capital."
-            )}
-
-            ${createBhLegendItem(
-              "S",
-              "Sistema Suplementar",
-              "Rede municipal complementar operada com veículos menores em trajetos específicos."
-            )}
-
-            ${createBhLegendItem(
-              "🌆",
-              "Ônibus metropolitanos",
-              "Rede estadual que conecta Belo Horizonte aos demais municípios da Região Metropolitana."
-            )}
-
-          </div>
-
-        </section>
-
-
-        <!-- ==================================================
-             PRINCIPAIS SISTEMAS
-        =================================================== -->
-
-        <section class="panel-box network-full">
-
-          <h4 class="panel-title">
-            Principais sistemas
-          </h4>
-
-          <div class="operator-grid">
-
-            ${createBhSystemCard(
-              "🚇",
-              "Metrô",
-              "Sistema metroviário da Região Metropolitana de Belo Horizonte.",
-              "Linha 1 · Novo Eldorado ↔ Vilarinho"
-            )}
-
-            ${createBhSystemCard(
-              "🚍",
-              "MOVE",
-              "Sistema municipal BRT de alta capacidade.",
-              "4 estações de integração + 37 de transferência"
-            )}
-
-            ${createBhSystemCard(
-              "🚌",
-              "Ônibus convencional",
-              "Rede municipal que atende bairros, Centro e diferentes regiões.",
-              "Gestão municipal · SUMOB"
-            )}
-
-            ${createBhSystemCard(
-              "S",
-              "Suplementar",
-              "Serviço municipal complementar em trajetos específicos.",
-              "27 linhas"
-            )}
-
-            ${createBhSystemCard(
-              "🌆",
-              "Metropolitano",
-              "Rede que conecta Belo Horizonte a outros municípios da RMBH.",
-              "Sistema estadual"
-            )}
-
-          </div>
-
-        </section>
-
-
-        <!-- ==================================================
-             MAPA DO METRÔ
+             MAPA
         =================================================== -->
 
         <section class="panel-box network-full">
@@ -379,11 +273,14 @@ window.BELO_HORIZONTE_TRANSPORT_MODULES["network"] = {
           </h4>
 
           <p class="panel-intro">
-            Use o mapa para visualizar
+            Use o mapa para entender
+            a estrutura ferroviária
+            de Belo Horizonte,
             a Linha 1 atualmente disponível
-            e a expansão da rede
-            que está em implantação.
+            e a expansão prevista
+            com a Linha 2.
           </p>
+
 
           <div
             class="official-map-wrap"
@@ -421,20 +318,148 @@ window.BELO_HORIZONTE_TRANSPORT_MODULES["network"] = {
               Ampliar mapa
             </button>
 
+
+            <a
+              class="official-link"
+              href="https://www.metrobh.com.br/"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Metrô BH
+            </a>
+
           </div>
 
 
-          <div class="fare-note">
+          <div class="visitor-alert">
 
             <strong>
-              Para uma viagem atual:
+              O mapa mostra apenas
+              uma parte da mobilidade
+              de Belo Horizonte.
             </strong>
 
-            considere a Linha 1.
-            A Linha 2 está em implantação
-            e não deve ser tratada
-            como uma linha totalmente disponível
-            para o passageiro.
+            A cidade também depende
+            do MOVE,
+            ônibus convencionais,
+            Sistema Suplementar
+            e linhas metropolitanas.
+
+            Para transformar
+            essa estrutura
+            em um deslocamento específico,
+            use também
+            “Planeje o trajeto”.
+
+          </div>
+
+        </section>
+
+
+        <!-- ==================================================
+             ENTENDA A REDE
+        =================================================== -->
+
+        <section class="panel-box network-full">
+
+          <h4 class="panel-title">
+            Entenda a rede
+          </h4>
+
+          <p class="panel-intro">
+            A mobilidade de Belo Horizonte
+            combina sistemas municipais,
+            metrô
+            e transporte metropolitano.
+
+            Cada um deles
+            cumpre uma função diferente.
+          </p>
+
+
+          <div class="legend-grid">
+
+            ${createBhLegendItem(
+              "M",
+              "Metrô",
+              "Rede ferroviária que estrutura parte dos deslocamentos entre Contagem e Belo Horizonte."
+            )}
+
+            ${createBhLegendItem(
+              "MOVE",
+              "MOVE",
+              "Sistema BRT municipal com corredores, linhas troncais, alimentadoras e estações."
+            )}
+
+            ${createBhLegendItem(
+              "BUS",
+              "Ônibus municipais",
+              "Rede de superfície que amplia a cobertura para bairros e regiões fora dos grandes eixos."
+            )}
+
+            ${createBhLegendItem(
+              "S",
+              "Sistema Suplementar",
+              "Rede municipal complementar operada em trajetos específicos."
+            )}
+
+            ${createBhLegendItem(
+              "RMBH",
+              "Metropolitano",
+              "Linhas estaduais que conectam Belo Horizonte a outros municípios da Região Metropolitana."
+            )}
+
+          </div>
+
+        </section>
+
+
+        <!-- ==================================================
+             PRINCIPAIS SISTEMAS
+        =================================================== -->
+
+        <section class="panel-box network-full">
+
+          <h4 class="panel-title">
+            Principais sistemas
+          </h4>
+
+          <div class="operator-grid">
+
+            ${createBhSystemCard(
+              "🚇",
+              "Metrô",
+              "Principal eixo ferroviário da rede.",
+              "Linha 1 · Novo Eldorado ↔ Vilarinho"
+            )}
+
+            ${createBhSystemCard(
+              "🚍",
+              "MOVE",
+              "Sistema BRT que estrutura importantes corredores municipais.",
+              "Troncais · alimentadoras · estações"
+            )}
+
+            ${createBhSystemCard(
+              "🚌",
+              "Ônibus convencional",
+              "Amplia a cobertura municipal entre bairros e regiões da cidade.",
+              "Rede municipal"
+            )}
+
+            ${createBhSystemCard(
+              "S",
+              "Suplementar",
+              "Serviço municipal complementar.",
+              "Trajetos específicos"
+            )}
+
+            ${createBhSystemCard(
+              "🌆",
+              "Metropolitano",
+              "Conecta Belo Horizonte a outros municípios da RMBH.",
+              "Sistema estadual"
+            )}
 
           </div>
 
@@ -452,12 +477,18 @@ window.BELO_HORIZONTE_TRANSPORT_MODULES["network"] = {
           </h4>
 
           <p class="panel-intro">
-            A Linha 1 liga
+            A Linha 1
+            é a estrutura metroviária
+            atualmente disponível
+            para o passageiro.
+
+            Ela conecta
             Novo Eldorado,
             em Contagem,
             a Vilarinho,
             em Belo Horizonte.
           </p>
+
 
           <div class="lines-grid">
 
@@ -472,37 +503,51 @@ window.BELO_HORIZONTE_TRANSPORT_MODULES["network"] = {
 
           </div>
 
+        </section>
 
-          <div
-            class="comparison-grid"
-            style="margin-top:14px;"
-          >
 
-            <article class="comparison-card">
+        <!-- ==================================================
+             HUBS DO METRÔ
+        =================================================== -->
+
+        <section class="panel-box network-full">
+
+          <h4 class="panel-title">
+            Pontos que ajudam
+            a entender a Linha 1
+          </h4>
+
+
+          <div class="bus-system-grid">
+
+            <article class="bus-system-card">
+
+              <span>🚇</span>
 
               <strong>
                 Novo Eldorado
               </strong>
 
               <p>
-                Estação terminal
-                da Linha 1
-                em Contagem
-                e 20ª estação
-                do sistema.
+                Terminal da Linha 1
+                no município
+                de Contagem.
               </p>
 
             </article>
 
 
-            <article class="comparison-card">
+            <article class="bus-system-card">
+
+              <span>🏙️</span>
 
               <strong>
                 Central
               </strong>
 
               <p>
-                Referência metroviária
+                Importante referência
+                ferroviária
                 para a região central
                 de Belo Horizonte.
               </p>
@@ -510,14 +555,17 @@ window.BELO_HORIZONTE_TRANSPORT_MODULES["network"] = {
             </article>
 
 
-            <article class="comparison-card">
+            <article class="bus-system-card">
+
+              <span>🔄</span>
 
               <strong>
                 São Gabriel
               </strong>
 
               <p>
-                Importante conexão
+                Ponto importante
+                de conexão
                 entre metrô,
                 MOVE
                 e ônibus.
@@ -526,7 +574,9 @@ window.BELO_HORIZONTE_TRANSPORT_MODULES["network"] = {
             </article>
 
 
-            <article class="comparison-card">
+            <article class="bus-system-card">
+
+              <span>🚍</span>
 
               <strong>
                 Vilarinho
@@ -534,8 +584,9 @@ window.BELO_HORIZONTE_TRANSPORT_MODULES["network"] = {
 
               <p>
                 Terminal da Linha 1
-                no vetor Norte
-                e conexão com o MOVE.
+                com conexão
+                ao MOVE
+                e ao vetor Norte.
               </p>
 
             </article>
@@ -555,17 +606,21 @@ window.BELO_HORIZONTE_TRANSPORT_MODULES["network"] = {
             Linha 2 do Metrô
           </h4>
 
+
           <div class="visitor-alert">
 
             <strong>
-              A Linha 2 está em construção.
+              A Linha 2 está em implantação.
             </strong>
 
-            Ela ampliará a rede
+            Ela faz parte
+            da expansão
+            da rede metroviária
             em direção ao Barreiro,
-            mas não deve ser considerada
-            uma linha totalmente disponível
-            para uma viagem atual.
+            mas ainda não deve
+            ser lida
+            como uma linha totalmente disponível
+            para o passageiro.
 
           </div>
 
@@ -575,12 +630,41 @@ window.BELO_HORIZONTE_TRANSPORT_MODULES["network"] = {
             <article class="comparison-card">
 
               <strong>
+                Nova Suíça
+              </strong>
+
+              <p>
+                Ponto previsto
+                de conexão
+                da nova linha.
+              </p>
+
+            </article>
+
+
+            <article class="comparison-card">
+
+              <strong>
+                Barreiro
+              </strong>
+
+              <p>
+                Extremo previsto
+                do novo corredor.
+              </p>
+
+            </article>
+
+
+            <article class="comparison-card">
+
+              <strong>
                 10,5 km
               </strong>
 
               <p>
                 Extensão prevista
-                para a Linha 2.
+                da Linha 2.
               </p>
 
             </article>
@@ -593,44 +677,8 @@ window.BELO_HORIZONTE_TRANSPORT_MODULES["network"] = {
               </strong>
 
               <p>
-                Nova Suíça,
-                Amazonas,
-                Nova Gameleira,
-                Nova Cintra,
-                Vista Alegre,
-                Ferrugem
-                e Barreiro.
-              </p>
-
-            </article>
-
-
-            <article class="comparison-card">
-
-              <strong>
-                Nova Suíça ↔ Barreiro
-              </strong>
-
-              <p>
-                Esse será
-                o eixo completo
-                da nova linha.
-              </p>
-
-            </article>
-
-
-            <article class="comparison-card">
-
-              <strong>
-                Conclusão prevista
-              </strong>
-
-              <p>
-                A previsão atual
-                do Metrô BH
-                é de conclusão completa
-                em 2028.
+                Estrutura prevista
+                para o novo eixo.
               </p>
 
             </article>
@@ -650,14 +698,27 @@ window.BELO_HORIZONTE_TRANSPORT_MODULES["network"] = {
             MOVE
           </h4>
 
-          <p class="panel-intro">
-            O MOVE é o sistema BRT
-            de Belo Horizonte.
-            Sua estrutura combina
-            linhas alimentadoras,
-            linhas troncais
-            e estações.
-          </p>
+
+          <div class="answer-block">
+
+            <strong>
+              É o principal sistema BRT
+              de Belo Horizonte.
+            </strong>
+
+            <p>
+              O MOVE organiza
+              parte importante
+              dos deslocamentos
+              por ônibus
+              através de corredores estruturais,
+              linhas troncais,
+              alimentadoras
+              e estações de integração.
+            </p>
+
+          </div>
+
 
           <div class="comparison-grid">
 
@@ -670,7 +731,7 @@ window.BELO_HORIZONTE_TRANSPORT_MODULES["network"] = {
               <p>
                 Ligam bairros
                 às estações
-                de integração.
+                e aos corredores principais.
               </p>
 
             </article>
@@ -684,8 +745,9 @@ window.BELO_HORIZONTE_TRANSPORT_MODULES["network"] = {
 
               <p>
                 Percorrem
-                os principais corredores
-                estruturais do sistema.
+                os principais eixos
+                estruturais
+                do sistema.
               </p>
 
             </article>
@@ -694,15 +756,12 @@ window.BELO_HORIZONTE_TRANSPORT_MODULES["network"] = {
             <article class="comparison-card">
 
               <strong>
-                4 estações
-                de integração
+                Estações de integração
               </strong>
 
               <p>
-                Venda Nova,
-                Vilarinho,
-                São Gabriel
-                e Pampulha.
+                Concentram conexões
+                entre diferentes linhas.
               </p>
 
             </article>
@@ -711,14 +770,13 @@ window.BELO_HORIZONTE_TRANSPORT_MODULES["network"] = {
             <article class="comparison-card">
 
               <strong>
-                37 estações
-                de transferência
+                Estações de transferência
               </strong>
 
               <p>
-                Distribuídas
-                pelos corredores
-                e pela Área Central.
+                Organizam trocas
+                ao longo
+                dos corredores.
               </p>
 
             </article>
@@ -729,14 +787,97 @@ window.BELO_HORIZONTE_TRANSPORT_MODULES["network"] = {
 
 
         <!-- ==================================================
-             ESTAÇÕES MOVE
+             CORREDORES MOVE
         =================================================== -->
 
         <section class="panel-box network-full">
 
           <h4 class="panel-title">
-            Estações de integração do MOVE
+            Principais eixos do MOVE
           </h4>
+
+
+          <div class="comparison-grid">
+
+            <article class="comparison-card">
+
+              <strong>
+                Antônio Carlos
+              </strong>
+
+              <p>
+                Importante corredor
+                entre Área Central,
+                Pampulha
+                e vetor Norte.
+              </p>
+
+            </article>
+
+
+            <article class="comparison-card">
+
+              <strong>
+                Cristiano Machado
+              </strong>
+
+              <p>
+                Estrutura parte
+                dos deslocamentos
+                em direção
+                ao vetor Nordeste.
+              </p>
+
+            </article>
+
+
+            <article class="comparison-card">
+
+              <strong>
+                Pedro I
+              </strong>
+
+              <p>
+                Integra
+                o conjunto
+                de corredores
+                do vetor Norte.
+              </p>
+
+            </article>
+
+
+            <article class="comparison-card">
+
+              <strong>
+                Vilarinho
+              </strong>
+
+              <p>
+                Importante eixo
+                relacionado
+                à região
+                de Venda Nova.
+              </p>
+
+            </article>
+
+          </div>
+
+        </section>
+
+
+        <!-- ==================================================
+             HUBS MOVE
+        =================================================== -->
+
+        <section class="panel-box network-full">
+
+          <h4 class="panel-title">
+            Conexões que ajudam
+            a entender o MOVE
+          </h4>
+
 
           <div class="bus-system-grid">
 
@@ -749,9 +890,9 @@ window.BELO_HORIZONTE_TRANSPORT_MODULES["network"] = {
               </strong>
 
               <p>
-                Integra linhas
-                alimentadoras
-                e serviços do MOVE.
+                Importante estação
+                de integração
+                do sistema.
               </p>
 
             </article>
@@ -766,9 +907,9 @@ window.BELO_HORIZONTE_TRANSPORT_MODULES["network"] = {
               </strong>
 
               <p>
-                Integra MOVE
-                e Linha 1
-                do metrô.
+                Conecta
+                MOVE
+                e metrô.
               </p>
 
             </article>
@@ -783,10 +924,9 @@ window.BELO_HORIZONTE_TRANSPORT_MODULES["network"] = {
               </strong>
 
               <p>
-                Conecta MOVE,
-                ônibus
-                e Linha 1
-                do metrô.
+                Conecta metrô,
+                MOVE
+                e ônibus.
               </p>
 
             </article>
@@ -801,93 +941,44 @@ window.BELO_HORIZONTE_TRANSPORT_MODULES["network"] = {
               </strong>
 
               <p>
-                Importante conexão
+                Importante estação
                 para a região
                 da Pampulha.
               </p>
 
             </article>
 
-          </div>
 
-        </section>
+            <article class="bus-system-card">
 
-
-        <!-- ==================================================
-             TRANSFERÊNCIAS MOVE
-        =================================================== -->
-
-        <section class="panel-box network-full">
-
-          <h4 class="panel-title">
-            Onde estão as 37 estações de transferência
-          </h4>
-
-          <div class="payment-choice-grid">
-
-            <article class="payment-choice">
+              <span>🚌</span>
 
               <strong>
-                Antônio Carlos
+                Barreiro
               </strong>
 
               <p>
-                14 estações.
+                Estação BHBUS
+                na região
+                do Barreiro.
               </p>
 
             </article>
 
 
-            <article class="payment-choice">
+            <article class="bus-system-card">
+
+              <span>🚌</span>
 
               <strong>
-                Cristiano Machado
+                Diamante
               </strong>
 
               <p>
-                9 estações.
-              </p>
-
-            </article>
-
-
-            <article class="payment-choice">
-
-              <strong>
-                Pedro I
-              </strong>
-
-              <p>
-                6 estações.
-              </p>
-
-            </article>
-
-
-            <article class="payment-choice">
-
-              <strong>
-                Vilarinho
-              </strong>
-
-              <p>
-                4 estações.
-              </p>
-
-            </article>
-
-
-            <article class="payment-choice">
-
-              <strong>
-                Área Central
-              </strong>
-
-              <p>
-                Tamoios,
-                Carijós,
-                São Paulo
-                e Rio de Janeiro.
+                Outra estação BHBUS
+                importante
+                na região
+                do Barreiro.
               </p>
 
             </article>
@@ -907,76 +998,27 @@ window.BELO_HORIZONTE_TRANSPORT_MODULES["network"] = {
             Ônibus municipais
           </h4>
 
-          <p class="panel-intro">
-            A rede municipal
-            vai além do MOVE
-            e atende áreas
-            sem cobertura direta
-            do metrô ou do BRT.
-          </p>
 
-          <div class="comparison-grid">
+          <div class="answer-block">
 
-            <article class="comparison-card">
+            <strong>
+              A rede municipal
+              vai além do MOVE.
+            </strong>
 
-              <strong>
-                Convencional
-              </strong>
+            <p>
+              Linhas convencionais
+              atendem bairros
+              e regiões
+              que não ficam diretamente
+              nos corredores
+              do metrô
+              ou do BRT.
 
-              <p>
-                Liga bairros,
-                Centro
-                e diferentes regiões
-                de Belo Horizonte.
-              </p>
-
-            </article>
-
-
-            <article class="comparison-card">
-
-              <strong>
-                MOVE
-              </strong>
-
-              <p>
-                Estrutura os deslocamentos
-                nos principais
-                corredores BRT.
-              </p>
-
-            </article>
-
-
-            <article class="comparison-card">
-
-              <strong>
-                Suplementar
-              </strong>
-
-              <p>
-                Complementa a cobertura
-                municipal
-                em trajetos específicos.
-              </p>
-
-            </article>
-
-
-            <article class="comparison-card">
-
-              <strong>
-                Vilas e Favelas
-              </strong>
-
-              <p>
-                13 linhas municipais
-                com tarifa zero
-                atendem áreas
-                de acesso mais difícil.
-              </p>
-
-            </article>
+              Elas complementam
+              a estrutura principal
+              da cidade.
+            </p>
 
           </div>
 
@@ -984,56 +1026,30 @@ window.BELO_HORIZONTE_TRANSPORT_MODULES["network"] = {
 
 
         <!-- ==================================================
-             BHBUS
+             SUPLEMENTAR
         =================================================== -->
 
         <section class="panel-box network-full">
 
           <h4 class="panel-title">
-            Estações BHBUS
+            Sistema Suplementar
           </h4>
 
-          <p class="panel-intro">
-            Além das quatro estações
-            de integração do MOVE,
-            existem duas estações
-            de integração BHBUS.
-          </p>
 
-          <div class="bus-system-grid">
+          <div class="answer-block">
 
-            <article class="bus-system-card">
+            <strong>
+              É uma rede municipal
+              complementar.
+            </strong>
 
-              <span>🚌</span>
-
-              <strong>
-                Barreiro
-              </strong>
-
-              <p>
-                Estação de integração
-                da região
-                do Barreiro.
-              </p>
-
-            </article>
-
-
-            <article class="bus-system-card">
-
-              <span>🚌</span>
-
-              <strong>
-                Diamante
-              </strong>
-
-              <p>
-                Estação de integração
-                BHBUS
-                na região do Barreiro.
-              </p>
-
-            </article>
+            <p>
+              O Sistema Suplementar
+              utiliza veículos menores
+              e atende trajetos específicos
+              que complementam
+              a rede convencional.
+            </p>
 
           </div>
 
@@ -1050,71 +1066,55 @@ window.BELO_HORIZONTE_TRANSPORT_MODULES["network"] = {
             Transporte metropolitano
           </h4>
 
-          <p class="panel-intro">
-            A Região Metropolitana
-            possui uma rede estadual
-            diferente da rede municipal
-            de Belo Horizonte.
-          </p>
 
-          <div class="route-compare-grid">
+          <div class="visitor-alert">
 
-            <article class="route-compare-card">
+            <strong>
+              A Região Metropolitana
+              possui uma rede diferente
+              da rede municipal
+              de Belo Horizonte.
+            </strong>
 
-              <span>
-                Dentro de Belo Horizonte
-              </span>
-
-              <strong>
-                Rede municipal
-              </strong>
-
-              <p>
-                Convencional,
-                MOVE
-                e Suplementar.
-              </p>
-
-              <span class="route-compare-result">
-                SUMOB
-              </span>
-
-            </article>
-
-
-            <article class="route-compare-card">
-
-              <span>
-                Entre municípios
-              </span>
-
-              <strong>
-                Rede metropolitana
-              </strong>
-
-              <p>
-                Linhas estaduais
-                conectam Belo Horizonte
-                a outros municípios
-                da RMBH.
-              </p>
-
-              <span class="route-compare-result">
-                Governo de Minas
-              </span>
-
-            </article>
+            As linhas metropolitanas
+            são estaduais
+            e conectam BH
+            a outros municípios
+            da RMBH.
 
           </div>
 
 
-          <div class="fare-note">
+          <div class="comparison-grid">
 
-            Na rede metropolitana,
-            a tarifa varia
-            conforme a linha utilizada
-            e a bilhetagem de referência
-            é o Cartão ÓTIMO.
+            <article class="comparison-card">
+
+              <strong>
+                Municipal
+              </strong>
+
+              <p>
+                MOVE,
+                ônibus convencional
+                e Suplementar.
+              </p>
+
+            </article>
+
+
+            <article class="comparison-card">
+
+              <strong>
+                Metropolitano
+              </strong>
+
+              <p>
+                Linhas estaduais
+                entre municípios
+                da RMBH.
+              </p>
+
+            </article>
 
           </div>
 
@@ -1122,14 +1122,240 @@ window.BELO_HORIZONTE_TRANSPORT_MODULES["network"] = {
 
 
         <!-- ==================================================
-             QUAL SISTEMA FAZ SENTIDO
+             COMO AS REDES SE RELACIONAM
         =================================================== -->
 
         <section class="panel-box network-full">
 
           <h4 class="panel-title">
-            Qual sistema tende a fazer sentido?
+            Uma cidade,
+            sistemas diferentes
           </h4>
+
+
+          <div class="comparison-grid">
+
+            <article class="comparison-card">
+
+              <strong>
+                Metrô
+              </strong>
+
+              <p>
+                Estrutura ferroviária
+                da rede.
+              </p>
+
+            </article>
+
+
+            <article class="comparison-card">
+
+              <strong>
+                MOVE
+              </strong>
+
+              <p>
+                Estrutura os principais
+                corredores BRT.
+              </p>
+
+            </article>
+
+
+            <article class="comparison-card">
+
+              <strong>
+                Convencional
+              </strong>
+
+              <p>
+                Amplia a cobertura
+                para bairros
+                e outros eixos.
+              </p>
+
+            </article>
+
+
+            <article class="comparison-card">
+
+              <strong>
+                Suplementar
+              </strong>
+
+              <p>
+                Complementa
+                trajetos municipais
+                específicos.
+              </p>
+
+            </article>
+
+
+            <article class="comparison-card">
+
+              <strong>
+                Metropolitano
+              </strong>
+
+              <p>
+                Faz a ligação
+                entre diferentes municípios
+                da RMBH.
+              </p>
+
+            </article>
+
+          </div>
+
+        </section>
+
+
+        <!-- ==================================================
+             COMO USAR A REDE
+        =================================================== -->
+
+        <section class="panel-box network-full">
+
+          <h4 class="panel-title">
+            Como interpretar a rede
+          </h4>
+
+
+          <div class="bus-use-flow">
+
+            <article class="bus-use-step">
+
+              <span>1</span>
+
+              <strong>
+                Localize a região
+              </strong>
+
+              <p>
+                Veja onde
+                sua origem
+                e destino
+                estão na cidade.
+              </p>
+
+            </article>
+
+
+            <article class="bus-use-step">
+
+              <span>2</span>
+
+              <strong>
+                Identifique o eixo
+              </strong>
+
+              <p>
+                Observe
+                se o local
+                está próximo
+                ao metrô,
+                MOVE
+                ou outra rede.
+              </p>
+
+            </article>
+
+
+            <article class="bus-use-step">
+
+              <span>3</span>
+
+              <strong>
+                Procure conexões
+              </strong>
+
+              <p>
+                Veja onde
+                metrô,
+                MOVE
+                e ônibus
+                se encontram.
+              </p>
+
+            </article>
+
+
+            <article class="bus-use-step">
+
+              <span>4</span>
+
+              <strong>
+                Planeje o trajeto real
+              </strong>
+
+              <p>
+                Depois de entender
+                a estrutura,
+                use
+                “Planeje o trajeto”
+                para decidir
+                a viagem completa.
+              </p>
+
+            </article>
+
+          </div>
+
+        </section>
+
+
+        <!-- ==================================================
+             NETWORK X PLANNER
+        =================================================== -->
+
+        <section class="panel-box network-full">
+
+          <h4 class="panel-title">
+            A rede mostra a estrutura.
+            O Planner mostra a viagem.
+          </h4>
+
+
+          <div class="visitor-alert">
+
+            <strong>
+              Para decidir
+              como realmente chegar
+              ao destino,
+              não dependa
+              apenas do mapa.
+            </strong>
+
+            Linhas específicas,
+            horários,
+            integrações,
+            pagamentos,
+            Madrugão,
+            domingos,
+            rede metropolitana,
+            tempo real
+            e comparação
+            entre opções
+            estão detalhados
+            em “Planeje o trajeto”.
+
+          </div>
+
+        </section>
+
+
+        <!-- ==================================================
+             RESUMO
+        =================================================== -->
+
+        <section class="panel-box network-full">
+
+          <h4 class="panel-title">
+            Em resumo
+          </h4>
+
 
           <div class="planner-check-grid">
 
@@ -1138,13 +1364,12 @@ window.BELO_HORIZONTE_TRANSPORT_MODULES["network"] = {
               <span>🚇</span>
 
               <strong>
-                Próximo à Linha 1
+                Metrô
               </strong>
 
               <p>
-                O metrô pode resolver
-                a parte principal
-                do deslocamento.
+                Estrutura ferroviária
+                da rede.
               </p>
 
             </article>
@@ -1155,14 +1380,12 @@ window.BELO_HORIZONTE_TRANSPORT_MODULES["network"] = {
               <span>🚍</span>
 
               <strong>
-                Eixos do MOVE
+                MOVE
               </strong>
 
               <p>
-                Alimentadora
-                e linha troncal
-                podem formar
-                a mesma viagem.
+                Principal sistema BRT
+                municipal.
               </p>
 
             </article>
@@ -1173,13 +1396,28 @@ window.BELO_HORIZONTE_TRANSPORT_MODULES["network"] = {
               <span>🚌</span>
 
               <strong>
-                Fora dos grandes eixos
+                Convencional
               </strong>
 
               <p>
-                A rede convencional
-                amplia a cobertura
-                pelos bairros.
+                Amplia a cobertura
+                da cidade.
+              </p>
+
+            </article>
+
+
+            <article class="planner-check-card">
+
+              <span>S</span>
+
+              <strong>
+                Suplementar
+              </strong>
+
+              <p>
+                Complementa
+                trajetos municipais.
               </p>
 
             </article>
@@ -1190,31 +1428,12 @@ window.BELO_HORIZONTE_TRANSPORT_MODULES["network"] = {
               <span>🌆</span>
 
               <strong>
-                Outra cidade da RMBH
+                Metropolitano
               </strong>
 
               <p>
-                O deslocamento pode exigir
-                uma linha metropolitana
-                estadual.
-              </p>
-
-            </article>
-
-
-            <article class="planner-check-card">
-
-              <span>🏗️</span>
-
-              <strong>
-                Barreiro pelo metrô
-              </strong>
-
-              <p>
-                A Linha 2
-                está em construção
-                e ainda não representa
-                a rede completa disponível.
+                Conecta BH
+                a outros municípios.
               </p>
 
             </article>
@@ -1256,7 +1475,7 @@ window.BELO_HORIZONTE_TRANSPORT_MODULES["network"] = {
             target="_blank"
             rel="noopener noreferrer"
           >
-            Estações · Prefeitura de Belo Horizonte
+            Estações · PBH
           </a>
 
 
