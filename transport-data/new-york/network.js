@@ -292,7 +292,7 @@ function openNewYorkNetworkMap() {
 window.NEW_YORK_TRANSPORT_MODULES["network"] = {
 
   kicker:
-    "Nova York · visão completa",
+    "Nova York · visão da rede",
 
   title:
     "Rede de Transporte",
@@ -315,13 +315,16 @@ window.NEW_YORK_TRANSPORT_MODULES["network"] = {
           </h4>
 
           <p class="panel-intro">
-            O mapa mostra
-            os serviços do subway,
-            estações,
-            transferências
-            e conexões importantes
+            Use o mapa
+            para entender
+            a estrutura do Subway,
+            os serviços,
+            as estações
+            e os principais pontos
+            de transferência
             da rede de Nova York.
           </p>
+
 
           <div
             class="official-map-wrap"
@@ -375,23 +378,23 @@ window.NEW_YORK_TRANSPORT_MODULES["network"] = {
           <div class="visitor-alert">
 
             <strong>
-              Este mapa é a referência
-              para o Subway.
+              Este mapa representa
+              principalmente o Subway.
             </strong>
 
-            PATH,
             LIRR,
             Metro-North,
+            PATH,
             NYC Ferry
             e AirTrain JFK
-            pertencem a redes
-            ou estruturas próprias.
+            são sistemas
+            ou estruturas diferentes.
 
-            Por isso,
-            não existe um único mapa
-            que substitua
-            todos os sistemas
-            apresentados nesta página.
+            Para transformar
+            essa rede
+            em um trajeto específico,
+            use também
+            “Planeje o trajeto”.
 
           </div>
 
@@ -405,42 +408,46 @@ window.NEW_YORK_TRANSPORT_MODULES["network"] = {
         <section class="panel-box network-full">
 
           <h4 class="panel-title">
-            Entenda a rede de Nova York
+            Entenda a rede
           </h4>
 
           <p class="panel-intro">
-            A mobilidade da região
+            A mobilidade de Nova York
             combina transporte urbano,
-            ferroviário suburbano,
+            trens suburbanos,
             conexões interestaduais,
             ferries
             e sistemas aeroportuários.
+
+            Cada rede
+            cumpre uma função diferente.
           </p>
+
 
           <div class="legend-grid">
 
             ${createNewYorkLegendItem(
               "M",
               "Subway",
-              "Rede urbana da MTA que conecta Manhattan, Brooklyn, Queens e Bronx."
+              "Principal rede ferroviária urbana da cidade."
             )}
 
             ${createNewYorkLegendItem(
               "BUS",
               "Ônibus",
-              "Rede da MTA com serviços Local, Limited, SBS e Express."
+              "Rede de superfície da MTA que complementa o Subway."
             )}
 
             ${createNewYorkLegendItem(
               "LIRR",
               "Long Island Rail Road",
-              "Trem suburbano que conecta Nova York a Queens, Brooklyn e Long Island."
+              "Trem suburbano voltado principalmente a Queens, Brooklyn e Long Island."
             )}
 
             ${createNewYorkLegendItem(
               "MNR",
               "Metro-North",
-              "Trem suburbano para Bronx, Westchester, Hudson Valley e Connecticut."
+              "Trem suburbano para o norte da região."
             )}
 
             ${createNewYorkLegendItem(
@@ -452,13 +459,13 @@ window.NEW_YORK_TRANSPORT_MODULES["network"] = {
             ${createNewYorkLegendItem(
               "⛴",
               "Ferries",
-              "NYC Ferry e Staten Island Ferry possuem redes e regras próprias."
+              "Serviços hidroviários que complementam a rede terrestre."
             )}
 
             ${createNewYorkLegendItem(
               "✈",
               "AirTrain JFK",
-              "Sistema aeroportuário que conecta os terminais do JFK a Jamaica e Howard Beach."
+              "Sistema que conecta os terminais do JFK às redes externas."
             )}
 
           </div>
@@ -481,29 +488,29 @@ window.NEW_YORK_TRANSPORT_MODULES["network"] = {
             ${createNewYorkSystemCard(
               "🚇",
               "MTA Subway",
-              "Principal rede de transporte urbano sobre trilhos.",
-              "Serviço 24 horas · padrão varia conforme linha e horário"
+              "Principal rede ferroviária urbana de Nova York.",
+              "Manhattan · Brooklyn · Queens · Bronx"
             )}
 
             ${createNewYorkSystemCard(
               "🚌",
               "MTA Bus",
-              "Complementa o subway dentro dos cinco boroughs.",
-              "Local · Limited · SBS · Express"
+              "Rede de ônibus que complementa o Subway dentro da cidade.",
+              "Rede de superfície"
             )}
 
             ${createNewYorkSystemCard(
               "🚆",
               "LIRR",
-              "Rede ferroviária em direção a Long Island.",
+              "Rede ferroviária suburbana em direção a Long Island.",
               "Long Island Rail Road · MTA"
             )}
 
             ${createNewYorkSystemCard(
               "🚆",
               "Metro-North",
-              "Rede ferroviária para o norte da região.",
-              "Hudson · Harlem · New Haven"
+              "Rede ferroviária suburbana para o norte da região.",
+              "MTA"
             )}
 
             ${createNewYorkSystemCard(
@@ -517,13 +524,13 @@ window.NEW_YORK_TRANSPORT_MODULES["network"] = {
               "⛴",
               "NYC Ferry",
               "Rede hidroviária municipal.",
-              "Rotas próprias e tarifa separada"
+              "Sistema separado"
             )}
 
             ${createNewYorkSystemCard(
               "✈️",
               "AirTrain JFK",
-              "Conecta os terminais do JFK à rede externa.",
+              "Conecta os terminais do JFK às redes externas.",
               "Jamaica · Howard Beach"
             )}
 
@@ -548,13 +555,15 @@ window.NEW_YORK_TRANSPORT_MODULES["network"] = {
               A cor não é a linha.
             </strong>
 
-            A cor agrupa serviços
-            que compartilham
+            As cores agrupam
+            serviços que compartilham
             parte de um corredor.
 
-            Para saber qual trem pegar,
+            Para saber
+            qual trem pegar,
             observe sempre
-            a letra ou o número
+            a letra
+            ou o número
             do serviço.
 
           </div>
@@ -571,13 +580,15 @@ window.NEW_YORK_TRANSPORT_MODULES["network"] = {
               C
               e E
               aparecem em azul,
-              mas não fazem
-              exatamente o mesmo trajeto
-              nem as mesmas paradas.
+              mas não percorrem
+              exatamente
+              os mesmos trajetos
+              nem realizam
+              as mesmas paradas.
 
-              O mesmo vale
-              para outros grupos
-              do mapa.
+              O mesmo princípio
+              vale para outros
+              grupos do mapa.
             </p>
 
           </div>
@@ -592,18 +603,21 @@ window.NEW_YORK_TRANSPORT_MODULES["network"] = {
         <section class="panel-box network-full">
 
           <h4 class="panel-title">
-            Serviços do Subway
+            Grupos de serviços do Subway
           </h4>
 
           <p class="panel-intro">
-            Estes são os principais
-            grupos de serviços
-            que aparecem no mapa.
+            Estes são
+            os principais grupos
+            representados por cor
+            no mapa.
 
             Dentro de cada grupo,
-            confira o serviço específico
+            confira sempre
+            o serviço específico
             antes de embarcar.
           </p>
+
 
           <div class="lines-grid">
 
@@ -674,7 +688,7 @@ window.NEW_YORK_TRANSPORT_MODULES["network"] = {
               "#808183",
               "S",
               "Shuttles",
-              "42 Street, Franklin Avenue e Rockaway Park."
+              "Serviços shuttle identificados com S."
             )}
 
           </div>
@@ -692,6 +706,7 @@ window.NEW_YORK_TRANSPORT_MODULES["network"] = {
             Local e express
           </h4>
 
+
           <div class="route-compare-grid">
 
             <article class="route-compare-card">
@@ -701,7 +716,7 @@ window.NEW_YORK_TRANSPORT_MODULES["network"] = {
               </span>
 
               <strong>
-                Mais estações
+                Mais paradas
               </strong>
 
               <p>
@@ -728,8 +743,9 @@ window.NEW_YORK_TRANSPORT_MODULES["network"] = {
               </strong>
 
               <p>
-                Alguns serviços
-                passam por estações
+                Serviços expressos
+                podem passar
+                por determinadas estações
                 sem parar.
               </p>
 
@@ -745,15 +761,16 @@ window.NEW_YORK_TRANSPORT_MODULES["network"] = {
           <div class="visitor-alert">
 
             <strong>
-              Não existe uma regra
-              “todos os trens desta cor
-              param aqui”.
+              Não escolha
+              apenas pela cor.
             </strong>
 
             Confirme
             a letra ou número
-            e a parada específica
-            daquele serviço.
+            do serviço
+            e verifique
+            se ele realmente para
+            na estação desejada.
 
           </div>
 
@@ -770,6 +787,7 @@ window.NEW_YORK_TRANSPORT_MODULES["network"] = {
             Serviços S · Shuttles
           </h4>
 
+
           <div class="comparison-grid">
 
             <article class="comparison-card">
@@ -779,7 +797,8 @@ window.NEW_YORK_TRANSPORT_MODULES["network"] = {
               </strong>
 
               <p>
-                Conecta Times Sq–42 St
+                Conecta
+                Times Sq–42 St
                 e Grand Central–42 St.
               </p>
 
@@ -807,7 +826,8 @@ window.NEW_YORK_TRANSPORT_MODULES["network"] = {
               </strong>
 
               <p>
-                Atende o eixo
+                Serviço
+                na região
                 de Rockaway Park.
               </p>
 
@@ -819,14 +839,27 @@ window.NEW_YORK_TRANSPORT_MODULES["network"] = {
 
 
         <!-- ==================================================
-             PRINCIPAIS HUBS
+             HUBS
         =================================================== -->
 
         <section class="panel-box network-full">
 
           <h4 class="panel-title">
-            Grandes pontos de conexão
+            Conexões que ajudam
+            a entender a rede
           </h4>
+
+          <p class="panel-intro">
+            Você não precisa
+            decorar todas
+            as estações.
+
+            Alguns grandes hubs
+            ajudam a perceber
+            como diferentes redes
+            se encontram.
+          </p>
+
 
           <div class="bus-system-grid">
 
@@ -839,9 +872,9 @@ window.NEW_YORK_TRANSPORT_MODULES["network"] = {
               </strong>
 
               <p>
-                Um dos maiores
+                Um dos principais
                 pontos de transferência
-                do subway
+                do Subway
                 em Midtown.
               </p>
 
@@ -857,10 +890,10 @@ window.NEW_YORK_TRANSPORT_MODULES["network"] = {
               </strong>
 
               <p>
-                Subway
-                e Metro-North,
-                além de conexão
-                ferroviária do LIRR
+                Subway,
+                Metro-North
+                e conexão
+                com LIRR
                 em Grand Central Madison.
               </p>
 
@@ -876,11 +909,9 @@ window.NEW_YORK_TRANSPORT_MODULES["network"] = {
               </strong>
 
               <p>
-                Subway,
-                LIRR,
-                NJ Transit
-                e Amtrak
-                convergem na região.
+                Importante centro
+                ferroviário
+                em Midtown.
               </p>
 
             </article>
@@ -895,9 +926,8 @@ window.NEW_YORK_TRANSPORT_MODULES["network"] = {
               </strong>
 
               <p>
-                Grande conexão
-                de subway
-                e LIRR
+                Grande ponto
+                de conexão
                 em Brooklyn.
               </p>
 
@@ -913,10 +943,10 @@ window.NEW_YORK_TRANSPORT_MODULES["network"] = {
               </strong>
 
               <p>
-                Subway
-                e PATH
-                se conectam
-                na região do Oculus.
+                Região importante
+                de conexão
+                entre Subway
+                e PATH.
               </p>
 
             </article>
@@ -932,99 +962,10 @@ window.NEW_YORK_TRANSPORT_MODULES["network"] = {
 
               <p>
                 LIRR,
-                subway
+                Subway
                 e AirTrain JFK
-                convergem nessa área.
-              </p>
-
-            </article>
-
-          </div>
-
-        </section>
-
-
-        <!-- ==================================================
-             MANHATTAN
-        =================================================== -->
-
-        <section class="panel-box network-full">
-
-          <h4 class="panel-title">
-            Manhattan
-          </h4>
-
-          <p class="panel-intro">
-            A ilha concentra
-            grande quantidade
-            de serviços de subway,
-            mas também recebe
-            ônibus,
-            PATH,
-            trens suburbanos
-            e ferries.
-          </p>
-
-          <div class="comparison-grid">
-
-            <article class="comparison-card">
-
-              <strong>
-                Eixos norte–sul
-              </strong>
-
-              <p>
-                Diversos corredores
-                do subway
-                percorrem Manhattan
-                longitudinalmente.
-              </p>
-
-            </article>
-
-
-            <article class="comparison-card">
-
-              <strong>
-                Travessias leste–oeste
-              </strong>
-
-              <p>
-                Ônibus
-                e algumas linhas de subway
-                podem ser especialmente úteis.
-              </p>
-
-            </article>
-
-
-            <article class="comparison-card">
-
-              <strong>
-                Midtown
-              </strong>
-
-              <p>
-                Times Square,
-                Grand Central
-                e Penn Station
-                concentram conexões.
-              </p>
-
-            </article>
-
-
-            <article class="comparison-card">
-
-              <strong>
-                Lower Manhattan
-              </strong>
-
-              <p>
-                Fulton Center,
-                World Trade Center
-                e Wall Street
-                concentram diferentes redes.
+                se relacionam
+                nessa área.
               </p>
 
             </article>
@@ -1044,7 +985,32 @@ window.NEW_YORK_TRANSPORT_MODULES["network"] = {
             A rede além de Manhattan
           </h4>
 
+
           <div class="route-compare-grid">
+
+            <article class="route-compare-card">
+
+              <span>
+                Manhattan
+              </span>
+
+              <strong>
+                Subway + ônibus + trens + ferries
+              </strong>
+
+              <p>
+                Concentra
+                grande quantidade
+                de linhas
+                e conexões.
+              </p>
+
+              <span class="route-compare-result">
+                Maior concentração
+              </span>
+
+            </article>
+
 
             <article class="route-compare-card">
 
@@ -1057,8 +1023,9 @@ window.NEW_YORK_TRANSPORT_MODULES["network"] = {
               </strong>
 
               <p>
-                Grande parte do borough
-                é atendida
+                Diferentes áreas
+                do borough
+                são atendidas
                 por múltiplos sistemas.
               </p>
 
@@ -1080,14 +1047,13 @@ window.NEW_YORK_TRANSPORT_MODULES["network"] = {
               </strong>
 
               <p>
-                Jamaica
-                também funciona
-                como conexão
-                para o JFK.
+                Também concentra
+                conexões importantes
+                com o JFK.
               </p>
 
               <span class="route-compare-result">
-                Aeroporto e Long Island
+                Leste da cidade
               </span>
 
             </article>
@@ -1104,10 +1070,9 @@ window.NEW_YORK_TRANSPORT_MODULES["network"] = {
               </strong>
 
               <p>
-                A rede ferroviária
-                e de superfície
-                atende diferentes áreas
-                do borough.
+                A rede atende
+                diferentes áreas
+                ao norte da cidade.
               </p>
 
               <span class="route-compare-result">
@@ -1128,9 +1093,10 @@ window.NEW_YORK_TRANSPORT_MODULES["network"] = {
               </strong>
 
               <p>
-                Não há ligação direta
-                do subway
-                com os outros boroughs.
+                Possui estrutura
+                diferente
+                da rede de Subway
+                dos outros boroughs.
               </p>
 
               <span class="route-compare-result">
@@ -1145,30 +1111,14 @@ window.NEW_YORK_TRANSPORT_MODULES["network"] = {
 
 
         <!-- ==================================================
-             STATEN ISLAND
+             SISTEMAS COMPLEMENTARES
         =================================================== -->
 
         <section class="panel-box network-full">
 
           <h4 class="panel-title">
-            Staten Island Railway
+            Sistemas além do Subway
           </h4>
-
-          <div class="answer-block">
-
-            <strong>
-              Staten Island possui
-              seu próprio serviço ferroviário.
-            </strong>
-
-            <p>
-              O Staten Island Railway
-              conecta diferentes áreas
-              do borough
-              ao terminal St. George.
-            </p>
-
-          </div>
 
 
           <div class="comparison-grid">
@@ -1176,674 +1126,14 @@ window.NEW_YORK_TRANSPORT_MODULES["network"] = {
             <article class="comparison-card">
 
               <strong>
-                St. George
+                LIRR
               </strong>
 
               <p>
-                Terminal ferroviário
-                e conexão
-                com ferries.
-              </p>
-
-            </article>
-
-
-            <article class="comparison-card">
-
-              <strong>
-                Staten Island Ferry
-              </strong>
-
-              <p>
-                Liga St. George
-                a Whitehall,
-                em Lower Manhattan.
-              </p>
-
-            </article>
-
-          </div>
-
-        </section>
-
-
-        <!-- ==================================================
-             LIRR
-        =================================================== -->
-
-        <section class="panel-box network-full">
-
-          <h4 class="panel-title">
-            Long Island Rail Road · LIRR
-          </h4>
-
-          <p class="panel-intro">
-            A rede conecta
-            Nova York
-            a Queens
-            e Long Island,
-            além de possuir
-            terminais importantes
-            dentro da cidade.
-          </p>
-
-          <div class="payment-choice-grid">
-
-            <article class="payment-choice">
-
-              <strong>
-                Penn Station
-              </strong>
-
-              <p>
-                Terminal importante
-                do LIRR
-                em Manhattan.
-              </p>
-
-            </article>
-
-
-            <article class="payment-choice">
-
-              <strong>
-                Grand Central Madison
-              </strong>
-
-              <p>
-                Outro terminal
-                do LIRR
-                em Manhattan.
-              </p>
-
-            </article>
-
-
-            <article class="payment-choice">
-
-              <strong>
-                Atlantic Terminal
-              </strong>
-
-              <p>
-                Terminal
-                em Brooklyn.
-              </p>
-
-            </article>
-
-
-            <article class="payment-choice">
-
-              <strong>
-                Jamaica
-              </strong>
-
-              <p>
-                Um dos principais
-                pontos de conexão
-                da rede.
-              </p>
-
-            </article>
-
-          </div>
-
-
-          <div class="visitor-alert">
-
-            <strong>
-              LIRR não utiliza
-              a tarifa simples do subway.
-            </strong>
-
-            O sistema possui
-            bilhetes próprios
-            e tarifas relacionadas
-            à viagem escolhida.
-
-          </div>
-
-        </section>
-
-
-        <!-- ==================================================
-             METRO NORTH
-        =================================================== -->
-
-        <section class="panel-box network-full">
-
-          <h4 class="panel-title">
-            Metro-North Railroad
-          </h4>
-
-          <p class="panel-intro">
-            A rede atende principalmente
-            o eixo ao norte
-            de Nova York.
-          </p>
-
-          <div class="payment-choice-grid">
-
-            <article class="payment-choice">
-
-              <strong>
-                Hudson Line
-              </strong>
-
-              <p>
-                Segue pelo eixo
-                do Rio Hudson.
-              </p>
-
-            </article>
-
-
-            <article class="payment-choice">
-
-              <strong>
-                Harlem Line
-              </strong>
-
-              <p>
-                Segue pelo eixo
-                central de Westchester
-                e áreas ao norte.
-              </p>
-
-            </article>
-
-
-            <article class="payment-choice">
-
-              <strong>
-                New Haven Line
-              </strong>
-
-              <p>
-                Conecta Nova York
-                a áreas de Connecticut.
-              </p>
-
-            </article>
-
-
-            <article class="payment-choice">
-
-              <strong>
-                Grand Central
-              </strong>
-
-              <p>
-                Principal terminal
-                do Metro-North
-                em Manhattan.
-              </p>
-
-            </article>
-
-          </div>
-
-        </section>
-
-
-        <!-- ==================================================
-             PATH
-        =================================================== -->
-
-        <section class="panel-box network-full">
-
-          <h4 class="panel-title">
-            PATH · Nova York e Nova Jersey
-          </h4>
-
-          <p class="panel-intro">
-            O PATH possui
-            13 estações
-            entre Nova York
-            e Nova Jersey.
-          </p>
-
-          <div class="comparison-grid">
-
-            <article class="comparison-card">
-
-              <strong>
-                World Trade Center
-              </strong>
-
-              <p>
-                Terminal do PATH
-                em Lower Manhattan.
-              </p>
-
-            </article>
-
-
-            <article class="comparison-card">
-
-              <strong>
-                33 Street
-              </strong>
-
-              <p>
-                Terminal do PATH
-                em Midtown Manhattan.
-              </p>
-
-            </article>
-
-
-            <article class="comparison-card">
-
-              <strong>
-                Newark
-              </strong>
-
-              <p>
-                Terminal importante
-                em Nova Jersey.
-              </p>
-
-            </article>
-
-
-            <article class="comparison-card">
-
-              <strong>
-                Hoboken
-              </strong>
-
-              <p>
-                Conecta PATH
-                e outras redes
-                de Nova Jersey.
-              </p>
-
-            </article>
-
-
-            <article class="comparison-card">
-
-              <strong>
-                Journal Square
-              </strong>
-
-              <p>
-                Grande ponto
-                de conexão
-                em Jersey City.
-              </p>
-
-            </article>
-
-
-            <article class="comparison-card">
-
-              <strong>
-                Exchange Place
-              </strong>
-
-              <p>
-                Importante estação
-                na margem de Nova Jersey
-                próxima a Lower Manhattan.
-              </p>
-
-            </article>
-
-          </div>
-
-
-          <div class="visitor-alert">
-
-            <strong>
-              O padrão de serviço do PATH
-              muda conforme horário
-              e dia da semana.
-            </strong>
-
-            A Port Authority
-            publica separadamente
-            operação diurna,
-            noturna,
-            weekday
-            e weekend.
-
-          </div>
-
-        </section>
-
-
-        <!-- ==================================================
-             NYC FERRY
-        =================================================== -->
-
-        <section class="panel-box network-full">
-
-          <h4 class="panel-title">
-            NYC Ferry
-          </h4>
-
-          <p class="panel-intro">
-            A rede hidroviária
-            conecta diferentes áreas
-            de Manhattan,
-            Brooklyn,
-            Queens,
-            Bronx
-            e Staten Island.
-          </p>
-
-          <div class="payment-choice-grid">
-
-            <article class="payment-choice">
-
-              <strong>
-                East River
-              </strong>
-
-              <p>
-                Conecta landings
-                de Manhattan,
+                Trem suburbano
+                para Queens,
                 Brooklyn
-                e Queens.
-              </p>
-
-            </article>
-
-
-            <article class="payment-choice">
-
-              <strong>
-                South Brooklyn
-              </strong>
-
-              <p>
-                Atende diferentes áreas
-                de Brooklyn
-                e Manhattan.
-              </p>
-
-            </article>
-
-
-            <article class="payment-choice">
-
-              <strong>
-                Astoria
-              </strong>
-
-              <p>
-                Liga Queens,
-                Roosevelt Island,
-                Manhattan
-                e Brooklyn.
-              </p>
-
-            </article>
-
-
-            <article class="payment-choice">
-
-              <strong>
-                Rockaway–Soundview
-              </strong>
-
-              <p>
-                Atende diferentes áreas
-                da rede hidroviária.
-              </p>
-
-            </article>
-
-
-            <article class="payment-choice">
-
-              <strong>
-                St. George
-              </strong>
-
-              <p>
-                Conecta Staten Island
-                a pontos da rede
-                do NYC Ferry.
-              </p>
-
-            </article>
-
-
-            <article class="payment-choice">
-
-              <strong>
-                Governors Island
-              </strong>
-
-              <p>
-                Serviço sujeito
-                à programação
-                publicada.
-              </p>
-
-            </article>
-
-          </div>
-
-
-          <div class="visitor-alert">
-
-            <strong>
-              Horários e rotas
-              podem sofrer alterações.
-            </strong>
-
-            Confira a programação
-            atual do NYC Ferry
-            antes da viagem.
-
-          </div>
-
-        </section>
-
-
-        <!-- ==================================================
-             STATEN ISLAND FERRY
-        =================================================== -->
-
-        <section class="panel-box network-full">
-
-          <h4 class="panel-title">
-            Staten Island Ferry
-          </h4>
-
-          <div class="route-compare-grid">
-
-            <article class="route-compare-card">
-
-              <span>
-                Manhattan
-              </span>
-
-              <strong>
-                Whitehall Terminal
-              </strong>
-
-              <p>
-                Terminal
-                em Lower Manhattan.
-              </p>
-
-              <span class="route-compare-result">
-                NYC DOT
-              </span>
-
-            </article>
-
-
-            <article class="route-compare-card">
-
-              <span>
-                Staten Island
-              </span>
-
-              <strong>
-                St. George Terminal
-              </strong>
-
-              <p>
-                Conecta o ferry
-                ao Staten Island Railway
-                e aos ônibus locais.
-              </p>
-
-              <span class="route-compare-result">
-                NYC DOT
-              </span>
-
-            </article>
-
-          </div>
-
-
-          <div
-            class="fare-highlight-grid"
-            style="margin-top:14px;"
-          >
-
-            <article class="fare-highlight">
-
-              <span>
-                Tarifa
-              </span>
-
-              <strong>
-                Grátis
-              </strong>
-
-              <p>
-                Não é necessário
-                comprar bilhete
-                para essa travessia.
-              </p>
-
-            </article>
-
-          </div>
-
-        </section>
-
-
-        <!-- ==================================================
-             AIRTRAIN JFK
-        =================================================== -->
-
-        <section class="panel-box network-full">
-
-          <h4 class="panel-title">
-            AirTrain JFK
-          </h4>
-
-          <p class="panel-intro">
-            O sistema conecta
-            os terminais do aeroporto
-            às duas principais
-            saídas para a rede externa.
-          </p>
-
-          <div class="route-compare-grid">
-
-            <article class="route-compare-card">
-
-              <span>
-                Jamaica
-              </span>
-
-              <strong>
-                AirTrain + LIRR / Subway
-              </strong>
-
-              <p>
-                Jamaica conecta
-                o aeroporto
-                ao LIRR
-                e aos serviços
-                E,
-                J
-                e Z
-                do subway.
-              </p>
-
-              <span class="route-compare-result">
-                Conexão externa
-              </span>
-
-            </article>
-
-
-            <article class="route-compare-card">
-
-              <span>
-                Howard Beach
-              </span>
-
-              <strong>
-                AirTrain + A
-              </strong>
-
-              <p>
-                Howard Beach conecta
-                o AirTrain
-                ao serviço A
-                do subway.
-              </p>
-
-              <span class="route-compare-result">
-                Conexão externa
-              </span>
-
-            </article>
-
-          </div>
-
-
-          <div class="visitor-alert">
-
-            <strong>
-              AirTrain possui
-              cobrança própria.
-            </strong>
-
-            A viagem posterior
-            de subway
-            ou LIRR
-            pertence a outro sistema tarifário.
-
-          </div>
-
-        </section>
-
-
-        <!-- ==================================================
-             ROOSEVELT ISLAND
-        =================================================== -->
-
-        <section class="panel-box network-full">
-
-          <h4 class="panel-title">
-            Roosevelt Island
-          </h4>
-
-          <div class="comparison-grid">
-
-            <article class="comparison-card">
-
-              <strong>
-                Subway · F
-              </strong>
-
-              <p>
-                A ilha possui
-                estação de subway.
+                e Long Island.
               </p>
 
             </article>
@@ -1852,12 +1142,28 @@ window.NEW_YORK_TRANSPORT_MODULES["network"] = {
             <article class="comparison-card">
 
               <strong>
-                Roosevelt Island Tram
+                Metro-North
               </strong>
 
               <p>
-                Liga Roosevelt Island
-                a Manhattan.
+                Trem suburbano
+                para o norte
+                da região.
+              </p>
+
+            </article>
+
+
+            <article class="comparison-card">
+
+              <strong>
+                PATH
+              </strong>
+
+              <p>
+                Ferrovia
+                entre Manhattan
+                e Nova Jersey.
               </p>
 
             </article>
@@ -1870,99 +1176,40 @@ window.NEW_YORK_TRANSPORT_MODULES["network"] = {
               </strong>
 
               <p>
-                A rede hidroviária
-                também atende
-                Roosevelt Island.
+                Transporte aquático
+                entre diferentes áreas
+                da cidade.
               </p>
 
             </article>
 
-          </div>
 
-        </section>
-
-
-        <!-- ==================================================
-             AEROPORTOS
-        =================================================== -->
-
-        <section class="panel-box network-full">
-
-          <h4 class="panel-title">
-            Aeroportos e a rede
-          </h4>
-
-          <div class="route-compare-grid">
-
-            <article class="route-compare-card">
-
-              <span>
-                JFK
-              </span>
+            <article class="comparison-card">
 
               <strong>
-                AirTrain
+                Staten Island Ferry
               </strong>
 
               <p>
-                Jamaica
-                e Howard Beach
-                conectam o aeroporto
-                às redes externas.
+                Liga Manhattan
+                a Staten Island.
               </p>
 
-              <span class="route-compare-result">
+            </article>
+
+
+            <article class="comparison-card">
+
+              <strong>
                 AirTrain JFK
-              </span>
-
-            </article>
-
-
-            <article class="route-compare-card">
-
-              <span>
-                LaGuardia
-              </span>
-
-              <strong>
-                Ônibus
               </strong>
 
               <p>
-                O aeroporto
-                não possui
-                estação de subway
-                dentro dos terminais.
+                Conecta o aeroporto
+                às redes externas
+                em Jamaica
+                e Howard Beach.
               </p>
-
-              <span class="route-compare-result">
-                Conexão rodoviária
-              </span>
-
-            </article>
-
-
-            <article class="route-compare-card">
-
-              <span>
-                Newark
-              </span>
-
-              <strong>
-                Nova Jersey
-              </strong>
-
-              <p>
-                EWR pertence
-                à rede de transporte
-                de Nova Jersey
-                e exige planejamento
-                específico.
-              </p>
-
-              <span class="route-compare-result">
-                Outro estado
-              </span>
 
             </article>
 
@@ -1972,225 +1219,266 @@ window.NEW_YORK_TRANSPORT_MODULES["network"] = {
 
 
         <!-- ==================================================
-             INTEGRAÇÃO TARIFÁRIA
+             COMO OS SISTEMAS SE RELACIONAM
         =================================================== -->
 
         <section class="panel-box network-full">
 
           <h4 class="panel-title">
-            Uma conexão física
-            não significa tarifa integrada
+            Uma cidade,
+            várias redes
           </h4>
 
-          <div class="fare-scenario-grid">
 
-            <article class="fare-scenario">
+          <div class="comparison-grid">
 
-              <span class="fare-scenario-kicker">
-                MTA
-              </span>
-
-              <strong>
-                Subway + ônibus
-              </strong>
-
-              <p>
-                Podem utilizar
-                a transferência
-                prevista pelo OMNY.
-              </p>
-
-              <span class="fare-scenario-result">
-                Integração possível
-              </span>
-
-            </article>
-
-
-            <article class="fare-scenario">
-
-              <span class="fare-scenario-kicker">
-                PATH + MTA
-              </span>
-
-              <strong>
-                PATH + subway
-              </strong>
-
-              <p>
-                Pode haver
-                conexão física próxima,
-                mas as tarifas
-                são separadas.
-              </p>
-
-              <span class="fare-scenario-result">
-                Duas tarifas
-              </span>
-
-            </article>
-
-
-            <article class="fare-scenario">
-
-              <span class="fare-scenario-kicker">
-                LIRR + MTA
-              </span>
-
-              <strong>
-                LIRR + subway
-              </strong>
-
-              <p>
-                Os sistemas
-                possuem bilhetagem própria.
-              </p>
-
-              <span class="fare-scenario-result">
-                Duas tarifas
-              </span>
-
-            </article>
-
-
-            <article class="fare-scenario">
-
-              <span class="fare-scenario-kicker">
-                Ferry + MTA
-              </span>
-
-              <strong>
-                NYC Ferry + subway
-              </strong>
-
-              <p>
-                A troca de modal
-                não elimina
-                a segunda cobrança.
-              </p>
-
-              <span class="fare-scenario-result">
-                Duas tarifas
-              </span>
-
-            </article>
-
-
-            <article class="fare-scenario">
-
-              <span class="fare-scenario-kicker">
-                JFK
-              </span>
-
-              <strong>
-                AirTrain + subway
-              </strong>
-
-              <p>
-                O AirTrain
-                possui tarifa própria.
-              </p>
-
-              <span class="fare-scenario-result">
-                Duas tarifas
-              </span>
-
-            </article>
-
-          </div>
-
-        </section>
-
-
-        <!-- ==================================================
-             24 HORAS
-        =================================================== -->
-
-        <section class="panel-box network-full">
-
-          <h4 class="panel-title">
-            A rede funciona de madrugada,
-            mas não exatamente igual
-          </h4>
-
-          <div class="answer-block">
-
-            <strong>
-              O sistema de subway
-              opera 24 horas por dia.
-            </strong>
-
-            <p>
-              Isso não significa
-              que todos os serviços
-              mantenham o mesmo padrão,
-              frequência
-              ou trajeto
-              durante toda a madrugada.
-            </p>
-
-          </div>
-
-
-          <div class="visitor-alert">
-
-            <strong>
-              Madrugada e fim de semana
-              merecem uma nova conferência.
-            </strong>
-
-            Serviços podem circular
-            com frequência menor,
-            operar de forma diferente
-            ou sofrer alterações
-            por manutenção.
-
-          </div>
-
-        </section>
-
-
-        <!-- ==================================================
-             ACESSIBILIDADE
-        =================================================== -->
-
-        <section class="panel-box network-full">
-
-          <h4 class="panel-title">
-            Acessibilidade na rede
-          </h4>
-
-          <div class="planner-check-grid">
-
-            <article class="planner-check-card">
-
-              <span>♿</span>
+            <article class="comparison-card">
 
               <strong>
                 Subway
               </strong>
 
               <p>
-                Nem todas as estações
-                possuem acesso
-                sem escadas.
+                Principal estrutura
+                ferroviária urbana.
               </p>
 
             </article>
 
 
-            <article class="planner-check-card">
-
-              <span>🛗</span>
+            <article class="comparison-card">
 
               <strong>
-                Elevadores
+                Ônibus
               </strong>
 
               <p>
-                O status do equipamento
-                pode alterar
-                a viabilidade da rota.
+                Complementa
+                os corredores
+                ferroviários.
+              </p>
+
+            </article>
+
+
+            <article class="comparison-card">
+
+              <strong>
+                LIRR / Metro-North
+              </strong>
+
+              <p>
+                Trens suburbanos
+                da MTA.
+              </p>
+
+            </article>
+
+
+            <article class="comparison-card">
+
+              <strong>
+                PATH
+              </strong>
+
+              <p>
+                Sistema separado
+                para Nova Jersey.
+              </p>
+
+            </article>
+
+
+            <article class="comparison-card">
+
+              <strong>
+                Ferries
+              </strong>
+
+              <p>
+                Complementam
+                a mobilidade
+                pelas áreas costeiras.
+              </p>
+
+            </article>
+
+
+            <article class="comparison-card">
+
+              <strong>
+                AirTrain JFK
+              </strong>
+
+              <p>
+                Sistema aeroportuário
+                conectado
+                à rede externa.
+              </p>
+
+            </article>
+
+          </div>
+
+        </section>
+
+
+        <!-- ==================================================
+             COMO USAR O MAPA
+        =================================================== -->
+
+        <section class="panel-box network-full">
+
+          <h4 class="panel-title">
+            Como usar este mapa
+          </h4>
+
+
+          <div class="bus-use-flow">
+
+            <article class="bus-use-step">
+
+              <span>1</span>
+
+              <strong>
+                Localize a região
+              </strong>
+
+              <p>
+                Veja onde
+                sua origem
+                e destino
+                aparecem
+                na cidade.
+              </p>
+
+            </article>
+
+
+            <article class="bus-use-step">
+
+              <span>2</span>
+
+              <strong>
+                Identifique o serviço
+              </strong>
+
+              <p>
+                Observe
+                a letra
+                ou número
+                da linha.
+              </p>
+
+            </article>
+
+
+            <article class="bus-use-step">
+
+              <span>3</span>
+
+              <strong>
+                Procure transferências
+              </strong>
+
+              <p>
+                Veja onde
+                os serviços
+                e outras redes
+                se encontram.
+              </p>
+
+            </article>
+
+
+            <article class="bus-use-step">
+
+              <span>4</span>
+
+              <strong>
+                Planeje a viagem real
+              </strong>
+
+              <p>
+                Depois de entender
+                a estrutura,
+                use
+                “Planeje o trajeto”
+                para decidir
+                a viagem completa.
+              </p>
+
+            </article>
+
+          </div>
+
+        </section>
+
+
+        <!-- ==================================================
+             MAPA X PLANNER
+        =================================================== -->
+
+        <section class="panel-box network-full">
+
+          <h4 class="panel-title">
+            O mapa mostra a rede.
+            O Planner mostra a viagem.
+          </h4>
+
+
+          <div class="visitor-alert">
+
+            <strong>
+              Para escolher
+              como realmente chegar
+              ao destino,
+              não dependa
+              apenas do mapa.
+            </strong>
+
+            Direção,
+            local ou express,
+            entradas de estação,
+            aeroportos,
+            acessibilidade,
+            tarifas,
+            obras,
+            alterações de serviço
+            e combinações
+            entre sistemas
+            estão detalhadas
+            em “Planeje o trajeto”.
+
+          </div>
+
+        </section>
+
+
+        <!-- ==================================================
+             RESUMO
+        =================================================== -->
+
+        <section class="panel-box network-full">
+
+          <h4 class="panel-title">
+            Em resumo
+          </h4>
+
+
+          <div class="planner-check-grid">
+
+            <article class="planner-check-card">
+
+              <span>🚇</span>
+
+              <strong>
+                Subway
+              </strong>
+
+              <p>
+                Principal rede
+                urbana.
               </p>
 
             </article>
@@ -2205,9 +1493,42 @@ window.NEW_YORK_TRANSPORT_MODULES["network"] = {
               </strong>
 
               <p>
-                Podem ser importantes
-                como alternativa
-                de superfície.
+                Complementam
+                a cobertura
+                do Subway.
+              </p>
+
+            </article>
+
+
+            <article class="planner-check-card">
+
+              <span>🚆</span>
+
+              <strong>
+                LIRR
+              </strong>
+
+              <p>
+                Long Island
+                e áreas
+                da própria cidade.
+              </p>
+
+            </article>
+
+
+            <article class="planner-check-card">
+
+              <span>🚆</span>
+
+              <strong>
+                Metro-North
+              </strong>
+
+              <p>
+                Norte
+                da região.
               </p>
 
             </article>
@@ -2222,93 +1543,8 @@ window.NEW_YORK_TRANSPORT_MODULES["network"] = {
               </strong>
 
               <p>
-                Algumas estações
-                possuem elevadores;
-                confirme o percurso
-                necessário.
-              </p>
-
-            </article>
-
-          </div>
-
-        </section>
-
-
-        <!-- ==================================================
-             PARA O VISITANTE
-        =================================================== -->
-
-        <section class="panel-box network-full">
-
-          <h4 class="panel-title">
-            Qual sistema tende a fazer sentido?
-          </h4>
-
-          <div class="planner-check-grid">
-
-            <article class="planner-check-card">
-
-              <span>🚇</span>
-
-              <strong>
-                Dentro de NYC
-              </strong>
-
-              <p>
-                Comece comparando
-                subway
-                e ônibus.
-              </p>
-
-            </article>
-
-
-            <article class="planner-check-card">
-
-              <span>🚆</span>
-
-              <strong>
-                Long Island
-              </strong>
-
-              <p>
-                LIRR
-                pode estruturar
-                o deslocamento.
-              </p>
-
-            </article>
-
-
-            <article class="planner-check-card">
-
-              <span>🚆</span>
-
-              <strong>
-                Norte da região
-              </strong>
-
-              <p>
-                Considere
-                Metro-North.
-              </p>
-
-            </article>
-
-
-            <article class="planner-check-card">
-
-              <span>🚉</span>
-
-              <strong>
-                Nova Jersey
-              </strong>
-
-              <p>
-                PATH pode ser
-                uma das principais
-                conexões.
+                Manhattan
+                ↔ Nova Jersey.
               </p>
 
             </article>
@@ -2319,31 +1555,12 @@ window.NEW_YORK_TRANSPORT_MODULES["network"] = {
               <span>⛴️</span>
 
               <strong>
-                Próximo ao waterfront
+                Ferries
               </strong>
 
               <p>
-                Compare
-                NYC Ferry
-                com a rota terrestre.
-              </p>
-
-            </article>
-
-
-            <article class="planner-check-card">
-
-              <span>✈️</span>
-
-              <strong>
-                JFK
-              </strong>
-
-              <p>
-                AirTrain conecta
-                o aeroporto
-                a Jamaica
-                e Howard Beach.
+                Complementam
+                a rede terrestre.
               </p>
 
             </article>
@@ -2354,116 +1571,7 @@ window.NEW_YORK_TRANSPORT_MODULES["network"] = {
 
 
         <!-- ==================================================
-             O QUE CONFIRMAR
-        =================================================== -->
-
-        <section class="panel-box network-full">
-
-          <h4 class="panel-title">
-            O que realmente precisa ser confirmado no dia
-          </h4>
-
-          <div class="payment-choice-grid">
-
-            <article class="payment-choice">
-
-              <strong>
-                Subway
-              </strong>
-
-              <p>
-                Alterações,
-                obras
-                e mudanças temporárias
-                de serviço.
-              </p>
-
-            </article>
-
-
-            <article class="payment-choice">
-
-              <strong>
-                PATH
-              </strong>
-
-              <p>
-                Padrão weekday,
-                weekend,
-                day
-                ou night.
-              </p>
-
-            </article>
-
-
-            <article class="payment-choice">
-
-              <strong>
-                LIRR / Metro-North
-              </strong>
-
-              <p>
-                Horário
-                e trem específico
-                da viagem.
-              </p>
-
-            </article>
-
-
-            <article class="payment-choice">
-
-              <strong>
-                NYC Ferry
-              </strong>
-
-              <p>
-                Rota,
-                horário
-                e programação atual.
-              </p>
-
-            </article>
-
-
-            <article class="payment-choice">
-
-              <strong>
-                Acessibilidade
-              </strong>
-
-              <p>
-                Situação atual
-                dos elevadores
-                necessários.
-              </p>
-
-            </article>
-
-
-            <article class="payment-choice">
-
-              <strong>
-                Aeroportos
-              </strong>
-
-              <p>
-                Terminal,
-                obras
-                e conexão operacional
-                no momento da viagem.
-              </p>
-
-            </article>
-
-          </div>
-
-        </section>
-
-
-        <!-- ==================================================
-             FONTES OFICIAIS
+             FONTES
         =================================================== -->
 
         <div class="official-map-actions">
@@ -2484,7 +1592,7 @@ window.NEW_YORK_TRANSPORT_MODULES["network"] = {
             target="_blank"
             rel="noopener noreferrer"
           >
-            Serviço atual · MTA
+            MTA
           </a>
 
 
@@ -2514,7 +1622,7 @@ window.NEW_YORK_TRANSPORT_MODULES["network"] = {
             target="_blank"
             rel="noopener noreferrer"
           >
-            Rotas · NYC Ferry
+            NYC Ferry
           </a>
 
 
