@@ -610,14 +610,56 @@
       text-align: center;
     }
 
-    .site-footer a {
-      color: #1a0dab;
-      text-decoration: underline;
+    .site-footer > a {
+      color: rgba(255, 255, 255, 0.78);
+      text-decoration: none;
+      transition: color 0.2s ease;
     }
 
-    .site-footer a:hover,
-    .site-footer a:focus-visible {
-      opacity: 0.88;
+    .site-footer > a:hover,
+    .site-footer > a:focus-visible {
+      color: var(--gold);
+      opacity: 1;
+    }
+
+    .footer-socials {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      margin-top: 16px;
+    }
+
+    .footer-socials a {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 38px;
+      height: 38px;
+      border: 1px solid rgba(212, 175, 55, 0.28);
+      border-radius: 50%;
+      color: var(--gold);
+      background: rgba(212, 175, 55, 0.035);
+      text-decoration: none;
+      transition:
+        transform 0.2s ease,
+        border-color 0.2s ease,
+        background 0.2s ease;
+    }
+
+    .footer-socials a:hover,
+    .footer-socials a:focus-visible {
+      transform: translateY(-2px);
+      border-color: rgba(212, 175, 55, 0.62);
+      background: rgba(212, 175, 55, 0.08);
+      opacity: 1;
+      outline: none;
+    }
+
+    .footer-socials svg {
+      width: 17px;
+      height: 17px;
+      fill: currentColor;
     }
 
     /* MODAL */
@@ -2536,21 +2578,31 @@
 
           <div class="destination-toolbar">
             <select id="destinationSelect" class="destination-select" aria-label="Selecionar destino">
-              <option value="sao-paulo">São Paulo, Brasil</option>
-              <option value="rio">Rio de Janeiro, Brasil</option>
-              <option value="salvador">Salvador, Brasil</option>
-              <option value="gramado">Gramado, Brasil</option>
-              <option value="belo-horizonte">Belo Horizonte, Brasil</option>
-              <option value="brasilia">Brasília, Brasil</option>
-              <option value="new-york">Nova York, Estados Unidos</option>
-              <option value="miami">Miami, Estados Unidos</option>
-              <option value="orlando">Orlando, Estados Unidos</option>
-              <option value="cidade-do-mexico">Cidade do México, México</option>
-              <option value="madrid" disabled>Madrid, Espanha — em preparação</option>
-              <option value="barcelona" disabled>Barcelona, Espanha — em preparação</option>
-              <option value="paris" disabled>Paris, França — em preparação</option>
-              <option value="roma" disabled>Roma, Itália — em preparação</option>
-              <option value="buenos-aires" disabled>Buenos Aires, Argentina — em preparação</option>
+              <option value="" selected disabled>Escolha aqui o seu destino</option>
+
+              <optgroup label="Brasil">
+                <option value="sao-paulo">São Paulo</option>
+                <option value="rio">Rio de Janeiro</option>
+                <option value="belo-horizonte">Belo Horizonte</option>
+                <option value="brasilia">Brasília</option>
+                <option value="gramado">Gramado</option>
+                <option value="salvador">Salvador</option>
+              </optgroup>
+
+              <optgroup label="Américas">
+                <option value="buenos-aires" disabled>Buenos Aires, Argentina — em preparação</option>
+                <option value="cidade-do-mexico">Cidade do México, México</option>
+                <option value="miami">Miami, Estados Unidos</option>
+                <option value="new-york">Nova York, Estados Unidos</option>
+                <option value="orlando">Orlando, Estados Unidos</option>
+              </optgroup>
+
+              <optgroup label="Europa">
+                <option value="barcelona" disabled>Barcelona, Espanha — em preparação</option>
+                <option value="madrid" disabled>Madrid, Espanha — em preparação</option>
+                <option value="paris" disabled>Paris, França — em preparação</option>
+                <option value="roma" disabled>Roma, Itália — em preparação</option>
+              </optgroup>
             </select>
             <button id="showDestinationButton" class="primary-button" type="button">
               Explorar a malha
@@ -2686,6 +2738,32 @@
     Curadoria Elite Travel · O seu mundo, bem indicado.<br>
     São Paulo - SP ·
     <a href="contact.html">curadoriaelitetravel@gmail.com</a>
+
+    <div class="footer-socials" aria-label="Redes sociais da Curadoria Elite Travel">
+      <a
+        href="https://www.instagram.com/curadoriaelitetravel/"
+        target="_blank"
+        rel="noopener noreferrer"
+        aria-label="Instagram da Curadoria Elite Travel"
+        title="Instagram"
+      >
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M7.75 2h8.5A5.76 5.76 0 0 1 22 7.75v8.5A5.76 5.76 0 0 1 16.25 22h-8.5A5.76 5.76 0 0 1 2 16.25v-8.5A5.76 5.76 0 0 1 7.75 2Zm0 2A3.75 3.75 0 0 0 4 7.75v8.5A3.75 3.75 0 0 0 7.75 20h8.5A3.75 3.75 0 0 0 20 16.25v-8.5A3.75 3.75 0 0 0 16.25 4h-8.5ZM17.5 5.5a1.25 1.25 0 1 1 0 2.5 1.25 1.25 0 0 1 0-2.5ZM12 7a5 5 0 1 1 0 10 5 5 0 0 1 0-10Zm0 2a3 3 0 1 0 0 6 3 3 0 0 0 0-6Z"/>
+        </svg>
+      </a>
+
+      <a
+        href="https://www.linkedin.com/company/curadoria-elite-travel/"
+        target="_blank"
+        rel="noopener noreferrer"
+        aria-label="LinkedIn da Curadoria Elite Travel"
+        title="LinkedIn"
+      >
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M6.94 8.5H3.56V19h3.38V8.5ZM5.25 3A1.97 1.97 0 1 0 5.25 6.94 1.97 1.97 0 0 0 5.25 3ZM20.44 12.98c0-3.16-1.68-4.63-3.92-4.63-1.81 0-2.62.99-3.07 1.69V8.5h-3.38V19h3.38v-5.2c0-1.37.26-2.7 1.96-2.7 1.68 0 1.7 1.57 1.7 2.79V19h3.38l-.05-6.02Z"/>
+        </svg>
+      </a>
+    </div>
   </footer>
 
   <div class="modal" id="transportModal" aria-hidden="true">
