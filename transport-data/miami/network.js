@@ -292,7 +292,7 @@ function openMiamiNetworkMap() {
 window.MIAMI_TRANSPORT_MODULES["network"] = {
 
   kicker:
-    "Miami · visão completa",
+    "Miami · visão da rede",
 
   title:
     "Rede de Transporte",
@@ -315,13 +315,16 @@ window.MIAMI_TRANSPORT_MODULES["network"] = {
           </h4>
 
           <p class="panel-intro">
-            O mapa ajuda a visualizar
-            Metrorail,
+            Use o mapa
+            para entender
+            como Metrorail,
             Metromover,
             Metrobus
             e as principais conexões
-            do Miami-Dade Transit.
+            estruturam o transporte
+            de Miami-Dade.
           </p>
+
 
           <div
             class="official-map-wrap"
@@ -375,21 +378,24 @@ window.MIAMI_TRANSPORT_MODULES["network"] = {
           <div class="visitor-alert">
 
             <strong>
-              Miami não possui
-              uma única rede ferroviária.
+              Miami possui
+              diferentes redes
+              que se complementam.
             </strong>
 
             Metrorail,
             Metromover,
+            Metrobus,
+            Metro Express,
             Tri-Rail
             e Brightline
-            pertencem a estruturas diferentes.
+            cumprem funções diferentes.
 
-            Uma conexão física
-            entre sistemas
-            não significa
-            necessariamente
-            a mesma tarifa.
+            Para transformar
+            essa estrutura
+            em uma viagem específica,
+            use também
+            “Planeje o trajeto”.
 
           </div>
 
@@ -411,25 +417,25 @@ window.MIAMI_TRANSPORT_MODULES["network"] = {
             ${createMiamiLegendItem(
               "M",
               "Metrorail",
-              "Rede ferroviária urbana do Miami-Dade Transit."
+              "Sistema ferroviário urbano do Miami-Dade Transit."
             )}
 
             ${createMiamiLegendItem(
               "MOVE",
               "Metromover",
-              "Sistema elevado gratuito em Downtown, Brickell e Omni."
+              "Sistema elevado gratuito que circula pelo núcleo central de Miami."
             )}
 
             ${createMiamiLegendItem(
               "BUS",
               "Metrobus",
-              "Rede ampla de ônibus de Miami-Dade."
+              "Rede de ônibus que amplia a cobertura para áreas fora dos corredores ferroviários."
             )}
 
             ${createMiamiLegendItem(
               "BRT",
               "Metro Express",
-              "Bus Rapid Transit no corredor South Dade."
+              "Sistema de ônibus de alta capacidade no corredor South Dade."
             )}
 
             ${createMiamiLegendItem(
@@ -441,7 +447,7 @@ window.MIAMI_TRANSPORT_MODULES["network"] = {
             ${createMiamiLegendItem(
               "BL",
               "Brightline",
-              "Serviço ferroviário intercity entre Miami e outras cidades da Flórida."
+              "Serviço ferroviário intercity separado da rede municipal."
             )}
 
           </div>
@@ -450,7 +456,7 @@ window.MIAMI_TRANSPORT_MODULES["network"] = {
 
 
         <!-- ==================================================
-             SISTEMAS
+             PRINCIPAIS SISTEMAS
         =================================================== -->
 
         <section class="panel-box network-full">
@@ -464,35 +470,35 @@ window.MIAMI_TRANSPORT_MODULES["network"] = {
             ${createMiamiSystemCard(
               "🚇",
               "Metrorail",
-              "Principal rede ferroviária urbana de Miami-Dade.",
-              "23 estações · aproximadamente 25 milhas"
+              "Principal eixo ferroviário urbano de Miami-Dade.",
+              "Green Line · Orange Line"
             )}
 
             ${createMiamiSystemCard(
               "🚝",
               "Metromover",
-              "Sistema elevado gratuito no núcleo central.",
-              "21 estações · 3 loops"
+              "Circulação elevada gratuita no núcleo central.",
+              "Downtown · Brickell · Omni"
             )}
 
             ${createMiamiSystemCard(
               "🚌",
               "Metrobus",
               "Rede de ônibus que amplia a cobertura do condado.",
-              "Better Bus Network"
+              "Miami-Dade"
             )}
 
             ${createMiamiSystemCard(
               "🚍",
               "Metro Express",
-              "BRT de alta capacidade no corredor South Dade.",
-              "Florida City ↔ Dadeland South"
+              "BRT do corredor South Dade.",
+              "South Dade ↔ Dadeland South"
             )}
 
             ${createMiamiSystemCard(
               "🚆",
               "Tri-Rail",
-              "Rede ferroviária regional do sul da Flórida.",
+              "Sistema ferroviário regional do sul da Flórida.",
               "Miami-Dade · Broward · Palm Beach"
             )}
 
@@ -500,7 +506,7 @@ window.MIAMI_TRANSPORT_MODULES["network"] = {
               "🚄",
               "Brightline",
               "Serviço ferroviário intercity.",
-              "Miami · Aventura · Fort Lauderdale · Boca Raton · West Palm Beach · Orlando"
+              "Sul da Flórida · Orlando"
             )}
 
           </div>
@@ -519,11 +525,18 @@ window.MIAMI_TRANSPORT_MODULES["network"] = {
           </h4>
 
           <p class="panel-intro">
+            O Metrorail
+            é o principal sistema
+            ferroviário urbano
+            de Miami-Dade.
+
             A rede possui
-            duas linhas identificadas
+            duas linhas
+            identificadas
             pelas cores verde
             e laranja.
           </p>
+
 
           <div class="lines-grid">
 
@@ -531,252 +544,32 @@ window.MIAMI_TRANSPORT_MODULES["network"] = {
               "#169447",
               "GREEN",
               "Green Line",
-              "Palmetto ↔ Dadeland South."
+              "Forma o principal corredor da rede entre o noroeste e o sul de Miami-Dade."
             )}
 
             ${createMiamiRailCard(
               "#ef7d22",
               "ORANGE",
               "Orange Line",
-              "Conecta o eixo principal à Miami International Airport Station."
+              "Compartilha grande parte do corredor principal e acrescenta a conexão com Miami International Airport."
             )}
 
           </div>
 
 
-          <div class="fare-note">
+          <div class="visitor-alert">
 
             <strong>
-              Earlington Heights
+              As linhas compartilham
+              parte importante
+              do trajeto.
             </strong>
 
-            é o principal ponto
-            de transferência
-            entre Green
-            e Orange Lines
-            para viagens
-            relacionadas ao aeroporto.
-
-          </div>
-
-        </section>
-
-
-        <!-- ==================================================
-             ESTAÇÕES METRORAIL
-        =================================================== -->
-
-        <section class="panel-box network-full">
-
-          <h4 class="panel-title">
-            Estações do Metrorail
-          </h4>
-
-          <div class="payment-choice-grid">
-
-            <article class="payment-choice">
-              <strong>Palmetto</strong>
-              <p>Green Line.</p>
-            </article>
-
-            <article class="payment-choice">
-              <strong>Okeechobee</strong>
-              <p>Green Line.</p>
-            </article>
-
-            <article class="payment-choice">
-              <strong>Hialeah</strong>
-              <p>Green Line.</p>
-            </article>
-
-            <article class="payment-choice">
-              <strong>Tri-Rail</strong>
-              <p>Conexão ferroviária regional.</p>
-            </article>
-
-            <article class="payment-choice">
-              <strong>Northside</strong>
-              <p>Green Line.</p>
-            </article>
-
-            <article class="payment-choice">
-              <strong>Dr. Martin Luther King, Jr.</strong>
-              <p>Green Line.</p>
-            </article>
-
-            <article class="payment-choice">
-              <strong>Brownsville</strong>
-              <p>Green Line.</p>
-            </article>
-
-            <article class="payment-choice">
-              <strong>Earlington Heights</strong>
-              <p>Green / Orange transfer.</p>
-            </article>
-
-            <article class="payment-choice">
-              <strong>Miami International Airport</strong>
-              <p>Orange Line · MIA.</p>
-            </article>
-
-            <article class="payment-choice">
-              <strong>Allapattah</strong>
-              <p>Green + Orange.</p>
-            </article>
-
-            <article class="payment-choice">
-              <strong>Santa Clara</strong>
-              <p>Green + Orange.</p>
-            </article>
-
-            <article class="payment-choice">
-              <strong>Civic Center</strong>
-              <p>Health District.</p>
-            </article>
-
-            <article class="payment-choice">
-              <strong>Historic Overtown / Lyric Theatre</strong>
-              <p>Conexão com MiamiCentral.</p>
-            </article>
-
-            <article class="payment-choice">
-              <strong>Government Center</strong>
-              <p>Conexão com Metromover.</p>
-            </article>
-
-            <article class="payment-choice">
-              <strong>Brickell</strong>
-              <p>Conexão com Metromover.</p>
-            </article>
-
-            <article class="payment-choice">
-              <strong>Vizcaya</strong>
-              <p>Green + Orange.</p>
-            </article>
-
-            <article class="payment-choice">
-              <strong>Coconut Grove</strong>
-              <p>Green + Orange.</p>
-            </article>
-
-            <article class="payment-choice">
-              <strong>Douglas Road</strong>
-              <p>Green + Orange.</p>
-            </article>
-
-            <article class="payment-choice">
-              <strong>University</strong>
-              <p>University of Miami.</p>
-            </article>
-
-            <article class="payment-choice">
-              <strong>South Miami</strong>
-              <p>Green + Orange.</p>
-            </article>
-
-            <article class="payment-choice">
-              <strong>Dadeland North</strong>
-              <p>Green + Orange.</p>
-            </article>
-
-            <article class="payment-choice">
-              <strong>Dadeland South</strong>
-              <p>Terminal sul e conexão BRT.</p>
-            </article>
-
-          </div>
-
-        </section>
-
-
-        <!-- ==================================================
-             MIA
-        =================================================== -->
-
-        <section class="panel-box network-full">
-
-          <h4 class="panel-title">
-            Miami International Airport
-          </h4>
-
-          <div class="answer-block">
-
-            <strong>
-              Miami Airport Station
-              é um dos grandes pontos
-              intermodais da rede.
-            </strong>
-
-            <p>
-              A estação reúne
-              Metrorail,
-              Tri-Rail,
-              Metrobus
-              e conexão
-              com o MIA Mover.
-            </p>
-
-          </div>
-
-
-          <div class="comparison-grid">
-
-            <article class="comparison-card">
-
-              <strong>
-                Orange Line
-              </strong>
-
-              <p>
-                Conecta MIA
-                ao Metrorail.
-              </p>
-
-            </article>
-
-
-            <article class="comparison-card">
-
-              <strong>
-                Tri-Rail
-              </strong>
-
-              <p>
-                Trem regional
-                para Broward
-                e Palm Beach.
-              </p>
-
-            </article>
-
-
-            <article class="comparison-card">
-
-              <strong>
-                Metrobus
-              </strong>
-
-              <p>
-                Diversas linhas
-                atendem a estação.
-              </p>
-
-            </article>
-
-
-            <article class="comparison-card">
-
-              <strong>
-                MIA Mover
-              </strong>
-
-              <p>
-                Liga o complexo
-                de transporte
-                ao aeroporto.
-              </p>
-
-            </article>
+            Por isso,
+            além da cor,
+            observe sempre
+            o destino indicado
+            antes de embarcar.
 
           </div>
 
@@ -793,12 +586,47 @@ window.MIAMI_TRANSPORT_MODULES["network"] = {
             Metromover
           </h4>
 
-          <p class="panel-intro">
-            É uma rede elevada
-            de 21 estações
-            que atende o núcleo
-            central de Miami.
-          </p>
+          <div class="payment-recommendation">
+
+            <span class="payment-eyebrow">
+              Downtown · Brickell · Omni
+            </span>
+
+            <h4>
+              Circulação gratuita
+              pelo núcleo central.
+            </h4>
+
+            <p>
+              O Metromover
+              é um sistema elevado
+              que complementa
+              o Metrorail
+              dentro da região central.
+
+              Ele é especialmente útil
+              para deslocamentos
+              curtos entre áreas
+              de Downtown,
+              Brickell
+              e Omni.
+            </p>
+
+          </div>
+
+        </section>
+
+
+        <!-- ==================================================
+             LOOPS METROMOVER
+        =================================================== -->
+
+        <section class="panel-box network-full">
+
+          <h4 class="panel-title">
+            Como o Metromover se organiza
+          </h4>
+
 
           <div class="comparison-grid">
 
@@ -824,8 +652,10 @@ window.MIAMI_TRANSPORT_MODULES["network"] = {
               </strong>
 
               <p>
-                Liga Downtown
-                a Brickell.
+                Conecta
+                o centro
+                à região
+                de Brickell.
               </p>
 
             </article>
@@ -838,8 +668,10 @@ window.MIAMI_TRANSPORT_MODULES["network"] = {
               </strong>
 
               <p>
-                Atende o eixo
-                ao norte de Downtown.
+                Atende
+                o eixo
+                ao norte
+                de Downtown.
               </p>
 
             </article>
@@ -847,154 +679,17 @@ window.MIAMI_TRANSPORT_MODULES["network"] = {
           </div>
 
 
-          <div class="fare-highlight-grid"
-               style="margin-top:14px;">
+          <div class="visitor-alert">
 
-            <article class="fare-highlight">
+            <strong>
+              Confira o destino
+              exibido na estação.
+            </strong>
 
-              <span>
-                Tarifa
-              </span>
-
-              <strong>
-                Grátis
-              </strong>
-
-              <p>
-                Não precisa
-                de bilhete
-                para embarcar.
-              </p>
-
-            </article>
-
-          </div>
-
-        </section>
-
-
-        <!-- ==================================================
-             ESTAÇÕES METROMOVER
-        =================================================== -->
-
-        <section class="panel-box network-full">
-
-          <h4 class="panel-title">
-            Pontos importantes do Metromover
-          </h4>
-
-          <div class="payment-choice-grid">
-
-            <article class="payment-choice">
-
-              <strong>
-                Government Center
-              </strong>
-
-              <p>
-                Principal conexão
-                com o Metrorail.
-              </p>
-
-            </article>
-
-
-            <article class="payment-choice">
-
-              <strong>
-                Brickell
-              </strong>
-
-              <p>
-                Outra conexão
-                direta com Metrorail.
-              </p>
-
-            </article>
-
-
-            <article class="payment-choice">
-
-              <strong>
-                Wilkie D. Ferguson, Jr.
-              </strong>
-
-              <p>
-                Próxima
-                a MiamiCentral.
-              </p>
-
-            </article>
-
-
-            <article class="payment-choice">
-
-              <strong>
-                College/Bayside
-              </strong>
-
-              <p>
-                Próxima
-                ao Bayside Marketplace.
-              </p>
-
-            </article>
-
-
-            <article class="payment-choice">
-
-              <strong>
-                Freedom Tower
-              </strong>
-
-              <p>
-                Centro
-                e área cultural.
-              </p>
-
-            </article>
-
-
-            <article class="payment-choice">
-
-              <strong>
-                Adrienne Arsht Center
-              </strong>
-
-              <p>
-                Região cultural
-                ao norte de Downtown.
-              </p>
-
-            </article>
-
-
-            <article class="payment-choice">
-
-              <strong>
-                Brickell City Centre
-              </strong>
-
-              <p>
-                Área comercial
-                e residencial.
-              </p>
-
-            </article>
-
-
-            <article class="payment-choice">
-
-              <strong>
-                Financial District
-              </strong>
-
-              <p>
-                Extremo sul
-                do Brickell Loop.
-              </p>
-
-            </article>
+            Os veículos
+            não percorrem
+            necessariamente
+            o mesmo loop.
 
           </div>
 
@@ -1011,81 +706,44 @@ window.MIAMI_TRANSPORT_MODULES["network"] = {
             Metrobus
           </h4>
 
-          <p class="panel-intro">
-            A rede de ônibus
-            cobre áreas
-            que não ficam
-            diretamente próximas
-            ao Metrorail.
-          </p>
+          <div class="answer-block">
 
-          <div class="planner-check-grid">
+            <strong>
+              É a rede
+              que amplia a cobertura
+              para além das estações.
+            </strong>
 
-            <article class="planner-check-card">
+            <p>
+              O Metrobus
+              atende áreas
+              que não ficam diretamente
+              no corredor
+              do Metrorail
+              ou do Metromover.
 
-              <span>🏖️</span>
+              Ele também funciona
+              como primeira
+              ou última etapa
+              de muitas viagens.
+            </p>
 
-              <strong>
-                Miami Beach
-              </strong>
-
-              <p>
-                Ônibus é essencial
-                porque o Metrorail
-                não chega à ilha.
-              </p>
-
-            </article>
+          </div>
 
 
-            <article class="planner-check-card">
+          <div class="visitor-alert">
 
-              <span>✈️</span>
+            <strong>
+              O ônibus continua
+              sujeito ao trânsito.
+            </strong>
 
-              <strong>
-                MIA
-              </strong>
-
-              <p>
-                Diversas linhas
-                atendem
-                Miami Airport Station.
-              </p>
-
-            </article>
-
-
-            <article class="planner-check-card">
-
-              <span>🏙️</span>
-
-              <strong>
-                Downtown
-              </strong>
-
-              <p>
-                Integra
-                bairros periféricos
-                ao centro.
-              </p>
-
-            </article>
-
-
-            <article class="planner-check-card">
-
-              <span>🌴</span>
-
-              <strong>
-                South Dade
-              </strong>
-
-              <p>
-                Trabalha em conjunto
-                com Metro Express.
-              </p>
-
-            </article>
+            Por isso,
+            uma rota aparentemente curta
+            no mapa
+            pode ter tempo de viagem
+            bastante diferente
+            conforme o horário.
 
           </div>
 
@@ -1099,358 +757,30 @@ window.MIAMI_TRANSPORT_MODULES["network"] = {
         <section class="panel-box network-full">
 
           <h4 class="panel-title">
-            Metro Express · BRT
+            Metro Express
           </h4>
 
-          <p class="panel-intro">
-            O South Dade TransitWay
-            possui aproximadamente
-            20 milhas
-            em corredor dedicado.
-          </p>
-
-          <div class="route-compare-grid">
-
-            <article class="route-compare-card">
-
-              <span>
-                Norte
-              </span>
-
-              <strong>
-                Dadeland South
-              </strong>
-
-              <p>
-                Conexão direta
-                com o Metrorail.
-              </p>
-
-              <span class="route-compare-result">
-                Metrorail
-              </span>
-
-            </article>
-
-
-            <article class="route-compare-card">
-
-              <span>
-                Sul
-              </span>
-
-              <strong>
-                SW 344 Street / Florida City
-              </strong>
-
-              <p>
-                Extremo sul
-                do corredor BRT.
-              </p>
-
-              <span class="route-compare-result">
-                Metro Express
-              </span>
-
-            </article>
-
-          </div>
-
-
-          <div class="visitor-alert">
+          <div class="answer-block">
 
             <strong>
-              Metro Express
-              não funciona como
-              um ponto convencional
-              de Metrobus.
+              É um corredor BRT
+              voltado ao South Dade.
             </strong>
 
-            O sistema utiliza
-            estações próprias,
-            pagamento antes
-            do embarque
-            e plataformas
-            de nível elevado.
-
-          </div>
-
-        </section>
-
-
-        <!-- ==================================================
-             MIAMI BEACH
-        =================================================== -->
-
-        <section class="panel-box network-full">
-
-          <h4 class="panel-title">
-            Miami Beach
-          </h4>
-
-          <div class="visitor-alert">
-
-            <strong>
-              Não existe Metrorail
-              em Miami Beach.
-            </strong>
-
-            Para chegar à ilha,
-            o transporte público
-            depende principalmente
-            de ônibus
-            e serviços locais.
-
-          </div>
-
-
-          <div class="comparison-grid">
-
-            <article class="comparison-card">
-
-              <strong>
-                Route 150
-              </strong>
-
-              <p>
-                Miami Beach
-                Airport Express.
-              </p>
-
-            </article>
-
-
-            <article class="comparison-card">
-
-              <strong>
-                Route 20
-              </strong>
-
-              <p>
-                Airport Station
-                ↔ Lincoln Road.
-              </p>
-
-            </article>
-
-
-            <article class="comparison-card">
-
-              <strong>
-                Route 110 / J
-              </strong>
-
-              <p>
-                Outra conexão
-                entre MIA
-                e Miami Beach.
-              </p>
-
-            </article>
-
-          </div>
-
-        </section>
-
-
-        <!-- ==================================================
-             MIAMICENTRAL
-        =================================================== -->
-
-        <section class="panel-box network-full">
-
-          <h4 class="panel-title">
-            MiamiCentral
-          </h4>
-
-          <p class="panel-intro">
-            É um importante
-            ponto ferroviário
-            no centro de Miami.
-          </p>
-
-          <div class="bus-system-grid">
-
-            <article class="bus-system-card">
-
-              <span>🚄</span>
-
-              <strong>
-                Brightline
-              </strong>
-
-              <p>
-                Terminal
-                da rede intercity.
-              </p>
-
-            </article>
-
-
-            <article class="bus-system-card">
-
-              <span>🚆</span>
-
-              <strong>
-                Tri-Rail
-              </strong>
-
-              <p>
-                Serviços selecionados
-                atendem MiamiCentral.
-              </p>
-
-            </article>
-
-
-            <article class="bus-system-card">
-
-              <span>🚝</span>
-
-              <strong>
-                Metromover
-              </strong>
-
-              <p>
-                Wilkie D. Ferguson Jr.
-                fica próxima
-                à estação.
-              </p>
-
-            </article>
-
-
-            <article class="bus-system-card">
-
-              <span>🚇</span>
-
-              <strong>
-                Metrorail
-              </strong>
-
-              <p>
-                Government Center
-                fica na região
-                e conecta
-                à rede principal.
-              </p>
-
-            </article>
-
-          </div>
-
-        </section>
-
-
-        <!-- ==================================================
-             BRIGHTLINE
-        =================================================== -->
-
-        <section class="panel-box network-full">
-
-          <h4 class="panel-title">
-            Brightline
-          </h4>
-
-          <p class="panel-intro">
-            Brightline liga Miami
-            a diferentes cidades
-            da Flórida.
-          </p>
-
-          <div class="payment-choice-grid">
-
-            <article class="payment-choice">
-
-              <strong>
-                Miami
-              </strong>
-
-              <p>
-                MiamiCentral.
-              </p>
-
-            </article>
-
-
-            <article class="payment-choice">
-
-              <strong>
-                Aventura
-              </strong>
-
-              <p>
-                Norte de Miami-Dade.
-              </p>
-
-            </article>
-
-
-            <article class="payment-choice">
-
-              <strong>
-                Fort Lauderdale
-              </strong>
-
-              <p>
-                Broward County.
-              </p>
-
-            </article>
-
-
-            <article class="payment-choice">
-
-              <strong>
-                Boca Raton
-              </strong>
-
-              <p>
-                Palm Beach County.
-              </p>
-
-            </article>
-
-
-            <article class="payment-choice">
-
-              <strong>
-                West Palm Beach
-              </strong>
-
-              <p>
-                Palm Beach County.
-              </p>
-
-            </article>
-
-
-            <article class="payment-choice">
-
-              <strong>
-                Orlando
-              </strong>
-
-              <p>
-                Estação
-                no aeroporto MCO.
-              </p>
-
-            </article>
-
-          </div>
-
-
-          <div class="visitor-alert">
-
-            <strong>
-              Brightline
-              não é Metrorail.
-            </strong>
-
-            Possui bilhetagem,
-            horários
-            e preços próprios.
+            <p>
+              O Metro Express
+              utiliza infraestrutura
+              própria
+              e se conecta
+              ao Metrorail
+              em Dadeland South.
+
+              Ele funciona
+              como uma extensão
+              da rede estrutural
+              em direção
+              ao sul do condado.
+            </p>
 
           </div>
 
@@ -1467,71 +797,26 @@ window.MIAMI_TRANSPORT_MODULES["network"] = {
             Tri-Rail
           </h4>
 
-          <p class="panel-intro">
-            Tri-Rail é a ferrovia
-            regional que conecta
-            Miami-Dade,
-            Broward
-            e Palm Beach.
-          </p>
+          <div class="answer-block">
 
-          <div class="comparison-grid">
+            <strong>
+              É um trem regional,
+              não uma linha
+              do Metrorail.
+            </strong>
 
-            <article class="comparison-card">
+            <p>
+              O Tri-Rail
+              conecta Miami-Dade,
+              Broward
+              e Palm Beach.
 
-              <strong>
-                Miami Airport
-              </strong>
-
-              <p>
-                Conexão direta
-                com MIA.
-              </p>
-
-            </article>
-
-
-            <article class="comparison-card">
-
-              <strong>
-                Metrorail Transfer
-              </strong>
-
-              <p>
-                Conecta
-                Tri-Rail
-                ao Metrorail.
-              </p>
-
-            </article>
-
-
-            <article class="comparison-card">
-
-              <strong>
-                Fort Lauderdale
-              </strong>
-
-              <p>
-                Atende
-                a região de Broward.
-              </p>
-
-            </article>
-
-
-            <article class="comparison-card">
-
-              <strong>
-                West Palm Beach
-              </strong>
-
-              <p>
-                Extensão norte
-                da rede regional.
-              </p>
-
-            </article>
+              Ele se relaciona
+              com a rede urbana
+              por meio
+              de pontos específicos
+              de conexão.
+            </p>
 
           </div>
 
@@ -1539,16 +824,53 @@ window.MIAMI_TRANSPORT_MODULES["network"] = {
           <div class="visitor-alert">
 
             <strong>
-              MiamiCentral exige atenção.
+              Integração física
+              não significa
+              que os sistemas
+              sejam iguais.
             </strong>
 
-            Nem todos os serviços
-            do Tri-Rail
-            entram diretamente
-            em MiamiCentral.
+            Tri-Rail
+            possui operação,
+            horários
+            e estrutura tarifária
+            próprios.
 
-            Confira o trem específico
-            antes da viagem.
+          </div>
+
+        </section>
+
+
+        <!-- ==================================================
+             BRIGHTLINE
+        =================================================== -->
+
+        <section class="panel-box network-full">
+
+          <h4 class="panel-title">
+            Brightline
+          </h4>
+
+          <div class="answer-block">
+
+            <strong>
+              É um serviço
+              ferroviário intercity
+              separado.
+            </strong>
+
+            <p>
+              A Brightline
+              utiliza MiamiCentral
+              como seu terminal
+              em Miami
+              e conecta a cidade
+              a outros destinos
+              da Flórida.
+
+              Ela não faz parte
+              do Miami-Dade Transit.
+            </p>
 
           </div>
 
@@ -1562,8 +884,20 @@ window.MIAMI_TRANSPORT_MODULES["network"] = {
         <section class="panel-box network-full">
 
           <h4 class="panel-title">
-            Principais pontos de conexão
+            Conexões que ajudam
+            a entender a rede
           </h4>
+
+          <p class="panel-intro">
+            Você não precisa
+            decorar todas as estações.
+
+            Estes pontos ajudam
+            a perceber
+            onde os principais
+            sistemas se encontram.
+          </p>
+
 
           <div class="bus-system-grid">
 
@@ -1579,7 +913,8 @@ window.MIAMI_TRANSPORT_MODULES["network"] = {
                 Metrorail,
                 Tri-Rail,
                 Metrobus
-                e MIA Mover.
+                e conexão
+                com o aeroporto.
               </p>
 
             </article>
@@ -1594,8 +929,10 @@ window.MIAMI_TRANSPORT_MODULES["network"] = {
               </strong>
 
               <p>
+                Ponto importante
+                entre os corredores
                 Green
-                ↔ Orange Line.
+                e Orange.
               </p>
 
             </article>
@@ -1610,9 +947,10 @@ window.MIAMI_TRANSPORT_MODULES["network"] = {
               </strong>
 
               <p>
-                Metrorail
-                ↔ Metromover
-                ↔ Metrobus.
+                Uma das principais
+                conexões
+                entre Metrorail
+                e Metromover.
               </p>
 
             </article>
@@ -1627,9 +965,10 @@ window.MIAMI_TRANSPORT_MODULES["network"] = {
               </strong>
 
               <p>
-                Metrorail
-                ↔ Metromover
-                ↔ ônibus.
+                Conexão
+                entre Metrorail,
+                Metromover
+                e serviços de superfície.
               </p>
 
             </article>
@@ -1644,10 +983,10 @@ window.MIAMI_TRANSPORT_MODULES["network"] = {
               </strong>
 
               <p>
-                Brightline,
-                Tri-Rail
-                e conexões
-                com Downtown.
+                Terminal Brightline
+                com conexões
+                próximas
+                à rede de Downtown.
               </p>
 
             </article>
@@ -1662,116 +1001,112 @@ window.MIAMI_TRANSPORT_MODULES["network"] = {
               </strong>
 
               <p>
+                Conexão
+                entre Metrorail
+                e Metro Express.
+              </p>
+
+            </article>
+
+          </div>
+
+        </section>
+
+
+        <!-- ==================================================
+             SISTEMAS DIFERENTES
+        =================================================== -->
+
+        <section class="panel-box network-full">
+
+          <h4 class="panel-title">
+            Uma região,
+            sistemas diferentes
+          </h4>
+
+
+          <div class="comparison-grid">
+
+            <article class="comparison-card">
+
+              <strong>
                 Metrorail
-                ↔ Metro Express.
+              </strong>
+
+              <p>
+                Ferrovia urbana
+                do Miami-Dade Transit.
               </p>
 
             </article>
 
-          </div>
 
-        </section>
-
-
-        <!-- ==================================================
-             TARIFAS NÃO INTEGRADAS
-        =================================================== -->
-
-        <section class="panel-box network-full">
-
-          <h4 class="panel-title">
-            Conexão física
-            não significa tarifa única
-          </h4>
-
-          <div class="fare-scenario-grid">
-
-            <article class="fare-scenario">
-
-              <span class="fare-scenario-kicker">
-                Miami-Dade
-              </span>
+            <article class="comparison-card">
 
               <strong>
-                Metrobus + Metrorail
-              </strong>
-
-              <p>
-                Podem utilizar
-                as regras
-                de transferência
-                do sistema.
-              </p>
-
-              <span class="fare-scenario-result">
-                Integração possível
-              </span>
-
-            </article>
-
-
-            <article class="fare-scenario">
-
-              <span class="fare-scenario-kicker">
-                Downtown
-              </span>
-
-              <strong>
-                Metrorail + Metromover
-              </strong>
-
-              <p>
                 Metromover
-                é gratuito.
-              </p>
+              </strong>
 
-              <span class="fare-scenario-result">
-                Sem tarifa no mover
-              </span>
+              <p>
+                Circulação gratuita
+                no núcleo central.
+              </p>
 
             </article>
 
 
-            <article class="fare-scenario">
+            <article class="comparison-card">
 
-              <span class="fare-scenario-kicker">
+              <strong>
+                Metrobus
+              </strong>
+
+              <p>
+                Rede de ônibus
+                do condado.
+              </p>
+
+            </article>
+
+
+            <article class="comparison-card">
+
+              <strong>
+                Metro Express
+              </strong>
+
+              <p>
+                BRT estrutural
+                de South Dade.
+              </p>
+
+            </article>
+
+
+            <article class="comparison-card">
+
+              <strong>
                 Tri-Rail
-              </span>
-
-              <strong>
-                Tri-Rail + Metrorail
               </strong>
 
               <p>
-                São sistemas
-                tarifários distintos.
+                Ferrovia regional
+                do sul da Flórida.
               </p>
-
-              <span class="fare-scenario-result">
-                Consulte a viagem
-              </span>
 
             </article>
 
 
-            <article class="fare-scenario">
-
-              <span class="fare-scenario-kicker">
-                Brightline
-              </span>
+            <article class="comparison-card">
 
               <strong>
-                Brightline + Metrorail
+                Brightline
               </strong>
 
               <p>
-                Brightline
-                possui bilhete próprio.
+                Trem intercity
+                com operação própria.
               </p>
-
-              <span class="fare-scenario-result">
-                Sistemas separados
-              </span>
 
             </article>
 
@@ -1781,14 +1116,150 @@ window.MIAMI_TRANSPORT_MODULES["network"] = {
 
 
         <!-- ==================================================
-             QUAL SISTEMA
+             COMO USAR O MAPA
         =================================================== -->
 
         <section class="panel-box network-full">
 
           <h4 class="panel-title">
-            Qual sistema tende a fazer sentido?
+            Como usar este mapa
           </h4>
+
+
+          <div class="bus-use-flow">
+
+            <article class="bus-use-step">
+
+              <span>1</span>
+
+              <strong>
+                Localize a região
+              </strong>
+
+              <p>
+                Veja onde
+                sua origem
+                e seu destino
+                aparecem
+                na rede.
+              </p>
+
+            </article>
+
+
+            <article class="bus-use-step">
+
+              <span>2</span>
+
+              <strong>
+                Identifique o eixo principal
+              </strong>
+
+              <p>
+                Observe
+                se a região
+                está próxima
+                ao Metrorail,
+                Metromover
+                ou Metro Express.
+              </p>
+
+            </article>
+
+
+            <article class="bus-use-step">
+
+              <span>3</span>
+
+              <strong>
+                Procure as conexões
+              </strong>
+
+              <p>
+                Veja onde
+                ônibus,
+                trens regionais
+                e sistemas urbanos
+                se encontram.
+              </p>
+
+            </article>
+
+
+            <article class="bus-use-step">
+
+              <span>4</span>
+
+              <strong>
+                Planeje o trajeto real
+              </strong>
+
+              <p>
+                Depois de entender
+                a estrutura,
+                use
+                “Planeje o trajeto”
+                para decidir
+                a viagem completa.
+              </p>
+
+            </article>
+
+          </div>
+
+        </section>
+
+
+        <!-- ==================================================
+             MAPA X PLANNER
+        =================================================== -->
+
+        <section class="panel-box network-full">
+
+          <h4 class="panel-title">
+            O mapa mostra a rede.
+            O Planner mostra a viagem.
+          </h4>
+
+          <div class="visitor-alert">
+
+            <strong>
+              Para escolher
+              como realmente ir
+              de um lugar a outro,
+              não dependa apenas
+              do mapa.
+            </strong>
+
+            Miami Beach,
+            MIA,
+            Downtown,
+            Brickell,
+            linhas específicas,
+            horários,
+            Tri-Rail,
+            Brightline,
+            bagagem,
+            acessibilidade
+            e outras decisões
+            estão detalhadas
+            em “Planeje o trajeto”.
+
+          </div>
+
+        </section>
+
+
+        <!-- ==================================================
+             RESUMO
+        =================================================== -->
+
+        <section class="panel-box network-full">
+
+          <h4 class="panel-title">
+            Em resumo
+          </h4>
+
 
           <div class="planner-check-grid">
 
@@ -1797,12 +1268,12 @@ window.MIAMI_TRANSPORT_MODULES["network"] = {
               <span>🚇</span>
 
               <strong>
-                MIA / Downtown / Brickell
+                Metrorail
               </strong>
 
               <p>
-                Comece verificando
-                Metrorail.
+                Principal eixo
+                ferroviário urbano.
               </p>
 
             </article>
@@ -1813,13 +1284,12 @@ window.MIAMI_TRANSPORT_MODULES["network"] = {
               <span>🚝</span>
 
               <strong>
-                Dentro de Downtown
+                Metromover
               </strong>
 
               <p>
-                Metromover
-                pode resolver
-                a parte final.
+                Circulação gratuita
+                no centro.
               </p>
 
             </article>
@@ -1827,16 +1297,15 @@ window.MIAMI_TRANSPORT_MODULES["network"] = {
 
             <article class="planner-check-card">
 
-              <span>🏖️</span>
+              <span>🚌</span>
 
               <strong>
-                Miami Beach
+                Metrobus
               </strong>
 
               <p>
-                Metrobus
-                é uma referência
-                importante.
+                Amplia a cobertura
+                do condado.
               </p>
 
             </article>
@@ -1847,13 +1316,12 @@ window.MIAMI_TRANSPORT_MODULES["network"] = {
               <span>🚍</span>
 
               <strong>
-                South Dade
+                Metro Express
               </strong>
 
               <p>
-                Considere
-                Metro Express
-                + Metrorail.
+                Estrutura South Dade
+                ↔ Metrorail.
               </p>
 
             </article>
@@ -1864,13 +1332,11 @@ window.MIAMI_TRANSPORT_MODULES["network"] = {
               <span>🚆</span>
 
               <strong>
-                Broward / Palm Beach
+                Tri-Rail
               </strong>
 
               <p>
-                Compare
-                Tri-Rail
-                e Brightline.
+                Transporte regional.
               </p>
 
             </article>
@@ -1881,118 +1347,11 @@ window.MIAMI_TRANSPORT_MODULES["network"] = {
               <span>🚄</span>
 
               <strong>
-                Orlando
-              </strong>
-
-              <p>
-                Brightline
-                oferece ligação
-                ferroviária direta.
-              </p>
-
-            </article>
-
-          </div>
-
-        </section>
-
-
-        <!-- ==================================================
-             O QUE CONFIRMAR
-        =================================================== -->
-
-        <section class="panel-box network-full">
-
-          <h4 class="panel-title">
-            O que realmente precisa ser confirmado no dia
-          </h4>
-
-          <div class="payment-choice-grid">
-
-            <article class="payment-choice">
-
-              <strong>
-                Metrorail
-              </strong>
-
-              <p>
-                Single tracking,
-                alterações
-                e frequência atual.
-              </p>
-
-            </article>
-
-
-            <article class="payment-choice">
-
-              <strong>
-                Metromover
-              </strong>
-
-              <p>
-                Loop,
-                chegada
-                e eventuais alterações.
-              </p>
-
-            </article>
-
-
-            <article class="payment-choice">
-
-              <strong>
-                Metrobus
-              </strong>
-
-              <p>
-                Horário,
-                trânsito
-                e desvios.
-              </p>
-
-            </article>
-
-
-            <article class="payment-choice">
-
-              <strong>
-                Tri-Rail
-              </strong>
-
-              <p>
-                Trem
-                e horário específicos.
-              </p>
-
-            </article>
-
-
-            <article class="payment-choice">
-
-              <strong>
                 Brightline
               </strong>
 
               <p>
-                Horário,
-                disponibilidade
-                e tarifa.
-              </p>
-
-            </article>
-
-
-            <article class="payment-choice">
-
-              <strong>
-                Acessibilidade
-              </strong>
-
-              <p>
-                Status atual
-                dos equipamentos
-                necessários.
+                Transporte intercity.
               </p>
 
             </article>
@@ -2020,21 +1379,21 @@ window.MIAMI_TRANSPORT_MODULES["network"] = {
 
           <a
             class="official-link"
-            href="https://www.miamidade.gov/resources/transportation_publicworks/documents/metromover-map.pdf"
+            href="https://www.miamidade.gov/global/transportation/metromover.page"
             target="_blank"
             rel="noopener noreferrer"
           >
-            Mapa Metromover · Miami-Dade
+            Metromover · Miami-Dade
           </a>
 
 
           <a
             class="official-link"
-            href="https://www.miamidade.gov/resources/transportation_publicworks/documents/system-maps-web.pdf"
+            href="https://www.miamidade.gov/global/transportation/metrobus.page"
             target="_blank"
             rel="noopener noreferrer"
           >
-            Mapa Metrobus · abril de 2026
+            Metrobus · Miami-Dade
           </a>
 
 
