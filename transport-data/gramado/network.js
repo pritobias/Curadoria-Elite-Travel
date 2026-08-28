@@ -10,7 +10,7 @@ window.GRAMADO_TRANSPORT_MODULES =
 
 window.GRAMADO_TRANSPORT_MODULES["network"] = {
 
-  kicker: "Gramado · como a mobilidade funciona",
+  kicker: "Gramado · visão da rede",
 
   title: "Rede de Transporte",
 
@@ -28,30 +28,36 @@ window.GRAMADO_TRANSPORT_MODULES["network"] = {
         <section class="panel-box network-full">
 
           <h4 class="panel-title">
-            Gramado não possui metrô nem trem urbano
+            Como a mobilidade de Gramado se organiza
           </h4>
 
           <p class="panel-intro">
+            Gramado não possui
+            metrô nem trem urbano.
+
             A mobilidade combina
             transporte municipal por ônibus,
-            transporte rodoviário intermunicipal,
-            deslocamentos a pé
-            e transporte individual.
+            deslocamentos a pé,
+            transporte individual
+            e uma rede rodoviária
+            para viagens fora do município.
           </p>
+
 
           <div class="comparison-grid">
 
             <article class="comparison-card">
 
               <strong>
-                Centro
+                Região central
               </strong>
 
               <p>
-                Muitos deslocamentos
-                podem ser feitos a pé,
-                dependendo da localização
-                da hospedagem e do destino.
+                Concentra atrações,
+                restaurantes,
+                comércio
+                e serviços
+                em uma área relativamente compacta.
               </p>
 
             </article>
@@ -60,14 +66,29 @@ window.GRAMADO_TRANSPORT_MODULES["network"] = {
             <article class="comparison-card">
 
               <strong>
-                Bairros e interior
+                Bairros
+              </strong>
+
+              <p>
+                São atendidos
+                pela rede municipal
+                de ônibus.
+              </p>
+
+            </article>
+
+
+            <article class="comparison-card">
+
+              <strong>
+                Interior
               </strong>
 
               <p>
                 A rede municipal
-                atende áreas urbanas
-                e localidades do interior
-                de Gramado.
+                também alcança
+                localidades mais afastadas
+                dentro de Gramado.
               </p>
 
             </article>
@@ -81,27 +102,8 @@ window.GRAMADO_TRANSPORT_MODULES["network"] = {
 
               <p>
                 O deslocamento passa
-                para o sistema rodoviário
-                intermunicipal
-                do Rio Grande do Sul.
-              </p>
-
-            </article>
-
-
-            <article class="comparison-card">
-
-              <strong>
-                Destinos afastados
-              </strong>
-
-              <p>
-                Dependendo do local,
-                ônibus,
-                táxi,
-                aplicativo
-                ou carro podem ter
-                níveis diferentes de conveniência.
+                para o transporte
+                rodoviário intermunicipal.
               </p>
 
             </article>
@@ -112,27 +114,116 @@ window.GRAMADO_TRANSPORT_MODULES["network"] = {
 
 
         <!-- ==================================================
-             NOVO SISTEMA MUNICIPAL
+             PRINCIPAIS ESTRUTURAS
         =================================================== -->
 
         <section class="panel-box network-full">
 
           <h4 class="panel-title">
-            Novo transporte público municipal
+            Principais estruturas
+          </h4>
+
+
+          <div class="planner-check-grid">
+
+            <article class="planner-check-card">
+
+              <span>🚶</span>
+
+              <strong>
+                Mobilidade a pé
+              </strong>
+
+              <p>
+                Tem papel importante
+                principalmente
+                na região central.
+              </p>
+
+            </article>
+
+
+            <article class="planner-check-card">
+
+              <span>🚌</span>
+
+              <strong>
+                Rede municipal
+              </strong>
+
+              <p>
+                Liga Centro,
+                bairros
+                e localidades do interior.
+              </p>
+
+            </article>
+
+
+            <article class="planner-check-card">
+
+              <span>🛣️</span>
+
+              <strong>
+                Intermunicipal
+              </strong>
+
+              <p>
+                Conecta Gramado
+                a outros municípios
+                do Rio Grande do Sul.
+              </p>
+
+            </article>
+
+
+            <article class="planner-check-card">
+
+              <span>🚗</span>
+
+              <strong>
+                Transporte individual
+              </strong>
+
+              <p>
+                Complementa
+                os deslocamentos
+                fora da rede coletiva.
+              </p>
+
+            </article>
+
+          </div>
+
+        </section>
+
+
+        <!-- ==================================================
+             REDE MUNICIPAL
+        =================================================== -->
+
+        <section class="panel-box network-full">
+
+          <h4 class="panel-title">
+            Rede municipal de ônibus
           </h4>
 
           <p class="panel-intro">
             A nova operação
             entrou em funcionamento
-            em 1º de agosto de 2026.
+            em 1º de agosto de 2026
+            e reorganizou
+            o transporte coletivo
+            dentro do município.
           </p>
+
 
           <div class="fare-highlight-grid">
 
             <article class="fare-highlight">
 
               <span>
-                Rede municipal
+                Estrutura
               </span>
 
               <strong>
@@ -140,28 +231,9 @@ window.GRAMADO_TRANSPORT_MODULES["network"] = {
               </strong>
 
               <p>
-                Estrutura divulgada
-                pela Prefeitura
-                para o novo sistema.
-              </p>
-
-            </article>
-
-
-            <article class="fare-highlight">
-
-              <span>
-                Tarifa
-              </span>
-
-              <strong>
-                R$ 4,00
-              </strong>
-
-              <p>
-                Valor da passagem
-                municipal desde
-                1º de agosto de 2026.
+                Rede municipal
+                divulgada
+                pela Prefeitura.
               </p>
 
             </article>
@@ -174,14 +246,33 @@ window.GRAMADO_TRANSPORT_MODULES["network"] = {
               </span>
 
               <strong>
-                Urbana + interior
+                Centro + bairros
               </strong>
 
               <p>
-                A nova rede
-                atende bairros
-                e localidades
-                fora da área central.
+                Atende diferentes
+                áreas urbanas
+                de Gramado.
+              </p>
+
+            </article>
+
+
+            <article class="fare-highlight">
+
+              <span>
+                Cobertura
+              </span>
+
+              <strong>
+                Interior
+              </strong>
+
+              <p>
+                Também alcança
+                localidades
+                mais afastadas
+                do município.
               </p>
 
             </article>
@@ -198,12 +289,10 @@ window.GRAMADO_TRANSPORT_MODULES["network"] = {
               </strong>
 
               <p>
-                A reestruturação
-                aumentou rotas,
+                A nova estrutura
+                expandiu rotas,
                 itinerários
-                e horários,
-                inclusive à noite
-                em parte da rede.
+                e parte da oferta noturna.
               </p>
 
             </article>
@@ -214,21 +303,23 @@ window.GRAMADO_TRANSPORT_MODULES["network"] = {
 
 
         <!-- ==================================================
-             EXPANSÃO DA COBERTURA
+             COBERTURA
         =================================================== -->
 
         <section class="panel-box network-full">
 
           <h4 class="panel-title">
-            O que mudou na cobertura
+            Algumas áreas da cobertura municipal
           </h4>
 
           <p class="panel-intro">
-            A nova modelagem
-            ampliou o transporte
-            para regiões antes
-            menos atendidas.
+            A reorganização
+            ampliou o atendimento
+            para diferentes bairros
+            e localidades
+            fora do núcleo turístico central.
           </p>
+
 
           <div class="bus-system-grid">
 
@@ -241,9 +332,9 @@ window.GRAMADO_TRANSPORT_MODULES["network"] = {
               </strong>
 
               <p>
-                Está entre as áreas
-                contempladas
-                pela ampliação.
+                Integra a área urbana
+                atendida
+                pela nova rede.
               </p>
 
             </article>
@@ -258,9 +349,10 @@ window.GRAMADO_TRANSPORT_MODULES["network"] = {
               </strong>
 
               <p>
-                Foi incluída
-                nos novos percursos
-                divulgados.
+                Também aparece
+                entre as áreas
+                contempladas
+                pela nova operação.
               </p>
 
             </article>
@@ -275,10 +367,9 @@ window.GRAMADO_TRANSPORT_MODULES["network"] = {
               </strong>
 
               <p>
-                Também aparece
-                entre as regiões
-                contempladas
-                pela expansão.
+                Faz parte
+                da expansão
+                da cobertura municipal.
               </p>
 
             </article>
@@ -293,10 +384,10 @@ window.GRAMADO_TRANSPORT_MODULES["network"] = {
               </strong>
 
               <p>
-                Localidades do interior
+                Representam
+                localidades do interior
                 incluídas
-                na ampliação
-                do atendimento.
+                na estrutura ampliada.
               </p>
 
             </article>
@@ -313,174 +404,34 @@ window.GRAMADO_TRANSPORT_MODULES["network"] = {
         <section class="panel-box network-full">
 
           <h4 class="panel-title">
-            No Centro, caminhar pode ser suficiente
+            Região central
           </h4>
 
-          <p class="panel-intro">
-            A área turística central
-            concentra atrações,
-            restaurantes,
-            comércio
-            e serviços.
-          </p>
 
-          <div class="planner-check-grid">
+          <div class="answer-block">
 
-            <article class="planner-check-card">
+            <strong>
+              O Centro funciona
+              de forma diferente
+              das áreas mais afastadas.
+            </strong>
 
-              <span>🚶</span>
+            <p>
+              A concentração
+              de atrações,
+              restaurantes,
+              comércio
+              e serviços
+              faz com que muitos pontos
+              estejam próximos
+              uns dos outros.
 
-              <strong>
-                Distância
-              </strong>
-
-              <p>
-                Para trajetos curtos,
-                caminhar pode ser
-                mais simples
-                do que esperar transporte.
-              </p>
-
-            </article>
-
-
-            <article class="planner-check-card">
-
-              <span>🌧️</span>
-
-              <strong>
-                Clima
-              </strong>
-
-              <p>
-                Chuva,
-                frio
-                e neblina
-                podem tornar o mesmo percurso
-                menos conveniente.
-              </p>
-
-            </article>
-
-
-            <article class="planner-check-card">
-
-              <span>🧳</span>
-
-              <strong>
-                Bagagem
-              </strong>
-
-              <p>
-                Na chegada ou saída,
-                transporte motorizado
-                pode ser mais confortável.
-              </p>
-
-            </article>
-
-
-            <article class="planner-check-card">
-
-              <span>🕒</span>
-
-              <strong>
-                Horário
-              </strong>
-
-              <p>
-                Se depender do ônibus,
-                a programação
-                da linha escolhida
-                passa a importar.
-              </p>
-
-            </article>
-
-          </div>
-
-        </section>
-
-
-        <!-- ==================================================
-             MUNICIPAL
-        =================================================== -->
-
-        <section class="panel-box network-full">
-
-          <h4 class="panel-title">
-            Rede municipal
-          </h4>
-
-          <p class="panel-intro">
-            O transporte municipal
-            atende mais do que
-            a região turística central.
-          </p>
-
-          <div class="comparison-grid">
-
-            <article class="comparison-card">
-
-              <strong>
-                Centro
-              </strong>
-
-              <p>
-                Faz parte
-                da rede municipal,
-                embora muitos percursos
-                possam ser feitos a pé.
-              </p>
-
-            </article>
-
-
-            <article class="comparison-card">
-
-              <strong>
-                Bairros
-              </strong>
-
-              <p>
-                As linhas ampliam
-                a conexão
-                entre diferentes áreas
-                de Gramado.
-              </p>
-
-            </article>
-
-
-            <article class="comparison-card">
-
-              <strong>
-                Interior
-              </strong>
-
-              <p>
-                A rede também
-                alcança localidades
-                mais afastadas
-                dentro do município.
-              </p>
-
-            </article>
-
-
-            <article class="comparison-card">
-
-              <strong>
-                Atendimento noturno
-              </strong>
-
-              <p>
-                Parte da nova rede
-                possui oferta ampliada
-                durante a noite.
-              </p>
-
-            </article>
+              A rede municipal,
+              porém,
+              continua fazendo parte
+              da mobilidade
+              dessa região.
+            </p>
 
           </div>
 
@@ -494,8 +445,10 @@ window.GRAMADO_TRANSPORT_MODULES["network"] = {
         <section class="panel-box network-full">
 
           <h4 class="panel-title">
-            Municipal e intermunicipal são redes diferentes
+            Municipal e intermunicipal
+            são redes diferentes
           </h4>
+
 
           <div class="route-compare-grid">
 
@@ -506,17 +459,18 @@ window.GRAMADO_TRANSPORT_MODULES["network"] = {
               </span>
 
               <strong>
-                Transporte municipal
+                Rede municipal
               </strong>
 
               <p>
-                Rede local
-                administrada
-                pelo Município.
+                Atende Centro,
+                bairros
+                e localidades
+                dentro do próprio município.
               </p>
 
               <span class="route-compare-result">
-                Tarifa R$ 4,00
+                Sistema local
               </span>
 
             </article>
@@ -529,17 +483,17 @@ window.GRAMADO_TRANSPORT_MODULES["network"] = {
               </span>
 
               <strong>
-                Transporte intermunicipal
+                Rede intermunicipal
               </strong>
 
               <p>
-                Faz parte
-                do sistema estadual
-                de transporte rodoviário.
+                As viagens passam
+                para o sistema
+                rodoviário estadual.
               </p>
 
               <span class="route-compare-result">
-                Tarifa por linha
+                Sistema estadual
               </span>
 
             </article>
@@ -556,24 +510,25 @@ window.GRAMADO_TRANSPORT_MODULES["network"] = {
         <section class="panel-box network-full">
 
           <h4 class="panel-title">
-            Gramado ↔ Canela
+            Gramado e Canela
           </h4>
+
 
           <div class="visitor-alert">
 
             <strong>
-              É um deslocamento intermunicipal.
+              As duas cidades
+              formam um circuito turístico próximo,
+              mas são municípios diferentes.
             </strong>
 
-            Embora as duas cidades
-            sejam próximas
-            e formem um mesmo circuito turístico,
-            Gramado e Canela
-            são municípios diferentes.
-
-            A viagem entre elas
-            não pertence à rede municipal
-            de Gramado.
+            Por isso,
+            uma viagem
+            entre Gramado e Canela
+            pertence à rede
+            intermunicipal,
+            e não ao transporte
+            municipal de Gramado.
 
           </div>
 
@@ -581,7 +536,7 @@ window.GRAMADO_TRANSPORT_MODULES["network"] = {
 
 
         <!-- ==================================================
-             REDE ESTADUAL
+             INTERMUNICIPAL
         =================================================== -->
 
         <section class="panel-box network-full">
@@ -590,98 +545,56 @@ window.GRAMADO_TRANSPORT_MODULES["network"] = {
             Rede rodoviária intermunicipal
           </h4>
 
-          <p class="panel-intro">
-            Gramado integra
-            o sistema regular
-            de transporte intermunicipal
-            do Rio Grande do Sul.
-          </p>
 
           <div class="answer-block">
 
             <strong>
-              Os serviços são operados
+              Gramado faz parte
+              da rede rodoviária
+              regular do Rio Grande do Sul.
+            </strong>
+
+            <p>
+              Os serviços intermunicipais
+              são operados
               por empresas autorizadas
-              pelo DAER-RS.
-            </strong>
+              dentro da estrutura
+              regulada pelo Estado.
 
-            <p>
-              O Departamento gerencia
-              e fiscaliza
-              o sistema regular
-              de transporte intermunicipal
-              de passageiros.
+              Essa rede conecta Gramado
+              a diferentes cidades
+              da região
+              e do restante
+              do Rio Grande do Sul.
             </p>
 
           </div>
 
 
-          <div class="answer-block">
+          <div class="visitor-alert">
 
             <strong>
-              A operação depende da linha.
+              A rede intermunicipal
+              possui lógica própria.
             </strong>
 
-            <p>
-              Horário,
-              itinerário,
-              pontos de embarque
-              e tarifa variam
-              conforme o serviço utilizado.
-            </p>
+            Linhas,
+            horários,
+            pontos de embarque
+            e tarifas
+            dependem
+            do serviço escolhido.
 
+            Esses detalhes pertencem
+            ao planejamento
+            da viagem específica.
           </div>
 
         </section>
 
 
         <!-- ==================================================
-             CONECTIVIDADE REGIONAL
-        =================================================== -->
-
-        <section class="panel-box network-full">
-
-          <h4 class="panel-title">
-            Conectividade regional
-          </h4>
-
-          <div class="answer-block">
-
-            <strong>
-              Gramado está inserida
-              na rede rodoviária estadual.
-            </strong>
-
-            <p>
-              Registros do DAER
-              incluem linhas regulares
-              que possuem Gramado
-              como origem,
-              destino,
-              passagem
-              ou seção operacional.
-            </p>
-
-          </div>
-
-
-          <div class="fare-note">
-
-            Esses registros demonstram
-            a integração regional da cidade,
-            mas não devem ser usados
-            isoladamente para afirmar
-            que determinada partida
-            está disponível
-            no dia da viagem.
-
-          </div>
-
-        </section>
-
-
-        <!-- ==================================================
-             RODOVIÁRIA CENTRAL
+             RODOVIÁRIA
         =================================================== -->
 
         <section class="panel-box network-full">
@@ -690,34 +603,24 @@ window.GRAMADO_TRANSPORT_MODULES["network"] = {
             Estação Rodoviária de Gramado
           </h4>
 
+
           <div class="answer-block">
 
             <strong>
-              Referência para viagens rodoviárias
+              É uma das principais referências
+              para a rede rodoviária
+              da cidade.
             </strong>
 
             <p>
-              A rodoviária central
-              é utilizada
-              por serviços rodoviários
+              A estrutura central
+              recebe serviços
               intermunicipais
-              e interestaduais.
+              e interestaduais
+              e funciona
+              como importante ponto
+              de conexão regional.
             </p>
-
-          </div>
-
-
-          <div class="visitor-alert">
-
-            <strong>
-              O local de embarque
-              depende da viagem escolhida.
-            </strong>
-
-            Para um serviço específico,
-            confirme plataforma,
-            ponto de embarque
-            e horário.
 
           </div>
 
@@ -725,46 +628,126 @@ window.GRAMADO_TRANSPORT_MODULES["network"] = {
 
 
         <!-- ==================================================
-             VÁRZEA GRANDE
+             VARZEA GRANDE
         =================================================== -->
 
         <section class="panel-box network-full">
 
           <h4 class="panel-title">
-            Terminal Rodoviário da Várzea Grande
-          </h4>
-
-          <div class="answer-block">
-
-            <strong>
-              É uma referência
-              diferente da Rodoviária central.
-            </strong>
-
-            <p>
-              O local aparece
-              no novo sistema municipal
-              e foi utilizado
-              para o cadastramento
-              de usuários
-              da bilhetagem eletrônica.
-            </p>
-
-          </div>
-
-
-          <div class="visitor-alert">
-
-            <strong>
-              Não confunda os dois terminais.
-            </strong>
-
-            A Estação Rodoviária
-            da área central
-            e o Terminal Rodoviário
+            Terminal Rodoviário
             da Várzea Grande
-            cumprem papéis diferentes
-            na mobilidade local.
+          </h4>
+
+
+          <div class="visitor-alert">
+
+            <strong>
+              Não é a mesma estrutura
+              da Rodoviária central.
+            </strong>
+
+            O Terminal Rodoviário
+            da Várzea Grande
+            aparece relacionado
+            à mobilidade municipal
+            e cumpre papel diferente
+            da Estação Rodoviária
+            localizada
+            na área central.
+          </div>
+
+        </section>
+
+
+        <!-- ==================================================
+             COMO AS REDES SE RELACIONAM
+        =================================================== -->
+
+        <section class="panel-box network-full">
+
+          <h4 class="panel-title">
+            Uma cidade,
+            estruturas diferentes
+          </h4>
+
+
+          <div class="comparison-grid">
+
+            <article class="comparison-card">
+
+              <strong>
+                Centro
+              </strong>
+
+              <p>
+                Concentra
+                grande parte
+                da mobilidade turística
+                a pé.
+              </p>
+
+            </article>
+
+
+            <article class="comparison-card">
+
+              <strong>
+                Rede municipal
+              </strong>
+
+              <p>
+                Estrutura
+                os deslocamentos
+                dentro de Gramado.
+              </p>
+
+            </article>
+
+
+            <article class="comparison-card">
+
+              <strong>
+                Interior
+              </strong>
+
+              <p>
+                Também é atendido
+                por parte
+                da rede municipal.
+              </p>
+
+            </article>
+
+
+            <article class="comparison-card">
+
+              <strong>
+                Intermunicipal
+              </strong>
+
+              <p>
+                Assume as viagens
+                que ultrapassam
+                os limites
+                de Gramado.
+              </p>
+
+            </article>
+
+
+            <article class="comparison-card">
+
+              <strong>
+                Transporte individual
+              </strong>
+
+              <p>
+                Complementa
+                a estrutura coletiva
+                da cidade.
+              </p>
+
+            </article>
 
           </div>
 
@@ -772,14 +755,149 @@ window.GRAMADO_TRANSPORT_MODULES["network"] = {
 
 
         <!-- ==================================================
-             QUAL SISTEMA PROCURAR
+             COMO INTERPRETAR
         =================================================== -->
 
         <section class="panel-box network-full">
 
           <h4 class="panel-title">
-            Qual sistema tende a fazer sentido?
+            Como interpretar a mobilidade
           </h4>
+
+
+          <div class="bus-use-flow">
+
+            <article class="bus-use-step">
+
+              <span>1</span>
+
+              <strong>
+                Localize o destino
+              </strong>
+
+              <p>
+                Veja se ele está
+                no Centro,
+                em outro bairro,
+                no interior
+                ou fora de Gramado.
+              </p>
+
+            </article>
+
+
+            <article class="bus-use-step">
+
+              <span>2</span>
+
+              <strong>
+                Identifique a rede
+              </strong>
+
+              <p>
+                Diferencie
+                transporte municipal
+                de transporte
+                intermunicipal.
+              </p>
+
+            </article>
+
+
+            <article class="bus-use-step">
+
+              <span>3</span>
+
+              <strong>
+                Observe os pontos de conexão
+              </strong>
+
+              <p>
+                Rodoviária central
+                e Terminal da Várzea Grande
+                cumprem funções diferentes.
+              </p>
+
+            </article>
+
+
+            <article class="bus-use-step">
+
+              <span>4</span>
+
+              <strong>
+                Planeje a viagem real
+              </strong>
+
+              <p>
+                Depois de entender
+                a estrutura,
+                use
+                “Planeje o trajeto”
+                para escolher
+                a melhor alternativa
+                para aquele deslocamento.
+              </p>
+
+            </article>
+
+          </div>
+
+        </section>
+
+
+        <!-- ==================================================
+             NETWORK X PLANNER
+        =================================================== -->
+
+        <section class="panel-box network-full">
+
+          <h4 class="panel-title">
+            A rede mostra a estrutura.
+            O Planner mostra a viagem.
+          </h4>
+
+
+          <div class="visitor-alert">
+
+            <strong>
+              Para decidir
+              como realmente
+              fazer o deslocamento,
+              use também
+              “Planeje o trajeto”.
+            </strong>
+
+            Caminhada,
+            ônibus municipal,
+            linhas específicas,
+            horários,
+            Canela,
+            viagens intermunicipais,
+            clima,
+            grupos,
+            carro,
+            táxi,
+            aplicativo
+            e comparação
+            entre alternativas
+            estão detalhados
+            no Planner.
+          </div>
+
+        </section>
+
+
+        <!-- ==================================================
+             RESUMO
+        =================================================== -->
+
+        <section class="panel-box network-full">
+
+          <h4 class="panel-title">
+            Em resumo
+          </h4>
+
 
           <div class="planner-check-grid">
 
@@ -788,12 +906,12 @@ window.GRAMADO_TRANSPORT_MODULES["network"] = {
               <span>🚶</span>
 
               <strong>
-                Destino próximo no Centro
+                Centro
               </strong>
 
               <p>
-                Caminhar pode ser
-                a opção mais simples.
+                Mobilidade turística
+                bastante concentrada.
               </p>
 
             </article>
@@ -804,12 +922,13 @@ window.GRAMADO_TRANSPORT_MODULES["network"] = {
               <span>🚌</span>
 
               <strong>
-                Bairro ou interior
+                Municipal
               </strong>
 
               <p>
-                A rede municipal
-                é a referência.
+                Centro,
+                bairros
+                e interior.
               </p>
 
             </article>
@@ -824,8 +943,8 @@ window.GRAMADO_TRANSPORT_MODULES["network"] = {
               </strong>
 
               <p>
-                O deslocamento
-                já é intermunicipal.
+                Já é outra cidade
+                e outra rede.
               </p>
 
             </article>
@@ -836,12 +955,13 @@ window.GRAMADO_TRANSPORT_MODULES["network"] = {
               <span>🛣️</span>
 
               <strong>
-                Outra cidade
+                Intermunicipal
               </strong>
 
               <p>
-                A viagem pertence
-                ao sistema rodoviário estadual.
+                Conecta Gramado
+                ao restante
+                da região.
               </p>
 
             </article>
@@ -852,101 +972,12 @@ window.GRAMADO_TRANSPORT_MODULES["network"] = {
               <span>🚗</span>
 
               <strong>
-                Vários destinos afastados
+                Individual
               </strong>
 
               <p>
-                Compare ônibus,
-                carro,
-                táxi
-                ou aplicativo
-                conforme o dia.
-              </p>
-
-            </article>
-
-          </div>
-
-        </section>
-
-
-        <!-- ==================================================
-             O QUE MUDA NO DIA
-        =================================================== -->
-
-        <section class="panel-box network-full">
-
-          <h4 class="panel-title">
-            O que precisa ser confirmado no dia da viagem
-          </h4>
-
-          <p class="panel-intro">
-            A estrutura da rede
-            está explicada acima.
-            Alguns dados,
-            porém,
-            são operacionais
-            e podem mudar.
-          </p>
-
-          <div class="payment-choice-grid">
-
-            <article class="payment-choice">
-
-              <strong>
-                Linha específica
-              </strong>
-
-              <p>
-                A rota depende
-                do bairro,
-                localidade
-                ou cidade de destino.
-              </p>
-
-            </article>
-
-
-            <article class="payment-choice">
-
-              <strong>
-                Horário
-              </strong>
-
-              <p>
-                Cada serviço
-                possui programação própria.
-              </p>
-
-            </article>
-
-
-            <article class="payment-choice">
-
-              <strong>
-                Ponto de embarque
-              </strong>
-
-              <p>
-                O local pode variar
-                conforme a linha
-                ou viagem rodoviária.
-              </p>
-
-            </article>
-
-
-            <article class="payment-choice">
-
-              <strong>
-                Alterações operacionais
-              </strong>
-
-              <p>
-                Ajustes temporários
-                podem modificar
-                horários
-                ou itinerários.
+                Complementa
+                a rede coletiva.
               </p>
 
             </article>
@@ -989,16 +1020,6 @@ window.GRAMADO_TRANSPORT_MODULES["network"] = {
             rel="noopener noreferrer"
           >
             Transporte intermunicipal · DAER-RS
-          </a>
-
-
-          <a
-            class="official-link"
-            href="https://www.daer.rs.gov.br/orientacoes-aos-transportadores"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Tarifas e sistema estadual · DAER-RS
           </a>
 
 
