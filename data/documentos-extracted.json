@@ -1,9 +1,9 @@
 {
-  "extractedAt": "2026-08-27T19:26:30.206Z",
+  "extractedAt": "2026-08-28T20:13:17.867Z",
   "totalCountriesDetected": 28,
   "totalCityRedirectsDetected": 228,
   "totalInteractiveDetailBlocksDetected": 4,
-  "totalSourcesDetected": 305,
+  "totalSourcesDetected": 307,
   "countries": [
     {
       "id": "estados-unidos",
@@ -2579,10 +2579,12 @@
     "https://www.health.belgium.be/",
     "https://www.ica.gov.sg/enter-transit-depart/entering-singapore",
     "https://www.ica.gov.sg/enter-transit-depart/entering-singapore/sg-arrival-card",
+    "https://www.instagram.com/curadoriaelitetravel/",
     "https://www.international.gc.ca/country-pays/brazil-bresil/brasilia.aspx?lang=eng",
     "https://www.international.gc.ca/country-pays/brazil-bresil/index.aspx?lang=eng",
     "https://www.international.gc.ca/country-pays/brazil-bresil/rio_de_janeiro.aspx?lang=eng",
     "https://www.international.gc.ca/country-pays/brazil-bresil/sao_paulo.aspx?lang=eng",
+    "https://www.linkedin.com/company/curadoria-elite-travel",
     "https://www.mfa.gov.tr/visa-information-for-foreigners.en.mfa",
     "https://www.mfa.gr/brazil",
     "https://www.mfa.gr/en/visas/",
