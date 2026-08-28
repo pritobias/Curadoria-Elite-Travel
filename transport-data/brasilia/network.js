@@ -50,7 +50,7 @@ function createBrasiliaLegendItem(
 window.BRASILIA_TRANSPORT_MODULES["network"] = {
 
   kicker:
-    "Brasília · visão completa",
+    "Brasília · visão da rede",
 
   title:
     "Rede de Transporte",
@@ -74,10 +74,18 @@ window.BRASILIA_TRANSPORT_MODULES["network"] = {
 
           <p class="panel-intro">
             O Sistema de Transporte Público Coletivo
-            do Distrito Federal é dividido
-            oficialmente em dois modais:
-            rodoviário e metroviário.
+            do Distrito Federal combina
+            estrutura rodoviária
+            e metroviária.
+
+            Dentro dessa rede,
+            metrô,
+            BRT,
+            ônibus
+            e serviços complementares
+            cumprem funções diferentes.
           </p>
+
 
           <div class="comparison-grid">
 
@@ -89,8 +97,9 @@ window.BRASILIA_TRANSPORT_MODULES["network"] = {
 
               <p>
                 Reúne ônibus,
-                BRT e os serviços
-                Básico e Complementar
+                BRT
+                e serviços
+                complementares
                 do Distrito Federal.
               </p>
 
@@ -104,10 +113,11 @@ window.BRASILIA_TRANSPORT_MODULES["network"] = {
               </strong>
 
               <p>
-                É formado pelo Metrô-DF,
-                que atende o Plano Piloto
-                e parte do eixo oeste
-                do Distrito Federal.
+                É formado
+                pelo Metrô-DF,
+                que estrutura
+                principalmente
+                parte do eixo oeste.
               </p>
 
             </article>
@@ -124,39 +134,40 @@ window.BRASILIA_TRANSPORT_MODULES["network"] = {
         <section class="panel-box network-full">
 
           <h4 class="panel-title">
-            O que você encontra na rede
+            Principais sistemas
           </h4>
+
 
           <div class="legend-grid">
 
             ${createBrasiliaLegendItem(
               "M",
               "Metrô",
-              "Rede metroviária que liga a região central a áreas como Guará, Águas Claras, Taguatinga, Ceilândia e Samambaia."
+              "Rede ferroviária que conecta a região central a Guará, Águas Claras, Taguatinga, Ceilândia e Samambaia."
             )}
 
             ${createBrasiliaLegendItem(
               "BRT",
               "BRT",
-              "Sistema de ônibus de alta capacidade que estrutura principalmente o eixo sul do Distrito Federal."
+              "Sistema de ônibus de alta capacidade que estrutura principalmente o eixo sul."
             )}
 
             ${createBrasiliaLegendItem(
-              "🚌",
+              "BUS",
               "Ônibus",
-              "Rede rodoviária que cobre o Plano Piloto e as diferentes Regiões Administrativas."
+              "Rede de superfície responsável pela cobertura mais ampla das Regiões Administrativas."
             )}
 
             ${createBrasiliaLegendItem(
-              "🚐",
+              "LOCAL",
               "Serviços locais",
-              "Incluem micro-ônibus e serviços de vizinhança utilizados em trajetos locais."
+              "Micro-ônibus e outros serviços voltados a trajetos locais e de vizinhança."
             )}
 
             ${createBrasiliaLegendItem(
-              "🌾",
-              "Serviço Complementar",
-              "Abrange serviços complementares ao sistema básico, incluindo atendimento rural e executivo."
+              "COMP",
+              "Complementar",
+              "Serviços complementares, incluindo atendimentos específicos urbanos e rurais."
             )}
 
           </div>
@@ -175,10 +186,16 @@ window.BRASILIA_TRANSPORT_MODULES["network"] = {
           </h4>
 
           <p class="panel-intro">
-            A rede parte da região central
-            e se divide em dois eixos
-            depois de Águas Claras:
-            Ceilândia e Samambaia.
+            A rede metroviária
+            parte da região central
+            e segue pelo eixo oeste
+            do Distrito Federal.
+
+            Depois de Águas Claras,
+            o sistema se divide
+            nos eixos
+            de Ceilândia
+            e Samambaia.
           </p>
 
 
@@ -207,15 +224,37 @@ window.BRASILIA_TRANSPORT_MODULES["network"] = {
           </div>
 
 
-          <div class="fare-note">
+          <div class="visitor-alert">
 
-            No mapa,
-            os círculos identificam estações em operação
-            e os pontos pretos indicam estações em construção.
-            Os ramais de Ceilândia e Samambaia
-            compartilham parte do percurso.
+            <strong>
+              Os dois eixos
+              compartilham parte
+              da mesma rede.
+            </strong>
+
+            O trecho central
+            é comum aos serviços.
+
+            Depois da bifurcação,
+            os trens seguem
+            em direção
+            a Ceilândia
+            ou Samambaia.
 
           </div>
+
+        </section>
+
+
+        <!-- ==================================================
+             ESTRUTURA DO METRÔ
+        =================================================== -->
+
+        <section class="panel-box network-full">
+
+          <h4 class="panel-title">
+            Como o metrô se organiza
+          </h4>
 
 
           <div class="comparison-grid">
@@ -227,10 +266,12 @@ window.BRASILIA_TRANSPORT_MODULES["network"] = {
               </strong>
 
               <p>
-                Os trens utilizam
-                o mesmo eixo entre
-                a região central
-                e Águas Claras.
+                A região central,
+                Guará
+                e parte do eixo
+                até Águas Claras
+                pertencem
+                à estrutura comum.
               </p>
 
             </article>
@@ -243,10 +284,10 @@ window.BRASILIA_TRANSPORT_MODULES["network"] = {
               </strong>
 
               <p>
-                Depois da bifurcação,
-                um dos serviços
-                segue em direção
-                a Taguatinga e Ceilândia.
+                Um dos ramais
+                segue por Taguatinga
+                em direção
+                a Ceilândia.
               </p>
 
             </article>
@@ -259,9 +300,10 @@ window.BRASILIA_TRANSPORT_MODULES["network"] = {
               </strong>
 
               <p>
-                O outro serviço
+                O outro ramal
                 segue de Águas Claras
-                em direção a Samambaia.
+                em direção
+                a Samambaia.
               </p>
 
             </article>
@@ -274,9 +316,10 @@ window.BRASILIA_TRANSPORT_MODULES["network"] = {
               </strong>
 
               <p>
-                A região central
-                possui conexão direta
-                com a Rodoviária
+                É o principal
+                ponto metroviário
+                associado
+                à Rodoviária
                 do Plano Piloto.
               </p>
 
@@ -288,14 +331,16 @@ window.BRASILIA_TRANSPORT_MODULES["network"] = {
 
 
         <!-- ==================================================
-             REGIÕES NO EIXO DO METRÔ
+             REGIÕES DO METRÔ
         =================================================== -->
 
         <section class="panel-box network-full">
 
           <h4 class="panel-title">
-            Principais regiões atendidas pelo metrô
+            Regiões que ajudam
+            a entender o eixo do metrô
           </h4>
+
 
           <div class="bus-system-grid">
 
@@ -327,8 +372,8 @@ window.BRASILIA_TRANSPORT_MODULES["network"] = {
 
               <p>
                 Está no trecho
-                comum da rede
-                metroviária.
+                compartilhado
+                da rede metroviária.
               </p>
 
             </article>
@@ -343,8 +388,8 @@ window.BRASILIA_TRANSPORT_MODULES["network"] = {
               </strong>
 
               <p>
-                É o principal ponto
-                de separação
+                É a principal
+                região de separação
                 entre os dois eixos.
               </p>
 
@@ -360,9 +405,10 @@ window.BRASILIA_TRANSPORT_MODULES["network"] = {
               </strong>
 
               <p>
-                É atendida
-                pelo eixo que segue
-                em direção a Ceilândia.
+                Integra o eixo
+                que segue
+                em direção
+                a Ceilândia.
               </p>
 
             </article>
@@ -377,8 +423,10 @@ window.BRASILIA_TRANSPORT_MODULES["network"] = {
               </strong>
 
               <p>
-                Forma um dos extremos
-                da rede metroviária.
+                Forma um dos
+                grandes eixos
+                terminais
+                da rede.
               </p>
 
             </article>
@@ -394,8 +442,9 @@ window.BRASILIA_TRANSPORT_MODULES["network"] = {
 
               <p>
                 Forma o outro
-                grande eixo terminal
-                da rede.
+                grande eixo
+                terminal
+                do metrô.
               </p>
 
             </article>
@@ -415,11 +464,28 @@ window.BRASILIA_TRANSPORT_MODULES["network"] = {
             BRT
           </h4>
 
-          <p class="panel-intro">
-            O BRT estrutura principalmente
-            os deslocamentos do eixo sul
-            do Distrito Federal.
-          </p>
+
+          <div class="answer-block">
+
+            <strong>
+              O BRT estrutura
+              principalmente
+              o eixo sul
+              do Distrito Federal.
+            </strong>
+
+            <p>
+              O sistema combina
+              terminais,
+              linhas alimentadoras
+              e serviços troncais
+              para organizar
+              deslocamentos
+              de maior capacidade.
+            </p>
+
+          </div>
+
 
           <div class="comparison-grid">
 
@@ -432,7 +498,8 @@ window.BRASILIA_TRANSPORT_MODULES["network"] = {
               <p>
                 Possui terminal
                 de integração
-                do sistema BRT.
+                associado
+                ao corredor BRT.
               </p>
 
             </article>
@@ -445,9 +512,10 @@ window.BRASILIA_TRANSPORT_MODULES["network"] = {
               </strong>
 
               <p>
-                Também possui
-                terminal de integração
-                ligado ao corredor.
+                Também funciona
+                como importante
+                ponto de integração
+                do eixo sul.
               </p>
 
             </article>
@@ -456,14 +524,13 @@ window.BRASILIA_TRANSPORT_MODULES["network"] = {
             <article class="comparison-card">
 
               <strong>
-                Linhas alimentadoras
+                Alimentadoras
               </strong>
 
               <p>
                 Fazem a ligação
-                entre bairros
-                e os terminais
-                de integração.
+                entre áreas locais
+                e os terminais.
               </p>
 
             </article>
@@ -472,13 +539,13 @@ window.BRASILIA_TRANSPORT_MODULES["network"] = {
             <article class="comparison-card">
 
               <strong>
-                Serviços troncais
+                Troncais
               </strong>
 
               <p>
-                Realizam os deslocamentos
-                de maior capacidade
-                pelo corredor estruturado.
+                Percorrem
+                o eixo principal
+                do corredor estruturado.
               </p>
 
             </article>
@@ -489,20 +556,63 @@ window.BRASILIA_TRANSPORT_MODULES["network"] = {
 
 
         <!-- ==================================================
-             REDE DE ÔNIBUS
+             ÔNIBUS
         =================================================== -->
 
         <section class="panel-box network-full">
 
           <h4 class="panel-title">
-            Como a rede de ônibus é dividida
+            Rede de ônibus
+          </h4>
+
+
+          <div class="answer-block">
+
+            <strong>
+              É a rede com maior
+              cobertura territorial
+              do Distrito Federal.
+            </strong>
+
+            <p>
+              Os ônibus conectam
+              o Plano Piloto
+              às diferentes
+              Regiões Administrativas
+              e também estruturam
+              deslocamentos
+              entre áreas
+              que não possuem metrô
+              ou BRT.
+            </p>
+
+          </div>
+
+        </section>
+
+
+        <!-- ==================================================
+             BACIAS
+        =================================================== -->
+
+        <section class="panel-box network-full">
+
+          <h4 class="panel-title">
+            Como a operação de ônibus
+            é organizada
           </h4>
 
           <p class="panel-intro">
             O Serviço Básico
-            é organizado territorialmente
+            é dividido
+            territorialmente
             em cinco bacias operacionais.
+
+            Essa divisão ajuda
+            a organizar
+            a operação da rede.
           </p>
+
 
           <div class="payment-choice-grid">
 
@@ -513,10 +623,10 @@ window.BRASILIA_TRANSPORT_MODULES["network"] = {
               </strong>
 
               <p>
-                Brasília,
+                Inclui áreas
+                como Brasília,
                 Cruzeiro,
                 Lago Norte,
-                Varjão,
                 Sobradinho
                 e Planaltina.
               </p>
@@ -531,14 +641,11 @@ window.BRASILIA_TRANSPORT_MODULES["network"] = {
               </strong>
 
               <p>
-                Paranoá,
-                Itapoã,
+                Inclui áreas
+                como Paranoá,
                 São Sebastião,
-                Jardim Botânico,
-                Gama,
-                Santa Maria,
-                Park Way pela Epia
-                e Candangolândia.
+                Gama
+                e Santa Maria.
               </p>
 
             </article>
@@ -551,8 +658,9 @@ window.BRASILIA_TRANSPORT_MODULES["network"] = {
               </strong>
 
               <p>
-                Núcleo Bandeirante,
-                Riacho Fundo I e II,
+                Inclui áreas
+                como Núcleo Bandeirante,
+                Riacho Fundo,
                 Recanto das Emas
                 e Samambaia.
               </p>
@@ -567,11 +675,10 @@ window.BRASILIA_TRANSPORT_MODULES["network"] = {
               </strong>
 
               <p>
-                Guará,
-                Park Way pela região
-                de Arniqueiras,
-                Águas Claras,
-                parte de Taguatinga
+                Inclui Guará,
+                Águas Claras
+                e partes
+                de Taguatinga
                 e Ceilândia.
               </p>
 
@@ -585,30 +692,16 @@ window.BRASILIA_TRANSPORT_MODULES["network"] = {
               </strong>
 
               <p>
-                SAI,
-                SAAN,
-                SOF Norte,
-                Estrutural,
+                Inclui áreas
+                como Estrutural,
                 Vicente Pires,
-                parte de Taguatinga,
-                Ceilândia Norte
-                e Brazlândia.
+                Brazlândia
+                e partes
+                de Taguatinga
+                e Ceilândia.
               </p>
 
             </article>
-
-          </div>
-
-
-          <div class="fare-note">
-
-            As bacias organizam
-            territorialmente a operação
-            da rede de ônibus.
-            Uma mesma viagem pode envolver
-            serviços de áreas diferentes,
-            dependendo da origem
-            e do destino.
 
           </div>
 
@@ -622,22 +715,26 @@ window.BRASILIA_TRANSPORT_MODULES["network"] = {
         <section class="panel-box network-full">
 
           <h4 class="panel-title">
-            Micro-ônibus e serviços locais
+            Serviços locais
           </h4>
+
 
           <div class="answer-block">
 
             <strong>
-              Também fazem parte
-              da mobilidade do Distrito Federal.
+              Veículos menores
+              também fazem parte
+              da mobilidade
+              do Distrito Federal.
             </strong>
 
             <p>
-              Veículos menores,
-              incluindo serviços conhecidos
-              como Zebrinha,
-              atendem trajetos locais
-              e de vizinhança.
+              Micro-ônibus
+              e serviços locais,
+              incluindo os conhecidos
+              serviços de vizinhança,
+              complementam a rede
+              em trajetos específicos.
             </p>
 
           </div>
@@ -646,7 +743,7 @@ window.BRASILIA_TRANSPORT_MODULES["network"] = {
 
 
         <!-- ==================================================
-             SERVIÇO COMPLEMENTAR
+             COMPLEMENTAR
         =================================================== -->
 
         <section class="panel-box network-full">
@@ -654,6 +751,7 @@ window.BRASILIA_TRANSPORT_MODULES["network"] = {
           <h4 class="panel-title">
             Serviço Complementar
           </h4>
+
 
           <div class="comparison-grid">
 
@@ -664,9 +762,9 @@ window.BRASILIA_TRANSPORT_MODULES["network"] = {
               </strong>
 
               <p>
-                Atende áreas rurais
-                que fazem parte
-                do território
+                Complementa
+                a rede coletiva
+                em áreas rurais
                 do Distrito Federal.
               </p>
 
@@ -680,8 +778,7 @@ window.BRASILIA_TRANSPORT_MODULES["network"] = {
               </strong>
 
               <p>
-                Serviços executivos
-                também integram
+                Também integra
                 a categoria oficial
                 de Serviço Complementar.
               </p>
@@ -700,34 +797,27 @@ window.BRASILIA_TRANSPORT_MODULES["network"] = {
         <section class="panel-box network-full">
 
           <h4 class="panel-title">
-            TCB dentro da rede
+            TCB dentro da estrutura
           </h4>
+
 
           <div class="visitor-alert">
 
             <strong>
-              A TCB não opera
-              linhas tarifárias regulares
-              desde dezembro de 2024.
+              A TCB continua
+              fazendo parte
+              da estrutura institucional
+              do transporte do DF.
             </strong>
 
-            A empresa pública continua
-            integrando a estrutura de transporte
-            do Distrito Federal
-            e mantém outras atividades
-            e serviços institucionais.
-
-          </div>
-
-
-          <div class="fare-note">
-
-            A TCB ainda pode aparecer
-            associada a serviços específicos.
-            Isso não significa
-            que tenha voltado a operar
-            a rede regular tarifária
-            de ônibus do Distrito Federal.
+            A empresa,
+            porém,
+            não deve ser interpretada
+            como uma operadora
+            da rede tarifária regular
+            de ônibus
+            da mesma forma
+            que no passado.
 
           </div>
 
@@ -735,14 +825,16 @@ window.BRASILIA_TRANSPORT_MODULES["network"] = {
 
 
         <!-- ==================================================
-             CONEXÕES IMPORTANTES
+             CONEXÕES
         =================================================== -->
 
         <section class="panel-box network-full">
 
           <h4 class="panel-title">
-            Pontos importantes de conexão
+            Conexões que ajudam
+            a entender a rede
           </h4>
+
 
           <div class="bus-system-grid">
 
@@ -756,8 +848,10 @@ window.BRASILIA_TRANSPORT_MODULES["network"] = {
 
               <p>
                 Grande ponto
-                de distribuição de ônibus
-                e conexão com o metrô.
+                de distribuição
+                da rede de ônibus
+                e conexão
+                com o metrô.
               </p>
 
             </article>
@@ -772,9 +866,10 @@ window.BRASILIA_TRANSPORT_MODULES["network"] = {
               </strong>
 
               <p>
-                Principal acesso
-                metroviário
-                à região central.
+                Principal referência
+                metroviária
+                para a região
+                central.
               </p>
 
             </article>
@@ -790,7 +885,8 @@ window.BRASILIA_TRANSPORT_MODULES["network"] = {
 
               <p>
                 Integra serviços locais
-                e o corredor BRT.
+                ao corredor
+                principal do BRT.
               </p>
 
             </article>
@@ -805,8 +901,10 @@ window.BRASILIA_TRANSPORT_MODULES["network"] = {
               </strong>
 
               <p>
-                Referência de integração
-                para o eixo sul.
+                Outro ponto
+                importante
+                de integração
+                do eixo sul.
               </p>
 
             </article>
@@ -817,14 +915,241 @@ window.BRASILIA_TRANSPORT_MODULES["network"] = {
 
 
         <!-- ==================================================
-             COMO PENSAR A REDE
+             COMO AS REDES SE RELACIONAM
         =================================================== -->
 
         <section class="panel-box network-full">
 
           <h4 class="panel-title">
-            Como pensar a rede
+            Um território,
+            sistemas diferentes
           </h4>
+
+
+          <div class="comparison-grid">
+
+            <article class="comparison-card">
+
+              <strong>
+                Metrô
+              </strong>
+
+              <p>
+                Estrutura principalmente
+                parte do eixo oeste.
+              </p>
+
+            </article>
+
+
+            <article class="comparison-card">
+
+              <strong>
+                BRT
+              </strong>
+
+              <p>
+                Estrutura principalmente
+                o eixo sul.
+              </p>
+
+            </article>
+
+
+            <article class="comparison-card">
+
+              <strong>
+                Ônibus
+              </strong>
+
+              <p>
+                Fazem a cobertura
+                mais ampla
+                das Regiões Administrativas.
+              </p>
+
+            </article>
+
+
+            <article class="comparison-card">
+
+              <strong>
+                Serviços locais
+              </strong>
+
+              <p>
+                Complementam
+                deslocamentos
+                específicos.
+              </p>
+
+            </article>
+
+
+            <article class="comparison-card">
+
+              <strong>
+                Complementar
+              </strong>
+
+              <p>
+                Amplia
+                o atendimento
+                em situações
+                próprias da rede.
+              </p>
+
+            </article>
+
+          </div>
+
+        </section>
+
+
+        <!-- ==================================================
+             COMO INTERPRETAR
+        =================================================== -->
+
+        <section class="panel-box network-full">
+
+          <h4 class="panel-title">
+            Como interpretar a rede
+          </h4>
+
+
+          <div class="bus-use-flow">
+
+            <article class="bus-use-step">
+
+              <span>1</span>
+
+              <strong>
+                Localize o eixo
+              </strong>
+
+              <p>
+                Identifique
+                em qual região
+                do Distrito Federal
+                estão origem
+                e destino.
+              </p>
+
+            </article>
+
+
+            <article class="bus-use-step">
+
+              <span>2</span>
+
+              <strong>
+                Veja a rede estrutural
+              </strong>
+
+              <p>
+                Observe
+                se o deslocamento
+                se relaciona
+                ao metrô,
+                BRT
+                ou à rede de ônibus.
+              </p>
+
+            </article>
+
+
+            <article class="bus-use-step">
+
+              <span>3</span>
+
+              <strong>
+                Procure conexões
+              </strong>
+
+              <p>
+                Identifique
+                onde diferentes
+                serviços
+                se encontram.
+              </p>
+
+            </article>
+
+
+            <article class="bus-use-step">
+
+              <span>4</span>
+
+              <strong>
+                Planeje a viagem real
+              </strong>
+
+              <p>
+                Depois de entender
+                a estrutura,
+                use
+                “Planeje o trajeto”
+                para decidir
+                o deslocamento completo.
+              </p>
+
+            </article>
+
+          </div>
+
+        </section>
+
+
+        <!-- ==================================================
+             NETWORK X PLANNER
+        =================================================== -->
+
+        <section class="panel-box network-full">
+
+          <h4 class="panel-title">
+            A rede mostra a estrutura.
+            O Planner mostra a viagem.
+          </h4>
+
+
+          <div class="visitor-alert">
+
+            <strong>
+              Para decidir
+              como realmente
+              chegar ao destino,
+              não dependa apenas
+              da visão geral.
+            </strong>
+
+            Escolha entre metrô,
+            BRT
+            e ônibus,
+            integrações,
+            tarifa,
+            domingos e feriados,
+            distâncias,
+            horários,
+            posição dos veículos
+            e DF no Ponto
+            estão detalhados
+            em “Planeje o trajeto”.
+
+          </div>
+
+        </section>
+
+
+        <!-- ==================================================
+             RESUMO
+        =================================================== -->
+
+        <section class="panel-box network-full">
+
+          <h4 class="panel-title">
+            Em resumo
+          </h4>
+
 
           <div class="planner-check-grid">
 
@@ -833,16 +1158,13 @@ window.BRASILIA_TRANSPORT_MODULES["network"] = {
               <span>🚇</span>
 
               <strong>
-                Eixo oeste
+                Metrô
               </strong>
 
               <p>
-                O metrô ganha importância
-                em Guará,
-                Águas Claras,
-                Taguatinga,
-                Ceilândia
-                e Samambaia.
+                Estrutura
+                parte importante
+                do eixo oeste.
               </p>
 
             </article>
@@ -853,13 +1175,13 @@ window.BRASILIA_TRANSPORT_MODULES["network"] = {
               <span>🚍</span>
 
               <strong>
-                Eixo sul
+                BRT
               </strong>
 
               <p>
-                O BRT tem papel central
-                em Gama
-                e Santa Maria.
+                Estrutura
+                principalmente
+                o eixo sul.
               </p>
 
             </article>
@@ -870,14 +1192,13 @@ window.BRASILIA_TRANSPORT_MODULES["network"] = {
               <span>🚌</span>
 
               <strong>
-                Cobertura territorial
+                Ônibus
               </strong>
 
               <p>
-                Os ônibus ampliam
-                a cobertura
-                pelas diferentes
-                Regiões Administrativas.
+                Fazem
+                a cobertura mais ampla
+                do Distrito Federal.
               </p>
 
             </article>
@@ -885,17 +1206,15 @@ window.BRASILIA_TRANSPORT_MODULES["network"] = {
 
             <article class="planner-check-card">
 
-              <span>🔄</span>
+              <span>🚐</span>
 
               <strong>
-                Integrações
+                Serviços locais
               </strong>
 
               <p>
-                Uma viagem pode combinar
-                ônibus,
-                BRT
-                e metrô.
+                Complementam
+                trajetos específicos.
               </p>
 
             </article>
@@ -906,39 +1225,16 @@ window.BRASILIA_TRANSPORT_MODULES["network"] = {
               <span>🌾</span>
 
               <strong>
-                Áreas rurais
+                Complementar
               </strong>
 
               <p>
-                O sistema também
-                possui atendimento
-                complementar rural.
+                Amplia
+                a estrutura
+                do transporte coletivo.
               </p>
 
             </article>
-
-          </div>
-
-        </section>
-
-
-        <!-- ==================================================
-             VAI DE GRAÇA
-        =================================================== -->
-
-        <section class="panel-box network-full">
-
-          <h4 class="panel-title">
-            Domingos e feriados
-          </h4>
-
-          <div class="fare-note">
-
-            Pelo programa Vai de Graça,
-            ônibus, BRT, micro-ônibus,
-            serviços urbanos e rurais
-            e metrô são gratuitos
-            aos domingos e feriados.
 
           </div>
 
@@ -987,7 +1283,7 @@ window.BRASILIA_TRANSPORT_MODULES["network"] = {
             target="_blank"
             rel="noopener noreferrer"
           >
-            Situação atual da TCB
+            TCB
           </a>
 
         </div>
