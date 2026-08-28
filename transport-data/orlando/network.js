@@ -250,7 +250,7 @@ function openOrlandoNetworkMap() {
 window.ORLANDO_TRANSPORT_MODULES["network"] = {
 
   kicker:
-    "Orlando · visão completa",
+    "Orlando · visão da rede",
 
   title:
     "Rede de Transporte",
@@ -273,13 +273,17 @@ window.ORLANDO_TRANSPORT_MODULES["network"] = {
           </h4>
 
           <p class="panel-intro">
-            O mapa ajuda
-            a visualizar
+            Use o mapa para entender
+            a estrutura geral
+            do transporte público
+            da região de Orlando.
+
+            Ele ajuda a visualizar
             a rede LYNX
             e as principais conexões
-            de transporte
-            da região de Orlando.
+            com outros sistemas.
           </p>
+
 
           <div
             class="official-map-wrap"
@@ -333,18 +337,26 @@ window.ORLANDO_TRANSPORT_MODULES["network"] = {
           <div class="visitor-alert">
 
             <strong>
-              Orlando não possui
-              uma única rede
-              que resolva todos
-              os deslocamentos turísticos.
+              Orlando funciona de forma diferente
+              de cidades com metrô abrangente.
             </strong>
 
-            LYNX,
-            LYMMO,
-            SunRail,
-            NeighborLink
-            e transportes privados
-            cumprem funções diferentes.
+            A mobilidade pública
+            depende principalmente
+            de ônibus,
+            com serviços complementares
+            para Downtown,
+            transporte regional
+            e áreas específicas.
+
+            Para decidir
+            como chegar
+            a parques,
+            aeroportos,
+            hotéis
+            e outras regiões,
+            use também
+            “Planeje o trajeto”.
 
           </div>
 
@@ -361,6 +373,17 @@ window.ORLANDO_TRANSPORT_MODULES["network"] = {
             Entenda a rede
           </h4>
 
+          <p class="panel-intro">
+            Orlando não possui
+            uma única rede
+            capaz de resolver
+            todos os deslocamentos.
+
+            Cada sistema
+            cumpre uma função diferente.
+          </p>
+
+
           <div class="legend-grid">
 
             ${createOrlandoLegendItem(
@@ -372,25 +395,25 @@ window.ORLANDO_TRANSPORT_MODULES["network"] = {
             ${createOrlandoLegendItem(
               "LYM",
               "LYMMO",
-              "Rede gratuita de circulação em Downtown Orlando."
+              "Serviço gratuito para circulação dentro de Downtown Orlando."
             )}
 
             ${createOrlandoLegendItem(
               "SR",
               "SunRail",
-              "Trem regional que atravessa diferentes cidades da Central Florida."
+              "Trem regional que conecta cidades e bairros ao longo de um corredor ferroviário."
             )}
 
             ${createOrlandoLegendItem(
               "NL",
               "NeighborLink",
-              "Serviço sob demanda em zonas específicas."
+              "Serviço sob demanda disponível em zonas específicas da rede LYNX."
             )}
 
             ${createOrlandoLegendItem(
               "SH",
               "Shuttles",
-              "Hotéis, parques e operadores privados podem oferecer transporte próprio."
+              "Hotéis, parques e operadores privados podem manter serviços próprios."
             )}
 
           </div>
@@ -408,19 +431,20 @@ window.ORLANDO_TRANSPORT_MODULES["network"] = {
             Principais sistemas
           </h4>
 
+
           <div class="operator-grid">
 
             ${createOrlandoSystemCard(
               "🚌",
               "LYNX",
-              "Principal rede de ônibus públicos da região.",
-              "Orlando · Orange County · Osceola · Seminole"
+              "Principal rede pública de ônibus da região de Orlando.",
+              "Rede regional"
             )}
 
             ${createOrlandoSystemCard(
               "🚍",
               "LYMMO",
-              "Circulação gratuita dentro de Downtown Orlando.",
+              "Serviço gratuito para deslocamentos dentro de Downtown Orlando.",
               "Centro de Orlando"
             )}
 
@@ -428,21 +452,21 @@ window.ORLANDO_TRANSPORT_MODULES["network"] = {
               "🚆",
               "SunRail",
               "Trem regional da Central Florida.",
-              "DeLand ↔ Kissimmee / Poinciana"
+              "Corredor ferroviário regional"
             )}
 
             ${createOrlandoSystemCard(
               "🚐",
               "NeighborLink",
-              "Transporte sob demanda em áreas específicas.",
-              "LYNX"
+              "Transporte sob demanda em áreas determinadas.",
+              "Serviço LYNX"
             )}
 
             ${createOrlandoSystemCard(
               "🏨",
               "Shuttles",
-              "Serviços privados oferecidos por hotéis e atrações.",
-              "Condições próprias"
+              "Transportes próprios de hotéis, parques e outros operadores.",
+              "Condições variam"
             )}
 
           </div>
@@ -457,128 +481,34 @@ window.ORLANDO_TRANSPORT_MODULES["network"] = {
         <section class="panel-box network-full">
 
           <h4 class="panel-title">
-            LYNX
-          </h4>
-
-          <p class="panel-intro">
-            É a principal estrutura
-            de transporte público rodoviário
-            da região de Orlando.
-          </p>
-
-          <div class="planner-check-grid">
-
-            <article class="planner-check-card">
-              <span>🏙️</span>
-              <strong>Downtown</strong>
-              <p>
-                Diversas linhas
-                convergem
-                para o centro.
-              </p>
-            </article>
-
-            <article class="planner-check-card">
-              <span>✈️</span>
-              <strong>MCO</strong>
-              <p>
-                O aeroporto
-                é atendido
-                por diversas linhas.
-              </p>
-            </article>
-
-            <article class="planner-check-card">
-              <span>🎢</span>
-              <strong>Atrações</strong>
-              <p>
-                Linhas atendem
-                diferentes corredores
-                turísticos.
-              </p>
-            </article>
-
-            <article class="planner-check-card">
-              <span>🛍️</span>
-              <strong>Compras</strong>
-              <p>
-                Outlets
-                e shopping centers
-                possuem conexões LYNX.
-              </p>
-            </article>
-
-            <article class="planner-check-card">
-              <span>🚆</span>
-              <strong>SunRail</strong>
-              <p>
-                Diversas estações
-                possuem linhas alimentadoras.
-              </p>
-            </article>
-
-          </div>
-
-        </section>
-
-
-        <!-- ==================================================
-             LYNX CENTRAL
-        =================================================== -->
-
-        <section class="panel-box network-full">
-
-          <h4 class="panel-title">
-            LYNX Central Station
+            LYNX é a base da rede pública
           </h4>
 
           <div class="answer-block">
 
             <strong>
-              Um dos principais hubs
+              Pense no LYNX
+              como a principal rede
+              de transporte coletivo
               de Orlando.
             </strong>
 
             <p>
-              O terminal
-              concentra diversas linhas
-              da rede LYNX
-              no centro da cidade.
+              As linhas conectam
+              Downtown,
+              bairros,
+              áreas comerciais,
+              atrações,
+              aeroportos
+              e outras cidades
+              da região metropolitana.
+
+              A rede é extensa,
+              mas os trajetos
+              podem exigir
+              conexões
+              e caminhadas.
             </p>
-
-          </div>
-
-
-          <div class="comparison-grid">
-
-            <article class="comparison-card">
-              <strong>LYNX</strong>
-              <p>
-                Grande número
-                de conexões
-                rodoviárias.
-              </p>
-            </article>
-
-            <article class="comparison-card">
-              <strong>SunRail</strong>
-              <p>
-                A estação
-                LYNX Central
-                do SunRail
-                fica integrada
-                ao complexo.
-              </p>
-            </article>
-
-            <article class="comparison-card">
-              <strong>LYMMO</strong>
-              <p>
-                A rede gratuita
-                atende
-                Downtown Orlando.
-              </p>
-            </article>
 
           </div>
 
@@ -602,30 +532,22 @@ window.ORLANDO_TRANSPORT_MODULES["network"] = {
             </span>
 
             <h4>
-              Transporte gratuito no centro.
+              Circulação gratuita no centro.
             </h4>
 
             <p>
               O LYMMO
               funciona como
-              uma rede circuladora
-              para deslocamentos
-              dentro da região central.
+              um serviço de circulação
+              dentro de Downtown Orlando.
+
+              Ele complementa
+              a rede LYNX,
+              mas não substitui
+              os ônibus regionais
+              para viagens
+              fora do centro.
             </p>
-
-          </div>
-
-
-          <div class="fare-highlight-grid">
-
-            <article class="fare-highlight">
-              <span>Tarifa</span>
-              <strong>Grátis</strong>
-              <p>
-                Não é necessário
-                comprar bilhete.
-              </p>
-            </article>
 
           </div>
 
@@ -642,574 +564,45 @@ window.ORLANDO_TRANSPORT_MODULES["network"] = {
             SunRail
           </h4>
 
-          <p class="panel-intro">
-            O SunRail
-            é o sistema ferroviário regional
-            da Central Florida.
-          </p>
-
           <div class="answer-block">
 
             <strong>
-              Ele não substitui
-              a rede de ônibus
-              para todos os destinos.
+              É um trem regional,
+              não uma rede de metrô.
             </strong>
 
             <p>
-              O corredor ferroviário
-              atende cidades
-              e bairros específicos.
+              O SunRail
+              percorre um corredor
+              norte-sul
+              da Central Florida.
 
-              Muitas viagens
-              exigem conexão
-              com LYNX
-              na primeira
-              ou última etapa.
+              Ele pode ser útil
+              quando origem
+              e destino
+              ficam próximos
+              às estações
+              ou possuem
+              boas conexões
+              com ônibus.
             </p>
 
           </div>
 
-        </section>
-
-
-        <!-- ==================================================
-             ESTAÇÕES SUNRAIL
-        =================================================== -->
-
-        <section class="panel-box network-full">
-
-          <h4 class="panel-title">
-            Estações do SunRail
-          </h4>
-
-          <div class="payment-choice-grid">
-
-            <article class="payment-choice">
-              <strong>DeLand</strong>
-              <p>Volusia County.</p>
-            </article>
-
-            <article class="payment-choice">
-              <strong>DeBary</strong>
-              <p>Volusia County.</p>
-            </article>
-
-            <article class="payment-choice">
-              <strong>Sanford</strong>
-              <p>Seminole County.</p>
-            </article>
-
-            <article class="payment-choice">
-              <strong>Lake Mary</strong>
-              <p>Seminole County.</p>
-            </article>
-
-            <article class="payment-choice">
-              <strong>Longwood</strong>
-              <p>Seminole County.</p>
-            </article>
-
-            <article class="payment-choice">
-              <strong>Altamonte Springs</strong>
-              <p>Seminole County.</p>
-            </article>
-
-            <article class="payment-choice">
-              <strong>Maitland</strong>
-              <p>Orange County.</p>
-            </article>
-
-            <article class="payment-choice">
-              <strong>Winter Park</strong>
-              <p>Orange County.</p>
-            </article>
-
-            <article class="payment-choice">
-              <strong>AdventHealth</strong>
-              <p>Orlando.</p>
-            </article>
-
-            <article class="payment-choice">
-              <strong>LYNX Central</strong>
-              <p>Downtown Orlando.</p>
-            </article>
-
-            <article class="payment-choice">
-              <strong>Church Street</strong>
-              <p>Downtown Orlando.</p>
-            </article>
-
-            <article class="payment-choice">
-              <strong>Orlando Health / Amtrak</strong>
-              <p>Orlando.</p>
-            </article>
-
-            <article class="payment-choice">
-              <strong>Sand Lake Road</strong>
-              <p>Conexão para MCO.</p>
-            </article>
-
-            <article class="payment-choice">
-              <strong>Meadow Woods</strong>
-              <p>South Orlando.</p>
-            </article>
-
-            <article class="payment-choice">
-              <strong>Tupperware</strong>
-              <p>Osceola County.</p>
-            </article>
-
-            <article class="payment-choice">
-              <strong>Kissimmee</strong>
-              <p>Downtown Kissimmee.</p>
-            </article>
-
-            <article class="payment-choice">
-              <strong>Poinciana</strong>
-              <p>Extremo sul da rede.</p>
-            </article>
-
-          </div>
-
-        </section>
-
-
-        <!-- ==================================================
-             MCO
-        =================================================== -->
-
-        <section class="panel-box network-full">
-
-          <h4 class="panel-title">
-            Orlando International Airport · MCO
-          </h4>
 
           <div class="visitor-alert">
 
             <strong>
-              Não existe
-              estação SunRail
-              dentro do MCO.
+              O trem não cobre
+              toda a área turística.
             </strong>
 
-            A conexão ferroviária
-            é feita através
-            da estação
-            Sand Lake Road
-            e de ônibus LYNX.
-
-          </div>
-
-
-          <div class="payment-choice-grid">
-
-            <article class="payment-choice">
-              <strong>Link 11</strong>
-              <p>
-                Sand Lake Road
-                e MCO.
-              </p>
-            </article>
-
-            <article class="payment-choice">
-              <strong>Link 42</strong>
-              <p>
-                International Drive,
-                Sand Lake Road
-                e MCO.
-              </p>
-            </article>
-
-            <article class="payment-choice">
-              <strong>Link 311</strong>
-              <p>
-                Disney Springs,
-                Epic Universe,
-                Sand Lake Road
-                e MCO.
-              </p>
-            </article>
-
-          </div>
-
-        </section>
-
-
-        <!-- ==================================================
-             TRAIN TO PLANE
-        =================================================== -->
-
-        <section class="panel-box network-full">
-
-          <h4 class="panel-title">
-            Train to Plane
-          </h4>
-
-          <div class="route-compare-grid">
-
-            <article class="route-compare-card">
-
-              <span>Trem</span>
-
-              <strong>SunRail</strong>
-
-              <p>
-                Viaje
-                até Sand Lake Road.
-              </p>
-
-              <span class="route-compare-result">
-                Etapa 1
-              </span>
-
-            </article>
-
-            <article class="route-compare-card">
-
-              <span>Ônibus</span>
-
-              <strong>LYNX</strong>
-
-              <p>
-                Continue
-                até MCO
-                pelos serviços participantes.
-              </p>
-
-              <span class="route-compare-result">
-                Etapa 2
-              </span>
-
-            </article>
-
-          </div>
-
-        </section>
-
-
-        <!-- ==================================================
-             INTERNATIONAL DRIVE
-        =================================================== -->
-
-        <section class="panel-box network-full">
-
-          <h4 class="panel-title">
-            International Drive
-          </h4>
-
-          <div class="visitor-alert">
-
-            <strong>
-              International Drive
-              é um corredor,
-              não um único destino.
-            </strong>
-
-            Hotéis,
-            Convention Center,
-            parques,
-            outlets
-            e restaurantes
-            ficam espalhados
-            ao longo da região.
-
-          </div>
-
-
-          <div class="payment-choice-grid">
-
-            <article class="payment-choice">
-              <strong>Link 8</strong>
-              <p>Importante corredor da região.</p>
-            </article>
-
-            <article class="payment-choice">
-              <strong>Link 38</strong>
-              <p>Universal / International Drive.</p>
-            </article>
-
-            <article class="payment-choice">
-              <strong>Link 42</strong>
-              <p>International Drive / MCO.</p>
-            </article>
-
-            <article class="payment-choice">
-              <strong>Link 311</strong>
-              <p>Destination Parkway / Epic Universe / MCO.</p>
-            </article>
-
-            <article class="payment-choice">
-              <strong>Link 350</strong>
-              <p>SeaWorld / Disney.</p>
-            </article>
-
-          </div>
-
-        </section>
-
-
-        <!-- ==================================================
-             DISNEY
-        =================================================== -->
-
-        <section class="panel-box network-full">
-
-          <h4 class="panel-title">
-            Walt Disney World
-          </h4>
-
-          <p class="panel-intro">
-            A rede LYNX
-            possui diferentes serviços
-            relacionados
-            ao complexo Disney.
-          </p>
-
-          <div class="payment-choice-grid">
-
-            <article class="payment-choice">
-              <strong>Link 300</strong>
-              <p>Disney / Orlando Express.</p>
-            </article>
-
-            <article class="payment-choice">
-              <strong>Link 301</strong>
-              <p>Conexões regionais com Disney.</p>
-            </article>
-
-            <article class="payment-choice">
-              <strong>Link 302</strong>
-              <p>Disney Springs.</p>
-            </article>
-
-            <article class="payment-choice">
-              <strong>Link 303</strong>
-              <p>Disney Springs e conexões regionais.</p>
-            </article>
-
-            <article class="payment-choice">
-              <strong>Link 304</strong>
-              <p>Disney Springs.</p>
-            </article>
-
-            <article class="payment-choice">
-              <strong>Link 306</strong>
-              <p>Poinciana / Disney.</p>
-            </article>
-
-            <article class="payment-choice">
-              <strong>Link 307</strong>
-              <p>Disney Circulator.</p>
-            </article>
-
-            <article class="payment-choice">
-              <strong>Link 311</strong>
-              <p>Disney Springs / Epic Universe / MCO.</p>
-            </article>
-
-            <article class="payment-choice">
-              <strong>Link 350</strong>
-              <p>SeaWorld / Disney.</p>
-            </article>
-
-          </div>
-
-
-          <div class="visitor-alert">
-
-            <strong>
-              Transporte LYNX
-              e transporte Disney
-              são redes diferentes.
-            </strong>
-
-            Depois de chegar
-            ao complexo,
-            o visitante pode utilizar
-            os serviços internos
-            disponibilizados pela Disney,
-            conforme o destino.
-
-          </div>
-
-        </section>
-
-
-        <!-- ==================================================
-             UNIVERSAL
-        =================================================== -->
-
-        <section class="panel-box network-full">
-
-          <h4 class="panel-title">
-            Universal Orlando
-          </h4>
-
-          <div class="payment-choice-grid">
-
-            <article class="payment-choice">
-              <strong>Link 21</strong>
-              <p>
-                Kirkman Road
-                / Universal Orlando.
-              </p>
-            </article>
-
-            <article class="payment-choice">
-              <strong>Link 38</strong>
-              <p>
-                Universal Orlando
-                / International Drive.
-              </p>
-            </article>
-
-            <article class="payment-choice">
-              <strong>Link 40</strong>
-              <p>
-                Americana Boulevard
-                / Universal Orlando.
-              </p>
-            </article>
-
-            <article class="payment-choice">
-              <strong>Link 311</strong>
-              <p>
-                Epic Universe
-                / Disney Springs
-                / MCO.
-              </p>
-            </article>
-
-          </div>
-
-
-          <div class="visitor-alert">
-
-            <strong>
-              Epic Universe
-              não é a mesma parada
-              dos parques tradicionais
-              da Universal.
-            </strong>
-
-            Confirme
-            qual parque
-            você pretende visitar.
-
-          </div>
-
-        </section>
-
-
-        <!-- ==================================================
-             SEAWORLD
-        =================================================== -->
-
-        <section class="panel-box network-full">
-
-          <h4 class="panel-title">
-            SeaWorld
-          </h4>
-
-          <div class="comparison-grid">
-
-            <article class="comparison-card">
-
-              <strong>Link 8</strong>
-
-              <p>
-                Corredor
-                de International Drive
-                e região de SeaWorld.
-              </p>
-
-            </article>
-
-            <article class="comparison-card">
-
-              <strong>Link 350</strong>
-
-              <p>
-                Destination Parkway
-                / SeaWorld
-                / Disney Express.
-              </p>
-
-            </article>
-
-          </div>
-
-        </section>
-
-
-        <!-- ==================================================
-             OUTLETS
-        =================================================== -->
-
-        <section class="panel-box network-full">
-
-          <h4 class="panel-title">
-            Compras e outlets
-          </h4>
-
-          <div class="comparison-grid">
-
-            <article class="comparison-card">
-
-              <strong>
-                Orlando International
-                Premium Outlets
-              </strong>
-
-              <p>
-                Região atendida
-                por diferentes
-                serviços LYNX.
-              </p>
-
-            </article>
-
-            <article class="comparison-card">
-
-              <strong>
-                Orlando Vineland
-                Premium Outlets
-              </strong>
-
-              <p>
-                Link 8
-                é uma referência
-                importante.
-              </p>
-
-            </article>
-
-            <article class="comparison-card">
-
-              <strong>
-                Florida Mall
-              </strong>
-
-              <p>
-                Importante hub
-                da rede de ônibus.
-              </p>
-
-            </article>
-
-            <article class="comparison-card">
-
-              <strong>
-                Mall at Millenia
-              </strong>
-
-              <p>
-                Também possui
-                conexões LYNX.
-              </p>
-
-            </article>
+            Muitas viagens
+            ainda exigem
+            uma conexão LYNX
+            ou outro transporte
+            na primeira
+            ou última etapa.
 
           </div>
 
@@ -1230,16 +623,17 @@ window.ORLANDO_TRANSPORT_MODULES["network"] = {
 
             <strong>
               Serviço sob demanda
-              dentro de zonas específicas.
+              em áreas específicas.
             </strong>
 
             <p>
               Diferentemente
-              de uma linha fixa,
-              o passageiro solicita
-              a viagem
-              dentro da área
-              atendida.
+              de uma linha convencional,
+              o NeighborLink
+              atende zonas determinadas
+              e depende
+              da solicitação
+              do passageiro.
             </p>
 
           </div>
@@ -1252,11 +646,11 @@ window.ORLANDO_TRANSPORT_MODULES["network"] = {
               em toda Orlando.
             </strong>
 
-            Confira
-            se sua origem
-            e destino
+            Verifique
+            se a origem
+            e o destino
             pertencem
-            a uma zona NeighborLink.
+            a uma zona atendida.
 
           </div>
 
@@ -1264,31 +658,40 @@ window.ORLANDO_TRANSPORT_MODULES["network"] = {
 
 
         <!-- ==================================================
-             SFB
+             SHUTTLES
         =================================================== -->
 
         <section class="panel-box network-full">
 
           <h4 class="panel-title">
-            Orlando Sanford International Airport · SFB
+            Shuttles privados
           </h4>
+
+          <p class="panel-intro">
+            Orlando possui
+            uma quantidade relevante
+            de transporte privado
+            oferecido por hotéis,
+            parques
+            e operadores turísticos.
+          </p>
+
 
           <div class="visitor-alert">
 
             <strong>
-              SFB e MCO
-              são aeroportos diferentes.
+              Esses serviços
+              não fazem parte
+              da rede pública LYNX.
             </strong>
 
-            Sanford fica
-            ao norte de Orlando
-            e exige
-            planejamento específico.
-
-            Não utilize
-            automaticamente
-            as conexões indicadas
-            para MCO.
+            Horários,
+            destinos,
+            reservas,
+            frequência
+            e regras
+            podem variar
+            conforme o operador.
 
           </div>
 
@@ -1296,75 +699,132 @@ window.ORLANDO_TRANSPORT_MODULES["network"] = {
 
 
         <!-- ==================================================
-             CONEXÕES
+             HUBS
         =================================================== -->
 
         <section class="panel-box network-full">
 
           <h4 class="panel-title">
-            Pontos importantes de conexão
+            Conexões que ajudam a entender a rede
           </h4>
+
+          <p class="panel-intro">
+            Você não precisa decorar
+            todos os terminais
+            e pontos de conexão.
+
+            Estes lugares ajudam
+            a perceber
+            como as diferentes partes
+            da rede se relacionam.
+          </p>
+
 
           <div class="bus-system-grid">
 
             <article class="bus-system-card">
+
               <span>🏙️</span>
-              <strong>LYNX Central Station</strong>
+
+              <strong>
+                LYNX Central Station
+              </strong>
+
               <p>
-                LYNX,
-                LYMMO
-                e SunRail.
+                Um dos principais
+                hubs de ônibus
+                de Downtown Orlando,
+                com conexão
+                ao SunRail
+                e ao LYMMO.
               </p>
+
             </article>
 
-            <article class="bus-system-card">
-              <span>✈️</span>
-              <strong>Sand Lake Road</strong>
-              <p>
-                SunRail
-                + LYNX
-                para MCO.
-              </p>
-            </article>
 
             <article class="bus-system-card">
+
+              <span>🚆</span>
+
+              <strong>
+                Sand Lake Road
+              </strong>
+
+              <p>
+                Estação SunRail
+                com conexões
+                de ônibus LYNX.
+              </p>
+
+            </article>
+
+
+            <article class="bus-system-card">
+
               <span>🎢</span>
-              <strong>Destination Parkway</strong>
+
+              <strong>
+                Destination Parkway
+              </strong>
+
               <p>
-                International Drive,
-                Convention Center,
-                Epic Universe
-                e outras conexões.
+                Ponto importante
+                para conexões
+                na região turística.
               </p>
+
             </article>
 
+
             <article class="bus-system-card">
+
               <span>🛍️</span>
-              <strong>Florida Mall</strong>
+
+              <strong>
+                Florida Mall
+              </strong>
+
               <p>
-                Importante
-                ponto de conexão
+                Importante ponto
+                de conexão
                 da rede LYNX.
               </p>
+
             </article>
 
+
             <article class="bus-system-card">
+
               <span>🏰</span>
-              <strong>Disney Springs</strong>
+
+              <strong>
+                Disney Springs
+              </strong>
+
               <p>
-                Diversas linhas
+                Referência
+                para algumas linhas
                 relacionadas
-                ao complexo Disney.
+                à área Disney.
               </p>
+
             </article>
 
+
             <article class="bus-system-card">
+
               <span>🚆</span>
-              <strong>Kissimmee</strong>
+
+              <strong>
+                Kissimmee
+              </strong>
+
               <p>
-                SunRail
-                e conexões LYNX.
+                Conexão
+                entre SunRail
+                e serviços locais.
               </p>
+
             </article>
 
           </div>
@@ -1373,124 +833,86 @@ window.ORLANDO_TRANSPORT_MODULES["network"] = {
 
 
         <!-- ==================================================
-             SISTEMAS SEPARADOS
+             COMO OS SISTEMAS SE RELACIONAM
         =================================================== -->
 
         <section class="panel-box network-full">
 
           <h4 class="panel-title">
             Uma região,
-            vários sistemas
+            sistemas diferentes
           </h4>
 
-          <div class="fare-scenario-grid">
 
-            <article class="fare-scenario">
+          <div class="comparison-grid">
 
-              <span class="fare-scenario-kicker">
+            <article class="comparison-card">
+
+              <strong>
                 LYNX
-              </span>
-
-              <strong>
-                Ônibus público
               </strong>
 
               <p>
-                Rede regional
-                com tarifa
-                e passes próprios.
+                Rede pública regional
+                de ônibus.
               </p>
-
-              <span class="fare-scenario-result">
-                Sistema público
-              </span>
 
             </article>
 
-            <article class="fare-scenario">
 
-              <span class="fare-scenario-kicker">
+            <article class="comparison-card">
+
+              <strong>
                 LYMMO
-              </span>
-
-              <strong>
-                Downtown
               </strong>
 
               <p>
-                Rede gratuita
-                dentro
-                da área central.
+                Circulação gratuita
+                dentro de Downtown.
               </p>
-
-              <span class="fare-scenario-result">
-                Grátis
-              </span>
 
             </article>
 
-            <article class="fare-scenario">
 
-              <span class="fare-scenario-kicker">
+            <article class="comparison-card">
+
+              <strong>
                 SunRail
-              </span>
+              </strong>
 
-              <strong>
+              <p>
                 Trem regional
-              </strong>
-
-              <p>
-                Tarifas
-                por zonas.
+                com corredor próprio.
               </p>
-
-              <span class="fare-scenario-result">
-                Sistema ferroviário
-              </span>
 
             </article>
 
-            <article class="fare-scenario">
 
-              <span class="fare-scenario-kicker">
-                Parques
-              </span>
+            <article class="comparison-card">
 
               <strong>
-                Transporte interno
+                NeighborLink
               </strong>
 
               <p>
-                Operadores turísticos
-                podem oferecer
-                redes próprias.
+                Serviço sob demanda
+                em áreas delimitadas.
               </p>
-
-              <span class="fare-scenario-result">
-                Sistema separado
-              </span>
 
             </article>
 
-            <article class="fare-scenario">
 
-              <span class="fare-scenario-kicker">
-                Hotéis
-              </span>
+            <article class="comparison-card">
 
               <strong>
-                Shuttle
+                Parques e hotéis
               </strong>
 
               <p>
-                Pode haver
-                transporte oferecido
-                pela hospedagem.
+                Podem operar
+                transportes privados
+                independentes.
               </p>
-
-              <span class="fare-scenario-result">
-                Confira o hotel
-              </span>
 
             </article>
 
@@ -1500,148 +922,242 @@ window.ORLANDO_TRANSPORT_MODULES["network"] = {
 
 
         <!-- ==================================================
-             VISITANTE
+             COMO USAR O MAPA
         =================================================== -->
 
         <section class="panel-box network-full">
 
           <h4 class="panel-title">
-            Qual sistema tende a fazer sentido?
+            Como usar este mapa
           </h4>
+
+
+          <div class="bus-use-flow">
+
+            <article class="bus-use-step">
+
+              <span>1</span>
+
+              <strong>
+                Localize a região
+              </strong>
+
+              <p>
+                Veja onde
+                sua origem
+                e seu destino
+                ficam na área
+                de Orlando.
+              </p>
+
+            </article>
+
+
+            <article class="bus-use-step">
+
+              <span>2</span>
+
+              <strong>
+                Observe a rede LYNX
+              </strong>
+
+              <p>
+                Identifique
+                quais corredores
+                e linhas
+                atendem a região.
+              </p>
+
+            </article>
+
+
+            <article class="bus-use-step">
+
+              <span>3</span>
+
+              <strong>
+                Procure conexões
+              </strong>
+
+              <p>
+                Veja se
+                o deslocamento
+                envolve Downtown,
+                SunRail
+                ou outro hub.
+              </p>
+
+            </article>
+
+
+            <article class="bus-use-step">
+
+              <span>4</span>
+
+              <strong>
+                Planeje a viagem real
+              </strong>
+
+              <p>
+                Depois de entender
+                a estrutura,
+                use
+                “Planeje o trajeto”
+                para verificar
+                a viagem completa.
+              </p>
+
+            </article>
+
+          </div>
+
+        </section>
+
+
+        <!-- ==================================================
+             O QUE O MAPA NÃO RESPONDE
+        =================================================== -->
+
+        <section class="panel-box network-full">
+
+          <h4 class="panel-title">
+            O mapa mostra a rede.
+            O Planner mostra a viagem.
+          </h4>
+
+          <div class="visitor-alert">
+
+            <strong>
+              Para decidir
+              qual transporte usar,
+              vá além do mapa.
+            </strong>
+
+            Aeroportos,
+            parques,
+            hotéis,
+            outlets,
+            International Drive,
+            horários,
+            linhas específicas
+            e conexões
+            estão detalhados
+            na área
+            “Planeje o trajeto”.
+
+          </div>
+
+        </section>
+
+
+        <!-- ==================================================
+             RESUMO
+        =================================================== -->
+
+        <section class="panel-box network-full">
+
+          <h4 class="panel-title">
+            Em resumo
+          </h4>
+
 
           <div class="planner-check-grid">
 
             <article class="planner-check-card">
-              <span>🏙️</span>
-              <strong>Downtown</strong>
-              <p>
-                LYMMO,
-                LYNX
-                e SunRail.
-              </p>
-            </article>
 
-            <article class="planner-check-card">
-              <span>✈️</span>
-              <strong>MCO</strong>
-              <p>
-                LYNX direto
-                ou SunRail
-                + LYNX.
-              </p>
-            </article>
+              <span>🗺️</span>
 
-            <article class="planner-check-card">
-              <span>🎢</span>
-              <strong>International Drive</strong>
-              <p>
-                Principalmente
-                LYNX.
-              </p>
-            </article>
-
-            <article class="planner-check-card">
-              <span>🏰</span>
-              <strong>Disney</strong>
-              <p>
-                LYNX
-                + transporte
-                interno Disney,
-                conforme a viagem.
-              </p>
-            </article>
-
-            <article class="planner-check-card">
-              <span>🚆</span>
               <strong>
-                Winter Park / Sanford / Kissimmee
+                Mapa
               </strong>
+
               <p>
-                Compare SunRail
-                com a conexão final.
+                Use para entender
+                a estrutura geral.
               </p>
+
             </article>
+
 
             <article class="planner-check-card">
-              <span>🏨</span>
-              <strong>Hotel</strong>
+
+              <span>🚌</span>
+
+              <strong>
+                LYNX
+              </strong>
+
               <p>
-                Confira
-                se existe
-                shuttle próprio.
+                Principal rede pública
+                de Orlando.
               </p>
+
             </article>
 
-          </div>
 
-        </section>
+            <article class="planner-check-card">
 
+              <span>🚍</span>
 
-        <!-- ==================================================
-             O QUE CONFIRMAR
-        =================================================== -->
+              <strong>
+                LYMMO
+              </strong>
 
-        <section class="panel-box network-full">
-
-          <h4 class="panel-title">
-            O que confirmar no dia
-          </h4>
-
-          <div class="payment-choice-grid">
-
-            <article class="payment-choice">
-              <strong>LYNX</strong>
               <p>
-                Linha,
-                horário,
-                parada
-                e eventuais desvios.
+                Circulação gratuita
+                em Downtown.
               </p>
+
             </article>
 
-            <article class="payment-choice">
-              <strong>SunRail</strong>
+
+            <article class="planner-check-card">
+
+              <span>🚆</span>
+
+              <strong>
+                SunRail
+              </strong>
+
               <p>
-                Operação,
-                horário
-                e estação
-                da viagem.
+                Trem regional
+                da Central Florida.
               </p>
+
             </article>
 
-            <article class="payment-choice">
-              <strong>MCO</strong>
+
+            <article class="planner-check-card">
+
+              <span>🚐</span>
+
+              <strong>
+                NeighborLink
+              </strong>
+
               <p>
-                Terminal
-                e conexão LYNX.
+                Transporte sob demanda
+                em zonas específicas.
               </p>
+
             </article>
 
-            <article class="payment-choice">
-              <strong>Parques</strong>
-              <p>
-                Ponto correto
-                e horário
-                da volta.
-              </p>
-            </article>
 
-            <article class="payment-choice">
-              <strong>Shuttle</strong>
-              <p>
-                Reserva,
-                disponibilidade
-                e horários.
-              </p>
-            </article>
+            <article class="planner-check-card">
 
-            <article class="payment-choice">
-              <strong>Trânsito</strong>
+              <span>📍</span>
+
+              <strong>
+                Próximo passo
+              </strong>
+
               <p>
-                Pode alterar
-                significativamente
-                o tempo de ônibus.
+                Use o Planner
+                para transformar
+                a rede
+                em um trajeto real.
               </p>
+
             </article>
 
           </div>
@@ -1702,16 +1218,6 @@ window.ORLANDO_TRANSPORT_MODULES["network"] = {
             rel="noopener noreferrer"
           >
             SunRail
-          </a>
-
-
-          <a
-            class="official-link"
-            href="https://sunrail.com/connecting-services/train-to-plane/"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Train to Plane
           </a>
 
         </div>
