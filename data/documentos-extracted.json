@@ -1,9 +1,9 @@
 {
-  "extractedAt": "2026-08-31T16:44:01.429Z",
+  "extractedAt": "2026-08-31T22:32:25.974Z",
   "totalCountriesDetected": 28,
   "totalCityRedirectsDetected": 228,
   "totalInteractiveDetailBlocksDetected": 4,
-  "totalSourcesDetected": 307,
+  "totalSourcesDetected": 308,
   "countries": [
     {
       "id": "estados-unidos",
@@ -2433,6 +2433,7 @@
     "https://www.cbsa-asfc.gc.ca/travel-voyage/menu-eng.html",
     "https://www.celnisprava.cz/en/Pages/default.aspx",
     "https://www.chile.gob.cl/brasil/",
+    "https://www.curadoriaelitetravel.com/documentos.html",
     "https://www.customs.go.jp/english/",
     "https://www.customs.go.th/",
     "https://www.customs.gov.sg/",
