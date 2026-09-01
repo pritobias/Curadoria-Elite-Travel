@@ -130,7 +130,9 @@ function getMetaDescription(destino) {
     `Descubra ${destino.cidade}, ${destino.pais}, com informações selecionadas, ` +
     `materiais digitais e ferramentas da Curadoria Elite Travel para preparar sua viagem de forma autônoma.`;
 
-  return base.length <= 160 ? base : base.slice(0, 157).trim() + "...";
+  return base.length <= 160
+    ? base
+    : base.slice(0, 157).trim() + "...";
 }
 
 /* =========================================================
@@ -140,13 +142,15 @@ function getMetaDescription(destino) {
 function buildDestinationHtml(destino) {
   const cidade = escapeHtml(destino.cidade);
   const pais = escapeHtml(destino.pais);
-  const cityLabel = escapeHtml(destino.cityLabel);
   const texto = escapeHtml(destino.texto);
 
   const destinationUrl = normalizeUrlPath(destino.url);
   const canonicalUrl = SITE_URL + destinationUrl;
 
-  const metaDescription = escapeHtml(getMetaDescription(destino));
+  const metaDescription = escapeHtml(
+    getMetaDescription(destino)
+  );
+
   const pageTitle =
     `${cidade}, ${pais} | Materiais e ferramentas para viajar melhor | Curadoria Elite Travel`;
 
@@ -168,30 +172,66 @@ function buildDestinationHtml(destino) {
 <head>
   <!-- Google Analytics -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-S07L3R13WJ"></script>
+
   <script>
     window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
+
+    function gtag(){
+      dataLayer.push(arguments);
+    }
+
     function trackEvent(name, params = {}) {
       if (typeof gtag === "function") {
         gtag("event", name, params);
       }
     }
+
     gtag("js", new Date());
     gtag("config", "G-S07L3R13WJ");
   </script>
 
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  />
 
   <title>${pageTitle}</title>
-  <meta name="description" content="${metaDescription}" />
-  <link rel="canonical" href="${canonicalUrl}" />
 
-  <meta property="og:type" content="website" />
-  <meta property="og:title" content="${pageTitle}" />
-  <meta property="og:description" content="${metaDescription}" />
-  <meta property="og:url" content="${canonicalUrl}" />
-  <meta property="og:site_name" content="Curadoria Elite Travel" />
+  <meta
+    name="description"
+    content="${metaDescription}"
+  />
+
+  <link
+    rel="canonical"
+    href="${canonicalUrl}"
+  />
+
+  <meta
+    property="og:type"
+    content="website"
+  />
+
+  <meta
+    property="og:title"
+    content="${pageTitle}"
+  />
+
+  <meta
+    property="og:description"
+    content="${metaDescription}"
+  />
+
+  <meta
+    property="og:url"
+    content="${canonicalUrl}"
+  />
+
+  <meta
+    property="og:site_name"
+    content="Curadoria Elite Travel"
+  />
 
   <style>
     :root{
@@ -362,8 +402,16 @@ function buildDestinationHtml(destino) {
       position:absolute;
       inset:0;
       background:
-        linear-gradient(180deg, rgba(0,0,0,0.08), rgba(0,0,0,0.66)),
-        radial-gradient(circle at center, transparent 0%, rgba(0,0,0,0.42) 100%);
+        linear-gradient(
+          180deg,
+          rgba(0,0,0,0.08),
+          rgba(0,0,0,0.66)
+        ),
+        radial-gradient(
+          circle at center,
+          transparent 0%,
+          rgba(0,0,0,0.42) 100%
+        );
       pointer-events:none;
     }
 
@@ -396,7 +444,10 @@ function buildDestinationHtml(destino) {
       height:100%;
       object-fit:cover;
       display:block;
-      filter:brightness(0.86) saturate(0.88) contrast(1.03);
+      filter:
+        brightness(0.86)
+        saturate(0.88)
+        contrast(1.03);
     }
 
     .hero-image.flag{
@@ -513,7 +564,11 @@ function buildDestinationHtml(destino) {
 
     .materials-section{
       background:
-        radial-gradient(circle at top center, rgba(212,175,55,0.06), transparent 30%),
+        radial-gradient(
+          circle at top center,
+          rgba(212,175,55,0.06),
+          transparent 30%
+        ),
         #070707;
       border-top:1px solid rgba(255,255,255,0.05);
       border-bottom:1px solid rgba(255,255,255,0.05);
@@ -538,7 +593,9 @@ function buildDestinationHtml(destino) {
       box-shadow:0 16px 40px rgba(0,0,0,0.24);
       display:flex;
       flex-direction:column;
-      transition:transform 0.25s ease, border-color 0.25s ease;
+      transition:
+        transform 0.25s ease,
+        border-color 0.25s ease;
     }
 
     .material-card:hover{
@@ -590,7 +647,9 @@ function buildDestinationHtml(destino) {
       color:#000;
       font-weight:800;
       cursor:pointer;
-      transition:transform 0.2s ease, opacity 0.2s ease;
+      transition:
+        transform 0.2s ease,
+        opacity 0.2s ease;
     }
 
     .material-button:hover{
@@ -701,7 +760,9 @@ function buildDestinationHtml(destino) {
       color:var(--gold);
       background:rgba(255,255,255,0.02);
       text-decoration:none;
-      transition:transform 0.25s ease, border-color 0.25s ease;
+      transition:
+        transform 0.25s ease,
+        border-color 0.25s ease;
     }
 
     .footer-social a:hover{
@@ -861,15 +922,30 @@ function buildDestinationHtml(destino) {
 <body>
 
 <header id="siteHeader">
-  <a class="brand" href="/" aria-label="Curadoria Elite Travel">
-    <img src="/images/rosa-dos-ventos.png" alt="Rosa dos Ventos">
+
+  <a
+    class="brand"
+    href="/"
+    aria-label="Curadoria Elite Travel"
+  >
+    <img
+      src="/images/rosa-dos-ventos.png"
+      alt="Rosa dos Ventos"
+    >
+
     <div>
-      <div class="brand-name">Curadoria Elite Travel</div>
-      <div class="brand-tagline">O seu mundo, bem indicado.</div>
+      <div class="brand-name">
+        Curadoria Elite Travel
+      </div>
+
+      <div class="brand-tagline">
+        O seu mundo, bem indicado.
+      </div>
     </div>
   </a>
 
   <nav>
+
     <button
       class="nav-toggle"
       id="navToggle"
@@ -883,33 +959,79 @@ function buildDestinationHtml(destino) {
       <span></span>
     </button>
 
-    <div class="nav-menu" id="navMenu">
-      <a href="/">Início</a>
-      <a href="/?secao=quem">Quem Somos</a>
-      <a href="/?secao=curadoria">Curadoria</a>
-      <a href="/?secao=buscador">Buscador</a>
+    <div
+      class="nav-menu"
+      id="navMenu"
+    >
+
+      <a href="/">
+        Início
+      </a>
+
+      <a href="/?secao=quem">
+        Quem Somos
+      </a>
+
+      <a href="/?secao=curadoria">
+        Curadoria
+      </a>
+
+      <a href="/?secao=buscador">
+        Buscador
+      </a>
 
       <span class="nav-sep"></span>
 
-      <a href="/?cart=1" id="navCart">Carrinho (0)</a>
+      <a
+        href="/?cart=1"
+        id="navCart"
+      >
+        Carrinho (0)
+      </a>
 
       <span class="nav-sep"></span>
 
-      <a href="/login.html" id="navLogin">Entrar</a>
-      <a href="/account.html" id="navAccount" style="display:none;">Minha conta</a>
-      <a href="#" id="navLogout" style="display:none;">Sair</a>
+      <a
+        href="/login.html"
+        id="navLogin"
+      >
+        Entrar
+      </a>
+
+      <a
+        href="/account.html"
+        id="navAccount"
+        style="display:none;"
+      >
+        Minha conta
+      </a>
+
+      <a
+        href="#"
+        id="navLogout"
+        style="display:none;"
+      >
+        Sair
+      </a>
+
     </div>
   </nav>
+
 </header>
 
 <main>
 
   <section class="destination-hero">
+
     <div class="hero-glow"></div>
 
     <div class="hero-shell">
 
-      <div class="hero-visual" aria-hidden="true">
+      <div
+        class="hero-visual"
+        aria-hidden="true"
+      >
+
         <div class="hero-image flag">
           <img
             src="${bandeira}"
@@ -930,27 +1052,41 @@ function buildDestinationHtml(destino) {
             alt=""
           >
         </div>
+
       </div>
 
       <div class="hero-copy">
-        <div class="hero-country">${pais}</div>
 
-        <h1>${cidade}</h1>
+        <div class="hero-country">
+          ${pais}
+        </div>
+
+        <h1>
+          ${cidade}
+        </h1>
 
         <div class="hero-divider"></div>
 
         <p class="hero-description">
           ${texto}
         </p>
+
       </div>
 
     </div>
+
   </section>
 
-  <section class="content-section materials-section" id="materiais">
+  <section
+    class="content-section materials-section"
+    id="materiais"
+  >
+
     <div class="content-shell">
 
-      <div class="section-eyebrow">Curadoria Elite Travel</div>
+      <div class="section-eyebrow">
+        Curadoria Elite Travel
+      </div>
 
       <h2 class="section-title">
         Materiais disponíveis para ${cidade}
@@ -961,19 +1097,28 @@ function buildDestinationHtml(destino) {
         As categorias exibidas abaixo correspondem aos conteúdos atualmente disponíveis para este destino.
       </p>
 
-      <div class="materials-grid" id="materialsGrid">
+      <div
+        class="materials-grid"
+        id="materialsGrid"
+      >
+
         <div class="loading-state">
           Carregando materiais disponíveis...
         </div>
+
       </div>
 
     </div>
+
   </section>
 
   <section class="content-section tools-section">
+
     <div class="content-shell">
 
-      <div class="section-eyebrow">Antes e durante a viagem</div>
+      <div class="section-eyebrow">
+        Antes e durante a viagem
+      </div>
 
       <h2 class="section-title">
         Preparando sua viagem
@@ -986,20 +1131,27 @@ function buildDestinationHtml(destino) {
       <div class="tools-grid">
 
         <article class="tool-card">
-          <h3>Documentos, vistos e saúde</h3>
+
+          <h3>
+            Documentos, vistos e saúde
+          </h3>
 
           <p>
-            Consulte informações sobre entrada no destino, documentação,
-            apoio diplomático e saúde para viagem.
+            Consulte informações sobre entrada no destino,
+            documentação, apoio diplomático e saúde para viagem.
           </p>
 
           <a href="/documentos.html">
             Acessar ferramenta
           </a>
+
         </article>
 
         <article class="tool-card">
-          <h3>Transportes em ${cidade}</h3>
+
+          <h3>
+            Transportes em ${cidade}
+          </h3>
 
           <p>
             Consulte informações organizadas sobre redes de transporte,
@@ -1009,20 +1161,25 @@ function buildDestinationHtml(destino) {
           <a href="/transportes.html">
             Acessar ferramenta
           </a>
+
         </article>
 
       </div>
 
     </div>
+
   </section>
 
 </main>
 
 <footer>
+
   Curadoria Elite Travel · O seu mundo, bem indicado.<br>
 
   São Paulo - SP ·
-  <a href="/contact.html">curadoriaelitetravel@gmail.com</a>
+  <a href="/contact.html">
+    curadoriaelitetravel@gmail.com
+  </a>
 
   <div
     class="footer-social"
@@ -1036,7 +1193,10 @@ function buildDestinationHtml(destino) {
       aria-label="Instagram da Curadoria Elite Travel"
       title="Instagram"
     >
-      <svg viewBox="0 0 24 24" aria-hidden="true">
+      <svg
+        viewBox="0 0 24 24"
+        aria-hidden="true"
+      >
         <path d="M7 2h10a5 5 0 0 1 5 5v10a5 5 0 0 1-5 5H7a5 5 0 0 1-5-5V7a5 5 0 0 1 5-5Zm0 2a3 3 0 0 0-3 3v10a3 3 0 0 0 3 3h10a3 3 0 0 0 3-3V7a3 3 0 0 0-3-3H7Zm5 3.5A4.5 4.5 0 1 1 7.5 12 4.5 4.5 0 0 1 12 7.5Zm0 2A2.5 2.5 0 1 0 14.5 12 2.5 2.5 0 0 0 12 9.5Zm5.25-3.1a1.05 1.05 0 1 1-1.05 1.05 1.05 1.05 0 0 1 1.05-1.05Z"/>
       </svg>
     </a>
@@ -1048,25 +1208,35 @@ function buildDestinationHtml(destino) {
       aria-label="LinkedIn da Curadoria Elite Travel"
       title="LinkedIn"
     >
-      <svg viewBox="0 0 24 24" aria-hidden="true">
+      <svg
+        viewBox="0 0 24 24"
+        aria-hidden="true"
+      >
         <path d="M6.5 8.25H3.25V21H6.5V8.25ZM4.88 3A1.88 1.88 0 1 0 4.9 6.75 1.88 1.88 0 0 0 4.88 3ZM21 13.7c0-3.85-2.05-5.64-4.79-5.64a4.14 4.14 0 0 0-3.74 2.05V8.25H9.22V21h3.25v-6.31c0-1.66.32-3.27 2.38-3.27 2.03 0 2.05 1.9 2.05 3.38V21H21v-7.3Z"/>
       </svg>
     </a>
 
   </div>
+
 </footer>
 
 <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
 
 <script>
+
   const DESTINATION = ${destinationData};
 
-  const SUPABASE_URL = ${JSON.stringify(SUPABASE_URL)};
-  const SUPABASE_ANON_KEY = ${JSON.stringify(SUPABASE_ANON_KEY)};
+  const SUPABASE_URL =
+    ${JSON.stringify(SUPABASE_URL)};
 
-  const CART_STORAGE_KEY = "cet_cart_v2";
+  const SUPABASE_ANON_KEY =
+    ${JSON.stringify(SUPABASE_ANON_KEY)};
+
+  const CART_STORAGE_KEY =
+    "cet_cart_v2";
 
   const CATEGORY_DESCRIPTIONS = {
+
     "city guide":
       "Uma visão ampla do destino, organizada para ajudar você a compreender melhor a cidade e começar suas escolhas.",
 
@@ -1084,35 +1254,60 @@ function buildDestinationHtml(destino) {
 
     "sugestão de presentes":
       "Ideias e endereços selecionados para encontrar presentes com mais intenção durante a viagem."
+
   };
 
   const CATEGORY_ICONS = {
-    "city guide": "◇",
-    "gastronomia": "✦",
-    "atrações turísticas": "⌖",
-    "vida noturna": "☾",
-    "endereços para compras": "⌑",
-    "sugestão de presentes": "◈"
+
+    "city guide":"◇",
+
+    "gastronomia":"✦",
+
+    "atrações turísticas":"⌖",
+
+    "vida noturna":"☾",
+
+    "endereços para compras":"⌑",
+
+    "sugestão de presentes":"◈"
+
   };
 
-  const categoryPricesMap = new Map();
-  const ownedMap = new Map();
+  const categoryPricesMap =
+    new Map();
 
-  let supabaseClient = null;
+  const ownedMap =
+    new Map();
+
+  let supabaseClient =
+    null;
 
   function toggleMobileNav(){
-    const header = document.getElementById("siteHeader");
-    if (!header) return;
+
+    const header =
+      document.getElementById("siteHeader");
+
+    if (!header){
+      return;
+    }
+
     header.classList.toggle("nav-open");
   }
 
   function closeMobileNav(){
-    const header = document.getElementById("siteHeader");
-    if (!header) return;
+
+    const header =
+      document.getElementById("siteHeader");
+
+    if (!header){
+      return;
+    }
+
     header.classList.remove("nav-open");
   }
 
   function normalizeKeyPart(str){
+
     return String(str || "")
       .trim()
       .toLowerCase()
@@ -1122,111 +1317,204 @@ function buildDestinationHtml(destino) {
       .replace(/\\s*-\\s*/g, " - ")
       .replace(/\\s+/g, " ")
       .trim();
+
   }
 
   function normalizeCategoryName(category){
-    return normalizeKeyPart(category || "");
+
+    return normalizeKeyPart(
+      category || ""
+    );
+
   }
 
-  function purchaseKey(category, cityLabel){
-    return normalizeKeyPart(category) + "||" + normalizeKeyPart(cityLabel);
+  function normalizeCityLabel(cityLabel){
+
+    return normalizeKeyPart(
+      cityLabel || ""
+    );
+
+  }
+
+  function purchaseKey(
+    category,
+    cityLabel
+  ){
+
+    return (
+      normalizeKeyPart(category) +
+      "||" +
+      normalizeKeyPart(cityLabel)
+    );
+
   }
 
   function ensureSupabase(){
-    if (supabaseClient) return supabaseClient;
+
+    if (supabaseClient){
+      return supabaseClient;
+    }
 
     if (!window.supabase){
       return null;
     }
 
-    supabaseClient = window.supabase.createClient(
-      SUPABASE_URL,
-      SUPABASE_ANON_KEY
-    );
+    supabaseClient =
+      window.supabase.createClient(
+        SUPABASE_URL,
+        SUPABASE_ANON_KEY
+      );
 
     return supabaseClient;
+
   }
 
   async function getSession(){
-    const sb = ensureSupabase();
+
+    const sb =
+      ensureSupabase();
 
     if (!sb){
       return null;
     }
 
-    const { data } = await sb.auth.getSession();
+    const { data } =
+      await sb.auth.getSession();
 
-    return data && data.session
+    return (
+      data &&
+      data.session
+    )
       ? data.session
       : null;
+
   }
 
   async function refreshNavAuth(){
-    const session = await getSession();
 
-    const navLogin = document.getElementById("navLogin");
-    const navAccount = document.getElementById("navAccount");
-    const navLogout = document.getElementById("navLogout");
+    const session =
+      await getSession();
 
-    if (!navLogin || !navAccount || !navLogout){
+    const navLogin =
+      document.getElementById("navLogin");
+
+    const navAccount =
+      document.getElementById("navAccount");
+
+    const navLogout =
+      document.getElementById("navLogout");
+
+    if (
+      !navLogin ||
+      !navAccount ||
+      !navLogout
+    ){
       return;
     }
 
-    if (session && session.user){
-      navLogin.style.display = "none";
-      navAccount.style.display = "inline";
-      navLogout.style.display = "inline";
+    if (
+      session &&
+      session.user
+    ){
+
+      navLogin.style.display =
+        "none";
+
+      navAccount.style.display =
+        "inline";
+
+      navLogout.style.display =
+        "inline";
+
     }else{
-      navLogin.style.display = "inline";
-      navAccount.style.display = "none";
-      navLogout.style.display = "none";
+
+      navLogin.style.display =
+        "inline";
+
+      navAccount.style.display =
+        "none";
+
+      navLogout.style.display =
+        "none";
+
     }
+
   }
 
   async function doLogout(event){
+
     if (event){
       event.preventDefault();
     }
 
     try{
-      const sb = ensureSupabase();
+
+      const sb =
+        ensureSupabase();
 
       if (sb){
         await sb.auth.signOut();
       }
+
     }catch(error){
-      console.error("Erro ao sair da conta:", error);
+
+      console.error(
+        "Erro ao sair da conta:",
+        error
+      );
+
     }
 
     await refreshNavAuth();
+
   }
 
   function getCart(){
+
     try{
-      const raw = localStorage.getItem(CART_STORAGE_KEY);
-      const parsed = raw ? JSON.parse(raw) : [];
+
+      const raw =
+        localStorage.getItem(
+          CART_STORAGE_KEY
+        );
+
+      const parsed =
+        raw
+          ? JSON.parse(raw)
+          : [];
 
       return Array.isArray(parsed)
         ? parsed
         : [];
+
     }catch(error){
+
       return [];
+
     }
+
   }
 
   function updateCartBadge(){
-    const navCart = document.getElementById("navCart");
+
+    const navCart =
+      document.getElementById("navCart");
 
     if (!navCart){
       return;
     }
 
     navCart.textContent =
-      "Carrinho (" + getCart().length + ")";
+      "Carrinho (" +
+      getCart().length +
+      ")";
+
   }
 
   function formatBRL(value){
+
     try{
+
       return new Intl.NumberFormat(
         "pt-BR",
         {
@@ -1234,200 +1522,367 @@ function buildDestinationHtml(destino) {
           currency:"BRL"
         }
       ).format(value);
+
     }catch(error){
+
       return "R$ " + String(value);
+
     }
+
   }
 
   function getFallbackPriceForCategory(category){
-    const normalized = normalizeCategoryName(category);
 
-    if (normalized === "city guide"){
+    const normalized =
+      normalizeCategoryName(category);
+
+    if (
+      normalized === "city guide"
+    ){
       return 88.92;
     }
 
     return 57.83;
+
   }
 
   function getPriceForCategory(category){
-    const key = normalizeCategoryName(category);
 
-    if (categoryPricesMap.has(key)){
-      return Number(categoryPricesMap.get(key) || 0);
+    const key =
+      normalizeCategoryName(category);
+
+    if (
+      categoryPricesMap.has(key)
+    ){
+
+      return Number(
+        categoryPricesMap.get(key) || 0
+      );
+
     }
 
-    return getFallbackPriceForCategory(category);
+    return getFallbackPriceForCategory(
+      category
+    );
+
   }
 
   async function loadCategoryPrices(){
+
     categoryPricesMap.clear();
 
     try{
-      const sb = ensureSupabase();
+
+      const sb =
+        ensureSupabase();
 
       if (!sb){
         return;
       }
 
-      const { data, error } = await sb
-        .from("category_prices")
-        .select("category, price, is_active")
-        .eq("is_active", true);
+      const {
+        data,
+        error
+      } =
+        await sb
+          .from("category_prices")
+          .select(
+            "category, price, is_active"
+          )
+          .eq(
+            "is_active",
+            true
+          );
 
       if (error){
+
         console.error(
           "Erro ao carregar preços:",
           error
         );
+
         return;
+
       }
 
-      (data || []).forEach((row) => {
-        const category =
-          String(row.category || "").trim();
+      (data || []).forEach(
+        (row) => {
 
-        const price =
-          Number(row.price || 0);
+          const category =
+            String(
+              row.category || ""
+            ).trim();
 
-        if (!category){
-          return;
+          const price =
+            Number(
+              row.price || 0
+            );
+
+          if (!category){
+            return;
+          }
+
+          if (
+            !Number.isFinite(price) ||
+            price <= 0
+          ){
+            return;
+          }
+
+          categoryPricesMap.set(
+            normalizeCategoryName(
+              category
+            ),
+            price
+          );
+
         }
-
-        if (!Number.isFinite(price) || price <= 0){
-          return;
-        }
-
-        categoryPricesMap.set(
-          normalizeCategoryName(category),
-          price
-        );
-      });
+      );
 
     }catch(error){
+
       console.error(
         "Falha ao carregar preços:",
         error
       );
+
     }
+
   }
 
   async function loadOwnedPurchases(){
+
     ownedMap.clear();
 
     try{
-      const session = await getSession();
 
-      if (!session || !session.user){
+      const session =
+        await getSession();
+
+      if (
+        !session ||
+        !session.user
+      ){
         return;
       }
 
-      const sb = ensureSupabase();
+      const sb =
+        ensureSupabase();
 
       if (!sb){
         return;
       }
 
-      const { data, error } = await sb
-        .from("purchase")
-        .select("category, city, pdf_url")
-        .eq("user_id", session.user.id)
-        .limit(500);
+      const {
+        data,
+        error
+      } =
+        await sb
+          .from("purchase")
+          .select(
+            "category, city, pdf_url"
+          )
+          .eq(
+            "user_id",
+            session.user.id
+          )
+          .limit(500);
 
       if (error){
+
         console.error(
           "Erro ao carregar compras do usuário:",
           error
         );
+
         return;
+
       }
 
-      (data || []).forEach((row) => {
-        const key = purchaseKey(
-          row.category || "",
-          row.city || ""
-        );
+      (data || []).forEach(
+        (row) => {
 
-        ownedMap.set(
-          key,
-          {
-            pdf_url: row.pdf_url || null
-          }
-        );
-      });
+          const key =
+            purchaseKey(
+              row.category || "",
+              row.city || ""
+            );
+
+          ownedMap.set(
+            key,
+            {
+              pdf_url:
+                row.pdf_url || null
+            }
+          );
+
+        }
+      );
 
     }catch(error){
+
       console.error(
         "Falha ao carregar compras:",
         error
       );
+
     }
+
   }
 
-  function userOwns(category, cityLabel){
+  function userOwns(
+    category,
+    cityLabel
+  ){
+
     return ownedMap.has(
-      purchaseKey(category, cityLabel)
+      purchaseKey(
+        category,
+        cityLabel
+      )
     );
+
   }
 
   function getCategoryDescription(category){
+
     const normalized =
       normalizeCategoryName(category);
 
-    return CATEGORY_DESCRIPTIONS[normalized] ||
-      "Material digital com indicações e referências selecionadas para apoiar suas escolhas durante a viagem.";
+    return (
+      CATEGORY_DESCRIPTIONS[
+        normalized
+      ] ||
+      "Material digital com indicações e referências selecionadas para apoiar suas escolhas durante a viagem."
+    );
+
   }
 
   function getCategoryIcon(category){
+
     const normalized =
       normalizeCategoryName(category);
 
-    return CATEGORY_ICONS[normalized] || "◇";
+    return (
+      CATEGORY_ICONS[
+        normalized
+      ] ||
+      "◇"
+    );
+
   }
 
   async function loadDestinationMaterials(){
+
     const grid =
-      document.getElementById("materialsGrid");
+      document.getElementById(
+        "materialsGrid"
+      );
 
     if (!grid){
       return;
     }
 
     try{
-      const sb = ensureSupabase();
+
+      const sb =
+        ensureSupabase();
 
       if (!sb){
+
         throw new Error(
           "Supabase não disponível."
         );
+
       }
 
-      const { data, error } = await sb
-        .from("curadoria_materials")
-        .select("category, city_label")
-        .eq("is_active", true)
-        .eq("city_label", DESTINATION.cityLabel)
-        .order("category", { ascending:true });
+      /*
+        IMPORTANTE:
+
+        Não usamos mais igualdade exata de city_label.
+
+        Isso evita que diferenças como:
+
+        Paris - França
+        Paris - FRANÇA
+        PARIS - FRANÇA
+        paris - franca
+
+        façam materiais válidos desaparecerem.
+
+        Primeiro carregamos os materiais ativos.
+        Depois comparamos o destino usando uma
+        versão normalizada do texto.
+      */
+
+      const {
+        data,
+        error
+      } =
+        await sb
+          .from(
+            "curadoria_materials"
+          )
+          .select(
+            "category, city_label"
+          )
+          .eq(
+            "is_active",
+            true
+          )
+          .order(
+            "category",
+            {
+              ascending:true
+            }
+          );
 
       if (error){
         throw error;
       }
 
-      const materials = Array.isArray(data)
-        ? data
-        : [];
+      const destinationKey =
+        normalizeCityLabel(
+          DESTINATION.cityLabel
+        );
+
+      const materials =
+        (Array.isArray(data)
+          ? data
+          : []
+        ).filter(
+          (row) => {
+
+            const rowCityLabel =
+              normalizeCityLabel(
+                row.city_label || ""
+              );
+
+            return (
+              rowCityLabel ===
+              destinationKey
+            );
+
+          }
+        );
 
       if (!materials.length){
+
         grid.innerHTML =
           '<div class="empty-state">' +
           'Nenhum material está disponível para este destino no momento.' +
           '</div>';
 
         return;
+
       }
 
-      renderMaterials(materials);
+      renderMaterials(
+        materials
+      );
 
     }catch(error){
+
       console.error(
         "Erro ao carregar materiais do destino:",
         error
@@ -1437,130 +1892,212 @@ function buildDestinationHtml(destino) {
         '<div class="error-state">' +
         'Não foi possível carregar os materiais disponíveis neste momento.' +
         '</div>';
+
     }
+
   }
 
   function renderMaterials(materials){
+
     const grid =
-      document.getElementById("materialsGrid");
+      document.getElementById(
+        "materialsGrid"
+      );
 
     if (!grid){
       return;
     }
 
-    grid.innerHTML = "";
+    grid.innerHTML =
+      "";
 
-    materials.forEach((material) => {
-      const category =
-        String(material.category || "").trim();
+    materials.forEach(
+      (material) => {
 
-      const cityLabel =
-        String(material.city_label || "").trim();
+        const category =
+          String(
+            material.category || ""
+          ).trim();
 
-      if (!category || !cityLabel){
-        return;
-      }
+        const cityLabel =
+          String(
+            material.city_label || ""
+          ).trim();
 
-      const price =
-        getPriceForCategory(category);
+        if (
+          !category ||
+          !cityLabel
+        ){
+          return;
+        }
 
-      const owns =
-        userOwns(category, cityLabel);
+        const price =
+          getPriceForCategory(
+            category
+          );
 
-      const article =
-        document.createElement("article");
+        const owns =
+          userOwns(
+            category,
+            cityLabel
+          );
 
-      article.className =
-        "material-card";
+        const article =
+          document.createElement(
+            "article"
+          );
 
-      const icon =
-        document.createElement("div");
+        article.className =
+          "material-card";
 
-      icon.className =
-        "material-icon";
+        const icon =
+          document.createElement(
+            "div"
+          );
 
-      icon.textContent =
-        getCategoryIcon(category);
+        icon.className =
+          "material-icon";
 
-      const title =
-        document.createElement("h3");
+        icon.textContent =
+          getCategoryIcon(
+            category
+          );
 
-      title.textContent =
-        category;
+        const title =
+          document.createElement(
+            "h3"
+          );
 
-      const description =
-        document.createElement("p");
+        title.textContent =
+          category;
 
-      description.className =
-        "material-description";
+        const description =
+          document.createElement(
+            "p"
+          );
 
-      description.textContent =
-        getCategoryDescription(category);
+        description.className =
+          "material-description";
 
-      const priceElement =
-        document.createElement("div");
+        description.textContent =
+          getCategoryDescription(
+            category
+          );
 
-      priceElement.className =
-        "material-price";
+        const priceElement =
+          document.createElement(
+            "div"
+          );
 
-      priceElement.textContent =
-        formatBRL(price);
+        priceElement.className =
+          "material-price";
 
-      const button =
-        document.createElement("button");
+        priceElement.textContent =
+          formatBRL(
+            price
+          );
 
-      button.type =
-        "button";
+        const button =
+          document.createElement(
+            "button"
+          );
 
-      button.className =
-        "material-button" +
-        (owns ? " owned" : "");
+        button.type =
+          "button";
 
-      button.textContent =
-        owns
-          ? "Acessar na minha conta"
-          : "Comprar agora";
+        button.className =
+          "material-button" +
+          (
+            owns
+              ? " owned"
+              : ""
+          );
 
-      if (owns){
-        button.addEventListener(
-          "click",
-          () => {
-            window.location.href =
-              "/account.html";
-          }
+        button.textContent =
+          owns
+            ? "Acessar na minha conta"
+            : "Comprar agora";
+
+        if (owns){
+
+          button.addEventListener(
+            "click",
+            () => {
+
+              window.location.href =
+                "/account.html";
+
+            }
+          );
+
+        }else{
+
+          button.addEventListener(
+            "click",
+            () => {
+
+              goToPurchase(
+                category,
+                cityLabel
+              );
+
+            }
+          );
+
+        }
+
+        article.appendChild(
+          icon
         );
-      }else{
-        button.addEventListener(
-          "click",
-          () => {
-            goToPurchase(
-              category,
-              cityLabel
-            );
-          }
+
+        article.appendChild(
+          title
         );
+
+        article.appendChild(
+          description
+        );
+
+        article.appendChild(
+          priceElement
+        );
+
+        article.appendChild(
+          button
+        );
+
+        grid.appendChild(
+          article
+        );
+
       }
+    );
 
-      article.appendChild(icon);
-      article.appendChild(title);
-      article.appendChild(description);
-      article.appendChild(priceElement);
-      article.appendChild(button);
-
-      grid.appendChild(article);
-    });
   }
 
-  function goToPurchase(category, cityLabel){
+  function goToPurchase(
+    category,
+    cityLabel
+  ){
+
     trackEvent(
       "view_item",
       {
-        item_name:cityLabel,
-        item_category:category,
-        currency:"BRL",
-        value:Number(
-          getPriceForCategory(category) || 0
-        )
+        item_name:
+          cityLabel,
+
+        item_category:
+          category,
+
+        currency:
+          "BRL",
+
+        value:
+          Number(
+            getPriceForCategory(
+              category
+            ) || 0
+          )
       }
     );
 
@@ -1568,16 +2105,14 @@ function buildDestinationHtml(destino) {
       Nesta primeira versão do motor,
       a compra retorna à Curadoria principal.
 
-      A próxima etapa integrará diretamente
-      o mesmo carrinho e checkout dentro da
-      página de destino, sem duplicar sistema.
+      A integração direta com o mesmo carrinho
+      e checkout será feita na etapa específica
+      de integração comercial.
     */
 
-    const target =
+    window.location.href =
       "/?secao=curadoria";
 
-    window.location.href =
-      target;
   }
 
   document.addEventListener(
@@ -1589,31 +2124,37 @@ function buildDestinationHtml(destino) {
       updateCartBadge();
 
       const logout =
-        document.getElementById("navLogout");
+        document.getElementById(
+          "navLogout"
+        );
 
       if (logout){
+
         logout.addEventListener(
           "click",
           doLogout
         );
+
       }
 
       document.addEventListener(
         "click",
         (event) => {
-          const header =
-            document.getElementById("siteHeader");
 
-          const navToggle =
-            document.getElementById("navToggle");
+          const header =
+            document.getElementById(
+              "siteHeader"
+            );
 
           if (
             header &&
-            navToggle &&
-            !header.contains(event.target)
+            !header.contains(
+              event.target
+            )
           ){
             closeMobileNav();
           }
+
         }
       );
 
@@ -1624,26 +2165,28 @@ function buildDestinationHtml(destino) {
       await loadOwnedPurchases();
 
       await loadDestinationMaterials();
+
     }
   );
+
 </script>
 
 <script type="application/ld+json">
 ${JSON.stringify(
   {
-    "@context": "https://schema.org",
-    "@type": "TouristDestination",
-    "name": destino.cidade,
-    "description": destino.texto,
-    "url": canonicalUrl,
-    "containedInPlace": {
-      "@type": "Country",
-      "name": destino.pais
+    "@context":"https://schema.org",
+    "@type":"TouristDestination",
+    "name":destino.cidade,
+    "description":destino.texto,
+    "url":canonicalUrl,
+    "containedInPlace":{
+      "@type":"Country",
+      "name":destino.pais
     },
-    "publisher": {
-      "@type": "Organization",
-      "name": "Curadoria Elite Travel",
-      "url": SITE_URL
+    "publisher":{
+      "@type":"Organization",
+      "name":"Curadoria Elite Travel",
+      "url":SITE_URL
     }
   },
   null,
@@ -1660,42 +2203,69 @@ ${JSON.stringify(
 ========================================================= */
 
 function loadDestinationData() {
-  if (!fs.existsSync(DESTINOS_DATA_PATH)) {
+
+  if (
+    !fs.existsSync(
+      DESTINOS_DATA_PATH
+    )
+  ) {
+
     throw new Error(
       "Arquivo data/destinos.json não encontrado."
     );
+
   }
 
-  const raw = fs.readFileSync(
-    DESTINOS_DATA_PATH,
-    "utf8"
-  );
+  const raw =
+    fs.readFileSync(
+      DESTINOS_DATA_PATH,
+      "utf8"
+    );
 
-  const parsed = JSON.parse(raw);
+  const parsed =
+    JSON.parse(raw);
 
   if (
     !parsed ||
-    !Array.isArray(parsed.destinos)
+    !Array.isArray(
+      parsed.destinos
+    )
   ) {
+
     throw new Error(
       'data/destinos.json precisa possuir a propriedade "destinos" como array.'
     );
+
   }
 
   return parsed.destinos;
+
 }
 
-function generateDestination(destino, index) {
-  validateDestination(destino, index);
+function generateDestination(
+  destino,
+  index
+) {
+
+  validateDestination(
+    destino,
+    index
+  );
 
   const outputDirectory =
     path.join(
       DESTINOS_OUTPUT_DIR,
-      String(destino.slugPais).trim(),
-      String(destino.slugCidade).trim()
+      String(
+        destino.slugPais
+      ).trim(),
+      String(
+        destino.slugCidade
+      ).trim()
     );
 
-  ensureDirectory(outputDirectory);
+  ensureDirectory(
+    outputDirectory
+  );
 
   const outputFile =
     path.join(
@@ -1704,7 +2274,9 @@ function generateDestination(destino, index) {
     );
 
   const html =
-    buildDestinationHtml(destino);
+    buildDestinationHtml(
+      destino
+    );
 
   fs.writeFileSync(
     outputFile,
@@ -1718,13 +2290,17 @@ function generateDestination(destino, index) {
       outputFile
     )}`
   );
+
 }
 
 function main() {
+
   console.log("");
+
   console.log(
     "Curadoria Elite Travel — geração de destinos"
   );
+
   console.log(
     "---------------------------------------------"
   );
@@ -1733,18 +2309,26 @@ function main() {
     loadDestinationData();
 
   if (!destinos.length) {
+
     console.log(
       "Nenhum destino cadastrado."
     );
+
     return;
+
   }
 
   destinos.forEach(
-    (destino, index) => {
+    (
+      destino,
+      index
+    ) => {
+
       generateDestination(
         destino,
         index
       );
+
     }
   );
 
@@ -1757,18 +2341,24 @@ function main() {
   );
 
   console.log("");
+
 }
 
 try {
+
   main();
-} catch (error) {
+
+} catch(error) {
+
   console.error("");
+
   console.error(
     "Erro ao gerar páginas de destino:"
   );
 
   console.error(
-    error && error.message
+    error &&
+    error.message
       ? error.message
       : error
   );
@@ -1776,4 +2366,5 @@ try {
   console.error("");
 
   process.exit(1);
+
 }
