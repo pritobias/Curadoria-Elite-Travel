@@ -3,6 +3,7 @@
     {
       "cidade": "Paris",
       "pais": "França",
+      "cityLabel": "Paris - FRANÇA",
       "slugPais": "franca",
       "slugCidade": "paris",
       "url": "/destinos/franca/paris/",
