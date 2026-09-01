@@ -10,15 +10,15 @@
       "imagens": [
         {
           "tipo": "bandeira",
-          "arquivo": "paris-bandeira.jpg"
+          "arquivo": "/images/destinos/paris-bandeira.png"
         },
         {
           "tipo": "ponto-turistico",
-          "arquivo": "paris-torre-eiffel.jpg"
+          "arquivo": "/images/destinos/torre-eiffel.png"
         },
         {
           "tipo": "ponto-turistico",
-          "arquivo": "paris-louvre.jpg"
+          "arquivo": "/images/destinos/museu-louvre.png"
         }
       ]
     }
