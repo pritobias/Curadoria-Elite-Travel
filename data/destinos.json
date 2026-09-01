@@ -1,1 +1,26 @@
-
+{
+  "destinos": [
+    {
+      "cidade": "Paris",
+      "pais": "França",
+      "slugPais": "franca",
+      "slugCidade": "paris",
+      "url": "/destinos/franca/paris/",
+      "texto": "Paris atravessa séculos sem deixar de pertencer ao presente. Arte, arquitetura, cafés e grandes monumentos convivem com uma cidade que continua encontrando novas maneiras de surpreender.",
+      "imagens": [
+        {
+          "tipo": "bandeira",
+          "arquivo": "paris-bandeira.jpg"
+        },
+        {
+          "tipo": "ponto-turistico",
+          "arquivo": "paris-torre-eiffel.jpg"
+        },
+        {
+          "tipo": "ponto-turistico",
+          "arquivo": "paris-louvre.jpg"
+        }
+      ]
+    }
+  ]
+}
