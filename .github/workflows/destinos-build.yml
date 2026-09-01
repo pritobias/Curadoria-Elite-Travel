@@ -1,0 +1,40 @@
+name: Build Destination Pages
+
+on:
+  workflow_dispatch:
+
+  push:
+    paths:
+      - "data/destinos.json"
+      - "scripts/build-destinos.js"
+      - "package.json"
+      - "images/destinos/**"
+      - ".github/workflows/destinos-build.yml"
+
+permissions:
+  contents: write
+
+jobs:
+  build-destinos:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Build destination pages
+        run: npm run build-destinos
+
+      - name: Commit generated destination pages
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: "Generate destination pages"
+          file_pattern: destinos/**
