@@ -3,7 +3,7 @@ const path = require("path");
 
 /* =========================================================
    CURADORIA ELITE TRAVEL
-   GERADOR DE PÁGINAS DE DESTINO
+   GERADOR AUTOMÁTICO DE PÁGINAS DE DESTINO
 
    Fonte editorial:
    data/destinos.json
@@ -11,16 +11,26 @@ const path = require("path");
    Saída:
    /destinos/{pais}/{cidade}/index.html
 
-   Os materiais comerciais NÃO são gravados neste arquivo.
-   Cada página consulta o Supabase no navegador e exibe
-   somente os materiais ativos do destino.
+   Supabase continua sendo a fonte de verdade para:
+   - materiais ativos
+   - preços
+   - autenticação
+   - compras realizadas
+
+   A página de destino usa o mesmo carrinho e o mesmo
+   processo comercial da Curadoria principal.
 ========================================================= */
 
 const ROOT_DIR = path.resolve(__dirname, "..");
-const DESTINOS_DATA_PATH = path.join(ROOT_DIR, "data", "destinos.json");
-const DESTINOS_OUTPUT_DIR = path.join(ROOT_DIR, "destinos");
 
-const SITE_URL = "https://www.curadoriaelitetravel.com";
+const DESTINOS_DATA_PATH =
+  path.join(ROOT_DIR, "data", "destinos.json");
+
+const DESTINOS_OUTPUT_DIR =
+  path.join(ROOT_DIR, "destinos");
+
+const SITE_URL =
+  "https://www.curadoriaelitetravel.com";
 
 const SUPABASE_URL =
   "https://lnyoqoezezisakghtmim.supabase.co";
@@ -28,8 +38,9 @@ const SUPABASE_URL =
 const SUPABASE_ANON_KEY =
   "sb_publishable_7NB9Y784asZcGohMBz1ePA_ZDYhwEqf";
 
+
 /* =========================================================
-   UTILITÁRIOS
+   UTILITÁRIOS DO GERADOR
 ========================================================= */
 
 function escapeHtml(value) {
@@ -41,12 +52,14 @@ function escapeHtml(value) {
     .replace(/'/g, "&#039;");
 }
 
+
 function escapeJsonForScript(value) {
   return JSON.stringify(value)
     .replace(/</g, "\\u003c")
     .replace(/>/g, "\\u003e")
     .replace(/&/g, "\\u0026");
 }
+
 
 function normalizeUrlPath(value) {
   let url = String(value || "").trim();
@@ -62,9 +75,13 @@ function normalizeUrlPath(value) {
   return url;
 }
 
+
 function ensureDirectory(directory) {
-  fs.mkdirSync(directory, { recursive: true });
+  fs.mkdirSync(directory, {
+    recursive: true
+  });
 }
+
 
 function validateDestination(destino, index) {
   const requiredFields = [
@@ -89,34 +106,51 @@ function validateDestination(destino, index) {
     }
   });
 
-  if (!Array.isArray(destino.imagens) || destino.imagens.length < 3) {
+  if (
+    !Array.isArray(destino.imagens) ||
+    destino.imagens.length < 3
+  ) {
     throw new Error(
       `Destino ${index + 1} (${destino.cidade}): são necessárias pelo menos 3 imagens.`
     );
   }
 
-  destino.imagens.forEach((imagem, imageIndex) => {
-    if (!imagem || !imagem.tipo || !imagem.arquivo) {
-      throw new Error(
-        `Destino ${index + 1} (${destino.cidade}): imagem ${
-          imageIndex + 1
-        } está incompleta.`
-      );
+  destino.imagens.forEach(
+    (imagem, imageIndex) => {
+      if (
+        !imagem ||
+        !imagem.tipo ||
+        !imagem.arquivo
+      ) {
+        throw new Error(
+          `Destino ${index + 1} (${destino.cidade}): imagem ${imageIndex + 1} está incompleta.`
+        );
+      }
     }
-  });
+  );
 }
+
 
 function getDestinationImages(destino) {
   const bandeira =
-    destino.imagens.find((imagem) => imagem.tipo === "bandeira") ||
-    destino.imagens[0];
+    destino.imagens.find(
+      (imagem) =>
+        imagem.tipo === "bandeira"
+    ) || destino.imagens[0];
 
-  const pontosTuristicos = destino.imagens.filter(
-    (imagem) => imagem.tipo === "ponto-turistico"
-  );
+  const pontosTuristicos =
+    destino.imagens.filter(
+      (imagem) =>
+        imagem.tipo === "ponto-turistico"
+    );
 
-  const ponto1 = pontosTuristicos[0] || destino.imagens[1];
-  const ponto2 = pontosTuristicos[1] || destino.imagens[2];
+  const ponto1 =
+    pontosTuristicos[0] ||
+    destino.imagens[1];
+
+  const ponto2 =
+    pontosTuristicos[1] ||
+    destino.imagens[2];
 
   return {
     bandeira: bandeira.arquivo,
@@ -124,6 +158,7 @@ function getDestinationImages(destino) {
     ponto2: ponto2.arquivo
   };
 }
+
 
 function getMetaDescription(destino) {
   const base =
@@ -135,68 +170,112 @@ function getMetaDescription(destino) {
     : base.slice(0, 157).trim() + "...";
 }
 
+
 /* =========================================================
-   TEMPLATE HTML
+   TEMPLATE DA PÁGINA
 ========================================================= */
 
 function buildDestinationHtml(destino) {
-  const cidade = escapeHtml(destino.cidade);
-  const pais = escapeHtml(destino.pais);
-  const texto = escapeHtml(destino.texto);
+  const cidade =
+    escapeHtml(destino.cidade);
 
-  const destinationUrl = normalizeUrlPath(destino.url);
-  const canonicalUrl = SITE_URL + destinationUrl;
+  const pais =
+    escapeHtml(destino.pais);
 
-  const metaDescription = escapeHtml(
-    getMetaDescription(destino)
-  );
+  const texto =
+    escapeHtml(destino.texto);
+
+  const destinationUrl =
+    normalizeUrlPath(destino.url);
+
+  const canonicalUrl =
+    SITE_URL + destinationUrl;
+
+  const metaDescription =
+    escapeHtml(
+      getMetaDescription(destino)
+    );
 
   const pageTitle =
     `${cidade}, ${pais} | Materiais e ferramentas para viajar melhor | Curadoria Elite Travel`;
 
-  const images = getDestinationImages(destino);
+  const images =
+    getDestinationImages(destino);
 
-  const bandeira = escapeHtml(images.bandeira);
-  const ponto1 = escapeHtml(images.ponto1);
-  const ponto2 = escapeHtml(images.ponto2);
+  const bandeira =
+    escapeHtml(images.bandeira);
 
-  const destinationData = escapeJsonForScript({
-    cidade: destino.cidade,
-    pais: destino.pais,
-    cityLabel: destino.cityLabel,
-    url: destinationUrl
-  });
+  const ponto1 =
+    escapeHtml(images.ponto1);
+
+  const ponto2 =
+    escapeHtml(images.ponto2);
+
+  const destinationData =
+    escapeJsonForScript({
+      cidade: destino.cidade,
+      pais: destino.pais,
+      cityLabel: destino.cityLabel,
+      url: destinationUrl
+    });
+
 
   return `<!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
+
   <!-- Google Analytics -->
-  <script async src="https://www.googletagmanager.com/gtag/js?id=G-S07L3R13WJ"></script>
+  <script
+    async
+    src="https://www.googletagmanager.com/gtag/js?id=G-S07L3R13WJ"
+  ></script>
 
   <script>
-    window.dataLayer = window.dataLayer || [];
+    window.dataLayer =
+      window.dataLayer || [];
 
     function gtag(){
       dataLayer.push(arguments);
     }
 
-    function trackEvent(name, params = {}) {
-      if (typeof gtag === "function") {
-        gtag("event", name, params);
+    function trackEvent(
+      name,
+      params = {}
+    ){
+      if (
+        typeof gtag === "function"
+      ){
+        gtag(
+          "event",
+          name,
+          params
+        );
       }
     }
 
-    gtag("js", new Date());
-    gtag("config", "G-S07L3R13WJ");
+    gtag(
+      "js",
+      new Date()
+    );
+
+    gtag(
+      "config",
+      "G-S07L3R13WJ"
+    );
   </script>
 
+
   <meta charset="UTF-8" />
+
   <meta
     name="viewport"
     content="width=device-width, initial-scale=1.0"
   />
 
-  <title>${pageTitle}</title>
+  <title>
+    ${pageTitle}
+  </title>
 
   <meta
     name="description"
@@ -207,6 +286,7 @@ function buildDestinationHtml(destino) {
     rel="canonical"
     href="${canonicalUrl}"
   />
+
 
   <meta
     property="og:type"
@@ -233,7 +313,9 @@ function buildDestinationHtml(destino) {
     content="Curadoria Elite Travel"
   />
 
+
   <style>
+
     :root{
       --gold:#d4af37;
       --background:#070707;
@@ -243,13 +325,16 @@ function buildDestinationHtml(destino) {
       --border:rgba(212,175,55,0.18);
     }
 
+
     *{
       box-sizing:border-box;
     }
 
+
     html{
       scroll-behavior:smooth;
     }
+
 
     body{
       margin:0;
@@ -259,13 +344,16 @@ function buildDestinationHtml(destino) {
       overflow-x:hidden;
     }
 
+
     a{
       color:inherit;
     }
 
+
     button{
       font:inherit;
     }
+
 
     header{
       padding:16px 40px;
@@ -282,6 +370,7 @@ function buildDestinationHtml(destino) {
       gap:16px;
     }
 
+
     .brand{
       display:flex;
       align-items:center;
@@ -291,10 +380,12 @@ function buildDestinationHtml(destino) {
       text-decoration:none;
     }
 
+
     .brand img{
       height:34px;
       width:34px;
     }
+
 
     .brand-name{
       font-family:"Cinzel","Georgia",serif;
@@ -305,6 +396,7 @@ function buildDestinationHtml(destino) {
       line-height:1.1;
     }
 
+
     .brand-tagline{
       font-size:12px;
       color:rgba(255,255,255,0.7);
@@ -312,11 +404,13 @@ function buildDestinationHtml(destino) {
       margin-top:2px;
     }
 
+
     nav{
       display:flex;
       align-items:center;
       position:relative;
     }
+
 
     .nav-menu{
       display:flex;
@@ -325,6 +419,7 @@ function buildDestinationHtml(destino) {
       flex-wrap:wrap;
       justify-content:flex-end;
     }
+
 
     nav a{
       color:var(--gold);
@@ -335,9 +430,11 @@ function buildDestinationHtml(destino) {
       transition:opacity 0.25s ease;
     }
 
+
     nav a:hover{
       opacity:0.88;
     }
+
 
     .nav-sep{
       width:1px;
@@ -346,6 +443,7 @@ function buildDestinationHtml(destino) {
       display:inline-block;
       margin:0 2px;
     }
+
 
     .nav-toggle{
       display:none;
@@ -357,6 +455,7 @@ function buildDestinationHtml(destino) {
       cursor:pointer;
     }
 
+
     .nav-toggle span{
       display:block;
       width:18px;
@@ -366,9 +465,11 @@ function buildDestinationHtml(destino) {
       border-radius:99px;
     }
 
+
     main{
       min-height:100vh;
     }
+
 
     .destination-hero{
       position:relative;
@@ -380,22 +481,28 @@ function buildDestinationHtml(destino) {
       background:#080808;
     }
 
+
     .hero-glow{
       position:absolute;
       width:700px;
       height:700px;
       left:50%;
       top:45%;
-      transform:translate(-50%,-50%);
-      border-radius:50%;
-      background:radial-gradient(
-        circle,
-        rgba(212,175,55,0.12) 0%,
-        rgba(212,175,55,0.05) 35%,
-        transparent 70%
+      transform:translate(
+        -50%,
+        -50%
       );
+      border-radius:50%;
+      background:
+        radial-gradient(
+          circle,
+          rgba(212,175,55,0.12) 0%,
+          rgba(212,175,55,0.05) 35%,
+          transparent 70%
+        );
       pointer-events:none;
     }
+
 
     .destination-hero::after{
       content:"";
@@ -415,6 +522,7 @@ function buildDestinationHtml(destino) {
       pointer-events:none;
     }
 
+
     .hero-shell{
       width:100%;
       max-width:1240px;
@@ -423,12 +531,14 @@ function buildDestinationHtml(destino) {
       z-index:2;
     }
 
+
     .hero-visual{
       height:430px;
       position:relative;
       max-width:1100px;
       margin:0 auto;
     }
+
 
     .hero-image{
       position:absolute;
@@ -438,6 +548,7 @@ function buildDestinationHtml(destino) {
       background:#111;
       box-shadow:0 24px 60px rgba(0,0,0,0.38);
     }
+
 
     .hero-image img{
       width:100%;
@@ -450,6 +561,7 @@ function buildDestinationHtml(destino) {
         contrast(1.03);
     }
 
+
     .hero-image.flag{
       width:31%;
       height:54%;
@@ -459,6 +571,7 @@ function buildDestinationHtml(destino) {
       z-index:1;
     }
 
+
     .hero-image.landmark-main{
       width:47%;
       height:92%;
@@ -466,6 +579,7 @@ function buildDestinationHtml(destino) {
       top:0;
       z-index:3;
     }
+
 
     .hero-image.landmark-secondary{
       width:34%;
@@ -476,6 +590,7 @@ function buildDestinationHtml(destino) {
       z-index:2;
     }
 
+
     .hero-copy{
       max-width:850px;
       margin:-30px auto 0;
@@ -484,6 +599,7 @@ function buildDestinationHtml(destino) {
       text-align:center;
       padding:0 20px;
     }
+
 
     .hero-country{
       color:var(--gold);
@@ -494,28 +610,37 @@ function buildDestinationHtml(destino) {
       font-weight:650;
     }
 
+
     .hero-copy h1{
       font-family:"Cinzel","Georgia",serif;
-      font-size:clamp(54px,8vw,104px);
+      font-size:clamp(
+        54px,
+        8vw,
+        104px
+      );
       line-height:0.95;
       margin:0;
       color:#fff;
       text-transform:uppercase;
       letter-spacing:2px;
-      text-shadow:0 12px 40px rgba(0,0,0,0.72);
+      text-shadow:
+        0 12px 40px rgba(0,0,0,0.72);
     }
+
 
     .hero-divider{
       width:110px;
       height:1px;
       margin:24px auto 20px;
-      background:linear-gradient(
-        90deg,
-        transparent,
-        rgba(212,175,55,0.95),
-        transparent
-      );
+      background:
+        linear-gradient(
+          90deg,
+          transparent,
+          rgba(212,175,55,0.95),
+          transparent
+        );
     }
+
 
     .hero-description{
       margin:0 auto;
@@ -523,17 +648,21 @@ function buildDestinationHtml(destino) {
       color:rgba(255,255,255,0.86);
       font-size:16px;
       line-height:1.85;
-      text-shadow:0 4px 18px rgba(0,0,0,0.65);
+      text-shadow:
+        0 4px 18px rgba(0,0,0,0.65);
     }
+
 
     .content-section{
       padding:82px 40px;
     }
 
+
     .content-shell{
       max-width:1120px;
       margin:0 auto;
     }
+
 
     .section-eyebrow{
       color:rgba(255,255,255,0.55);
@@ -544,14 +673,20 @@ function buildDestinationHtml(destino) {
       margin-bottom:10px;
     }
 
+
     .section-title{
       color:var(--gold);
       text-align:center;
       font-family:"Cinzel","Georgia",serif;
-      font-size:clamp(28px,4vw,42px);
+      font-size:clamp(
+        28px,
+        4vw,
+        42px
+      );
       margin:0 0 14px;
       font-weight:600;
     }
+
 
     .section-subtitle{
       max-width:760px;
@@ -561,6 +696,7 @@ function buildDestinationHtml(destino) {
       font-size:15px;
       line-height:1.8;
     }
+
 
     .materials-section{
       background:
@@ -574,23 +710,34 @@ function buildDestinationHtml(destino) {
       border-bottom:1px solid rgba(255,255,255,0.05);
     }
 
+
     .materials-grid{
       display:grid;
-      grid-template-columns:repeat(3,minmax(0,1fr));
+      grid-template-columns:
+        repeat(
+          3,
+          minmax(0,1fr)
+        );
       gap:18px;
     }
+
 
     .material-card{
       min-height:260px;
       padding:26px 22px;
       border-radius:18px;
-      background:linear-gradient(
-        180deg,
-        rgba(14,14,14,0.98),
-        rgba(6,6,6,0.96)
-      );
-      border:1px solid rgba(212,175,55,0.16);
-      box-shadow:0 16px 40px rgba(0,0,0,0.24);
+      background:
+        linear-gradient(
+          180deg,
+          rgba(14,14,14,0.98),
+          rgba(6,6,6,0.96)
+        );
+      border:
+        1px solid
+        rgba(212,175,55,0.16);
+      box-shadow:
+        0 16px 40px
+        rgba(0,0,0,0.24);
       display:flex;
       flex-direction:column;
       transition:
@@ -598,15 +745,21 @@ function buildDestinationHtml(destino) {
         border-color 0.25s ease;
     }
 
+
     .material-card:hover{
-      transform:translateY(-4px);
-      border-color:rgba(212,175,55,0.38);
+      transform:
+        translateY(-4px);
+      border-color:
+        rgba(212,175,55,0.38);
     }
+
 
     .material-icon{
       width:46px;
       height:46px;
-      border:1px solid rgba(212,175,55,0.28);
+      border:
+        1px solid
+        rgba(212,175,55,0.28);
       border-radius:50%;
       display:flex;
       align-items:center;
@@ -616,6 +769,7 @@ function buildDestinationHtml(destino) {
       margin-bottom:20px;
     }
 
+
     .material-card h3{
       color:var(--gold);
       margin:0 0 10px;
@@ -623,13 +777,16 @@ function buildDestinationHtml(destino) {
       line-height:1.35;
     }
 
+
     .material-description{
-      color:rgba(255,255,255,0.70);
+      color:
+        rgba(255,255,255,0.70);
       font-size:13.5px;
       line-height:1.65;
       margin:0 0 18px;
       flex:1;
     }
+
 
     .material-price{
       color:#fff;
@@ -637,6 +794,7 @@ function buildDestinationHtml(destino) {
       font-size:17px;
       margin-bottom:14px;
     }
+
 
     .material-button{
       width:100%;
@@ -652,15 +810,12 @@ function buildDestinationHtml(destino) {
         opacity 0.2s ease;
     }
 
+
     .material-button:hover{
-      transform:translateY(-1px);
+      transform:
+        translateY(-1px);
     }
 
-    .material-button.owned{
-      background:transparent;
-      border:1px solid rgba(212,175,55,0.38);
-      color:var(--gold);
-    }
 
     .loading-state,
     .empty-state,
@@ -669,36 +824,53 @@ function buildDestinationHtml(destino) {
       text-align:center;
       padding:30px 20px;
       border-radius:16px;
-      border:1px dashed rgba(255,255,255,0.12);
-      color:rgba(255,255,255,0.68);
+      border:
+        1px dashed
+        rgba(255,255,255,0.12);
+      color:
+        rgba(255,255,255,0.68);
       line-height:1.7;
-      background:rgba(10,10,10,0.68);
+      background:
+        rgba(10,10,10,0.68);
     }
+
 
     .tools-section{
       background:#090909;
     }
 
+
     .tools-grid{
       display:grid;
-      grid-template-columns:repeat(2,minmax(0,1fr));
+      grid-template-columns:
+        repeat(
+          2,
+          minmax(0,1fr)
+        );
       gap:20px;
       max-width:920px;
       margin:0 auto;
     }
 
+
     .tool-card{
       border-radius:20px;
       padding:30px 26px;
-      background:linear-gradient(
-        180deg,
-        rgba(13,13,13,0.96),
-        rgba(6,6,6,0.94)
-      );
-      border:1px solid rgba(212,175,55,0.18);
-      box-shadow:0 18px 44px rgba(0,0,0,0.22);
+      background:
+        linear-gradient(
+          180deg,
+          rgba(13,13,13,0.96),
+          rgba(6,6,6,0.94)
+        );
+      border:
+        1px solid
+        rgba(212,175,55,0.18);
+      box-shadow:
+        0 18px 44px
+        rgba(0,0,0,0.22);
       text-align:center;
     }
+
 
     .tool-card h3{
       color:var(--gold);
@@ -706,12 +878,15 @@ function buildDestinationHtml(destino) {
       font-size:21px;
     }
 
+
     .tool-card p{
-      color:rgba(255,255,255,0.72);
+      color:
+        rgba(255,255,255,0.72);
       line-height:1.7;
       font-size:14px;
       margin:0 0 20px;
     }
+
 
     .tool-card a{
       display:inline-flex;
@@ -726,20 +901,373 @@ function buildDestinationHtml(destino) {
       font-weight:800;
     }
 
+
+    /* =====================================================
+       POPUPS E CARRINHO
+    ===================================================== */
+
+    .popup-bg{
+      position:fixed;
+      inset:0;
+      background:
+        rgba(0,0,0,0.85);
+      display:none;
+      justify-content:center;
+      align-items:center;
+      z-index:3000;
+      padding:18px;
+    }
+
+
+    .popup-bg.active{
+      display:flex;
+    }
+
+
+    .popup-content{
+      background:#111;
+      border:1px solid #222;
+      border-radius:14px;
+      max-width:720px;
+      width:100%;
+      padding:24px;
+      position:relative;
+      text-align:center;
+      max-height:
+        calc(100vh - 36px);
+      display:flex;
+      flex-direction:column;
+      overflow:hidden;
+    }
+
+
+    .popup-content h3{
+      margin:0 0 10px;
+      color:var(--gold);
+      flex:0 0 auto;
+    }
+
+
+    .popup-content p{
+      margin:0 0 14px;
+      color:
+        rgba(255,255,255,0.8);
+      line-height:1.6;
+      font-size:14px;
+      flex:0 0 auto;
+    }
+
+
+    .popup-actions{
+      display:flex;
+      gap:12px;
+      justify-content:center;
+      flex-wrap:wrap;
+      margin-top:14px;
+      flex:0 0 auto;
+    }
+
+
+    .popup-actions button{
+      cursor:pointer;
+      padding:11px 18px;
+      border-radius:10px;
+      border:none;
+      background:var(--gold);
+      color:#000;
+      font-weight:700;
+    }
+
+
+    .popup-actions button.btn-ghost{
+      background:transparent;
+      border:
+        1px solid
+        rgba(212,175,55,0.38);
+      color:var(--gold);
+    }
+
+
+    .popup-actions button[disabled]{
+      opacity:0.55;
+      cursor:not-allowed;
+    }
+
+
+    .popup-rules{
+      text-align:left;
+      margin-top:14px;
+      background:#0f0f0f;
+      border:1px solid #222;
+      border-radius:12px;
+      padding:16px;
+      color:
+        rgba(255,255,255,0.78);
+      font-size:13.5px;
+      line-height:1.6;
+      overflow:auto;
+      flex:1 1 auto;
+      min-height:0;
+    }
+
+
+    .popup-rules strong{
+      color:var(--gold);
+    }
+
+
+    .consent-wrap{
+      display:flex;
+      gap:10px;
+      align-items:flex-start;
+      margin-top:12px;
+      text-align:left;
+      padding:12px;
+      border:1px solid #222;
+      border-radius:12px;
+      background:#0f0f0f;
+      color:
+        rgba(255,255,255,0.82);
+      font-size:13.2px;
+      line-height:1.55;
+      flex:0 0 auto;
+    }
+
+
+    .consent-wrap input{
+      margin-top:3px;
+      accent-color:var(--gold);
+    }
+
+
+    .cart-list{
+      text-align:left;
+      margin-top:14px;
+      border:1px solid #222;
+      border-radius:12px;
+      background:#0f0f0f;
+      padding:12px;
+      overflow:auto;
+      flex:1 1 auto;
+      min-height:0;
+    }
+
+
+    .cart-item{
+      display:flex;
+      justify-content:space-between;
+      gap:12px;
+      padding:12px 10px;
+      border-bottom:
+        1px solid
+        rgba(255,255,255,0.08);
+    }
+
+
+    .cart-item:last-child{
+      border-bottom:none;
+    }
+
+
+    .cart-item-left{
+      min-width:0;
+    }
+
+
+    .cart-item-title{
+      color:#fff;
+      font-weight:650;
+      margin:0 0 4px;
+      font-size:14px;
+      line-height:1.35;
+    }
+
+
+    .cart-item-meta{
+      color:
+        rgba(255,255,255,0.70);
+      font-size:12.5px;
+      line-height:1.4;
+    }
+
+
+    .cart-item-right{
+      display:flex;
+      flex-direction:column;
+      align-items:flex-end;
+      gap:10px;
+      white-space:nowrap;
+    }
+
+
+    .cart-item-right button{
+      cursor:pointer;
+      padding:9px 13px;
+      border-radius:9px;
+      background:transparent;
+      border:
+        1px solid
+        rgba(212,175,55,0.38);
+      color:var(--gold);
+      font-weight:650;
+    }
+
+
+    .cart-total{
+      margin-top:12px;
+      display:flex;
+      justify-content:space-between;
+      gap:12px;
+      align-items:center;
+      padding:12px;
+      border:
+        1px solid
+        rgba(255,255,255,0.10);
+      border-radius:12px;
+      background:#0f0f0f;
+      text-align:left;
+      flex:0 0 auto;
+    }
+
+
+    .cart-total strong{
+      color:var(--gold);
+    }
+
+
+    .total-strike{
+      color:
+        rgba(255,255,255,0.55);
+      text-decoration:line-through;
+      margin-right:10px;
+      font-weight:650;
+    }
+
+
+    .total-final{
+      color:var(--gold);
+      font-weight:800;
+    }
+
+
+    .discount-line{
+      margin-top:8px;
+      text-align:left;
+      color:
+        rgba(255,255,255,0.72);
+      font-size:12.8px;
+    }
+
+
+    .discount-line strong{
+      color:var(--gold);
+    }
+
+
+    .coupon-wrap{
+      margin-top:10px;
+      text-align:left;
+      border:
+        1px solid
+        rgba(255,255,255,0.10);
+      border-radius:12px;
+      background:#0f0f0f;
+      padding:12px;
+      flex:0 0 auto;
+    }
+
+
+    .coupon-label{
+      display:block;
+      font-size:12.5px;
+      color:
+        rgba(255,255,255,0.75);
+      margin-bottom:8px;
+    }
+
+
+    .coupon-row{
+      display:flex;
+      gap:10px;
+      align-items:center;
+    }
+
+
+    .coupon-input{
+      width:100%;
+      padding:12px 14px;
+      border-radius:12px;
+      border:
+        1px solid
+        rgba(255,255,255,0.10);
+      background:
+        rgba(10,10,10,0.95);
+      color:#fff;
+      outline:none;
+      font-size:14px;
+      flex:1;
+    }
+
+
+    .coupon-apply{
+      cursor:pointer;
+      padding:11px 18px;
+      border-radius:10px;
+      border:none;
+      background:var(--gold);
+      color:#000;
+      font-weight:700;
+      min-width:120px;
+    }
+
+
+    .coupon-msg{
+      margin-top:8px;
+      font-size:12.5px;
+      line-height:1.45;
+      min-height:18px;
+    }
+
+
+    .coupon-msg.ok{
+      color:var(--gold);
+    }
+
+
+    .coupon-msg.err{
+      color:
+        rgba(255,255,255,0.72);
+    }
+
+
+    .coupon-help{
+      margin-top:8px;
+      font-size:12.5px;
+      color:
+        rgba(255,255,255,0.62);
+      line-height:1.45;
+    }
+
+
     footer{
-      border-top:1px solid rgba(255,255,255,0.08);
+      border-top:
+        1px solid
+        rgba(255,255,255,0.08);
       padding:34px 24px 38px;
       text-align:center;
-      color:rgba(255,255,255,0.68);
+      color:
+        rgba(255,255,255,0.68);
       font-size:14px;
       line-height:1.7;
       margin-top:0;
     }
 
+
     footer > a{
       color:#1a0dab;
       text-decoration:underline;
     }
+
 
     .footer-social{
       display:flex;
@@ -749,6 +1277,7 @@ function buildDestinationHtml(destino) {
       margin-top:16px;
     }
 
+
     .footer-social a{
       width:38px;
       height:38px;
@@ -756,19 +1285,15 @@ function buildDestinationHtml(destino) {
       align-items:center;
       justify-content:center;
       border-radius:50%;
-      border:1px solid rgba(212,175,55,0.30);
+      border:
+        1px solid
+        rgba(212,175,55,0.30);
       color:var(--gold);
-      background:rgba(255,255,255,0.02);
+      background:
+        rgba(255,255,255,0.02);
       text-decoration:none;
-      transition:
-        transform 0.25s ease,
-        border-color 0.25s ease;
     }
 
-    .footer-social a:hover{
-      transform:translateY(-2px);
-      border-color:rgba(212,175,55,0.65);
-    }
 
     .footer-social svg{
       width:18px;
@@ -776,20 +1301,25 @@ function buildDestinationHtml(destino) {
       fill:currentColor;
     }
 
+
     @media (max-width:980px){
+
       header{
         padding:14px 16px;
       }
 
+
       .brand{
         min-width:auto;
       }
+
 
       .nav-toggle{
         display:inline-flex;
         align-items:center;
         justify-content:center;
       }
+
 
       .nav-menu{
         display:none;
@@ -798,32 +1328,42 @@ function buildDestinationHtml(destino) {
         right:0;
         min-width:220px;
         padding:14px;
-        border:1px solid rgba(255,255,255,0.10);
+        border:
+          1px solid
+          rgba(255,255,255,0.10);
         border-radius:14px;
-        background:rgba(0,0,0,0.94);
-        backdrop-filter:blur(10px);
+        background:
+          rgba(0,0,0,0.94);
+        backdrop-filter:
+          blur(10px);
         flex-direction:column;
         align-items:flex-start;
         gap:12px;
         z-index:2000;
       }
 
+
       header.nav-open .nav-menu{
         display:flex;
       }
+
 
       .nav-sep{
         display:none;
       }
 
+
       .destination-hero{
         min-height:auto;
-        padding:120px 18px 64px;
+        padding:
+          120px 18px 64px;
       }
+
 
       .hero-visual{
         height:350px;
       }
+
 
       .hero-image.flag{
         width:42%;
@@ -831,54 +1371,83 @@ function buildDestinationHtml(destino) {
         top:18%;
       }
 
+
       .hero-image.landmark-main{
         width:54%;
         left:23%;
       }
+
 
       .hero-image.landmark-secondary{
         width:42%;
         height:55%;
       }
 
+
       .hero-copy{
         margin-top:-8px;
       }
+
 
       .content-section{
         padding:64px 18px;
       }
 
+
       .materials-grid{
-        grid-template-columns:repeat(2,minmax(0,1fr));
+        grid-template-columns:
+          repeat(
+            2,
+            minmax(0,1fr)
+          );
       }
+
 
       .tools-grid{
         grid-template-columns:1fr;
       }
+
+
+      .coupon-row{
+        flex-direction:column;
+        align-items:stretch;
+      }
+
+
+      .coupon-apply{
+        width:100%;
+      }
+
     }
 
+
     @media (max-width:640px){
+
       .brand-name{
         font-size:14px;
       }
 
+
       .brand-tagline{
         font-size:10px;
       }
+
 
       .brand img{
         width:30px;
         height:30px;
       }
 
+
       .hero-visual{
         height:285px;
       }
 
+
       .hero-image{
         border-radius:16px;
       }
+
 
       .hero-image.flag{
         width:45%;
@@ -887,11 +1456,13 @@ function buildDestinationHtml(destino) {
         top:22%;
       }
 
+
       .hero-image.landmark-main{
         width:59%;
         height:90%;
         left:20%;
       }
+
 
       .hero-image.landmark-secondary{
         width:44%;
@@ -900,26 +1471,50 @@ function buildDestinationHtml(destino) {
         bottom:8%;
       }
 
+
       .hero-copy h1{
-        font-size:clamp(44px,17vw,70px);
+        font-size:
+          clamp(
+            44px,
+            17vw,
+            70px
+          );
       }
+
 
       .hero-description{
         font-size:14.5px;
       }
 
+
       .materials-grid{
         grid-template-columns:1fr;
       }
 
+
       .material-card{
         min-height:0;
       }
+
+
+      .cart-item{
+        flex-direction:column;
+      }
+
+
+      .cart-item-right{
+        align-items:flex-start;
+      }
+
     }
+
   </style>
+
 </head>
 
+
 <body>
+
 
 <header id="siteHeader">
 
@@ -928,12 +1523,14 @@ function buildDestinationHtml(destino) {
     href="/"
     aria-label="Curadoria Elite Travel"
   >
+
     <img
       src="/images/rosa-dos-ventos.png"
       alt="Rosa dos Ventos"
     >
 
     <div>
+
       <div class="brand-name">
         Curadoria Elite Travel
       </div>
@@ -941,23 +1538,25 @@ function buildDestinationHtml(destino) {
       <div class="brand-tagline">
         O seu mundo, bem indicado.
       </div>
+
     </div>
+
   </a>
+
 
   <nav>
 
     <button
       class="nav-toggle"
-      id="navToggle"
       type="button"
       aria-label="Menu"
-      title="Menu"
       onclick="toggleMobileNav()"
     >
       <span></span>
       <span></span>
       <span></span>
     </button>
+
 
     <div
       class="nav-menu"
@@ -983,8 +1582,9 @@ function buildDestinationHtml(destino) {
       <span class="nav-sep"></span>
 
       <a
-        href="/?cart=1"
+        href="#"
         id="navCart"
+        onclick="openCart(); return false;"
       >
         Carrinho (0)
       </a>
@@ -1015,11 +1615,14 @@ function buildDestinationHtml(destino) {
       </a>
 
     </div>
+
   </nav>
 
 </header>
 
+
 <main>
+
 
   <section class="destination-hero">
 
@@ -1027,33 +1630,43 @@ function buildDestinationHtml(destino) {
 
     <div class="hero-shell">
 
+
       <div
         class="hero-visual"
         aria-hidden="true"
       >
 
         <div class="hero-image flag">
+
           <img
             src="${bandeira}"
             alt=""
           >
+
         </div>
 
+
         <div class="hero-image landmark-main">
+
           <img
             src="${ponto1}"
             alt=""
           >
+
         </div>
 
+
         <div class="hero-image landmark-secondary">
+
           <img
             src="${ponto2}"
             alt=""
           >
+
         </div>
 
       </div>
+
 
       <div class="hero-copy">
 
@@ -1073,9 +1686,11 @@ function buildDestinationHtml(destino) {
 
       </div>
 
+
     </div>
 
   </section>
+
 
   <section
     class="content-section materials-section"
@@ -1112,6 +1727,7 @@ function buildDestinationHtml(destino) {
 
   </section>
 
+
   <section class="content-section tools-section">
 
     <div class="content-shell">
@@ -1127,6 +1743,7 @@ function buildDestinationHtml(destino) {
       <p class="section-subtitle">
         Acesse ferramentas da Curadoria para consultar informações práticas relacionadas ao destino.
       </p>
+
 
       <div class="tools-grid">
 
@@ -1146,6 +1763,7 @@ function buildDestinationHtml(destino) {
           </a>
 
         </article>
+
 
         <article class="tool-card">
 
@@ -1170,16 +1788,22 @@ function buildDestinationHtml(destino) {
 
   </section>
 
+
 </main>
+
 
 <footer>
 
-  Curadoria Elite Travel · O seu mundo, bem indicado.<br>
+  Curadoria Elite Travel ·
+  O seu mundo, bem indicado.
+  <br>
 
   São Paulo - SP ·
+
   <a href="/contact.html">
     curadoriaelitetravel@gmail.com
   </a>
+
 
   <div
     class="footer-social"
@@ -1191,7 +1815,6 @@ function buildDestinationHtml(destino) {
       target="_blank"
       rel="noopener noreferrer"
       aria-label="Instagram da Curadoria Elite Travel"
-      title="Instagram"
     >
       <svg
         viewBox="0 0 24 24"
@@ -1201,12 +1824,12 @@ function buildDestinationHtml(destino) {
       </svg>
     </a>
 
+
     <a
       href="https://www.linkedin.com/company/curadoria-elite-travel"
       target="_blank"
       rel="noopener noreferrer"
       aria-label="LinkedIn da Curadoria Elite Travel"
-      title="LinkedIn"
     >
       <svg
         viewBox="0 0 24 24"
@@ -1220,20 +1843,66 @@ function buildDestinationHtml(destino) {
 
 </footer>
 
-<script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+
+<script
+  src="https://unpkg.com/@supabase/supabase-js@2"
+></script>
+
 
 <script>
 
-  const DESTINATION = ${destinationData};
+  /* =====================================================
+     CONFIGURAÇÃO
+  ===================================================== */
+
+  const DESTINATION =
+    ${destinationData};
+
 
   const SUPABASE_URL =
     ${JSON.stringify(SUPABASE_URL)};
 
+
   const SUPABASE_ANON_KEY =
     ${JSON.stringify(SUPABASE_ANON_KEY)};
 
+
   const CART_STORAGE_KEY =
     "cet_cart_v2";
+
+
+  const CHECKOUT_CONTEXT_KEY =
+    "cet_checkout_context_v2";
+
+
+  const CART_CHECKOUT_ITEMS_KEY =
+    "cet_cart_checkout_items_v2";
+
+
+  const CART_LAST_CHECKOUT_STARTED_KEY =
+    "cet_cart_last_checkout_started_v2";
+
+
+  const CART_COUPON_CODE_KEY =
+    "cet_cart_coupon_code_v1";
+
+
+  let supabaseClient = null;
+
+  let cartPricingPreview = null;
+
+
+  const categoryPricesMap =
+    new Map();
+
+
+  const ownedMap =
+    new Map();
+
+
+  /* =====================================================
+     CATEGORIAS
+  ===================================================== */
 
   const CATEGORY_DESCRIPTIONS = {
 
@@ -1257,6 +1926,7 @@ function buildDestinationHtml(destino) {
 
   };
 
+
   const CATEGORY_ICONS = {
 
     "city guide":"◇",
@@ -1273,38 +1943,50 @@ function buildDestinationHtml(destino) {
 
   };
 
-  const categoryPricesMap =
-    new Map();
 
-  const ownedMap =
-    new Map();
-
-  let supabaseClient =
-    null;
+  /* =====================================================
+     NAVEGAÇÃO
+  ===================================================== */
 
   function toggleMobileNav(){
 
     const header =
-      document.getElementById("siteHeader");
+      document.getElementById(
+        "siteHeader"
+      );
 
     if (!header){
       return;
     }
 
-    header.classList.toggle("nav-open");
+    header.classList.toggle(
+      "nav-open"
+    );
+
   }
+
 
   function closeMobileNav(){
 
     const header =
-      document.getElementById("siteHeader");
+      document.getElementById(
+        "siteHeader"
+      );
 
     if (!header){
       return;
     }
 
-    header.classList.remove("nav-open");
+    header.classList.remove(
+      "nav-open"
+    );
+
   }
+
+
+  /* =====================================================
+     NORMALIZAÇÃO
+  ===================================================== */
 
   function normalizeKeyPart(str){
 
@@ -1312,13 +1994,26 @@ function buildDestinationHtml(destino) {
       .trim()
       .toLowerCase()
       .normalize("NFD")
-      .replace(/[\\u0300-\\u036f]/g, "")
-      .replace(/[—–−]/g, "-")
-      .replace(/\\s*-\\s*/g, " - ")
-      .replace(/\\s+/g, " ")
+      .replace(
+        /[\\u0300-\\u036f]/g,
+        ""
+      )
+      .replace(
+        /[—–−]/g,
+        "-"
+      )
+      .replace(
+        /\\s*-\\s*/g,
+        " - "
+      )
+      .replace(
+        /\\s+/g,
+        " "
+      )
       .trim();
 
   }
+
 
   function normalizeCategoryName(category){
 
@@ -1328,6 +2023,7 @@ function buildDestinationHtml(destino) {
 
   }
 
+
   function normalizeCityLabel(cityLabel){
 
     return normalizeKeyPart(
@@ -1335,6 +2031,7 @@ function buildDestinationHtml(destino) {
     );
 
   }
+
 
   function purchaseKey(
     category,
@@ -1348,6 +2045,11 @@ function buildDestinationHtml(destino) {
     );
 
   }
+
+
+  /* =====================================================
+     SUPABASE E SESSÃO
+  ===================================================== */
 
   function ensureSupabase(){
 
@@ -1368,6 +2070,7 @@ function buildDestinationHtml(destino) {
     return supabaseClient;
 
   }
+
 
   async function getSession(){
 
@@ -1390,19 +2093,88 @@ function buildDestinationHtml(destino) {
 
   }
 
+
+  async function getAccessToken(){
+
+    const session =
+      await getSession();
+
+    return (
+      session &&
+      session.access_token
+    )
+      ? session.access_token
+      : null;
+
+  }
+
+
+  async function apiPOST(
+    url,
+    body
+  ){
+
+    const token =
+      await getAccessToken();
+
+    const headers = {
+      "Content-Type":
+        "application/json"
+    };
+
+    if (token){
+      headers["Authorization"] =
+        "Bearer " + token;
+    }
+
+    const response =
+      await fetch(
+        url,
+        {
+          method:"POST",
+          headers,
+          body:
+            JSON.stringify(
+              body || {}
+            )
+        }
+      );
+
+    let json = null;
+
+    try{
+      json =
+        await response.json();
+    }catch(error){}
+
+    return {
+      ok:response.ok,
+      status:response.status,
+      json
+    };
+
+  }
+
+
   async function refreshNavAuth(){
 
     const session =
       await getSession();
 
     const navLogin =
-      document.getElementById("navLogin");
+      document.getElementById(
+        "navLogin"
+      );
 
     const navAccount =
-      document.getElementById("navAccount");
+      document.getElementById(
+        "navAccount"
+      );
 
     const navLogout =
-      document.getElementById("navLogout");
+      document.getElementById(
+        "navLogout"
+      );
 
     if (
       !navLogin ||
@@ -1441,6 +2213,7 @@ function buildDestinationHtml(destino) {
 
   }
 
+
   async function doLogout(event){
 
     if (event){
@@ -1459,7 +2232,7 @@ function buildDestinationHtml(destino) {
     }catch(error){
 
       console.error(
-        "Erro ao sair da conta:",
+        "Erro ao sair:",
         error
       );
 
@@ -1469,47 +2242,10 @@ function buildDestinationHtml(destino) {
 
   }
 
-  function getCart(){
 
-    try{
-
-      const raw =
-        localStorage.getItem(
-          CART_STORAGE_KEY
-        );
-
-      const parsed =
-        raw
-          ? JSON.parse(raw)
-          : [];
-
-      return Array.isArray(parsed)
-        ? parsed
-        : [];
-
-    }catch(error){
-
-      return [];
-
-    }
-
-  }
-
-  function updateCartBadge(){
-
-    const navCart =
-      document.getElementById("navCart");
-
-    if (!navCart){
-      return;
-    }
-
-    navCart.textContent =
-      "Carrinho (" +
-      getCart().length +
-      ")";
-
-  }
+  /* =====================================================
+     PREÇOS
+  ===================================================== */
 
   function formatBRL(value){
 
@@ -1525,19 +2261,26 @@ function buildDestinationHtml(destino) {
 
     }catch(error){
 
-      return "R$ " + String(value);
+      return (
+        "R$ " +
+        String(value)
+      );
 
     }
 
   }
 
+
   function getFallbackPriceForCategory(category){
 
     const normalized =
-      normalizeCategoryName(category);
+      normalizeCategoryName(
+        category
+      );
 
     if (
-      normalized === "city guide"
+      normalized ===
+      "city guide"
     ){
       return 88.92;
     }
@@ -1546,17 +2289,21 @@ function buildDestinationHtml(destino) {
 
   }
 
+
   function getPriceForCategory(category){
 
     const key =
-      normalizeCategoryName(category);
+      normalizeCategoryName(
+        category
+      );
 
     if (
       categoryPricesMap.has(key)
     ){
 
       return Number(
-        categoryPricesMap.get(key) || 0
+        categoryPricesMap.get(key) ||
+        0
       );
 
     }
@@ -1566,6 +2313,7 @@ function buildDestinationHtml(destino) {
     );
 
   }
+
 
   async function loadCategoryPrices(){
 
@@ -1585,7 +2333,9 @@ function buildDestinationHtml(destino) {
         error
       } =
         await sb
-          .from("category_prices")
+          .from(
+            "category_prices"
+          )
           .select(
             "category, price, is_active"
           )
@@ -1650,6 +2400,11 @@ function buildDestinationHtml(destino) {
 
   }
 
+
+  /* =====================================================
+     COMPRAS JÁ EXISTENTES
+  ===================================================== */
+
   async function loadOwnedPurchases(){
 
     ownedMap.clear();
@@ -1691,7 +2446,7 @@ function buildDestinationHtml(destino) {
       if (error){
 
         console.error(
-          "Erro ao carregar compras do usuário:",
+          "Erro ao carregar compras:",
           error
         );
 
@@ -1702,14 +2457,11 @@ function buildDestinationHtml(destino) {
       (data || []).forEach(
         (row) => {
 
-          const key =
+          ownedMap.set(
             purchaseKey(
               row.category || "",
               row.city || ""
-            );
-
-          ownedMap.set(
-            key,
+            ),
             {
               pdf_url:
                 row.pdf_url || null
@@ -1730,6 +2482,7 @@ function buildDestinationHtml(destino) {
 
   }
 
+
   function userOwns(
     category,
     cityLabel
@@ -1744,33 +2497,1748 @@ function buildDestinationHtml(destino) {
 
   }
 
-  function getCategoryDescription(category){
 
-    const normalized =
-      normalizeCategoryName(category);
+  /* =====================================================
+     CARRINHO
+  ===================================================== */
+
+  function getCart(){
+
+    try{
+
+      const raw =
+        localStorage.getItem(
+          CART_STORAGE_KEY
+        );
+
+      const parsed =
+        raw
+          ? JSON.parse(raw)
+          : [];
+
+      return Array.isArray(parsed)
+        ? parsed
+        : [];
+
+    }catch(error){
+
+      return [];
+
+    }
+
+  }
+
+
+  function saveCart(items){
+
+    try{
+
+      localStorage.setItem(
+        CART_STORAGE_KEY,
+        JSON.stringify(
+          items || []
+        )
+      );
+
+    }catch(error){}
+
+    updateCartBadge();
+
+  }
+
+
+  function clearCart(){
+
+    try{
+
+      localStorage.removeItem(
+        CART_STORAGE_KEY
+      );
+
+    }catch(error){}
+
+    updateCartBadge();
+
+  }
+
+
+  function cartItemKey(
+    category,
+    cityLabel
+  ){
+
+    return purchaseKey(
+      category,
+      cityLabel
+    );
+
+  }
+
+
+  function updateCartBadge(){
+
+    const navCart =
+      document.getElementById(
+        "navCart"
+      );
+
+    if (!navCart){
+      return;
+    }
+
+    navCart.textContent =
+      "Carrinho (" +
+      getCart().length +
+      ")";
+
+  }
+
+
+  function calcCartTotal(items){
+
+    let total = 0;
+
+    (items || []).forEach(
+      (item) => {
+
+        const qty =
+          Number(
+            item.qty || 0
+          );
+
+        const price =
+          Number(
+            item.price || 0
+          );
+
+        total +=
+          qty * price;
+
+      }
+    );
+
+    return total;
+
+  }
+
+
+  function removeFromCart(key){
+
+    const items =
+      getCart().filter(
+        (item) =>
+          item &&
+          item.key !== key
+      );
+
+    saveCart(items);
+
+    cartPricingPreview = null;
+
+    renderCart();
+
+  }
+
+
+  function addToCart(
+    category,
+    cityLabel
+  ){
+
+    const items =
+      getCart();
+
+    const key =
+      cartItemKey(
+        category,
+        cityLabel
+      );
+
+    if (
+      items.some(
+        (item) =>
+          item &&
+          item.key === key
+      )
+    ){
+
+      return false;
+
+    }
+
+    const price =
+      getPriceForCategory(
+        category
+      );
+
+    items.push({
+      key,
+      category:
+        String(
+          category || ""
+        ).trim(),
+      city:
+        String(
+          cityLabel || ""
+        ).trim(),
+      qty:1,
+      price:
+        Number(
+          price || 0
+        )
+    });
+
+    saveCart(items);
+
+    cartPricingPreview = null;
+
+    trackEvent(
+      "add_to_cart",
+      {
+        item_category:
+          category,
+        item_name:
+          cityLabel,
+        currency:
+          "BRL",
+        value:
+          Number(
+            price || 0
+          )
+      }
+    );
+
+    return true;
+
+  }
+
+
+  function addToCartAndOpenCart(
+    category,
+    cityLabel
+  ){
+
+    addToCart(
+      category,
+      cityLabel
+    );
+
+    openCart();
+
+  }
+
+
+  /* =====================================================
+     CUPOM
+  ===================================================== */
+
+  function normalizeCouponCode(code){
+
+    return String(
+      code || ""
+    )
+      .trim()
+      .toUpperCase();
+
+  }
+
+
+  function setCartCouponCode(code){
+
+    try{
+
+      const value =
+        normalizeCouponCode(
+          code
+        );
+
+      if (!value){
+
+        localStorage.removeItem(
+          CART_COUPON_CODE_KEY
+        );
+
+      }else{
+
+        localStorage.setItem(
+          CART_COUPON_CODE_KEY,
+          value
+        );
+
+      }
+
+    }catch(error){}
+
+  }
+
+
+  function getCartCouponCode(){
+
+    try{
+
+      return normalizeCouponCode(
+        localStorage.getItem(
+          CART_COUPON_CODE_KEY
+        ) || ""
+      );
+
+    }catch(error){
+
+      return "";
+
+    }
+
+  }
+
+
+  function clearCartCouponCode(){
+
+    try{
+
+      localStorage.removeItem(
+        CART_COUPON_CODE_KEY
+      );
+
+    }catch(error){}
+
+  }
+
+
+  function setCouponMessage(
+    text,
+    kind
+  ){
+
+    const element =
+      document.getElementById(
+        "couponMsg"
+      );
+
+    if (!element){
+      return;
+    }
+
+    element.classList.remove(
+      "ok",
+      "err"
+    );
+
+    element.textContent =
+      text || "";
+
+    if (kind === "ok"){
+      element.classList.add("ok");
+    }
+
+    if (kind === "err"){
+      element.classList.add("err");
+    }
+
+  }
+
+
+  async function applyCouponInCart(){
+
+    const items =
+      getCart();
+
+    if (!items.length){
+
+      setCouponMessage(
+        "Seu carrinho está vazio.",
+        "err"
+      );
+
+      return;
+
+    }
+
+    const code =
+      getCartCouponCode();
+
+    if (!code){
+
+      cartPricingPreview = null;
+
+      renderCartTotalsOnly();
+
+      return;
+
+    }
+
+    const session =
+      await getSession();
+
+    if (
+      !session ||
+      !session.user
+    ){
+
+      setCouponMessage(
+        "Faça login para validar o cupom no carrinho.",
+        "err"
+      );
+
+      return;
+
+    }
+
+    const payload = {
+
+      items:
+        items.map(
+          (item) => ({
+            category:
+              item.category,
+            city:
+              item.city,
+            qty:
+              Number(
+                item.qty || 1
+              ) || 1
+          })
+        ),
+
+      coupon_code:code,
+
+      preview_only:true
+
+    };
+
+
+    const response =
+      await apiPOST(
+        "/api/create-checkout-mercadopago",
+        payload
+      );
+
+
+    if (
+      !response.ok ||
+      !response.json ||
+      response.json.ok !== true
+    ){
+
+      cartPricingPreview =
+        null;
+
+      setCouponMessage(
+        "Este cupom não está válido. Insira um cupom válido.",
+        "err"
+      );
+
+      renderCartTotalsOnly();
+
+      return;
+
+    }
+
+
+    const preview =
+      response.json;
+
+
+    const matchCount =
+      Number(
+        preview.applied &&
+        preview.applied.match_count
+          ? preview.applied.match_count
+          : 0
+      );
+
+
+    if (
+      matchCount > 0 &&
+      preview.totals &&
+      Number(
+        preview.totals.discount_total ||
+        0
+      ) > 0
+    ){
+
+      cartPricingPreview =
+        preview;
+
+      setCouponMessage(
+        "Cupom aplicado.",
+        "ok"
+      );
+
+    }else{
+
+      cartPricingPreview =
+        null;
+
+      setCouponMessage(
+        "Este cupom não está válido. Insira um cupom válido.",
+        "err"
+      );
+
+    }
+
+
+    renderCartTotalsOnly();
+
+  }
+
+
+  /* =====================================================
+     POPUP GERAL
+  ===================================================== */
+
+  function ensurePopupExists(){
+
+    if (
+      document.getElementById(
+        "popup"
+      )
+    ){
+      return;
+    }
+
+
+    const wrap =
+      document.createElement(
+        "div"
+      );
+
+
+    wrap.innerHTML =
+      '<div class="popup-bg" id="popup">' +
+
+        '<div class="popup-content" id="popup-content">' +
+
+          '<h3 id="popup-title"></h3>' +
+
+          '<p id="popup-text"></p>' +
+
+          '<div class="popup-rules" id="popup-rules" style="display:none;">' +
+
+            '<strong>Informações Importantes</strong><br><br>' +
+
+            'A Curadoria Elite Travel oferece exclusivamente materiais digitais de caráter informativo e orientativo, baseados em indicações, referências e conteúdos selecionados.<br><br>' +
+
+            'Não realizamos reservas, vendas de passagens, hospedagens, experiências ou qualquer tipo de intermediação direta com fornecedores ou prestadores de serviço.<br><br>' +
+
+            'As decisões de compra, contratação e utilização de serviços indicados nos materiais são de <strong>responsabilidade exclusiva do usuário</strong>.<br><br>' +
+
+            'Por se tratar de conteúdo digital disponibilizado de forma imediata após a confirmação da compra, <strong>não é possível realizar cancelamentos, trocas ou reembolsos</strong>.<br><br>' +
+
+            'Ao adquirir nossos materiais, o usuário declara estar ciente e de acordo com essas condições.' +
+
+          '</div>' +
+
+          '<div class="popup-actions">' +
+
+            '<button class="btn-ghost" id="popup-secondary" style="display:none;"></button>' +
+
+            '<button id="popup-proceed" style="display:none;"></button>' +
+
+            '<button class="btn-ghost" id="popup-close">Fechar</button>' +
+
+          '</div>' +
+
+        '</div>' +
+
+      '</div>';
+
+
+    document.body.appendChild(
+      wrap
+    );
+
+
+    document
+      .getElementById(
+        "popup-close"
+      )
+      .addEventListener(
+        "click",
+        closePopup
+      );
+
+  }
+
+
+  function closePopup(){
+
+    const popup =
+      document.getElementById(
+        "popup"
+      );
+
+    if (popup){
+      popup.classList.remove(
+        "active"
+      );
+    }
+
+
+    const consent =
+      document.getElementById(
+        "consent-checkbox-wrap"
+      );
+
+    if (consent){
+      consent.remove();
+    }
+
+  }
+
+
+  function openPopup({
+    title="",
+    text="",
+    showProceed=false,
+    proceedText="Ir para pagamento",
+    showRules=false,
+    requireConsent=false,
+    onProceed=null,
+    secondaryText=null,
+    onSecondary=null
+  }){
+
+    ensurePopupExists();
+
+
+    document
+      .getElementById(
+        "popup-title"
+      )
+      .textContent =
+        title;
+
+
+    document
+      .getElementById(
+        "popup-text"
+      )
+      .textContent =
+        text;
+
+
+    const rules =
+      document.getElementById(
+        "popup-rules"
+      );
+
+
+    rules.style.display =
+      showRules
+        ? "block"
+        : "none";
+
+
+    const proceed =
+      document.getElementById(
+        "popup-proceed"
+      );
+
+
+    proceed.style.display =
+      showProceed
+        ? "inline-block"
+        : "none";
+
+
+    proceed.textContent =
+      proceedText;
+
+
+    proceed.disabled =
+      false;
+
+
+    const secondary =
+      document.getElementById(
+        "popup-secondary"
+      );
+
+
+    if (
+      secondaryText &&
+      typeof onSecondary === "function"
+    ){
+
+      secondary.style.display =
+        "inline-block";
+
+      secondary.textContent =
+        secondaryText;
+
+      secondary.onclick =
+        () => {
+
+          closePopup();
+
+          onSecondary();
+
+        };
+
+    }else{
+
+      secondary.style.display =
+        "none";
+
+      secondary.onclick =
+        null;
+
+    }
+
+
+    const oldConsent =
+      document.getElementById(
+        "consent-checkbox-wrap"
+      );
+
+    if (oldConsent){
+      oldConsent.remove();
+    }
+
+
+    if (
+      showProceed &&
+      requireConsent
+    ){
+
+      const consentWrap =
+        document.createElement(
+          "div"
+        );
+
+
+      consentWrap.id =
+        "consent-checkbox-wrap";
+
+
+      consentWrap.className =
+        "consent-wrap";
+
+
+      consentWrap.innerHTML =
+        '<input type="checkbox" id="consent-checkbox">' +
+
+        '<label for="consent-checkbox">' +
+
+          'Li e concordo que, por ser um produto digital de acesso imediato, não será possível realizar cancelamentos, trocas ou reembolsos após a confirmação da compra.' +
+
+        '</label>';
+
+
+      const actions =
+        document.querySelector(
+          "#popup-content .popup-actions"
+        );
+
+
+      actions.parentNode.insertBefore(
+        consentWrap,
+        actions
+      );
+
+
+      proceed.disabled =
+        true;
+
+
+      document
+        .getElementById(
+          "consent-checkbox"
+        )
+        .addEventListener(
+          "change",
+          (event) => {
+
+            proceed.disabled =
+              !event.target.checked;
+
+          }
+        );
+
+    }
+
+
+    proceed.onclick =
+      null;
+
+
+    if (
+      showProceed &&
+      typeof onProceed === "function"
+    ){
+
+      proceed.onclick =
+        async () => {
+
+          closePopup();
+
+          await onProceed();
+
+        };
+
+    }
+
+
+    document
+      .getElementById(
+        "popup"
+      )
+      .classList.add(
+        "active"
+      );
+
+  }
+
+
+  /* =====================================================
+     POPUP DO CARRINHO
+  ===================================================== */
+
+  function ensureCartPopupExists(){
+
+    if (
+      document.getElementById(
+        "cartPopup"
+      )
+    ){
+      return;
+    }
+
+
+    const wrap =
+      document.createElement(
+        "div"
+      );
+
+
+    wrap.innerHTML =
+      '<div class="popup-bg" id="cartPopup">' +
+
+        '<div class="popup-content">' +
+
+          '<h3>Carrinho</h3>' +
+
+          '<p>Confira seus materiais antes de finalizar sua escolha.</p>' +
+
+          '<div class="coupon-wrap">' +
+
+            '<label class="coupon-label" for="couponInput">Cupom</label>' +
+
+            '<div class="coupon-row">' +
+
+              '<input id="couponInput" class="coupon-input" type="text" placeholder="Ex: LANCAMENTONY10" autocomplete="off">' +
+
+              '<button id="couponApplyBtn" class="coupon-apply" type="button">Aplicar</button>' +
+
+            '</div>' +
+
+            '<div id="couponMsg" class="coupon-msg"></div>' +
+
+            '<div class="coupon-help">Se o cupom estiver ativo e dentro do período, ele será aplicado no pagamento.</div>' +
+
+          '</div>' +
+
+          '<div class="cart-list" id="cartList"></div>' +
+
+          '<div class="cart-total" id="cartTotalWrap" style="display:none;">' +
+
+            '<div><strong>Total</strong></div>' +
+
+            '<div id="cartTotalValue"><strong>R$ 0,00</strong></div>' +
+
+          '</div>' +
+
+          '<div id="cartDiscountLine" class="discount-line" style="display:none;">' +
+
+            'Desconto aplicado: <strong id="cartDiscountValue">R$ 0,00</strong>' +
+
+          '</div>' +
+
+          '<div class="popup-actions">' +
+
+            '<button class="btn-ghost" id="cartContinueBtn">Continuar comprando</button>' +
+
+            '<button id="cartProceedBtn">Ir para pagamento</button>' +
+
+            '<button class="btn-ghost" id="cartCloseBtn">Fechar</button>' +
+
+          '</div>' +
+
+        '</div>' +
+
+      '</div>';
+
+
+    document.body.appendChild(
+      wrap
+    );
+
+
+    const couponInput =
+      document.getElementById(
+        "couponInput"
+      );
+
+
+    couponInput.value =
+      getCartCouponCode();
+
+
+    couponInput.addEventListener(
+      "input",
+      () => {
+
+        couponInput.value =
+          normalizeCouponCode(
+            couponInput.value
+          );
+
+        setCartCouponCode(
+          couponInput.value
+        );
+
+        cartPricingPreview =
+          null;
+
+        setCouponMessage(
+          "",
+          ""
+        );
+
+        renderCartTotalsOnly();
+
+      }
+    );
+
+
+    document
+      .getElementById(
+        "couponApplyBtn"
+      )
+      .addEventListener(
+        "click",
+        applyCouponInCart
+      );
+
+
+    document
+      .getElementById(
+        "cartContinueBtn"
+      )
+      .addEventListener(
+        "click",
+        closeCart
+      );
+
+
+    document
+      .getElementById(
+        "cartCloseBtn"
+      )
+      .addEventListener(
+        "click",
+        closeCart
+      );
+
+
+    document
+      .getElementById(
+        "cartProceedBtn"
+      )
+      .addEventListener(
+        "click",
+        startCartCheckoutFlow
+      );
+
+
+    document
+      .getElementById(
+        "cartPopup"
+      )
+      .addEventListener(
+        "click",
+        (event) => {
+
+          if (
+            event.target &&
+            event.target.id ===
+            "cartPopup"
+          ){
+            closeCart();
+          }
+
+        }
+      );
+
+  }
+
+
+  function renderCartTotalsOnly(){
+
+    const items =
+      getCart();
+
+
+    const totalWrap =
+      document.getElementById(
+        "cartTotalWrap"
+      );
+
+
+    const totalValue =
+      document.getElementById(
+        "cartTotalValue"
+      );
+
+
+    const discountLine =
+      document.getElementById(
+        "cartDiscountLine"
+      );
+
+
+    const discountValue =
+      document.getElementById(
+        "cartDiscountValue"
+      );
+
+
+    if (!items.length){
+
+      if (totalWrap){
+        totalWrap.style.display =
+          "none";
+      }
+
+      if (discountLine){
+        discountLine.style.display =
+          "none";
+      }
+
+      return;
+
+    }
+
+
+    const baseTotal =
+      calcCartTotal(items);
+
+
+    if (
+      cartPricingPreview &&
+      cartPricingPreview.totals
+    ){
+
+      const newTotal =
+        Number(
+          cartPricingPreview.totals.total ||
+          0
+        );
+
+
+      const discountTotal =
+        Number(
+          cartPricingPreview.totals.discount_total ||
+          0
+        );
+
+
+      if (
+        discountTotal > 0 &&
+        newTotal > 0
+      ){
+
+        totalWrap.style.display =
+          "flex";
+
+
+        totalValue.innerHTML =
+          '<span class="total-strike">' +
+
+            formatBRL(
+              baseTotal
+            ) +
+
+          '</span>' +
+
+          '<span class="total-final">' +
+
+            formatBRL(
+              newTotal
+            ) +
+
+          '</span>';
+
+
+        discountLine.style.display =
+          "block";
+
+
+        discountValue.textContent =
+          formatBRL(
+            discountTotal
+          );
+
+
+        return;
+
+      }
+
+    }
+
+
+    totalWrap.style.display =
+      "flex";
+
+
+    totalValue.innerHTML =
+      "<strong>" +
+      formatBRL(
+        baseTotal
+      ) +
+      "</strong>";
+
+
+    discountLine.style.display =
+      "none";
+
+  }
+
+
+  function renderCart(){
+
+    ensureCartPopupExists();
+
+
+    const list =
+      document.getElementById(
+        "cartList"
+      );
+
+
+    const proceed =
+      document.getElementById(
+        "cartProceedBtn"
+      );
+
+
+    const items =
+      getCart();
+
+
+    if (!items.length){
+
+      list.innerHTML =
+        '<div style="padding:14px;color:rgba(255,255,255,0.70);">Seu carrinho está vazio.</div>';
+
+
+      proceed.disabled =
+        true;
+
+
+      renderCartTotalsOnly();
+
+      updateCartBadge();
+
+      return;
+
+    }
+
+
+    proceed.disabled =
+      false;
+
+
+    list.innerHTML =
+      "";
+
+
+    items.forEach(
+      (item) => {
+
+        const element =
+          document.createElement(
+            "div"
+          );
+
+
+        element.className =
+          "cart-item";
+
+
+        element.innerHTML =
+          '<div class="cart-item-left">' +
+
+            '<div class="cart-item-title">' +
+
+              item.city +
+
+            '</div>' +
+
+            '<div class="cart-item-meta">' +
+
+              item.category +
+
+              ' · Quantidade: ' +
+
+              Number(
+                item.qty || 1
+              ) +
+
+            '</div>' +
+
+            '<div class="cart-item-meta">' +
+
+              formatBRL(
+                Number(
+                  item.price || 0
+                )
+              ) +
+
+            '</div>' +
+
+          '</div>' +
+
+          '<div class="cart-item-right">' +
+
+            '<button data-remove="' +
+
+              item.key +
+
+            '">Remover</button>' +
+
+          '</div>';
+
+
+        element
+          .querySelector(
+            "[data-remove]"
+          )
+          .addEventListener(
+            "click",
+            () => {
+
+              removeFromCart(
+                item.key
+              );
+
+            }
+          );
+
+
+        list.appendChild(
+          element
+        );
+
+      }
+    );
+
+
+    renderCartTotalsOnly();
+
+    updateCartBadge();
+
+  }
+
+
+  function openCart(){
+
+    ensureCartPopupExists();
+
+    renderCart();
+
+    document
+      .getElementById(
+        "cartPopup"
+      )
+      .classList.add(
+        "active"
+      );
+
+  }
+
+
+  function closeCart(){
+
+    const popup =
+      document.getElementById(
+        "cartPopup"
+      );
+
+    if (popup){
+
+      popup.classList.remove(
+        "active"
+      );
+
+    }
+
+  }
+
+
+  /* =====================================================
+     LOGIN E CONTEXTO DO CHECKOUT
+  ===================================================== */
+
+  function setCheckoutContext(obj){
+
+    try{
+
+      localStorage.setItem(
+        CHECKOUT_CONTEXT_KEY,
+        JSON.stringify(
+          obj || {}
+        )
+      );
+
+    }catch(error){}
+
+  }
+
+
+  function getCheckoutContext(){
+
+    try{
+
+      const raw =
+        localStorage.getItem(
+          CHECKOUT_CONTEXT_KEY
+        );
+
+      return raw
+        ? JSON.parse(raw)
+        : null;
+
+    }catch(error){
+
+      return null;
+
+    }
+
+  }
+
+
+  function clearCheckoutContext(){
+
+    try{
+
+      localStorage.removeItem(
+        CHECKOUT_CONTEXT_KEY
+      );
+
+    }catch(error){}
+
+  }
+
+
+  function goLoginWithReturn(){
+
+    const returnTo =
+      window.location.pathname +
+      "?after_login=1";
+
+
+    window.location.href =
+      "/login.html?return_to=" +
+      encodeURIComponent(
+        returnTo
+      );
+
+  }
+
+
+  /* =====================================================
+     CHECKOUT
+  ===================================================== */
+
+  function goInvoiceCart(
+    items,
+    couponCode
+  ){
+
+    try{
+
+      const payload =
+        (items || []).map(
+          (item) => ({
+            category:
+              item.category,
+            city:
+              item.city,
+            qty:
+              Number(
+                item.qty || 1
+              ) || 1
+          })
+        );
+
+
+      localStorage.setItem(
+        CART_CHECKOUT_ITEMS_KEY,
+        JSON.stringify(
+          payload
+        )
+      );
+
+
+      localStorage.setItem(
+        CART_LAST_CHECKOUT_STARTED_KEY,
+        String(
+          Date.now()
+        )
+      );
+
+
+      setCartCouponCode(
+        couponCode ||
+        getCartCouponCode()
+      );
+
+    }catch(error){}
+
+
+    window.location.href =
+      "/checkout-success.html?step=invoice&cart=1";
+
+  }
+
+
+  async function showPolicyThenProceed(
+    nextFn
+  ){
+
+    openPopup({
+
+      title:
+        "Informações Importantes",
+
+      text:
+        "Antes de prosseguir, confirme as condições abaixo.",
+
+      showProceed:
+        true,
+
+      proceedText:
+        "Ir para pagamento",
+
+      showRules:
+        true,
+
+      requireConsent:
+        true,
+
+      onProceed:
+        nextFn
+
+    });
+
+  }
+
+
+  async function startCartCheckoutFlow(){
+
+    const items =
+      getCart();
+
+
+    if (!items.length){
+
+      openPopup({
+        title:"Carrinho",
+        text:"Seu carrinho está vazio."
+      });
+
+      return;
+
+    }
+
+
+    const session =
+      await getSession();
+
+
+    if (
+      !session ||
+      !session.user
+    ){
+
+      setCheckoutContext({
+        type:"cart"
+      });
+
+      closeCart();
+
+      goLoginWithReturn();
+
+      return;
+
+    }
+
+
+    /*
+      Antes do pagamento conferimos as compras
+      existentes do usuário.
+
+      A página continua mostrando todo material
+      disponível comercialmente, mas o checkout
+      impede compra duplicada.
+    */
+
+    await loadOwnedPurchases();
+
+
+    const currentItems =
+      getCart();
+
+
+    const filtered =
+      currentItems.filter(
+        (item) =>
+          item &&
+          !userOwns(
+            item.category,
+            item.city
+          )
+      );
+
+
+    if (
+      filtered.length !==
+      currentItems.length
+    ){
+
+      saveCart(
+        filtered
+      );
+
+
+      cartPricingPreview =
+        null;
+
+
+      renderCart();
+
+
+      if (!filtered.length){
+
+        closeCart();
+
+
+        openPopup({
+
+          title:"Carrinho",
+
+          text:
+            "Os materiais selecionados já estão disponíveis na sua conta.",
+
+          secondaryText:
+            "Ir para Minha conta",
+
+          onSecondary:
+            () => {
+
+              window.location.href =
+                "/account.html";
+
+            }
+
+        });
+
+
+        return;
+
+      }
+
+
+      openPopup({
+
+        title:"Carrinho",
+
+        text:
+          "Um ou mais materiais foram removidos porque você já os possui. Os demais continuam no carrinho.",
+
+        secondaryText:
+          "Voltar ao carrinho",
+
+        onSecondary:
+          openCart
+
+      });
+
+
+      return;
+
+    }
+
+
+    closeCart();
+
+
+    const couponNow =
+      getCartCouponCode();
+
+
+    await showPolicyThenProceed(
+      async () => {
+
+        const finalItems =
+          getCart();
+
+
+        if (!finalItems.length){
+
+          openPopup({
+            title:"Carrinho",
+            text:"Seu carrinho está vazio."
+          });
+
+          return;
+
+        }
+
+
+        trackEvent(
+          "begin_checkout",
+          {
+            currency:"BRL",
+            value:
+              calcCartTotal(
+                finalItems
+              ),
+            items:
+              finalItems.map(
+                (item) => ({
+                  item_name:
+                    item.city,
+                  item_category:
+                    item.category,
+                  price:
+                    item.price,
+                  quantity:
+                    item.qty
+                })
+              )
+          }
+        );
+
+
+        goInvoiceCart(
+          finalItems,
+          couponNow
+        );
+
+      }
+    );
+
+  }
+
+
+  async function resumeAfterLoginIfNeeded(){
+
+    const params =
+      new URLSearchParams(
+        window.location.search
+      );
+
+
+    if (
+      params.get(
+        "after_login"
+      ) !== "1"
+    ){
+      return;
+    }
+
+
+    try{
+
+      const url =
+        new URL(
+          window.location.href
+        );
+
+
+      url.searchParams.delete(
+        "after_login"
+      );
+
+
+      window.history.replaceState(
+        {},
+        "",
+        url.pathname
+      );
+
+    }catch(error){}
+
+
+    const context =
+      getCheckoutContext();
+
+
+    if (
+      !context ||
+      context.type !== "cart"
+    ){
+      return;
+    }
+
+
+    const session =
+      await getSession();
+
+
+    if (
+      !session ||
+      !session.user
+    ){
+      return;
+    }
+
+
+    clearCheckoutContext();
+
+
+    await startCartCheckoutFlow();
+
+  }
+
+
+  /* =====================================================
+     MATERIAIS DO DESTINO
+  ===================================================== */
+
+  function getCategoryDescription(
+    category
+  ){
 
     return (
       CATEGORY_DESCRIPTIONS[
-        normalized
+        normalizeCategoryName(
+          category
+        )
       ] ||
       "Material digital com indicações e referências selecionadas para apoiar suas escolhas durante a viagem."
     );
 
   }
 
-  function getCategoryIcon(category){
 
-    const normalized =
-      normalizeCategoryName(category);
+  function getCategoryIcon(
+    category
+  ){
 
     return (
       CATEGORY_ICONS[
-        normalized
+        normalizeCategoryName(
+          category
+        )
       ] ||
       "◇"
     );
 
   }
+
 
   async function loadDestinationMaterials(){
 
@@ -1779,14 +4247,17 @@ function buildDestinationHtml(destino) {
         "materialsGrid"
       );
 
+
     if (!grid){
       return;
     }
+
 
     try{
 
       const sb =
         ensureSupabase();
+
 
       if (!sb){
 
@@ -1796,24 +4267,6 @@ function buildDestinationHtml(destino) {
 
       }
 
-      /*
-        IMPORTANTE:
-
-        Não usamos mais igualdade exata de city_label.
-
-        Isso evita que diferenças como:
-
-        Paris - França
-        Paris - FRANÇA
-        PARIS - FRANÇA
-        paris - franca
-
-        façam materiais válidos desaparecerem.
-
-        Primeiro carregamos os materiais ativos.
-        Depois comparamos o destino usando uma
-        versão normalizada do texto.
-      */
 
       const {
         data,
@@ -1837,34 +4290,31 @@ function buildDestinationHtml(destino) {
             }
           );
 
+
       if (error){
         throw error;
       }
+
 
       const destinationKey =
         normalizeCityLabel(
           DESTINATION.cityLabel
         );
 
+
       const materials =
-        (Array.isArray(data)
-          ? data
-          : []
-        ).filter(
-          (row) => {
-
-            const rowCityLabel =
-              normalizeCityLabel(
-                row.city_label || ""
-              );
-
-            return (
-              rowCityLabel ===
-              destinationKey
-            );
-
-          }
+        (
+          Array.isArray(data)
+            ? data
+            : []
+        )
+        .filter(
+          (row) =>
+            normalizeCityLabel(
+              row.city_label || ""
+            ) === destinationKey
         );
+
 
       if (!materials.length){
 
@@ -1873,9 +4323,11 @@ function buildDestinationHtml(destino) {
           'Nenhum material está disponível para este destino no momento.' +
           '</div>';
 
+
         return;
 
       }
+
 
       renderMaterials(
         materials
@@ -1884,9 +4336,10 @@ function buildDestinationHtml(destino) {
     }catch(error){
 
       console.error(
-        "Erro ao carregar materiais do destino:",
+        "Erro ao carregar materiais:",
         error
       );
+
 
       grid.innerHTML =
         '<div class="error-state">' +
@@ -1897,19 +4350,25 @@ function buildDestinationHtml(destino) {
 
   }
 
-  function renderMaterials(materials){
+
+  function renderMaterials(
+    materials
+  ){
 
     const grid =
       document.getElementById(
         "materialsGrid"
       );
 
+
     if (!grid){
       return;
     }
 
+
     grid.innerHTML =
       "";
+
 
     materials.forEach(
       (material) => {
@@ -1919,10 +4378,12 @@ function buildDestinationHtml(destino) {
             material.category || ""
           ).trim();
 
+
         const cityLabel =
           String(
             material.city_label || ""
           ).trim();
+
 
         if (
           !category ||
@@ -1931,140 +4392,142 @@ function buildDestinationHtml(destino) {
           return;
         }
 
-        const price =
-          getPriceForCategory(
-            category
-          );
-
-        const owns =
-          userOwns(
-            category,
-            cityLabel
-          );
 
         const article =
           document.createElement(
             "article"
           );
 
+
         article.className =
           "material-card";
+
 
         const icon =
           document.createElement(
             "div"
           );
 
+
         icon.className =
           "material-icon";
+
 
         icon.textContent =
           getCategoryIcon(
             category
           );
 
+
         const title =
           document.createElement(
             "h3"
           );
 
+
         title.textContent =
           category;
+
 
         const description =
           document.createElement(
             "p"
           );
 
+
         description.className =
           "material-description";
+
 
         description.textContent =
           getCategoryDescription(
             category
           );
 
-        const priceElement =
+
+        const price =
           document.createElement(
             "div"
           );
 
-        priceElement.className =
+
+        price.className =
           "material-price";
 
-        priceElement.textContent =
+
+        price.textContent =
           formatBRL(
-            price
+            getPriceForCategory(
+              category
+            )
           );
+
 
         const button =
           document.createElement(
             "button"
           );
 
+
         button.type =
           "button";
 
+
         button.className =
-          "material-button" +
-          (
-            owns
-              ? " owned"
-              : ""
-          );
+          "material-button";
+
+
+        /*
+          REGRA COMERCIAL:
+
+          Se o material está ativo e aparece na página,
+          o card é comercial e oferece Comprar agora.
+
+          Compra já realizada é conferida somente durante
+          o processo do carrinho/checkout.
+        */
 
         button.textContent =
-          owns
-            ? "Acessar na minha conta"
-            : "Comprar agora";
+          "Comprar agora";
 
-        if (owns){
 
-          button.addEventListener(
-            "click",
-            () => {
+        button.addEventListener(
+          "click",
+          () => {
 
-              window.location.href =
-                "/account.html";
+            addToCartAndOpenCart(
+              category,
+              cityLabel
+            );
 
-            }
-          );
+          }
+        );
 
-        }else{
-
-          button.addEventListener(
-            "click",
-            () => {
-
-              goToPurchase(
-                category,
-                cityLabel
-              );
-
-            }
-          );
-
-        }
 
         article.appendChild(
           icon
         );
 
+
         article.appendChild(
           title
         );
+
 
         article.appendChild(
           description
         );
 
+
         article.appendChild(
-          priceElement
+          price
         );
+
 
         article.appendChild(
           button
         );
+
 
         grid.appendChild(
           article
@@ -2075,45 +4538,10 @@ function buildDestinationHtml(destino) {
 
   }
 
-  function goToPurchase(
-    category,
-    cityLabel
-  ){
 
-    trackEvent(
-      "view_item",
-      {
-        item_name:
-          cityLabel,
-
-        item_category:
-          category,
-
-        currency:
-          "BRL",
-
-        value:
-          Number(
-            getPriceForCategory(
-              category
-            ) || 0
-          )
-      }
-    );
-
-    /*
-      Nesta primeira versão do motor,
-      a compra retorna à Curadoria principal.
-
-      A integração direta com o mesmo carrinho
-      e checkout será feita na etapa específica
-      de integração comercial.
-    */
-
-    window.location.href =
-      "/?secao=curadoria";
-
-  }
+  /* =====================================================
+     INICIALIZAÇÃO
+  ===================================================== */
 
   document.addEventListener(
     "DOMContentLoaded",
@@ -2123,10 +4551,12 @@ function buildDestinationHtml(destino) {
 
       updateCartBadge();
 
+
       const logout =
         document.getElementById(
           "navLogout"
         );
+
 
       if (logout){
 
@@ -2137,26 +4567,6 @@ function buildDestinationHtml(destino) {
 
       }
 
-      document.addEventListener(
-        "click",
-        (event) => {
-
-          const header =
-            document.getElementById(
-              "siteHeader"
-            );
-
-          if (
-            header &&
-            !header.contains(
-              event.target
-            )
-          ){
-            closeMobileNav();
-          }
-
-        }
-      );
 
       await refreshNavAuth();
 
@@ -2166,27 +4576,49 @@ function buildDestinationHtml(destino) {
 
       await loadDestinationMaterials();
 
+      await resumeAfterLoginIfNeeded();
+
     }
   );
 
 </script>
 
+
 <script type="application/ld+json">
 ${JSON.stringify(
   {
-    "@context":"https://schema.org",
-    "@type":"TouristDestination",
-    "name":destino.cidade,
-    "description":destino.texto,
-    "url":canonicalUrl,
+    "@context":
+      "https://schema.org",
+
+    "@type":
+      "TouristDestination",
+
+    "name":
+      destino.cidade,
+
+    "description":
+      destino.texto,
+
+    "url":
+      canonicalUrl,
+
     "containedInPlace":{
-      "@type":"Country",
-      "name":destino.pais
+      "@type":
+        "Country",
+
+      "name":
+        destino.pais
     },
+
     "publisher":{
-      "@type":"Organization",
-      "name":"Curadoria Elite Travel",
-      "url":SITE_URL
+      "@type":
+        "Organization",
+
+      "name":
+        "Curadoria Elite Travel",
+
+      "url":
+        SITE_URL
     }
   },
   null,
@@ -2194,21 +4626,24 @@ ${JSON.stringify(
 )}
 </script>
 
+
 </body>
+
 </html>`;
 }
 
+
 /* =========================================================
-   GERAÇÃO
+   LEITURA DO JSON
 ========================================================= */
 
-function loadDestinationData() {
+function loadDestinationData(){
 
   if (
     !fs.existsSync(
       DESTINOS_DATA_PATH
     )
-  ) {
+  ){
 
     throw new Error(
       "Arquivo data/destinos.json não encontrado."
@@ -2216,21 +4651,24 @@ function loadDestinationData() {
 
   }
 
+
   const raw =
     fs.readFileSync(
       DESTINOS_DATA_PATH,
       "utf8"
     );
 
+
   const parsed =
     JSON.parse(raw);
+
 
   if (
     !parsed ||
     !Array.isArray(
       parsed.destinos
     )
-  ) {
+  ){
 
     throw new Error(
       'data/destinos.json precisa possuir a propriedade "destinos" como array.'
@@ -2238,19 +4676,26 @@ function loadDestinationData() {
 
   }
 
+
   return parsed.destinos;
 
 }
 
+
+/* =========================================================
+   GERAÇÃO INDIVIDUAL
+========================================================= */
+
 function generateDestination(
   destino,
   index
-) {
+){
 
   validateDestination(
     destino,
     index
   );
+
 
   const outputDirectory =
     path.join(
@@ -2263,9 +4708,11 @@ function generateDestination(
       ).trim()
     );
 
+
   ensureDirectory(
     outputDirectory
   );
+
 
   const outputFile =
     path.join(
@@ -2273,16 +4720,19 @@ function generateDestination(
       "index.html"
     );
 
+
   const html =
     buildDestinationHtml(
       destino
     );
+
 
   fs.writeFileSync(
     outputFile,
     html,
     "utf8"
   );
+
 
   console.log(
     `✓ ${destino.cidade}, ${destino.pais} -> ${path.relative(
@@ -2293,7 +4743,12 @@ function generateDestination(
 
 }
 
-function main() {
+
+/* =========================================================
+   EXECUÇÃO
+========================================================= */
+
+function main(){
 
   console.log("");
 
@@ -2305,10 +4760,12 @@ function main() {
     "---------------------------------------------"
   );
 
+
   const destinos =
     loadDestinationData();
 
-  if (!destinos.length) {
+
+  if (!destinos.length){
 
     console.log(
       "Nenhum destino cadastrado."
@@ -2317,6 +4774,7 @@ function main() {
     return;
 
   }
+
 
   destinos.forEach(
     (
@@ -2332,23 +4790,27 @@ function main() {
     }
   );
 
+
   console.log(
     "---------------------------------------------"
   );
+
 
   console.log(
     `${destinos.length} destino(s) gerado(s) com sucesso.`
   );
 
+
   console.log("");
 
 }
 
-try {
+
+try{
 
   main();
 
-} catch(error) {
+}catch(error){
 
   console.error("");
 
