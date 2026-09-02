@@ -898,8 +898,6 @@
       text-shadow:0 6px 24px rgba(0,0,0,0.34);
     }
 
-
-
     .tool-access-card{
       position:relative;
       z-index:2;
@@ -946,6 +944,132 @@
       font-weight:800;
       text-decoration:none;
       box-shadow:0 12px 28px rgba(212,175,55,0.16);
+    }
+
+    .destinations-explore{
+      position:relative;
+      z-index:2;
+      max-width:980px;
+      margin:24px auto 0;
+      padding:34px 30px;
+      border-radius:24px;
+      background:linear-gradient(180deg, rgba(8,8,8,0.92), rgba(4,4,4,0.88));
+      border:1px solid rgba(212,175,55,0.22);
+      box-shadow:0 20px 48px rgba(0,0,0,0.28);
+    }
+
+    .destinations-explore-head{
+      text-align:center;
+      margin-bottom:24px;
+    }
+
+    .destinations-explore-head h3{
+      margin:0 0 10px;
+      color:#d4af37;
+      font-size:26px;
+      letter-spacing:0.2px;
+    }
+
+    .destinations-explore-head p{
+      margin:0 auto;
+      max-width:760px;
+      color:rgba(255,255,255,0.82);
+      font-size:15px;
+      line-height:1.75;
+    }
+
+    .destinations-grid{
+      display:grid;
+      grid-template-columns:repeat(2,minmax(0,1fr));
+      gap:16px;
+    }
+
+    .destination-link-card{
+      position:relative;
+      min-height:210px;
+      display:flex;
+      align-items:flex-end;
+      overflow:hidden;
+      border-radius:18px;
+      border:1px solid rgba(212,175,55,0.18);
+      background:#0b0b0b;
+      text-decoration:none;
+      box-shadow:0 14px 34px rgba(0,0,0,0.24);
+      transition:transform 0.28s ease, border-color 0.28s ease, box-shadow 0.28s ease;
+    }
+
+    .destination-link-card:hover{
+      transform:translateY(-4px);
+      border-color:rgba(212,175,55,0.46);
+      box-shadow:0 18px 38px rgba(212,175,55,0.10);
+    }
+
+    .destination-link-image{
+      position:absolute;
+      inset:0;
+      background-size:cover;
+      background-position:center;
+      filter:brightness(0.74) saturate(0.86);
+      transform:scale(1.02);
+      transition:transform 0.45s ease, filter 0.45s ease;
+    }
+
+    .destination-link-card:hover .destination-link-image{
+      transform:scale(1.055);
+      filter:brightness(0.82) saturate(0.90);
+    }
+
+    .destination-link-overlay{
+      position:absolute;
+      inset:0;
+      background:linear-gradient(180deg, rgba(0,0,0,0.10) 0%, rgba(0,0,0,0.28) 42%, rgba(0,0,0,0.88) 100%);
+    }
+
+    .destination-link-copy{
+      position:relative;
+      z-index:2;
+      width:100%;
+      padding:22px;
+      box-sizing:border-box;
+    }
+
+    .destination-link-country{
+      display:block;
+      margin-bottom:5px;
+      color:#d4af37;
+      font-size:11px;
+      font-weight:700;
+      letter-spacing:1.5px;
+      text-transform:uppercase;
+    }
+
+    .destination-link-city{
+      display:block;
+      color:#fff;
+      font-family:"Cinzel","Georgia",serif;
+      font-size:24px;
+      font-weight:700;
+      line-height:1.15;
+      text-shadow:0 4px 18px rgba(0,0,0,0.70);
+    }
+
+    .destination-link-action{
+      display:inline-block;
+      margin-top:10px;
+      color:rgba(255,255,255,0.78);
+      font-size:12.5px;
+      line-height:1.4;
+    }
+
+    .destinations-loading{
+      grid-column:1/-1;
+      padding:20px;
+      text-align:center;
+      color:rgba(255,255,255,0.66);
+      border:1px dashed rgba(255,255,255,0.12);
+      border-radius:14px;
+      background:rgba(8,8,8,0.62);
+      font-size:14px;
     }
 
     .popup-bg{
@@ -1396,6 +1520,23 @@
         letter-spacing:1px;
       }
 
+      .destinations-explore{
+        padding:26px 18px;
+        border-radius:20px;
+      }
+
+      .destinations-grid{
+        grid-template-columns:1fr;
+      }
+
+      .destination-link-card{
+        min-height:190px;
+      }
+
+      .destination-link-city{
+        font-size:22px;
+      }
+
       .faq-section{
         margin-top:34px;
         padding:22px 16px;
@@ -1733,6 +1874,22 @@
           formas de pagamento e canais oficiais para consultar durante a viagem.
         </p>
         <a href="/transportes.html">Acessar ferramenta</a>
+      </div>
+
+      <div class="destinations-explore" id="destinationsExplore">
+        <div class="destinations-explore-head">
+          <h3>Explore os destinos</h3>
+          <p>
+            Reúna em um só lugar os materiais e ferramentas disponíveis para cada cidade
+            e comece a preparar sua viagem pelo destino.
+          </p>
+        </div>
+
+        <div class="destinations-grid" id="destinationsGrid">
+          <div class="destinations-loading">
+            Carregando destinos...
+          </div>
+        </div>
       </div>
 
       <div class="buscador-placeholder" style="margin-top:24px;">
@@ -3209,6 +3366,123 @@
     }
   }
 
+  function getDestinationCardImage(destino){
+    const imagens = Array.isArray(destino && destino.imagens)
+      ? destino.imagens
+      : [];
+
+    const pontoTuristico = imagens.find(
+      item => item && item.tipo === "ponto-turistico" && item.arquivo
+    );
+
+    if (pontoTuristico){
+      return pontoTuristico.arquivo;
+    }
+
+    const primeiraImagem = imagens.find(
+      item => item && item.arquivo
+    );
+
+    return primeiraImagem ? primeiraImagem.arquivo : "";
+  }
+
+  function renderExploreDestinations(destinos){
+    const grid = document.getElementById("destinationsGrid");
+    const section = document.getElementById("destinationsExplore");
+
+    if (!grid || !section) return;
+
+    const validDestinations = (destinos || []).filter(destino => {
+      return (
+        destino &&
+        String(destino.cidade || "").trim() &&
+        String(destino.pais || "").trim() &&
+        String(destino.url || "").trim()
+      );
+    });
+
+    if (!validDestinations.length){
+      section.style.display = "none";
+      return;
+    }
+
+    section.style.display = "block";
+    grid.innerHTML = "";
+
+    validDestinations.forEach(destino => {
+      const cidade = String(destino.cidade || "").trim();
+      const pais = String(destino.pais || "").trim();
+      const url = String(destino.url || "").trim();
+      const image = getDestinationCardImage(destino);
+
+      const link = document.createElement("a");
+      link.className = "destination-link-card";
+      link.href = url;
+      link.setAttribute(
+        "aria-label",
+        `Explorar ${cidade}, ${pais}`
+      );
+
+      const imageStyle = image
+        ? ` style="background-image:url('${image.replace(/'/g, "%27")}');"`
+        : "";
+
+      link.innerHTML = `
+        <span class="destination-link-image"${imageStyle}></span>
+        <span class="destination-link-overlay"></span>
+        <span class="destination-link-copy">
+          <span class="destination-link-country">${pais}</span>
+          <span class="destination-link-city">${cidade}</span>
+          <span class="destination-link-action">Explorar destino →</span>
+        </span>
+      `;
+
+      grid.appendChild(link);
+    });
+  }
+
+  async function loadExploreDestinations(){
+    const grid = document.getElementById("destinationsGrid");
+    const section = document.getElementById("destinationsExplore");
+
+    if (!grid || !section) return;
+
+    try{
+      const response = await fetch(
+        "/data/destinos.json",
+        {
+          cache: "no-store"
+        }
+      );
+
+      if (!response.ok){
+        throw new Error(
+          "Não foi possível carregar data/destinos.json."
+        );
+      }
+
+      const payload = await response.json();
+
+      const destinos = Array.isArray(payload)
+        ? payload
+        : (
+            Array.isArray(payload && payload.destinos)
+              ? payload.destinos
+              : []
+          );
+
+      renderExploreDestinations(destinos);
+
+    }catch(error){
+      console.error(
+        "Erro ao carregar destinos no Buscador:",
+        error
+      );
+
+      section.style.display = "none";
+    }
+  }
+
   async function resumeAfterLoginIfNeeded(){
     const flag = getQueryParam("after_login");
     if (flag !== "1") return;
@@ -3277,6 +3551,7 @@
 
     abrirSecaoViaURL();
 
+    await loadExploreDestinations();
     await refreshNavAuth();
     await loadCategoryPrices();
     await loadActiveMaterials();
