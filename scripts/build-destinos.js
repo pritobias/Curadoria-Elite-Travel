@@ -22,6 +22,9 @@ const DESTINOS_DATA_PATH =
 const DESTINOS_OUTPUT_DIR =
   path.join(ROOT_DIR, "destinos");
 
+const SITEMAP_PATH =
+  path.join(ROOT_DIR, "sitemap.xml");
+
 const SITE_URL =
   "https://www.curadoriaelitetravel.com";
 
@@ -895,7 +898,7 @@ function buildDestinationHtml(destino) {
 
 
     /* =====================================================
-       PREPARANDO SUA VIAGEM
+           PREPARANDO SUA VIAGEM
     ===================================================== */
 
     .tools-section{
@@ -2694,7 +2697,6 @@ function buildDestinationHtml(destino) {
   /* =====================================================
      CARRINHO
   ===================================================== */
-
   function getCart(){
 
     try{
@@ -3593,7 +3595,6 @@ function buildDestinationHtml(destino) {
             '<div id="couponMsg" class="coupon-msg"></div>' +
 
             '<div class="coupon-help">Se o cupom estiver ativo e dentro do período, ele será aplicado no pagamento.</div>' +
-
           '</div>' +
 
           '<div class="cart-list" id="cartList"></div>' +
@@ -4494,8 +4495,7 @@ function buildDestinationHtml(destino) {
     ){
 
       return;
-
-    }
+          }
 
 
     const session =
@@ -4998,6 +4998,125 @@ function loadDestinationData(){
 
 
 /* =========================================================
+   SITEMAP AUTOMÁTICO
+========================================================= */
+
+function escapeXml(value){
+
+  return String(
+    value ??
+    ""
+  )
+    .replace(
+      /&/g,
+      "&amp;"
+    )
+    .replace(
+      /</g,
+      "&lt;"
+    )
+    .replace(
+      />/g,
+      "&gt;"
+    )
+    .replace(
+      /"/g,
+      "&quot;"
+    )
+    .replace(
+      /'/g,
+      "&apos;"
+    );
+
+}
+
+
+function buildSitemapXml(destinos){
+
+  const fixedUrls = [
+    "/",
+    "/documentos.html",
+    "/transportes.html",
+    "/contact.html"
+  ];
+
+
+  const destinationUrls =
+    (destinos || []).map(
+      (destino) =>
+        normalizeUrlPath(
+          destino.url
+        )
+    );
+
+
+  const uniqueUrls =
+    Array.from(
+      new Set([
+        ...fixedUrls,
+        ...destinationUrls
+      ])
+    );
+
+
+  const entries =
+    uniqueUrls.map(
+      (urlPath) => {
+
+        const absoluteUrl =
+          urlPath === "/"
+            ? SITE_URL + "/"
+            : SITE_URL + urlPath;
+
+
+        return [
+          "  <url>",
+          `    <loc>${escapeXml(absoluteUrl)}</loc>`,
+          "  </url>"
+        ].join("\n");
+
+      }
+    );
+
+
+  return [
+    '<?xml version="1.0" encoding="UTF-8"?>',
+    '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">',
+    "",
+    entries.join("\n\n"),
+    "",
+    "</urlset>",
+    ""
+  ].join("\n");
+
+}
+
+
+function generateSitemap(destinos){
+
+  const sitemapXml =
+    buildSitemapXml(
+      destinos
+    );
+
+
+  fs.writeFileSync(
+    SITEMAP_PATH,
+    sitemapXml,
+    "utf8"
+  );
+
+
+  console.log(
+    `✓ sitemap.xml atualizado com ${
+      4 + destinos.length
+    } URL(s).`
+  );
+
+}
+
+
+/* =========================================================
    GERAÇÃO INDIVIDUAL
 ========================================================= */
 
@@ -5108,6 +5227,11 @@ function main(){
       );
 
     }
+  );
+
+
+  generateSitemap(
+    destinos
   );
 
 
