@@ -10,34 +10,16 @@ const path = require("path");
 
    Saída:
    /destinos/{pais}/{cidade}/index.html
-
-   Supabase continua sendo a fonte de verdade para:
-   - materiais ativos
-   - preços
-   - autenticação
-   - compras realizadas
-
-   A página de destino usa o mesmo carrinho e o mesmo
-   processo comercial da Curadoria principal.
 ========================================================= */
 
 const ROOT_DIR = path.resolve(__dirname, "..");
+const DESTINOS_DATA_PATH = path.join(ROOT_DIR, "data", "destinos.json");
+const DESTINOS_OUTPUT_DIR = path.join(ROOT_DIR, "destinos");
 
-const DESTINOS_DATA_PATH =
-  path.join(ROOT_DIR, "data", "destinos.json");
-
-const DESTINOS_OUTPUT_DIR =
-  path.join(ROOT_DIR, "destinos");
-
-const SITE_URL =
-  "https://www.curadoriaelitetravel.com";
-
-const SUPABASE_URL =
-  "https://lnyoqoezezisakghtmim.supabase.co";
-
+const SITE_URL = "https://www.curadoriaelitetravel.com";
+const SUPABASE_URL = "https://lnyoqoezezisakghtmim.supabase.co";
 const SUPABASE_ANON_KEY =
   "sb_publishable_7NB9Y784asZcGohMBz1ePA_ZDYhwEqf";
-
 
 /* =========================================================
    UTILITÁRIOS DO GERADOR
@@ -52,14 +34,12 @@ function escapeHtml(value) {
     .replace(/'/g, "&#039;");
 }
 
-
 function escapeJsonForScript(value) {
   return JSON.stringify(value)
     .replace(/</g, "\\u003c")
     .replace(/>/g, "\\u003e")
     .replace(/&/g, "\\u0026");
 }
-
 
 function normalizeUrlPath(value) {
   let url = String(value || "").trim();
@@ -75,13 +55,11 @@ function normalizeUrlPath(value) {
   return url;
 }
 
-
 function ensureDirectory(directory) {
   fs.mkdirSync(directory, {
     recursive: true
   });
 }
-
 
 function validateDestination(destino, index) {
   const requiredFields = [
@@ -106,51 +84,34 @@ function validateDestination(destino, index) {
     }
   });
 
-  if (
-    !Array.isArray(destino.imagens) ||
-    destino.imagens.length < 3
-  ) {
+  if (!Array.isArray(destino.imagens) || destino.imagens.length < 3) {
     throw new Error(
       `Destino ${index + 1} (${destino.cidade}): são necessárias pelo menos 3 imagens.`
     );
   }
 
-  destino.imagens.forEach(
-    (imagem, imageIndex) => {
-      if (
-        !imagem ||
-        !imagem.tipo ||
-        !imagem.arquivo
-      ) {
-        throw new Error(
-          `Destino ${index + 1} (${destino.cidade}): imagem ${imageIndex + 1} está incompleta.`
-        );
-      }
+  destino.imagens.forEach((imagem, imageIndex) => {
+    if (!imagem || !imagem.tipo || !imagem.arquivo) {
+      throw new Error(
+        `Destino ${index + 1} (${destino.cidade}): imagem ${
+          imageIndex + 1
+        } está incompleta.`
+      );
     }
-  );
+  });
 }
-
 
 function getDestinationImages(destino) {
   const bandeira =
-    destino.imagens.find(
-      (imagem) =>
-        imagem.tipo === "bandeira"
-    ) || destino.imagens[0];
+    destino.imagens.find((imagem) => imagem.tipo === "bandeira") ||
+    destino.imagens[0];
 
-  const pontosTuristicos =
-    destino.imagens.filter(
-      (imagem) =>
-        imagem.tipo === "ponto-turistico"
-    );
+  const pontosTuristicos = destino.imagens.filter(
+    (imagem) => imagem.tipo === "ponto-turistico"
+  );
 
-  const ponto1 =
-    pontosTuristicos[0] ||
-    destino.imagens[1];
-
-  const ponto2 =
-    pontosTuristicos[1] ||
-    destino.imagens[2];
+  const ponto1 = pontosTuristicos[0] || destino.imagens[1];
+  const ponto2 = pontosTuristicos[1] || destino.imagens[2];
 
   return {
     bandeira: bandeira.arquivo,
@@ -158,7 +119,6 @@ function getDestinationImages(destino) {
     ponto2: ponto2.arquivo
   };
 }
-
 
 function getMetaDescription(destino) {
   const base =
@@ -170,149 +130,86 @@ function getMetaDescription(destino) {
     : base.slice(0, 157).trim() + "...";
 }
 
-
 /* =========================================================
-   TEMPLATE DA PÁGINA
+   TEMPLATE
 ========================================================= */
 
 function buildDestinationHtml(destino) {
-  const cidade =
-    escapeHtml(destino.cidade);
+  const cidade = escapeHtml(destino.cidade);
+  const pais = escapeHtml(destino.pais);
+  const texto = escapeHtml(destino.texto);
 
-  const pais =
-    escapeHtml(destino.pais);
+  const destinationUrl = normalizeUrlPath(destino.url);
+  const canonicalUrl = SITE_URL + destinationUrl;
 
-  const texto =
-    escapeHtml(destino.texto);
-
-  const destinationUrl =
-    normalizeUrlPath(destino.url);
-
-  const canonicalUrl =
-    SITE_URL + destinationUrl;
-
-  const metaDescription =
-    escapeHtml(
-      getMetaDescription(destino)
-    );
+  const metaDescription = escapeHtml(
+    getMetaDescription(destino)
+  );
 
   const pageTitle =
     `${cidade}, ${pais} | Materiais e ferramentas para viajar melhor | Curadoria Elite Travel`;
 
-  const images =
-    getDestinationImages(destino);
+  const images = getDestinationImages(destino);
 
-  const bandeira =
-    escapeHtml(images.bandeira);
+  const bandeira = escapeHtml(images.bandeira);
+  const ponto1 = escapeHtml(images.ponto1);
+  const ponto2 = escapeHtml(images.ponto2);
 
-  const ponto1 =
-    escapeHtml(images.ponto1);
-
-  const ponto2 =
-    escapeHtml(images.ponto2);
-
-  const destinationData =
-    escapeJsonForScript({
-      cidade: destino.cidade,
-      pais: destino.pais,
-      cityLabel: destino.cityLabel,
-      url: destinationUrl
-    });
-
+  const destinationData = escapeJsonForScript({
+    cidade: destino.cidade,
+    pais: destino.pais,
+    cityLabel: destino.cityLabel,
+    url: destinationUrl
+  });
 
   return `<!DOCTYPE html>
 <html lang="pt-BR">
 
 <head>
 
-  <!-- Google Analytics -->
-  <script
-    async
-    src="https://www.googletagmanager.com/gtag/js?id=G-S07L3R13WJ"
-  ></script>
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-S07L3R13WJ"></script>
 
   <script>
-    window.dataLayer =
-      window.dataLayer || [];
+    window.dataLayer = window.dataLayer || [];
 
     function gtag(){
       dataLayer.push(arguments);
     }
 
-    function trackEvent(
-      name,
-      params = {}
-    ){
-      if (
-        typeof gtag === "function"
-      ){
-        gtag(
-          "event",
-          name,
-          params
-        );
+    function trackEvent(name, params = {}) {
+      if (typeof gtag === "function") {
+        gtag("event", name, params);
       }
     }
 
-    gtag(
-      "js",
-      new Date()
-    );
-
-    gtag(
-      "config",
-      "G-S07L3R13WJ"
-    );
+    gtag("js", new Date());
+    gtag("config", "G-S07L3R13WJ");
   </script>
 
-
-  <meta charset="UTF-8" />
+  <meta charset="UTF-8">
 
   <meta
     name="viewport"
     content="width=device-width, initial-scale=1.0"
-  />
+  >
 
-  <title>
-    ${pageTitle}
-  </title>
+  <title>${pageTitle}</title>
 
   <meta
     name="description"
     content="${metaDescription}"
-  />
+  >
 
   <link
     rel="canonical"
     href="${canonicalUrl}"
-  />
+  >
 
-
-  <meta
-    property="og:type"
-    content="website"
-  />
-
-  <meta
-    property="og:title"
-    content="${pageTitle}"
-  />
-
-  <meta
-    property="og:description"
-    content="${metaDescription}"
-  />
-
-  <meta
-    property="og:url"
-    content="${canonicalUrl}"
-  />
-
-  <meta
-    property="og:site_name"
-    content="Curadoria Elite Travel"
-  />
-
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="${pageTitle}">
+  <meta property="og:description" content="${metaDescription}">
+  <meta property="og:url" content="${canonicalUrl}">
+  <meta property="og:site_name" content="Curadoria Elite Travel">
 
   <style>
 
@@ -322,453 +219,365 @@ function buildDestinationHtml(destino) {
       --panel:#0d0d0d;
       --text:#ffffff;
       --muted:rgba(255,255,255,0.72);
-      --border:rgba(212,175,55,0.18);
     }
-
 
     *{
       box-sizing:border-box;
     }
 
-
     html{
       scroll-behavior:smooth;
     }
 
-
     body{
       margin:0;
-      font-family:"Segoe UI",sans-serif;
       background:var(--background);
       color:var(--text);
+      font-family:"Segoe UI",sans-serif;
       overflow-x:hidden;
     }
-
 
     a{
       color:inherit;
     }
 
-
     button{
       font:inherit;
     }
 
+    /* =====================================================
+       CABEÇALHO
+    ===================================================== */
 
     header{
-      padding:16px 40px;
-      display:flex;
-      justify-content:space-between;
-      align-items:center;
       position:fixed;
-      width:100%;
       top:0;
-      z-index:1000;
+      left:0;
+      width:100%;
+      min-height:70px;
+      padding:14px 32px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:20px;
       background:rgba(0,0,0,0.72);
-      backdrop-filter:blur(10px);
+      backdrop-filter:blur(12px);
       border-bottom:1px solid rgba(255,255,255,0.08);
-      gap:16px;
+      z-index:2000;
     }
-
 
     .brand{
       display:flex;
       align-items:center;
       gap:12px;
-      min-width:240px;
-      cursor:pointer;
       text-decoration:none;
+      min-width:260px;
     }
-
 
     .brand img{
-      height:34px;
       width:34px;
+      height:34px;
+      object-fit:contain;
     }
 
-
     .brand-name{
+      color:var(--gold);
       font-family:"Cinzel","Georgia",serif;
       font-size:18px;
-      color:var(--gold);
-      letter-spacing:0.8px;
       text-transform:uppercase;
+      letter-spacing:.7px;
       line-height:1.1;
     }
 
-
     .brand-tagline{
-      font-size:12px;
-      color:rgba(255,255,255,0.7);
-      line-height:1.2;
       margin-top:2px;
+      color:rgba(255,255,255,.72);
+      font-size:11px;
     }
-
 
     nav{
+      position:relative;
       display:flex;
       align-items:center;
-      position:relative;
     }
-
 
     .nav-menu{
       display:flex;
       align-items:center;
+      justify-content:flex-end;
       gap:16px;
       flex-wrap:wrap;
-      justify-content:flex-end;
     }
 
-
-    nav a{
+    .nav-menu a{
       color:var(--gold);
       text-decoration:none;
-      font-weight:500;
-      cursor:pointer;
+      font-weight:600;
+      font-size:14px;
       white-space:nowrap;
-      transition:opacity 0.25s ease;
     }
-
-
-    nav a:hover{
-      opacity:0.88;
-    }
-
 
     .nav-sep{
       width:1px;
       height:16px;
-      background:rgba(255,255,255,0.12);
-      display:inline-block;
-      margin:0 2px;
+      background:rgba(255,255,255,.12);
     }
-
 
     .nav-toggle{
       display:none;
       background:transparent;
-      border:1px solid rgba(212,175,55,0.35);
-      color:var(--gold);
-      padding:10px 12px;
-      border-radius:10px;
+      border:1px solid rgba(212,175,55,.35);
+      border-radius:9px;
+      padding:8px 10px;
       cursor:pointer;
     }
 
-
     .nav-toggle span{
-      display:block;
       width:18px;
       height:2px;
+      display:block;
       background:var(--gold);
       margin:4px 0;
-      border-radius:99px;
     }
 
-
-    main{
-      min-height:100vh;
-    }
-
+    /* =====================================================
+       HERO — CARROSSEL FOTOGRÁFICO
+    ===================================================== */
 
     .destination-hero{
       position:relative;
       min-height:760px;
-      padding:130px 40px 72px;
-      overflow:hidden;
+      height:92vh;
       display:flex;
       align-items:center;
+      justify-content:center;
+      overflow:hidden;
       background:#080808;
     }
 
-
-    .hero-glow{
+    .hero-carousel{
       position:absolute;
-      width:700px;
-      height:700px;
-      left:50%;
-      top:45%;
-      transform:translate(
-        -50%,
-        -50%
-      );
-      border-radius:50%;
-      background:
-        radial-gradient(
-          circle,
-          rgba(212,175,55,0.12) 0%,
-          rgba(212,175,55,0.05) 35%,
-          transparent 70%
-        );
-      pointer-events:none;
+      inset:0;
+      overflow:hidden;
     }
 
+    .hero-slide{
+      position:absolute;
+      inset:-2%;
+      opacity:0;
+      background-position:center;
+      background-repeat:no-repeat;
+      background-size:cover;
+      transform:scale(1.045);
+      transition:
+        opacity 1.8s ease-in-out,
+        transform 8s ease-out;
+      will-change:opacity,transform;
+    }
 
-    .destination-hero::after{
-      content:"";
+    .hero-slide.active{
+      opacity:1;
+      transform:scale(1);
+    }
+
+    .hero-slide:nth-child(1){
+      background-image:url("${ponto1}");
+    }
+
+    .hero-slide:nth-child(2){
+      background-image:url("${ponto2}");
+    }
+
+    .hero-slide:nth-child(3){
+      background-image:url("${bandeira}");
+    }
+
+    .hero-overlay{
       position:absolute;
       inset:0;
       background:
         linear-gradient(
           180deg,
-          rgba(0,0,0,0.08),
-          rgba(0,0,0,0.66)
+          rgba(0,0,0,.30) 0%,
+          rgba(0,0,0,.34) 37%,
+          rgba(0,0,0,.52) 73%,
+          rgba(0,0,0,.78) 100%
         ),
-        radial-gradient(
-          circle at center,
-          transparent 0%,
-          rgba(0,0,0,0.42) 100%
+        linear-gradient(
+          90deg,
+          rgba(0,0,0,.26),
+          rgba(0,0,0,.07) 38%,
+          rgba(0,0,0,.07) 62%,
+          rgba(0,0,0,.26)
         );
+      z-index:2;
       pointer-events:none;
     }
 
-
-    .hero-shell{
-      width:100%;
-      max-width:1240px;
-      margin:0 auto;
-      position:relative;
-      z-index:2;
-    }
-
-
-    .hero-visual{
-      height:430px;
-      position:relative;
-      max-width:1100px;
-      margin:0 auto;
-    }
-
-
-    .hero-image{
+    .hero-bottom-fade{
       position:absolute;
-      overflow:hidden;
-      border-radius:24px;
-      border:1px solid rgba(212,175,55,0.22);
-      background:#111;
-      box-shadow:0 24px 60px rgba(0,0,0,0.38);
-    }
-
-
-    .hero-image img{
-      width:100%;
-      height:100%;
-      object-fit:cover;
-      display:block;
-      filter:
-        brightness(0.86)
-        saturate(0.88)
-        contrast(1.03);
-    }
-
-
-    .hero-image.flag{
-      width:31%;
-      height:54%;
       left:0;
-      top:17%;
-      transform:rotate(-3deg);
-      z-index:1;
-    }
-
-
-    .hero-image.landmark-main{
-      width:47%;
-      height:92%;
-      left:27%;
-      top:0;
-      z-index:3;
-    }
-
-
-    .hero-image.landmark-secondary{
-      width:34%;
-      height:62%;
       right:0;
-      bottom:3%;
-      transform:rotate(3deg);
-      z-index:2;
+      bottom:0;
+      height:220px;
+      background:
+        linear-gradient(
+          180deg,
+          transparent,
+          rgba(7,7,7,.96)
+        );
+      z-index:3;
+      pointer-events:none;
     }
 
-
-    .hero-copy{
-      max-width:850px;
-      margin:-30px auto 0;
+    .hero-content{
       position:relative;
       z-index:5;
+      width:min(920px,90%);
+      margin:0 auto;
       text-align:center;
-      padding:0 20px;
+      transform:translateY(28px);
     }
-
 
     .hero-country{
       color:var(--gold);
       font-size:14px;
+      letter-spacing:4px;
       text-transform:uppercase;
-      letter-spacing:3px;
-      margin-bottom:10px;
-      font-weight:650;
-    }
-
-
-    .hero-copy h1{
-      font-family:"Cinzel","Georgia",serif;
-      font-size:clamp(
-        54px,
-        8vw,
-        104px
-      );
-      line-height:0.95;
-      margin:0;
-      color:#fff;
-      text-transform:uppercase;
-      letter-spacing:2px;
+      font-weight:700;
       text-shadow:
-        0 12px 40px rgba(0,0,0,0.72);
+        0 3px 20px rgba(0,0,0,.85);
     }
 
+    .hero-content h1{
+      margin:10px 0 0;
+      color:#fff;
+      font-family:"Cinzel","Georgia",serif;
+      font-size:clamp(72px,10vw,142px);
+      line-height:.92;
+      letter-spacing:2px;
+      text-transform:uppercase;
+      text-shadow:
+        0 8px 42px rgba(0,0,0,.80);
+    }
 
     .hero-divider{
-      width:110px;
+      width:120px;
       height:1px;
-      margin:24px auto 20px;
+      margin:28px auto 22px;
       background:
         linear-gradient(
           90deg,
           transparent,
-          rgba(212,175,55,0.95),
+          var(--gold),
           transparent
         );
     }
 
-
     .hero-description{
+      width:min(790px,100%);
       margin:0 auto;
-      max-width:780px;
-      color:rgba(255,255,255,0.86);
+      color:rgba(255,255,255,.96);
       font-size:16px;
-      line-height:1.85;
+      line-height:1.8;
       text-shadow:
-        0 4px 18px rgba(0,0,0,0.65);
+        0 3px 15px rgba(0,0,0,.95);
     }
 
+    /* =====================================================
+       SEÇÕES
+    ===================================================== */
 
     .content-section{
       padding:82px 40px;
     }
 
-
     .content-shell{
-      max-width:1120px;
+      width:min(1120px,100%);
       margin:0 auto;
     }
 
-
     .section-eyebrow{
-      color:rgba(255,255,255,0.55);
+      color:rgba(255,255,255,.55);
       text-align:center;
       text-transform:uppercase;
-      letter-spacing:2.2px;
+      letter-spacing:2.3px;
       font-size:12px;
       margin-bottom:10px;
     }
-
 
     .section-title{
       color:var(--gold);
       text-align:center;
       font-family:"Cinzel","Georgia",serif;
-      font-size:clamp(
-        28px,
-        4vw,
-        42px
-      );
+      font-size:clamp(30px,4vw,44px);
       margin:0 0 14px;
       font-weight:600;
     }
 
-
     .section-subtitle{
-      max-width:760px;
+      width:min(780px,100%);
       margin:0 auto 38px;
+      color:rgba(255,255,255,.74);
       text-align:center;
-      color:var(--muted);
       font-size:15px;
       line-height:1.8;
     }
-
 
     .materials-section{
       background:
         radial-gradient(
           circle at top center,
-          rgba(212,175,55,0.06),
-          transparent 30%
+          rgba(212,175,55,.055),
+          transparent 32%
         ),
         #070707;
-      border-top:1px solid rgba(255,255,255,0.05);
-      border-bottom:1px solid rgba(255,255,255,0.05);
+      border-top:1px solid rgba(255,255,255,.05);
+      border-bottom:1px solid rgba(255,255,255,.05);
     }
-
 
     .materials-grid{
       display:grid;
-      grid-template-columns:
-        repeat(
-          3,
-          minmax(0,1fr)
-        );
+      grid-template-columns:repeat(3,minmax(0,1fr));
       gap:18px;
     }
-
 
     .material-card{
       min-height:260px;
       padding:26px 22px;
       border-radius:18px;
+      display:flex;
+      flex-direction:column;
       background:
         linear-gradient(
           180deg,
-          rgba(14,14,14,0.98),
-          rgba(6,6,6,0.96)
+          rgba(15,15,15,.98),
+          rgba(7,7,7,.97)
         );
-      border:
-        1px solid
-        rgba(212,175,55,0.16);
-      box-shadow:
-        0 16px 40px
-        rgba(0,0,0,0.24);
-      display:flex;
-      flex-direction:column;
+      border:1px solid rgba(212,175,55,.17);
+      box-shadow:0 16px 40px rgba(0,0,0,.24);
       transition:
-        transform 0.25s ease,
-        border-color 0.25s ease;
+        transform .25s ease,
+        border-color .25s ease;
     }
-
 
     .material-card:hover{
-      transform:
-        translateY(-4px);
-      border-color:
-        rgba(212,175,55,0.38);
+      transform:translateY(-4px);
+      border-color:rgba(212,175,55,.42);
     }
-
 
     .material-icon{
       width:46px;
       height:46px;
-      border:
-        1px solid
-        rgba(212,175,55,0.28);
+      margin-bottom:20px;
       border-radius:50%;
+      border:1px solid rgba(212,175,55,.30);
       display:flex;
       align-items:center;
       justify-content:center;
       color:var(--gold);
       font-size:19px;
-      margin-bottom:20px;
     }
-
 
     .material-card h3{
       color:var(--gold);
@@ -777,100 +586,69 @@ function buildDestinationHtml(destino) {
       line-height:1.35;
     }
 
-
     .material-description{
-      color:
-        rgba(255,255,255,0.70);
-      font-size:13.5px;
-      line-height:1.65;
       margin:0 0 18px;
       flex:1;
+      color:rgba(255,255,255,.72);
+      font-size:13.5px;
+      line-height:1.65;
     }
-
 
     .material-price{
       color:#fff;
-      font-weight:700;
       font-size:17px;
+      font-weight:700;
       margin-bottom:14px;
     }
 
-
     .material-button{
       width:100%;
-      border:none;
+      border:0;
       border-radius:10px;
       padding:12px 16px;
       background:var(--gold);
       color:#000;
       font-weight:800;
       cursor:pointer;
-      transition:
-        transform 0.2s ease,
-        opacity 0.2s ease;
     }
-
-
-    .material-button:hover{
-      transform:
-        translateY(-1px);
-    }
-
 
     .loading-state,
     .empty-state,
     .error-state{
-      grid-column:1 / -1;
-      text-align:center;
+      grid-column:1/-1;
       padding:30px 20px;
+      text-align:center;
+      color:rgba(255,255,255,.68);
+      border:1px dashed rgba(255,255,255,.12);
       border-radius:16px;
-      border:
-        1px dashed
-        rgba(255,255,255,0.12);
-      color:
-        rgba(255,255,255,0.68);
-      line-height:1.7;
-      background:
-        rgba(10,10,10,0.68);
+      background:rgba(10,10,10,.68);
     }
-
 
     .tools-section{
       background:#090909;
     }
 
-
     .tools-grid{
       display:grid;
-      grid-template-columns:
-        repeat(
-          2,
-          minmax(0,1fr)
-        );
+      grid-template-columns:repeat(2,minmax(0,1fr));
       gap:20px;
-      max-width:920px;
+      width:min(920px,100%);
       margin:0 auto;
     }
 
-
     .tool-card{
-      border-radius:20px;
       padding:30px 26px;
+      border-radius:20px;
+      text-align:center;
       background:
         linear-gradient(
           180deg,
-          rgba(13,13,13,0.96),
-          rgba(6,6,6,0.94)
+          rgba(14,14,14,.96),
+          rgba(7,7,7,.94)
         );
-      border:
-        1px solid
-        rgba(212,175,55,0.18);
-      box-shadow:
-        0 18px 44px
-        rgba(0,0,0,0.22);
-      text-align:center;
+      border:1px solid rgba(212,175,55,.18);
+      box-shadow:0 18px 44px rgba(0,0,0,.22);
     }
-
 
     .tool-card h3{
       color:var(--gold);
@@ -878,15 +656,12 @@ function buildDestinationHtml(destino) {
       font-size:21px;
     }
 
-
     .tool-card p{
-      color:
-        rgba(255,255,255,0.72);
+      color:rgba(255,255,255,.72);
       line-height:1.7;
       font-size:14px;
       margin:0 0 20px;
     }
-
 
     .tool-card a{
       display:inline-flex;
@@ -901,195 +676,155 @@ function buildDestinationHtml(destino) {
       font-weight:800;
     }
 
-
     /* =====================================================
-       POPUPS E CARRINHO
+       POPUPS
     ===================================================== */
 
     .popup-bg{
       position:fixed;
       inset:0;
-      background:
-        rgba(0,0,0,0.85);
       display:none;
-      justify-content:center;
       align-items:center;
-      z-index:3000;
+      justify-content:center;
       padding:18px;
+      background:rgba(0,0,0,.85);
+      z-index:4000;
     }
-
 
     .popup-bg.active{
       display:flex;
     }
 
-
     .popup-content{
-      background:#111;
-      border:1px solid #222;
-      border-radius:14px;
-      max-width:720px;
-      width:100%;
+      width:min(720px,100%);
+      max-height:calc(100vh - 36px);
       padding:24px;
-      position:relative;
-      text-align:center;
-      max-height:
-        calc(100vh - 36px);
       display:flex;
       flex-direction:column;
       overflow:hidden;
+      text-align:center;
+      background:#111;
+      border:1px solid #222;
+      border-radius:14px;
     }
-
 
     .popup-content h3{
       margin:0 0 10px;
       color:var(--gold);
-      flex:0 0 auto;
     }
-
 
     .popup-content p{
       margin:0 0 14px;
-      color:
-        rgba(255,255,255,0.8);
+      color:rgba(255,255,255,.8);
       line-height:1.6;
       font-size:14px;
-      flex:0 0 auto;
     }
-
 
     .popup-actions{
       display:flex;
-      gap:12px;
       justify-content:center;
       flex-wrap:wrap;
+      gap:12px;
       margin-top:14px;
-      flex:0 0 auto;
     }
-
 
     .popup-actions button{
       cursor:pointer;
       padding:11px 18px;
       border-radius:10px;
-      border:none;
+      border:0;
       background:var(--gold);
       color:#000;
       font-weight:700;
     }
 
-
-    .popup-actions button.btn-ghost{
+    .popup-actions .btn-ghost{
       background:transparent;
-      border:
-        1px solid
-        rgba(212,175,55,0.38);
+      border:1px solid rgba(212,175,55,.38);
       color:var(--gold);
     }
 
-
-    .popup-actions button[disabled]{
-      opacity:0.55;
+    .popup-actions button:disabled{
+      opacity:.55;
       cursor:not-allowed;
     }
 
-
     .popup-rules{
-      text-align:left;
+      display:none;
+      flex:1 1 auto;
+      min-height:0;
+      overflow:auto;
       margin-top:14px;
+      padding:16px;
+      text-align:left;
+      color:rgba(255,255,255,.78);
       background:#0f0f0f;
       border:1px solid #222;
       border-radius:12px;
-      padding:16px;
-      color:
-        rgba(255,255,255,0.78);
       font-size:13.5px;
       line-height:1.6;
-      overflow:auto;
-      flex:1 1 auto;
-      min-height:0;
     }
-
 
     .popup-rules strong{
       color:var(--gold);
     }
-
 
     .consent-wrap{
       display:flex;
       gap:10px;
       align-items:flex-start;
       margin-top:12px;
-      text-align:left;
       padding:12px;
+      text-align:left;
+      color:rgba(255,255,255,.82);
+      background:#0f0f0f;
       border:1px solid #222;
       border-radius:12px;
-      background:#0f0f0f;
-      color:
-        rgba(255,255,255,0.82);
       font-size:13.2px;
       line-height:1.55;
-      flex:0 0 auto;
     }
-
 
     .consent-wrap input{
       margin-top:3px;
       accent-color:var(--gold);
     }
 
-
     .cart-list{
-      text-align:left;
-      margin-top:14px;
-      border:1px solid #222;
-      border-radius:12px;
-      background:#0f0f0f;
-      padding:12px;
-      overflow:auto;
       flex:1 1 auto;
       min-height:0;
+      overflow:auto;
+      margin-top:14px;
+      padding:12px;
+      text-align:left;
+      background:#0f0f0f;
+      border:1px solid #222;
+      border-radius:12px;
     }
-
 
     .cart-item{
       display:flex;
       justify-content:space-between;
       gap:12px;
       padding:12px 10px;
-      border-bottom:
-        1px solid
-        rgba(255,255,255,0.08);
+      border-bottom:1px solid rgba(255,255,255,.08);
     }
-
 
     .cart-item:last-child{
-      border-bottom:none;
+      border-bottom:0;
     }
-
-
-    .cart-item-left{
-      min-width:0;
-    }
-
 
     .cart-item-title{
       color:#fff;
       font-weight:650;
       margin:0 0 4px;
       font-size:14px;
-      line-height:1.35;
     }
 
-
     .cart-item-meta{
-      color:
-        rgba(255,255,255,0.70);
+      color:rgba(255,255,255,.70);
       font-size:12.5px;
       line-height:1.4;
     }
-
 
     .cart-item-right{
       display:flex;
@@ -1099,92 +834,72 @@ function buildDestinationHtml(destino) {
       white-space:nowrap;
     }
 
-
     .cart-item-right button{
       cursor:pointer;
       padding:9px 13px;
       border-radius:9px;
       background:transparent;
-      border:
-        1px solid
-        rgba(212,175,55,0.38);
+      border:1px solid rgba(212,175,55,.38);
       color:var(--gold);
       font-weight:650;
     }
 
-
     .cart-total{
-      margin-top:12px;
       display:flex;
       justify-content:space-between;
       gap:12px;
       align-items:center;
+      margin-top:12px;
       padding:12px;
-      border:
-        1px solid
-        rgba(255,255,255,0.10);
-      border-radius:12px;
-      background:#0f0f0f;
       text-align:left;
-      flex:0 0 auto;
+      background:#0f0f0f;
+      border:1px solid rgba(255,255,255,.10);
+      border-radius:12px;
     }
-
 
     .cart-total strong{
       color:var(--gold);
     }
 
-
     .total-strike{
-      color:
-        rgba(255,255,255,0.55);
+      color:rgba(255,255,255,.55);
       text-decoration:line-through;
       margin-right:10px;
       font-weight:650;
     }
-
 
     .total-final{
       color:var(--gold);
       font-weight:800;
     }
 
-
     .discount-line{
+      display:none;
       margin-top:8px;
       text-align:left;
-      color:
-        rgba(255,255,255,0.72);
+      color:rgba(255,255,255,.72);
       font-size:12.8px;
     }
-
 
     .discount-line strong{
       color:var(--gold);
     }
 
-
     .coupon-wrap{
       margin-top:10px;
-      text-align:left;
-      border:
-        1px solid
-        rgba(255,255,255,0.10);
-      border-radius:12px;
-      background:#0f0f0f;
       padding:12px;
-      flex:0 0 auto;
+      text-align:left;
+      background:#0f0f0f;
+      border:1px solid rgba(255,255,255,.10);
+      border-radius:12px;
     }
-
 
     .coupon-label{
       display:block;
-      font-size:12.5px;
-      color:
-        rgba(255,255,255,0.75);
       margin-bottom:8px;
+      color:rgba(255,255,255,.75);
+      font-size:12.5px;
     }
-
 
     .coupon-row{
       display:flex;
@@ -1192,91 +907,75 @@ function buildDestinationHtml(destino) {
       align-items:center;
     }
 
-
     .coupon-input{
+      flex:1;
       width:100%;
       padding:12px 14px;
-      border-radius:12px;
-      border:
-        1px solid
-        rgba(255,255,255,0.10);
-      background:
-        rgba(10,10,10,0.95);
-      color:#fff;
       outline:none;
+      color:#fff;
+      background:rgba(10,10,10,.95);
+      border:1px solid rgba(255,255,255,.10);
+      border-radius:12px;
       font-size:14px;
-      flex:1;
     }
 
-
     .coupon-apply{
+      min-width:120px;
       cursor:pointer;
       padding:11px 18px;
+      border:0;
       border-radius:10px;
-      border:none;
       background:var(--gold);
       color:#000;
       font-weight:700;
-      min-width:120px;
     }
 
-
     .coupon-msg{
+      min-height:18px;
       margin-top:8px;
       font-size:12.5px;
       line-height:1.45;
-      min-height:18px;
     }
-
 
     .coupon-msg.ok{
       color:var(--gold);
     }
 
-
     .coupon-msg.err{
-      color:
-        rgba(255,255,255,0.72);
+      color:rgba(255,255,255,.72);
     }
-
 
     .coupon-help{
       margin-top:8px;
+      color:rgba(255,255,255,.62);
       font-size:12.5px;
-      color:
-        rgba(255,255,255,0.62);
       line-height:1.45;
     }
 
+    /* =====================================================
+       FOOTER
+    ===================================================== */
 
     footer{
-      border-top:
-        1px solid
-        rgba(255,255,255,0.08);
       padding:34px 24px 38px;
       text-align:center;
-      color:
-        rgba(255,255,255,0.68);
+      color:rgba(255,255,255,.68);
+      border-top:1px solid rgba(255,255,255,.08);
       font-size:14px;
       line-height:1.7;
-      margin-top:0;
     }
-
 
     footer > a{
       color:#1a0dab;
       text-decoration:underline;
     }
 
-
     .footer-social{
       display:flex;
       justify-content:center;
-      align-items:center;
       gap:12px;
       margin-top:16px;
     }
-
 
     .footer-social a{
       width:38px;
@@ -1285,15 +984,10 @@ function buildDestinationHtml(destino) {
       align-items:center;
       justify-content:center;
       border-radius:50%;
-      border:
-        1px solid
-        rgba(212,175,55,0.30);
+      border:1px solid rgba(212,175,55,.30);
       color:var(--gold);
-      background:
-        rgba(255,255,255,0.02);
       text-decoration:none;
     }
-
 
     .footer-social svg{
       width:18px;
@@ -1301,6 +995,9 @@ function buildDestinationHtml(destino) {
       fill:currentColor;
     }
 
+    /* =====================================================
+       RESPONSIVO
+    ===================================================== */
 
     @media (max-width:980px){
 
@@ -1308,118 +1005,68 @@ function buildDestinationHtml(destino) {
         padding:14px 16px;
       }
 
-
       .brand{
         min-width:auto;
       }
 
-
       .nav-toggle{
-        display:inline-flex;
-        align-items:center;
-        justify-content:center;
+        display:block;
       }
-
 
       .nav-menu{
         display:none;
         position:absolute;
-        top:56px;
+        top:52px;
         right:0;
         min-width:220px;
         padding:14px;
-        border:
-          1px solid
-          rgba(255,255,255,0.10);
-        border-radius:14px;
-        background:
-          rgba(0,0,0,0.94);
-        backdrop-filter:
-          blur(10px);
         flex-direction:column;
         align-items:flex-start;
         gap:12px;
-        z-index:2000;
+        background:rgba(0,0,0,.95);
+        border:1px solid rgba(255,255,255,.10);
+        border-radius:14px;
       }
-
 
       header.nav-open .nav-menu{
         display:flex;
       }
 
-
       .nav-sep{
         display:none;
       }
 
-
       .destination-hero{
-        min-height:auto;
-        padding:
-          120px 18px 64px;
+        min-height:680px;
+        height:88vh;
       }
 
-
-      .hero-visual{
-        height:350px;
+      .hero-content{
+        transform:translateY(15px);
       }
 
-
-      .hero-image.flag{
-        width:42%;
-        height:48%;
-        top:18%;
+      .hero-content h1{
+        font-size:clamp(66px,15vw,110px);
       }
 
-
-      .hero-image.landmark-main{
-        width:54%;
-        left:23%;
+      .hero-slide:nth-child(1),
+      .hero-slide:nth-child(2),
+      .hero-slide:nth-child(3){
+        background-position:center;
       }
-
-
-      .hero-image.landmark-secondary{
-        width:42%;
-        height:55%;
-      }
-
-
-      .hero-copy{
-        margin-top:-8px;
-      }
-
 
       .content-section{
         padding:64px 18px;
       }
 
-
       .materials-grid{
-        grid-template-columns:
-          repeat(
-            2,
-            minmax(0,1fr)
-          );
+        grid-template-columns:repeat(2,minmax(0,1fr));
       }
-
 
       .tools-grid{
         grid-template-columns:1fr;
       }
-
-
-      .coupon-row{
-        flex-direction:column;
-        align-items:stretch;
-      }
-
-
-      .coupon-apply{
-        width:100%;
-      }
-
     }
-
 
     @media (max-width:640px){
 
@@ -1427,94 +1074,77 @@ function buildDestinationHtml(destino) {
         font-size:14px;
       }
 
-
       .brand-tagline{
         font-size:10px;
       }
-
 
       .brand img{
         width:30px;
         height:30px;
       }
 
-
-      .hero-visual{
-        height:285px;
+      .destination-hero{
+        min-height:620px;
+        height:82vh;
       }
 
-
-      .hero-image{
-        border-radius:16px;
+      .hero-content{
+        width:88%;
+        transform:translateY(24px);
       }
 
-
-      .hero-image.flag{
-        width:45%;
-        height:44%;
-        left:-4%;
-        top:22%;
+      .hero-content h1{
+        font-size:clamp(56px,19vw,84px);
       }
 
-
-      .hero-image.landmark-main{
-        width:59%;
-        height:90%;
-        left:20%;
+      .hero-country{
+        font-size:12px;
+        letter-spacing:3px;
       }
-
-
-      .hero-image.landmark-secondary{
-        width:44%;
-        height:48%;
-        right:-5%;
-        bottom:8%;
-      }
-
-
-      .hero-copy h1{
-        font-size:
-          clamp(
-            44px,
-            17vw,
-            70px
-          );
-      }
-
 
       .hero-description{
-        font-size:14.5px;
+        font-size:14px;
+        line-height:1.7;
       }
-
 
       .materials-grid{
         grid-template-columns:1fr;
       }
 
-
       .material-card{
         min-height:0;
       }
-
 
       .cart-item{
         flex-direction:column;
       }
 
-
       .cart-item-right{
         align-items:flex-start;
       }
 
+      .coupon-row{
+        flex-direction:column;
+      }
+
+      .coupon-apply{
+        width:100%;
+      }
+    }
+
+    @media (prefers-reduced-motion:reduce){
+
+      .hero-slide{
+        transition:none;
+        transform:none;
+      }
     }
 
   </style>
 
 </head>
 
-
 <body>
-
 
 <header id="siteHeader">
 
@@ -1543,7 +1173,6 @@ function buildDestinationHtml(destino) {
 
   </a>
 
-
   <nav>
 
     <button
@@ -1557,27 +1186,12 @@ function buildDestinationHtml(destino) {
       <span></span>
     </button>
 
+    <div class="nav-menu">
 
-    <div
-      class="nav-menu"
-      id="navMenu"
-    >
-
-      <a href="/">
-        Início
-      </a>
-
-      <a href="/?secao=quem">
-        Quem Somos
-      </a>
-
-      <a href="/?secao=curadoria">
-        Curadoria
-      </a>
-
-      <a href="/?secao=buscador">
-        Buscador
-      </a>
+      <a href="/">Início</a>
+      <a href="/?secao=quem">Quem Somos</a>
+      <a href="/?secao=curadoria">Curadoria</a>
+      <a href="/?secao=buscador">Buscador</a>
 
       <span class="nav-sep"></span>
 
@@ -1620,77 +1234,51 @@ function buildDestinationHtml(destino) {
 
 </header>
 
-
 <main>
 
+  <!-- =====================================================
+       HERO NOVO
+  ====================================================== -->
 
   <section class="destination-hero">
 
-    <div class="hero-glow"></div>
+    <div
+      class="hero-carousel"
+      aria-hidden="true"
+    >
 
-    <div class="hero-shell">
+      <div class="hero-slide active"></div>
+      <div class="hero-slide"></div>
+      <div class="hero-slide"></div>
 
+    </div>
 
-      <div
-        class="hero-visual"
-        aria-hidden="true"
-      >
+    <div class="hero-overlay"></div>
+    <div class="hero-bottom-fade"></div>
 
-        <div class="hero-image flag">
+    <div class="hero-content">
 
-          <img
-            src="${bandeira}"
-            alt=""
-          >
-
-        </div>
-
-
-        <div class="hero-image landmark-main">
-
-          <img
-            src="${ponto1}"
-            alt=""
-          >
-
-        </div>
-
-
-        <div class="hero-image landmark-secondary">
-
-          <img
-            src="${ponto2}"
-            alt=""
-          >
-
-        </div>
-
+      <div class="hero-country">
+        ${pais}
       </div>
 
+      <h1>
+        ${cidade}
+      </h1>
 
-      <div class="hero-copy">
+      <div class="hero-divider"></div>
 
-        <div class="hero-country">
-          ${pais}
-        </div>
-
-        <h1>
-          ${cidade}
-        </h1>
-
-        <div class="hero-divider"></div>
-
-        <p class="hero-description">
-          ${texto}
-        </p>
-
-      </div>
-
+      <p class="hero-description">
+        ${texto}
+      </p>
 
     </div>
 
   </section>
 
+  <!-- =====================================================
+       MATERIAIS
+  ====================================================== -->
 
   <section
     class="content-section materials-section"
@@ -1727,6 +1315,9 @@ function buildDestinationHtml(destino) {
 
   </section>
 
+  <!-- =====================================================
+       FERRAMENTAS
+  ====================================================== -->
 
   <section class="content-section tools-section">
 
@@ -1743,7 +1334,6 @@ function buildDestinationHtml(destino) {
       <p class="section-subtitle">
         Acesse ferramentas da Curadoria para consultar informações práticas relacionadas ao destino.
       </p>
-
 
       <div class="tools-grid">
 
@@ -1763,7 +1353,6 @@ function buildDestinationHtml(destino) {
           </a>
 
         </article>
-
 
         <article class="tool-card">
 
@@ -1788,14 +1377,11 @@ function buildDestinationHtml(destino) {
 
   </section>
 
-
 </main>
-
 
 <footer>
 
-  Curadoria Elite Travel ·
-  O seu mundo, bem indicado.
+  Curadoria Elite Travel · O seu mundo, bem indicado.
   <br>
 
   São Paulo - SP ·
@@ -1804,37 +1390,26 @@ function buildDestinationHtml(destino) {
     curadoriaelitetravel@gmail.com
   </a>
 
-
-  <div
-    class="footer-social"
-    aria-label="Redes sociais da Curadoria Elite Travel"
-  >
+  <div class="footer-social">
 
     <a
       href="https://www.instagram.com/curadoriaelitetravel/"
       target="_blank"
       rel="noopener noreferrer"
-      aria-label="Instagram da Curadoria Elite Travel"
+      aria-label="Instagram"
     >
-      <svg
-        viewBox="0 0 24 24"
-        aria-hidden="true"
-      >
+      <svg viewBox="0 0 24 24">
         <path d="M7 2h10a5 5 0 0 1 5 5v10a5 5 0 0 1-5 5H7a5 5 0 0 1-5-5V7a5 5 0 0 1 5-5Zm0 2a3 3 0 0 0-3 3v10a3 3 0 0 0 3 3h10a3 3 0 0 0 3-3V7a3 3 0 0 0-3-3H7Zm5 3.5A4.5 4.5 0 1 1 7.5 12 4.5 4.5 0 0 1 12 7.5Zm0 2A2.5 2.5 0 1 0 14.5 12 2.5 2.5 0 0 0 12 9.5Zm5.25-3.1a1.05 1.05 0 1 1-1.05 1.05 1.05 1.05 0 0 1 1.05-1.05Z"/>
       </svg>
     </a>
-
 
     <a
       href="https://www.linkedin.com/company/curadoria-elite-travel"
       target="_blank"
       rel="noopener noreferrer"
-      aria-label="LinkedIn da Curadoria Elite Travel"
+      aria-label="LinkedIn"
     >
-      <svg
-        viewBox="0 0 24 24"
-        aria-hidden="true"
-      >
+      <svg viewBox="0 0 24 24">
         <path d="M6.5 8.25H3.25V21H6.5V8.25ZM4.88 3A1.88 1.88 0 1 0 4.9 6.75 1.88 1.88 0 0 0 4.88 3ZM21 13.7c0-3.85-2.05-5.64-4.79-5.64a4.14 4.14 0 0 0-3.74 2.05V8.25H9.22V21h3.25v-6.31c0-1.66.32-3.27 2.38-3.27 2.03 0 2.05 1.9 2.05 3.38V21H21v-7.3Z"/>
       </svg>
     </a>
@@ -1843,66 +1418,42 @@ function buildDestinationHtml(destino) {
 
 </footer>
 
-
-<script
-  src="https://unpkg.com/@supabase/supabase-js@2"
-></script>
-
+<script src="https://unpkg.com/@supabase/supabase-js@2"></script>
 
 <script>
 
   /* =====================================================
-     CONFIGURAÇÃO
+     DESTINO
   ===================================================== */
 
-  const DESTINATION =
-    ${destinationData};
-
+  const DESTINATION = ${destinationData};
 
   const SUPABASE_URL =
     ${JSON.stringify(SUPABASE_URL)};
 
-
   const SUPABASE_ANON_KEY =
     ${JSON.stringify(SUPABASE_ANON_KEY)};
-
 
   const CART_STORAGE_KEY =
     "cet_cart_v2";
 
-
   const CHECKOUT_CONTEXT_KEY =
     "cet_checkout_context_v2";
-
 
   const CART_CHECKOUT_ITEMS_KEY =
     "cet_cart_checkout_items_v2";
 
-
   const CART_LAST_CHECKOUT_STARTED_KEY =
     "cet_cart_last_checkout_started_v2";
-
 
   const CART_COUPON_CODE_KEY =
     "cet_cart_coupon_code_v1";
 
-
   let supabaseClient = null;
-
   let cartPricingPreview = null;
 
-
-  const categoryPricesMap =
-    new Map();
-
-
-  const ownedMap =
-    new Map();
-
-
-  /* =====================================================
-     CATEGORIAS
-  ===================================================== */
+  const categoryPricesMap = new Map();
+  const ownedMap = new Map();
 
   const CATEGORY_DESCRIPTIONS = {
 
@@ -1926,23 +1477,66 @@ function buildDestinationHtml(destino) {
 
   };
 
-
   const CATEGORY_ICONS = {
-
     "city guide":"◇",
-
     "gastronomia":"✦",
-
     "atrações turísticas":"⌖",
-
     "vida noturna":"☾",
-
     "endereços para compras":"⌑",
-
     "sugestão de presentes":"◈"
-
   };
 
+  /* =====================================================
+     HERO CARROSSEL
+  ===================================================== */
+
+  function startHeroCarousel(){
+
+    const slides =
+      Array.from(
+        document.querySelectorAll(
+          ".hero-slide"
+        )
+      );
+
+    if (slides.length <= 1){
+      return;
+    }
+
+    const reduceMotion =
+      window.matchMedia &&
+      window.matchMedia(
+        "(prefers-reduced-motion: reduce)"
+      ).matches;
+
+    if (reduceMotion){
+      return;
+    }
+
+    let current = 0;
+
+    window.setInterval(
+      () => {
+
+        slides[current]
+          .classList.remove(
+            "active"
+          );
+
+        current =
+          (current + 1) %
+          slides.length;
+
+        slides[current]
+          .classList.add(
+            "active"
+          );
+
+      },
+      6000
+    );
+
+  }
 
   /* =====================================================
      NAVEGAÇÃO
@@ -1955,34 +1549,13 @@ function buildDestinationHtml(destino) {
         "siteHeader"
       );
 
-    if (!header){
-      return;
-    }
-
-    header.classList.toggle(
-      "nav-open"
-    );
-
-  }
-
-
-  function closeMobileNav(){
-
-    const header =
-      document.getElementById(
-        "siteHeader"
+    if (header){
+      header.classList.toggle(
+        "nav-open"
       );
-
-    if (!header){
-      return;
     }
 
-    header.classList.remove(
-      "nav-open"
-    );
-
   }
-
 
   /* =====================================================
      NORMALIZAÇÃO
@@ -2014,7 +1587,6 @@ function buildDestinationHtml(destino) {
 
   }
 
-
   function normalizeCategoryName(category){
 
     return normalizeKeyPart(
@@ -2023,7 +1595,6 @@ function buildDestinationHtml(destino) {
 
   }
 
-
   function normalizeCityLabel(cityLabel){
 
     return normalizeKeyPart(
@@ -2031,7 +1602,6 @@ function buildDestinationHtml(destino) {
     );
 
   }
-
 
   function purchaseKey(
     category,
@@ -2046,9 +1616,8 @@ function buildDestinationHtml(destino) {
 
   }
 
-
   /* =====================================================
-     SUPABASE E SESSÃO
+     SUPABASE
   ===================================================== */
 
   function ensureSupabase(){
@@ -2071,7 +1640,6 @@ function buildDestinationHtml(destino) {
 
   }
 
-
   async function getSession(){
 
     const sb =
@@ -2084,30 +1652,23 @@ function buildDestinationHtml(destino) {
     const { data } =
       await sb.auth.getSession();
 
-    return (
-      data &&
-      data.session
-    )
+    return data && data.session
       ? data.session
       : null;
 
   }
-
 
   async function getAccessToken(){
 
     const session =
       await getSession();
 
-    return (
-      session &&
+    return session &&
       session.access_token
-    )
       ? session.access_token
       : null;
 
   }
-
 
   async function apiPOST(
     url,
@@ -2123,7 +1684,7 @@ function buildDestinationHtml(destino) {
     };
 
     if (token){
-      headers["Authorization"] =
+      headers.Authorization =
         "Bearer " + token;
     }
 
@@ -2154,7 +1715,6 @@ function buildDestinationHtml(destino) {
     };
 
   }
-
 
   async function refreshNavAuth(){
 
@@ -2213,7 +1773,6 @@ function buildDestinationHtml(destino) {
 
   }
 
-
   async function doLogout(event){
 
     if (event){
@@ -2229,19 +1788,11 @@ function buildDestinationHtml(destino) {
         await sb.auth.signOut();
       }
 
-    }catch(error){
-
-      console.error(
-        "Erro ao sair:",
-        error
-      );
-
-    }
+    }catch(error){}
 
     await refreshNavAuth();
 
   }
-
 
   /* =====================================================
      PREÇOS
@@ -2261,26 +1812,20 @@ function buildDestinationHtml(destino) {
 
     }catch(error){
 
-      return (
-        "R$ " +
-        String(value)
-      );
+      return "R$ " + value;
 
     }
 
   }
 
-
-  function getFallbackPriceForCategory(category){
-
-    const normalized =
-      normalizeCategoryName(
-        category
-      );
+  function getFallbackPriceForCategory(
+    category
+  ){
 
     if (
-      normalized ===
-      "city guide"
+      normalizeCategoryName(
+        category
+      ) === "city guide"
     ){
       return 88.92;
     }
@@ -2289,8 +1834,9 @@ function buildDestinationHtml(destino) {
 
   }
 
-
-  function getPriceForCategory(category){
+  function getPriceForCategory(
+    category
+  ){
 
     const key =
       normalizeCategoryName(
@@ -2298,12 +1844,15 @@ function buildDestinationHtml(destino) {
       );
 
     if (
-      categoryPricesMap.has(key)
+      categoryPricesMap.has(
+        key
+      )
     ){
 
       return Number(
-        categoryPricesMap.get(key) ||
-        0
+        categoryPricesMap.get(
+          key
+        ) || 0
       );
 
     }
@@ -2314,70 +1863,62 @@ function buildDestinationHtml(destino) {
 
   }
 
-
   async function loadCategoryPrices(){
 
     categoryPricesMap.clear();
 
-    try{
+    const sb =
+      ensureSupabase();
 
-      const sb =
-        ensureSupabase();
+    if (!sb){
+      return;
+    }
 
-      if (!sb){
-        return;
-      }
-
-      const {
-        data,
-        error
-      } =
-        await sb
-          .from(
-            "category_prices"
-          )
-          .select(
-            "category, price, is_active"
-          )
-          .eq(
-            "is_active",
-            true
-          );
-
-      if (error){
-
-        console.error(
-          "Erro ao carregar preços:",
-          error
+    const {
+      data,
+      error
+    } =
+      await sb
+        .from(
+          "category_prices"
+        )
+        .select(
+          "category, price, is_active"
+        )
+        .eq(
+          "is_active",
+          true
         );
 
-        return;
+    if (error){
 
-      }
+      console.error(
+        "Erro ao carregar preços:",
+        error
+      );
 
-      (data || []).forEach(
-        (row) => {
+      return;
 
-          const category =
-            String(
-              row.category || ""
-            ).trim();
+    }
 
-          const price =
-            Number(
-              row.price || 0
-            );
+    (data || []).forEach(
+      (row) => {
 
-          if (!category){
-            return;
-          }
+        const category =
+          String(
+            row.category || ""
+          ).trim();
 
-          if (
-            !Number.isFinite(price) ||
-            price <= 0
-          ){
-            return;
-          }
+        const price =
+          Number(
+            row.price || 0
+          );
+
+        if (
+          category &&
+          Number.isFinite(price) &&
+          price > 0
+        ){
 
           categoryPricesMap.set(
             normalizeCategoryName(
@@ -2387,101 +1928,74 @@ function buildDestinationHtml(destino) {
           );
 
         }
-      );
 
-    }catch(error){
-
-      console.error(
-        "Falha ao carregar preços:",
-        error
-      );
-
-    }
+      }
+    );
 
   }
 
-
   /* =====================================================
-     COMPRAS JÁ EXISTENTES
+     COMPRAS EXISTENTES
   ===================================================== */
 
   async function loadOwnedPurchases(){
 
     ownedMap.clear();
 
-    try{
+    const session =
+      await getSession();
 
-      const session =
-        await getSession();
-
-      if (
-        !session ||
-        !session.user
-      ){
-        return;
-      }
-
-      const sb =
-        ensureSupabase();
-
-      if (!sb){
-        return;
-      }
-
-      const {
-        data,
-        error
-      } =
-        await sb
-          .from("purchase")
-          .select(
-            "category, city, pdf_url"
-          )
-          .eq(
-            "user_id",
-            session.user.id
-          )
-          .limit(500);
-
-      if (error){
-
-        console.error(
-          "Erro ao carregar compras:",
-          error
-        );
-
-        return;
-
-      }
-
-      (data || []).forEach(
-        (row) => {
-
-          ownedMap.set(
-            purchaseKey(
-              row.category || "",
-              row.city || ""
-            ),
-            {
-              pdf_url:
-                row.pdf_url || null
-            }
-          );
-
-        }
-      );
-
-    }catch(error){
-
-      console.error(
-        "Falha ao carregar compras:",
-        error
-      );
-
+    if (
+      !session ||
+      !session.user
+    ){
+      return;
     }
 
-  }
+    const sb =
+      ensureSupabase();
 
+    if (!sb){
+      return;
+    }
+
+    const {
+      data,
+      error
+    } =
+      await sb
+        .from("purchase")
+        .select(
+          "category, city, pdf_url"
+        )
+        .eq(
+          "user_id",
+          session.user.id
+        )
+        .limit(500);
+
+    if (error){
+      return;
+    }
+
+    (data || []).forEach(
+      (row) => {
+
+        ownedMap.set(
+          purchaseKey(
+            row.category || "",
+            row.city || ""
+          ),
+          {
+            pdf_url:
+              row.pdf_url || null
+          }
+        );
+
+      }
+    );
+
+  }
 
   function userOwns(
     category,
@@ -2496,7 +2010,6 @@ function buildDestinationHtml(destino) {
     );
 
   }
-
 
   /* =====================================================
      CARRINHO
@@ -2528,52 +2041,40 @@ function buildDestinationHtml(destino) {
 
   }
 
-
   function saveCart(items){
 
-    try{
-
-      localStorage.setItem(
-        CART_STORAGE_KEY,
-        JSON.stringify(
-          items || []
-        )
-      );
-
-    }catch(error){}
+    localStorage.setItem(
+      CART_STORAGE_KEY,
+      JSON.stringify(
+        items || []
+      )
+    );
 
     updateCartBadge();
 
   }
-
 
   function clearCart(){
 
-    try{
-
-      localStorage.removeItem(
-        CART_STORAGE_KEY
-      );
-
-    }catch(error){}
+    localStorage.removeItem(
+      CART_STORAGE_KEY
+    );
 
     updateCartBadge();
 
   }
 
-
   function cartItemKey(
     category,
-    cityLabel
+    city
   ){
 
     return purchaseKey(
       category,
-      cityLabel
+      city
     );
 
   }
-
 
   function updateCartBadge(){
 
@@ -2582,67 +2083,55 @@ function buildDestinationHtml(destino) {
         "navCart"
       );
 
-    if (!navCart){
-      return;
+    if (navCart){
+
+      navCart.textContent =
+        "Carrinho (" +
+        getCart().length +
+        ")";
+
     }
 
-    navCart.textContent =
-      "Carrinho (" +
-      getCart().length +
-      ")";
-
   }
-
 
   function calcCartTotal(items){
 
-    let total = 0;
-
-    (items || []).forEach(
-      (item) => {
-
-        const qty =
+    return (items || []).reduce(
+      (total,item) =>
+        total +
+        (
           Number(
             item.qty || 0
-          );
-
-        const price =
+          ) *
           Number(
             item.price || 0
-          );
-
-        total +=
-          qty * price;
-
-      }
+          )
+        ),
+      0
     );
-
-    return total;
 
   }
 
-
   function removeFromCart(key){
 
-    const items =
+    saveCart(
       getCart().filter(
         (item) =>
           item &&
           item.key !== key
-      );
+      )
+    );
 
-    saveCart(items);
-
-    cartPricingPreview = null;
+    cartPricingPreview =
+      null;
 
     renderCart();
 
   }
 
-
   function addToCart(
     category,
-    cityLabel
+    city
   ){
 
     const items =
@@ -2651,7 +2140,7 @@ function buildDestinationHtml(destino) {
     const key =
       cartItemKey(
         category,
-        cityLabel
+        city
       );
 
     if (
@@ -2661,9 +2150,7 @@ function buildDestinationHtml(destino) {
           item.key === key
       )
     ){
-
       return false;
-
     }
 
     const price =
@@ -2679,7 +2166,7 @@ function buildDestinationHtml(destino) {
         ).trim(),
       city:
         String(
-          cityLabel || ""
+          city || ""
         ).trim(),
       qty:1,
       price:
@@ -2690,7 +2177,8 @@ function buildDestinationHtml(destino) {
 
     saveCart(items);
 
-    cartPricingPreview = null;
+    cartPricingPreview =
+      null;
 
     trackEvent(
       "add_to_cart",
@@ -2698,7 +2186,7 @@ function buildDestinationHtml(destino) {
         item_category:
           category,
         item_name:
-          cityLabel,
+          city,
         currency:
           "BRL",
         value:
@@ -2712,21 +2200,19 @@ function buildDestinationHtml(destino) {
 
   }
 
-
   function addToCartAndOpenCart(
     category,
-    cityLabel
+    city
   ){
 
     addToCart(
       category,
-      cityLabel
+      city
     );
 
     openCart();
 
   }
-
 
   /* =====================================================
      CUPOM
@@ -2734,108 +2220,69 @@ function buildDestinationHtml(destino) {
 
   function normalizeCouponCode(code){
 
-    return String(
-      code || ""
-    )
+    return String(code || "")
       .trim()
       .toUpperCase();
 
   }
 
-
   function setCartCouponCode(code){
 
-    try{
+    const value =
+      normalizeCouponCode(code);
 
-      const value =
-        normalizeCouponCode(
-          code
-        );
-
-      if (!value){
-
-        localStorage.removeItem(
-          CART_COUPON_CODE_KEY
-        );
-
-      }else{
-
-        localStorage.setItem(
-          CART_COUPON_CODE_KEY,
-          value
-        );
-
-      }
-
-    }catch(error){}
-
-  }
-
-
-  function getCartCouponCode(){
-
-    try{
-
-      return normalizeCouponCode(
-        localStorage.getItem(
-          CART_COUPON_CODE_KEY
-        ) || ""
-      );
-
-    }catch(error){
-
-      return "";
-
-    }
-
-  }
-
-
-  function clearCartCouponCode(){
-
-    try{
+    if (!value){
 
       localStorage.removeItem(
         CART_COUPON_CODE_KEY
       );
 
-    }catch(error){}
+    }else{
+
+      localStorage.setItem(
+        CART_COUPON_CODE_KEY,
+        value
+      );
+
+    }
 
   }
 
+  function getCartCouponCode(){
+
+    return normalizeCouponCode(
+      localStorage.getItem(
+        CART_COUPON_CODE_KEY
+      ) || ""
+    );
+
+  }
 
   function setCouponMessage(
     text,
     kind
   ){
 
-    const element =
+    const el =
       document.getElementById(
         "couponMsg"
       );
 
-    if (!element){
+    if (!el){
       return;
     }
 
-    element.classList.remove(
-      "ok",
-      "err"
-    );
+    el.className =
+      "coupon-msg";
 
-    element.textContent =
+    if (kind){
+      el.classList.add(kind);
+    }
+
+    el.textContent =
       text || "";
 
-    if (kind === "ok"){
-      element.classList.add("ok");
-    }
-
-    if (kind === "err"){
-      element.classList.add("err");
-    }
-
   }
-
 
   async function applyCouponInCart(){
 
@@ -2858,7 +2305,8 @@ function buildDestinationHtml(destino) {
 
     if (!code){
 
-      cartPricingPreview = null;
+      cartPricingPreview =
+        null;
 
       renderCartTotalsOnly();
 
@@ -2883,35 +2331,29 @@ function buildDestinationHtml(destino) {
 
     }
 
-    const payload = {
-
-      items:
-        items.map(
-          (item) => ({
-            category:
-              item.category,
-            city:
-              item.city,
-            qty:
-              Number(
-                item.qty || 1
-              ) || 1
-          })
-        ),
-
-      coupon_code:code,
-
-      preview_only:true
-
-    };
-
-
     const response =
       await apiPOST(
         "/api/create-checkout-mercadopago",
-        payload
+        {
+          items:
+            items.map(
+              (item) => ({
+                category:
+                  item.category,
+                city:
+                  item.city,
+                qty:
+                  Number(
+                    item.qty || 1
+                  ) || 1
+              })
+            ),
+          coupon_code:
+            code,
+          preview_only:
+            true
+        }
       );
-
 
     if (
       !response.ok ||
@@ -2933,10 +2375,8 @@ function buildDestinationHtml(destino) {
 
     }
 
-
     const preview =
       response.json;
-
 
     const matchCount =
       Number(
@@ -2945,7 +2385,6 @@ function buildDestinationHtml(destino) {
           ? preview.applied.match_count
           : 0
       );
-
 
     if (
       matchCount > 0 &&
@@ -2976,11 +2415,9 @@ function buildDestinationHtml(destino) {
 
     }
 
-
     renderCartTotalsOnly();
 
   }
-
 
   /* =====================================================
      POPUP GERAL
@@ -2996,12 +2433,10 @@ function buildDestinationHtml(destino) {
       return;
     }
 
-
     const wrap =
       document.createElement(
         "div"
       );
-
 
     wrap.innerHTML =
       '<div class="popup-bg" id="popup">' +
@@ -3012,7 +2447,7 @@ function buildDestinationHtml(destino) {
 
           '<p id="popup-text"></p>' +
 
-          '<div class="popup-rules" id="popup-rules" style="display:none;">' +
+          '<div class="popup-rules" id="popup-rules">' +
 
             '<strong>Informações Importantes</strong><br><br>' +
 
@@ -3042,11 +2477,9 @@ function buildDestinationHtml(destino) {
 
       '</div>';
 
-
     document.body.appendChild(
       wrap
     );
-
 
     document
       .getElementById(
@@ -3058,7 +2491,6 @@ function buildDestinationHtml(destino) {
       );
 
   }
-
 
   function closePopup(){
 
@@ -3073,7 +2505,6 @@ function buildDestinationHtml(destino) {
       );
     }
 
-
     const consent =
       document.getElementById(
         "consent-checkbox-wrap"
@@ -3084,7 +2515,6 @@ function buildDestinationHtml(destino) {
     }
 
   }
-
 
   function openPopup({
     title="",
@@ -3100,14 +2530,12 @@ function buildDestinationHtml(destino) {
 
     ensurePopupExists();
 
-
     document
       .getElementById(
         "popup-title"
       )
       .textContent =
         title;
-
 
     document
       .getElementById(
@@ -3116,48 +2544,40 @@ function buildDestinationHtml(destino) {
       .textContent =
         text;
 
-
-    const rules =
-      document.getElementById(
+    document
+      .getElementById(
         "popup-rules"
-      );
-
-
-    rules.style.display =
-      showRules
-        ? "block"
-        : "none";
-
+      )
+      .style.display =
+        showRules
+          ? "block"
+          : "none";
 
     const proceed =
       document.getElementById(
         "popup-proceed"
       );
 
-
     proceed.style.display =
       showProceed
         ? "inline-block"
         : "none";
 
-
     proceed.textContent =
       proceedText;
 
-
     proceed.disabled =
       false;
-
 
     const secondary =
       document.getElementById(
         "popup-secondary"
       );
 
-
     if (
       secondaryText &&
-      typeof onSecondary === "function"
+      typeof onSecondary ===
+      "function"
     ){
 
       secondary.style.display =
@@ -3170,7 +2590,6 @@ function buildDestinationHtml(destino) {
         () => {
 
           closePopup();
-
           onSecondary();
 
         };
@@ -3185,7 +2604,6 @@ function buildDestinationHtml(destino) {
 
     }
 
-
     const oldConsent =
       document.getElementById(
         "consent-checkbox-wrap"
@@ -3194,7 +2612,6 @@ function buildDestinationHtml(destino) {
     if (oldConsent){
       oldConsent.remove();
     }
-
 
     if (
       showProceed &&
@@ -3206,14 +2623,11 @@ function buildDestinationHtml(destino) {
           "div"
         );
 
-
       consentWrap.id =
         "consent-checkbox-wrap";
 
-
       consentWrap.className =
         "consent-wrap";
-
 
       consentWrap.innerHTML =
         '<input type="checkbox" id="consent-checkbox">' +
@@ -3224,22 +2638,18 @@ function buildDestinationHtml(destino) {
 
         '</label>';
 
-
       const actions =
         document.querySelector(
           "#popup-content .popup-actions"
         );
-
 
       actions.parentNode.insertBefore(
         consentWrap,
         actions
       );
 
-
       proceed.disabled =
         true;
-
 
       document
         .getElementById(
@@ -3257,27 +2667,24 @@ function buildDestinationHtml(destino) {
 
     }
 
-
     proceed.onclick =
       null;
 
-
     if (
       showProceed &&
-      typeof onProceed === "function"
+      typeof onProceed ===
+      "function"
     ){
 
       proceed.onclick =
         async () => {
 
           closePopup();
-
           await onProceed();
 
         };
 
     }
-
 
     document
       .getElementById(
@@ -3289,9 +2696,8 @@ function buildDestinationHtml(destino) {
 
   }
 
-
   /* =====================================================
-     POPUP DO CARRINHO
+     CARRINHO
   ===================================================== */
 
   function ensureCartPopupExists(){
@@ -3304,12 +2710,10 @@ function buildDestinationHtml(destino) {
       return;
     }
 
-
     const wrap =
       document.createElement(
         "div"
       );
-
 
     wrap.innerHTML =
       '<div class="popup-bg" id="cartPopup">' +
@@ -3348,7 +2752,7 @@ function buildDestinationHtml(destino) {
 
           '</div>' +
 
-          '<div id="cartDiscountLine" class="discount-line" style="display:none;">' +
+          '<div id="cartDiscountLine" class="discount-line">' +
 
             'Desconto aplicado: <strong id="cartDiscountValue">R$ 0,00</strong>' +
 
@@ -3368,21 +2772,17 @@ function buildDestinationHtml(destino) {
 
       '</div>';
 
-
     document.body.appendChild(
       wrap
     );
-
 
     const couponInput =
       document.getElementById(
         "couponInput"
       );
 
-
     couponInput.value =
       getCartCouponCode();
-
 
     couponInput.addEventListener(
       "input",
@@ -3410,7 +2810,6 @@ function buildDestinationHtml(destino) {
       }
     );
 
-
     document
       .getElementById(
         "couponApplyBtn"
@@ -3419,7 +2818,6 @@ function buildDestinationHtml(destino) {
         "click",
         applyCouponInCart
       );
-
 
     document
       .getElementById(
@@ -3430,7 +2828,6 @@ function buildDestinationHtml(destino) {
         closeCart
       );
 
-
     document
       .getElementById(
         "cartCloseBtn"
@@ -3440,7 +2837,6 @@ function buildDestinationHtml(destino) {
         closeCart
       );
 
-
     document
       .getElementById(
         "cartProceedBtn"
@@ -3449,7 +2845,6 @@ function buildDestinationHtml(destino) {
         "click",
         startCartCheckoutFlow
       );
-
 
     document
       .getElementById(
@@ -3472,36 +2867,30 @@ function buildDestinationHtml(destino) {
 
   }
 
-
   function renderCartTotalsOnly(){
 
     const items =
       getCart();
-
 
     const totalWrap =
       document.getElementById(
         "cartTotalWrap"
       );
 
-
     const totalValue =
       document.getElementById(
         "cartTotalValue"
       );
-
 
     const discountLine =
       document.getElementById(
         "cartDiscountLine"
       );
 
-
     const discountValue =
       document.getElementById(
         "cartDiscountValue"
       );
-
 
     if (!items.length){
 
@@ -3519,10 +2908,8 @@ function buildDestinationHtml(destino) {
 
     }
 
-
     const baseTotal =
       calcCartTotal(items);
-
 
     if (
       cartPricingPreview &&
@@ -3535,13 +2922,11 @@ function buildDestinationHtml(destino) {
           0
         );
 
-
       const discountTotal =
         Number(
           cartPricingPreview.totals.discount_total ||
           0
         );
-
 
       if (
         discountTotal > 0 &&
@@ -3550,7 +2935,6 @@ function buildDestinationHtml(destino) {
 
         totalWrap.style.display =
           "flex";
-
 
         totalValue.innerHTML =
           '<span class="total-strike">' +
@@ -3569,16 +2953,13 @@ function buildDestinationHtml(destino) {
 
           '</span>';
 
-
         discountLine.style.display =
           "block";
-
 
         discountValue.textContent =
           formatBRL(
             discountTotal
           );
-
 
         return;
 
@@ -3586,10 +2967,8 @@ function buildDestinationHtml(destino) {
 
     }
 
-
     totalWrap.style.display =
       "flex";
-
 
     totalValue.innerHTML =
       "<strong>" +
@@ -3598,43 +2977,35 @@ function buildDestinationHtml(destino) {
       ) +
       "</strong>";
 
-
     discountLine.style.display =
       "none";
 
   }
 
-
   function renderCart(){
 
     ensureCartPopupExists();
-
 
     const list =
       document.getElementById(
         "cartList"
       );
 
-
     const proceed =
       document.getElementById(
         "cartProceedBtn"
       );
 
-
     const items =
       getCart();
-
 
     if (!items.length){
 
       list.innerHTML =
-        '<div style="padding:14px;color:rgba(255,255,255,0.70);">Seu carrinho está vazio.</div>';
-
+        '<div style="padding:14px;color:rgba(255,255,255,.7);">Seu carrinho está vazio.</div>';
 
       proceed.disabled =
         true;
-
 
       renderCartTotalsOnly();
 
@@ -3644,14 +3015,11 @@ function buildDestinationHtml(destino) {
 
     }
 
-
     proceed.disabled =
       false;
 
-
     list.innerHTML =
       "";
-
 
     items.forEach(
       (item) => {
@@ -3661,10 +3029,8 @@ function buildDestinationHtml(destino) {
             "div"
           );
 
-
         element.className =
           "cart-item";
-
 
         element.innerHTML =
           '<div class="cart-item-left">' +
@@ -3709,7 +3075,6 @@ function buildDestinationHtml(destino) {
 
           '</div>';
 
-
         element
           .querySelector(
             "[data-remove]"
@@ -3725,7 +3090,6 @@ function buildDestinationHtml(destino) {
             }
           );
 
-
         list.appendChild(
           element
         );
@@ -3733,13 +3097,11 @@ function buildDestinationHtml(destino) {
       }
     );
 
-
     renderCartTotalsOnly();
 
     updateCartBadge();
 
   }
-
 
   function openCart(){
 
@@ -3756,7 +3118,6 @@ function buildDestinationHtml(destino) {
       );
 
   }
-
 
   function closeCart(){
 
@@ -3775,26 +3136,20 @@ function buildDestinationHtml(destino) {
 
   }
 
-
   /* =====================================================
-     LOGIN E CONTEXTO DO CHECKOUT
+     CHECKOUT
   ===================================================== */
 
   function setCheckoutContext(obj){
 
-    try{
-
-      localStorage.setItem(
-        CHECKOUT_CONTEXT_KEY,
-        JSON.stringify(
-          obj || {}
-        )
-      );
-
-    }catch(error){}
+    localStorage.setItem(
+      CHECKOUT_CONTEXT_KEY,
+      JSON.stringify(
+        obj || {}
+      )
+    );
 
   }
-
 
   function getCheckoutContext(){
 
@@ -3817,26 +3172,19 @@ function buildDestinationHtml(destino) {
 
   }
 
-
   function clearCheckoutContext(){
 
-    try{
-
-      localStorage.removeItem(
-        CHECKOUT_CONTEXT_KEY
-      );
-
-    }catch(error){}
+    localStorage.removeItem(
+      CHECKOUT_CONTEXT_KEY
+    );
 
   }
-
 
   function goLoginWithReturn(){
 
     const returnTo =
       window.location.pathname +
       "?after_login=1";
-
 
     window.location.href =
       "/login.html?return_to=" +
@@ -3846,116 +3194,92 @@ function buildDestinationHtml(destino) {
 
   }
 
-
-  /* =====================================================
-     CHECKOUT
-  ===================================================== */
-
   function goInvoiceCart(
     items,
     couponCode
   ){
 
-    try{
-
-      const payload =
-        (items || []).map(
-          (item) => ({
-            category:
-              item.category,
-            city:
-              item.city,
-            qty:
-              Number(
-                item.qty || 1
-              ) || 1
-          })
-        );
-
-
-      localStorage.setItem(
-        CART_CHECKOUT_ITEMS_KEY,
-        JSON.stringify(
-          payload
-        )
+    const payload =
+      (items || []).map(
+        (item) => ({
+          category:
+            item.category,
+          city:
+            item.city,
+          qty:
+            Number(
+              item.qty || 1
+            ) || 1
+        })
       );
 
+    localStorage.setItem(
+      CART_CHECKOUT_ITEMS_KEY,
+      JSON.stringify(
+        payload
+      )
+    );
 
-      localStorage.setItem(
-        CART_LAST_CHECKOUT_STARTED_KEY,
-        String(
-          Date.now()
-        )
-      );
+    localStorage.setItem(
+      CART_LAST_CHECKOUT_STARTED_KEY,
+      String(
+        Date.now()
+      )
+    );
 
-
-      setCartCouponCode(
-        couponCode ||
-        getCartCouponCode()
-      );
-
-    }catch(error){}
-
+    setCartCouponCode(
+      couponCode ||
+      getCartCouponCode()
+    );
 
     window.location.href =
       "/checkout-success.html?step=invoice&cart=1";
 
   }
 
-
   async function showPolicyThenProceed(
     nextFn
   ){
 
     openPopup({
-
       title:
         "Informações Importantes",
-
       text:
         "Antes de prosseguir, confirme as condições abaixo.",
-
       showProceed:
         true,
-
       proceedText:
         "Ir para pagamento",
-
       showRules:
         true,
-
       requireConsent:
         true,
-
       onProceed:
         nextFn
-
     });
 
   }
-
 
   async function startCartCheckoutFlow(){
 
     const items =
       getCart();
 
-
     if (!items.length){
 
       openPopup({
-        title:"Carrinho",
-        text:"Seu carrinho está vazio."
+        title:
+          "Carrinho",
+        text:
+          "Seu carrinho está vazio."
       });
 
       return;
 
     }
 
-
     const session =
       await getSession();
-
 
     if (
       !session ||
@@ -3974,22 +3298,10 @@ function buildDestinationHtml(destino) {
 
     }
 
-
-    /*
-      Antes do pagamento conferimos as compras
-      existentes do usuário.
-
-      A página continua mostrando todo material
-      disponível comercialmente, mas o checkout
-      impede compra duplicada.
-    */
-
     await loadOwnedPurchases();
-
 
     const currentItems =
       getCart();
-
 
     const filtered =
       currentItems.filter(
@@ -4001,7 +3313,6 @@ function buildDestinationHtml(destino) {
           )
       );
 
-
     if (
       filtered.length !==
       currentItems.length
@@ -4011,29 +3322,22 @@ function buildDestinationHtml(destino) {
         filtered
       );
 
-
       cartPricingPreview =
         null;
 
-
       renderCart();
-
 
       if (!filtered.length){
 
         closeCart();
 
-
         openPopup({
-
-          title:"Carrinho",
-
+          title:
+            "Carrinho",
           text:
             "Os materiais selecionados já estão disponíveis na sua conta.",
-
           secondaryText:
             "Ir para Minha conta",
-
           onSecondary:
             () => {
 
@@ -4041,42 +3345,31 @@ function buildDestinationHtml(destino) {
                 "/account.html";
 
             }
-
         });
-
 
         return;
 
       }
 
-
       openPopup({
-
-        title:"Carrinho",
-
+        title:
+          "Carrinho",
         text:
           "Um ou mais materiais foram removidos porque você já os possui. Os demais continuam no carrinho.",
-
         secondaryText:
           "Voltar ao carrinho",
-
         onSecondary:
           openCart
-
       });
-
 
       return;
 
     }
 
-
     closeCart();
-
 
     const couponNow =
       getCartCouponCode();
-
 
     await showPolicyThenProceed(
       async () => {
@@ -4084,18 +3377,18 @@ function buildDestinationHtml(destino) {
         const finalItems =
           getCart();
 
-
         if (!finalItems.length){
 
           openPopup({
-            title:"Carrinho",
-            text:"Seu carrinho está vazio."
+            title:
+              "Carrinho",
+            text:
+              "Seu carrinho está vazio."
           });
 
           return;
 
         }
-
 
         trackEvent(
           "begin_checkout",
@@ -4121,7 +3414,6 @@ function buildDestinationHtml(destino) {
           }
         );
 
-
         goInvoiceCart(
           finalItems,
           couponNow
@@ -4132,14 +3424,12 @@ function buildDestinationHtml(destino) {
 
   }
 
-
   async function resumeAfterLoginIfNeeded(){
 
     const params =
       new URLSearchParams(
         window.location.search
       );
-
 
     if (
       params.get(
@@ -4149,7 +3439,6 @@ function buildDestinationHtml(destino) {
       return;
     }
 
-
     try{
 
       const url =
@@ -4157,11 +3446,9 @@ function buildDestinationHtml(destino) {
           window.location.href
         );
 
-
       url.searchParams.delete(
         "after_login"
       );
-
 
       window.history.replaceState(
         {},
@@ -4171,10 +3458,8 @@ function buildDestinationHtml(destino) {
 
     }catch(error){}
 
-
     const context =
       getCheckoutContext();
-
 
     if (
       !context ||
@@ -4183,10 +3468,8 @@ function buildDestinationHtml(destino) {
       return;
     }
 
-
     const session =
       await getSession();
-
 
     if (
       !session ||
@@ -4195,17 +3478,14 @@ function buildDestinationHtml(destino) {
       return;
     }
 
-
     clearCheckoutContext();
-
 
     await startCartCheckoutFlow();
 
   }
 
-
   /* =====================================================
-     MATERIAIS DO DESTINO
+     MATERIAIS
   ===================================================== */
 
   function getCategoryDescription(
@@ -4223,7 +3503,6 @@ function buildDestinationHtml(destino) {
 
   }
 
-
   function getCategoryIcon(
     category
   ){
@@ -4239,7 +3518,6 @@ function buildDestinationHtml(destino) {
 
   }
 
-
   async function loadDestinationMaterials(){
 
     const grid =
@@ -4247,109 +3525,85 @@ function buildDestinationHtml(destino) {
         "materialsGrid"
       );
 
-
     if (!grid){
       return;
     }
 
+    const sb =
+      ensureSupabase();
 
-    try{
-
-      const sb =
-        ensureSupabase();
-
-
-      if (!sb){
-
-        throw new Error(
-          "Supabase não disponível."
-        );
-
-      }
-
-
-      const {
-        data,
-        error
-      } =
-        await sb
-          .from(
-            "curadoria_materials"
-          )
-          .select(
-            "category, city_label"
-          )
-          .eq(
-            "is_active",
-            true
-          )
-          .order(
-            "category",
-            {
-              ascending:true
-            }
-          );
-
-
-      if (error){
-        throw error;
-      }
-
-
-      const destinationKey =
-        normalizeCityLabel(
-          DESTINATION.cityLabel
-        );
-
-
-      const materials =
-        (
-          Array.isArray(data)
-            ? data
-            : []
-        )
-        .filter(
-          (row) =>
-            normalizeCityLabel(
-              row.city_label || ""
-            ) === destinationKey
-        );
-
-
-      if (!materials.length){
-
-        grid.innerHTML =
-          '<div class="empty-state">' +
-          'Nenhum material está disponível para este destino no momento.' +
-          '</div>';
-
-
-        return;
-
-      }
-
-
-      renderMaterials(
-        materials
-      );
-
-    }catch(error){
-
-      console.error(
-        "Erro ao carregar materiais:",
-        error
-      );
-
+    if (!sb){
 
       grid.innerHTML =
-        '<div class="error-state">' +
-        'Não foi possível carregar os materiais disponíveis neste momento.' +
-        '</div>';
+        '<div class="error-state">Não foi possível carregar os materiais disponíveis neste momento.</div>';
+
+      return;
 
     }
 
-  }
+    const {
+      data,
+      error
+    } =
+      await sb
+        .from(
+          "curadoria_materials"
+        )
+        .select(
+          "category, city_label"
+        )
+        .eq(
+          "is_active",
+          true
+        )
+        .order(
+          "category",
+          {
+            ascending:true
+          }
+        );
 
+    if (error){
+
+      grid.innerHTML =
+        '<div class="error-state">Não foi possível carregar os materiais disponíveis neste momento.</div>';
+
+      return;
+
+    }
+
+    const destinationKey =
+      normalizeCityLabel(
+        DESTINATION.cityLabel
+      );
+
+    const materials =
+      (
+        Array.isArray(data)
+          ? data
+          : []
+      )
+      .filter(
+        (row) =>
+          normalizeCityLabel(
+            row.city_label || ""
+          ) === destinationKey
+      );
+
+    if (!materials.length){
+
+      grid.innerHTML =
+        '<div class="empty-state">Nenhum material está disponível para este destino no momento.</div>';
+
+      return;
+
+    }
+
+    renderMaterials(
+      materials
+    );
+
+  }
 
   function renderMaterials(
     materials
@@ -4360,15 +3614,12 @@ function buildDestinationHtml(destino) {
         "materialsGrid"
       );
 
-
     if (!grid){
       return;
     }
 
-
     grid.innerHTML =
       "";
-
 
     materials.forEach(
       (material) => {
@@ -4378,12 +3629,10 @@ function buildDestinationHtml(destino) {
             material.category || ""
           ).trim();
 
-
         const cityLabel =
           String(
             material.city_label || ""
           ).trim();
-
 
         if (
           !category ||
@@ -4392,68 +3641,55 @@ function buildDestinationHtml(destino) {
           return;
         }
 
-
         const article =
           document.createElement(
             "article"
           );
 
-
         article.className =
           "material-card";
-
 
         const icon =
           document.createElement(
             "div"
           );
 
-
         icon.className =
           "material-icon";
-
 
         icon.textContent =
           getCategoryIcon(
             category
           );
 
-
         const title =
           document.createElement(
             "h3"
           );
 
-
         title.textContent =
           category;
-
 
         const description =
           document.createElement(
             "p"
           );
 
-
         description.className =
           "material-description";
-
 
         description.textContent =
           getCategoryDescription(
             category
           );
 
-
         const price =
           document.createElement(
             "div"
           );
 
-
         price.className =
           "material-price";
-
 
         price.textContent =
           formatBRL(
@@ -4462,34 +3698,19 @@ function buildDestinationHtml(destino) {
             )
           );
 
-
         const button =
           document.createElement(
             "button"
           );
 
-
         button.type =
           "button";
-
 
         button.className =
           "material-button";
 
-
-        /*
-          REGRA COMERCIAL:
-
-          Se o material está ativo e aparece na página,
-          o card é comercial e oferece Comprar agora.
-
-          Compra já realizada é conferida somente durante
-          o processo do carrinho/checkout.
-        */
-
         button.textContent =
           "Comprar agora";
-
 
         button.addEventListener(
           "click",
@@ -4503,31 +3724,25 @@ function buildDestinationHtml(destino) {
           }
         );
 
-
         article.appendChild(
           icon
         );
-
 
         article.appendChild(
           title
         );
 
-
         article.appendChild(
           description
         );
-
 
         article.appendChild(
           price
         );
 
-
         article.appendChild(
           button
         );
-
 
         grid.appendChild(
           article
@@ -4537,7 +3752,6 @@ function buildDestinationHtml(destino) {
     );
 
   }
-
 
   /* =====================================================
      INICIALIZAÇÃO
@@ -4549,14 +3763,14 @@ function buildDestinationHtml(destino) {
 
       ensureSupabase();
 
-      updateCartBadge();
+      startHeroCarousel();
 
+      updateCartBadge();
 
       const logout =
         document.getElementById(
           "navLogout"
         );
-
 
       if (logout){
 
@@ -4566,7 +3780,6 @@ function buildDestinationHtml(destino) {
         );
 
       }
-
 
       await refreshNavAuth();
 
@@ -4582,7 +3795,6 @@ function buildDestinationHtml(destino) {
   );
 
 </script>
-
 
 <script type="application/ld+json">
 ${JSON.stringify(
@@ -4626,31 +3838,25 @@ ${JSON.stringify(
 )}
 </script>
 
-
 </body>
-
 </html>`;
 }
 
-
 /* =========================================================
-   LEITURA DO JSON
+   JSON
 ========================================================= */
 
-function loadDestinationData(){
+function loadDestinationData() {
 
   if (
     !fs.existsSync(
       DESTINOS_DATA_PATH
     )
-  ){
-
+  ) {
     throw new Error(
       "Arquivo data/destinos.json não encontrado."
     );
-
   }
-
 
   const raw =
     fs.readFileSync(
@@ -4658,44 +3864,36 @@ function loadDestinationData(){
       "utf8"
     );
 
-
   const parsed =
     JSON.parse(raw);
-
 
   if (
     !parsed ||
     !Array.isArray(
       parsed.destinos
     )
-  ){
-
+  ) {
     throw new Error(
       'data/destinos.json precisa possuir a propriedade "destinos" como array.'
     );
-
   }
 
-
   return parsed.destinos;
-
 }
 
-
 /* =========================================================
-   GERAÇÃO INDIVIDUAL
+   GERAÇÃO
 ========================================================= */
 
 function generateDestination(
   destino,
   index
-){
+) {
 
   validateDestination(
     destino,
     index
   );
-
 
   const outputDirectory =
     path.join(
@@ -4708,11 +3906,9 @@ function generateDestination(
       ).trim()
     );
 
-
   ensureDirectory(
     outputDirectory
   );
-
 
   const outputFile =
     path.join(
@@ -4720,19 +3916,16 @@ function generateDestination(
       "index.html"
     );
 
-
   const html =
     buildDestinationHtml(
       destino
     );
-
 
   fs.writeFileSync(
     outputFile,
     html,
     "utf8"
   );
-
 
   console.log(
     `✓ ${destino.cidade}, ${destino.pais} -> ${path.relative(
@@ -4743,12 +3936,11 @@ function generateDestination(
 
 }
 
-
 /* =========================================================
    EXECUÇÃO
 ========================================================= */
 
-function main(){
+function main() {
 
   console.log("");
 
@@ -4760,12 +3952,10 @@ function main(){
     "---------------------------------------------"
   );
 
-
   const destinos =
     loadDestinationData();
 
-
-  if (!destinos.length){
+  if (!destinos.length) {
 
     console.log(
       "Nenhum destino cadastrado."
@@ -4774,7 +3964,6 @@ function main(){
     return;
 
   }
-
 
   destinos.forEach(
     (
@@ -4790,27 +3979,23 @@ function main(){
     }
   );
 
-
   console.log(
     "---------------------------------------------"
   );
-
 
   console.log(
     `${destinos.length} destino(s) gerado(s) com sucesso.`
   );
 
-
   console.log("");
 
 }
 
-
-try{
+try {
 
   main();
 
-}catch(error){
+} catch(error) {
 
   console.error("");
 
