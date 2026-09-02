@@ -10,16 +10,27 @@ const path = require("path");
 
    Saída:
    /destinos/{pais}/{cidade}/index.html
+
+   O mesmo motor serve para todos os destinos.
 ========================================================= */
 
 const ROOT_DIR = path.resolve(__dirname, "..");
-const DESTINOS_DATA_PATH = path.join(ROOT_DIR, "data", "destinos.json");
-const DESTINOS_OUTPUT_DIR = path.join(ROOT_DIR, "destinos");
 
-const SITE_URL = "https://www.curadoriaelitetravel.com";
-const SUPABASE_URL = "https://lnyoqoezezisakghtmim.supabase.co";
+const DESTINOS_DATA_PATH =
+  path.join(ROOT_DIR, "data", "destinos.json");
+
+const DESTINOS_OUTPUT_DIR =
+  path.join(ROOT_DIR, "destinos");
+
+const SITE_URL =
+  "https://www.curadoriaelitetravel.com";
+
+const SUPABASE_URL =
+  "https://lnyoqoezezisakghtmim.supabase.co";
+
 const SUPABASE_ANON_KEY =
   "sb_publishable_7NB9Y784asZcGohMBz1ePA_ZDYhwEqf";
+
 
 /* =========================================================
    UTILITÁRIOS DO GERADOR
@@ -84,18 +95,23 @@ function validateDestination(destino, index) {
     }
   });
 
-  if (!Array.isArray(destino.imagens) || destino.imagens.length < 3) {
+  if (
+    !Array.isArray(destino.imagens) ||
+    destino.imagens.length < 3
+  ) {
     throw new Error(
       `Destino ${index + 1} (${destino.cidade}): são necessárias pelo menos 3 imagens.`
     );
   }
 
   destino.imagens.forEach((imagem, imageIndex) => {
-    if (!imagem || !imagem.tipo || !imagem.arquivo) {
+    if (
+      !imagem ||
+      !imagem.tipo ||
+      !imagem.arquivo
+    ) {
       throw new Error(
-        `Destino ${index + 1} (${destino.cidade}): imagem ${
-          imageIndex + 1
-        } está incompleta.`
+        `Destino ${index + 1} (${destino.cidade}): imagem ${imageIndex + 1} está incompleta.`
       );
     }
   });
@@ -103,15 +119,24 @@ function validateDestination(destino, index) {
 
 function getDestinationImages(destino) {
   const bandeira =
-    destino.imagens.find((imagem) => imagem.tipo === "bandeira") ||
-    destino.imagens[0];
+    destino.imagens.find(
+      (imagem) =>
+        imagem.tipo === "bandeira"
+    ) || destino.imagens[0];
 
-  const pontosTuristicos = destino.imagens.filter(
-    (imagem) => imagem.tipo === "ponto-turistico"
-  );
+  const pontosTuristicos =
+    destino.imagens.filter(
+      (imagem) =>
+        imagem.tipo === "ponto-turistico"
+    );
 
-  const ponto1 = pontosTuristicos[0] || destino.imagens[1];
-  const ponto2 = pontosTuristicos[1] || destino.imagens[2];
+  const ponto1 =
+    pontosTuristicos[0] ||
+    destino.imagens[1];
+
+  const ponto2 =
+    pontosTuristicos[1] ||
+    destino.imagens[2];
 
   return {
     bandeira: bandeira.arquivo,
@@ -130,61 +155,101 @@ function getMetaDescription(destino) {
     : base.slice(0, 157).trim() + "...";
 }
 
+
 /* =========================================================
-   TEMPLATE
+   TEMPLATE DA PÁGINA
 ========================================================= */
 
 function buildDestinationHtml(destino) {
-  const cidade = escapeHtml(destino.cidade);
-  const pais = escapeHtml(destino.pais);
-  const texto = escapeHtml(destino.texto);
+  const cidade =
+    escapeHtml(destino.cidade);
 
-  const destinationUrl = normalizeUrlPath(destino.url);
-  const canonicalUrl = SITE_URL + destinationUrl;
+  const pais =
+    escapeHtml(destino.pais);
 
-  const metaDescription = escapeHtml(
-    getMetaDescription(destino)
-  );
+  const texto =
+    escapeHtml(destino.texto);
+
+  const destinationUrl =
+    normalizeUrlPath(destino.url);
+
+  const canonicalUrl =
+    SITE_URL + destinationUrl;
+
+  const metaDescription =
+    escapeHtml(
+      getMetaDescription(destino)
+    );
 
   const pageTitle =
     `${cidade}, ${pais} | Materiais e ferramentas para viajar melhor | Curadoria Elite Travel`;
 
-  const images = getDestinationImages(destino);
+  const images =
+    getDestinationImages(destino);
 
-  const bandeira = escapeHtml(images.bandeira);
-  const ponto1 = escapeHtml(images.ponto1);
-  const ponto2 = escapeHtml(images.ponto2);
+  const bandeira =
+    escapeHtml(images.bandeira);
 
-  const destinationData = escapeJsonForScript({
-    cidade: destino.cidade,
-    pais: destino.pais,
-    cityLabel: destino.cityLabel,
-    url: destinationUrl
-  });
+  const ponto1 =
+    escapeHtml(images.ponto1);
+
+  const ponto2 =
+    escapeHtml(images.ponto2);
+
+  const destinationData =
+    escapeJsonForScript({
+      cidade: destino.cidade,
+      pais: destino.pais,
+      cityLabel: destino.cityLabel,
+      url: destinationUrl
+    });
+
 
   return `<!DOCTYPE html>
 <html lang="pt-BR">
 
 <head>
 
-  <script async src="https://www.googletagmanager.com/gtag/js?id=G-S07L3R13WJ"></script>
+  <!-- Google Analytics -->
+  <script
+    async
+    src="https://www.googletagmanager.com/gtag/js?id=G-S07L3R13WJ"
+  ></script>
 
   <script>
-    window.dataLayer = window.dataLayer || [];
+    window.dataLayer =
+      window.dataLayer || [];
 
     function gtag(){
       dataLayer.push(arguments);
     }
 
-    function trackEvent(name, params = {}) {
-      if (typeof gtag === "function") {
-        gtag("event", name, params);
+    function trackEvent(
+      name,
+      params = {}
+    ){
+      if (
+        typeof gtag === "function"
+      ){
+        gtag(
+          "event",
+          name,
+          params
+        );
       }
     }
 
-    gtag("js", new Date());
-    gtag("config", "G-S07L3R13WJ");
+    gtag(
+      "js",
+      new Date()
+    );
+
+    gtag(
+      "config",
+      "G-S07L3R13WJ"
+    );
   </script>
+
 
   <meta charset="UTF-8">
 
@@ -205,45 +270,149 @@ function buildDestinationHtml(destino) {
     href="${canonicalUrl}"
   >
 
-  <meta property="og:type" content="website">
-  <meta property="og:title" content="${pageTitle}">
-  <meta property="og:description" content="${metaDescription}">
-  <meta property="og:url" content="${canonicalUrl}">
-  <meta property="og:site_name" content="Curadoria Elite Travel">
+  <meta
+    property="og:type"
+    content="website"
+  >
+
+  <meta
+    property="og:title"
+    content="${pageTitle}"
+  >
+
+  <meta
+    property="og:description"
+    content="${metaDescription}"
+  >
+
+  <meta
+    property="og:url"
+    content="${canonicalUrl}"
+  >
+
+  <meta
+    property="og:site_name"
+    content="Curadoria Elite Travel"
+  >
+
 
   <style>
 
     :root{
       --gold:#d4af37;
       --background:#070707;
-      --panel:#0d0d0d;
+      --panel:#11100e;
       --text:#ffffff;
-      --muted:rgba(255,255,255,0.72);
+      --muted:rgba(255,255,255,.76);
     }
+
 
     *{
       box-sizing:border-box;
     }
 
+
     html{
       scroll-behavior:smooth;
+      background:#070707;
     }
+
 
     body{
       margin:0;
-      background:var(--background);
       color:var(--text);
       font-family:"Segoe UI",sans-serif;
       overflow-x:hidden;
+      background:#070707;
+      position:relative;
     }
+
 
     a{
       color:inherit;
     }
 
+
     button{
       font:inherit;
     }
+
+
+    /* =====================================================
+       FUNDO FOTOGRÁFICO CONTÍNUO
+    ===================================================== */
+
+    .page-photo-carousel{
+      position:fixed;
+      inset:0;
+      z-index:0;
+      overflow:hidden;
+      pointer-events:none;
+      background:#070707;
+    }
+
+
+    .page-photo-slide{
+      position:absolute;
+      inset:-3%;
+      opacity:0;
+      background-size:cover;
+      background-repeat:no-repeat;
+      background-position:center;
+      transform:scale(1.055);
+      transition:
+        opacity 1.9s ease-in-out,
+        transform 9s ease-out;
+      will-change:
+        opacity,
+        transform;
+    }
+
+
+    .page-photo-slide.active{
+      opacity:1;
+      transform:scale(1);
+    }
+
+
+    .page-photo-slide:nth-child(1){
+      background-image:url("${ponto1}");
+    }
+
+
+    .page-photo-slide:nth-child(2){
+      background-image:url("${ponto2}");
+    }
+
+
+    .page-photo-slide:nth-child(3){
+      background-image:url("${bandeira}");
+    }
+
+
+    .page-photo-global-overlay{
+      position:fixed;
+      inset:0;
+      z-index:1;
+      pointer-events:none;
+      background:
+        linear-gradient(
+          180deg,
+          rgba(0,0,0,.18) 0%,
+          rgba(0,0,0,.22) 38%,
+          rgba(0,0,0,.34) 70%,
+          rgba(0,0,0,.44) 100%
+        );
+    }
+
+
+    header,
+    main,
+    footer{
+      position:relative;
+      z-index:10;
+    }
+
 
     /* =====================================================
        CABEÇALHO
@@ -260,11 +429,18 @@ function buildDestinationHtml(destino) {
       align-items:center;
       justify-content:space-between;
       gap:20px;
-      background:rgba(0,0,0,0.72);
-      backdrop-filter:blur(12px);
-      border-bottom:1px solid rgba(255,255,255,0.08);
-      z-index:2000;
+      background:
+        rgba(5,5,5,.74);
+      backdrop-filter:
+        blur(13px);
+      -webkit-backdrop-filter:
+        blur(13px);
+      border-bottom:
+        1px solid
+        rgba(255,255,255,.10);
+      z-index:3000;
     }
+
 
     .brand{
       display:flex;
@@ -274,11 +450,13 @@ function buildDestinationHtml(destino) {
       min-width:260px;
     }
 
+
     .brand img{
       width:34px;
       height:34px;
       object-fit:contain;
     }
+
 
     .brand-name{
       color:var(--gold);
@@ -289,17 +467,21 @@ function buildDestinationHtml(destino) {
       line-height:1.1;
     }
 
+
     .brand-tagline{
       margin-top:2px;
-      color:rgba(255,255,255,.72);
+      color:
+        rgba(255,255,255,.74);
       font-size:11px;
     }
+
 
     nav{
       position:relative;
       display:flex;
       align-items:center;
     }
+
 
     .nav-menu{
       display:flex;
@@ -309,6 +491,7 @@ function buildDestinationHtml(destino) {
       flex-wrap:wrap;
     }
 
+
     .nav-menu a{
       color:var(--gold);
       text-decoration:none;
@@ -317,20 +500,26 @@ function buildDestinationHtml(destino) {
       white-space:nowrap;
     }
 
+
     .nav-sep{
       width:1px;
       height:16px;
-      background:rgba(255,255,255,.12);
+      background:
+        rgba(255,255,255,.14);
     }
+
 
     .nav-toggle{
       display:none;
       background:transparent;
-      border:1px solid rgba(212,175,55,.35);
+      border:
+        1px solid
+        rgba(212,175,55,.40);
       border-radius:9px;
       padding:8px 10px;
       cursor:pointer;
     }
+
 
     .nav-toggle span{
       width:18px;
@@ -340,8 +529,9 @@ function buildDestinationHtml(destino) {
       margin:4px 0;
     }
 
+
     /* =====================================================
-       HERO — CARROSSEL FOTOGRÁFICO
+       HERO
     ===================================================== */
 
     .destination-hero{
@@ -352,83 +542,32 @@ function buildDestinationHtml(destino) {
       align-items:center;
       justify-content:center;
       overflow:hidden;
-      background:#080808;
-    }
-
-    .hero-carousel{
-      position:absolute;
-      inset:0;
-      overflow:hidden;
-    }
-
-    .hero-slide{
-      position:absolute;
-      inset:-2%;
-      opacity:0;
-      background-position:center;
-      background-repeat:no-repeat;
-      background-size:cover;
-      transform:scale(1.045);
-      transition:
-        opacity 1.8s ease-in-out,
-        transform 8s ease-out;
-      will-change:opacity,transform;
-    }
-
-    .hero-slide.active{
-      opacity:1;
-      transform:scale(1);
-    }
-
-    .hero-slide:nth-child(1){
-      background-image:url("${ponto1}");
-    }
-
-    .hero-slide:nth-child(2){
-      background-image:url("${ponto2}");
-    }
-
-    .hero-slide:nth-child(3){
-      background-image:url("${bandeira}");
-    }
-
-    .hero-overlay{
-      position:absolute;
-      inset:0;
       background:
         linear-gradient(
           180deg,
-          rgba(0,0,0,.30) 0%,
-          rgba(0,0,0,.34) 37%,
-          rgba(0,0,0,.52) 73%,
-          rgba(0,0,0,.78) 100%
-        ),
+          rgba(0,0,0,.16) 0%,
+          rgba(0,0,0,.18) 45%,
+          rgba(0,0,0,.46) 78%,
+          rgba(0,0,0,.70) 100%
+        );
+    }
+
+
+    .destination-hero::after{
+      content:"";
+      position:absolute;
+      inset:0;
+      pointer-events:none;
+      background:
         linear-gradient(
           90deg,
-          rgba(0,0,0,.26),
-          rgba(0,0,0,.07) 38%,
-          rgba(0,0,0,.07) 62%,
-          rgba(0,0,0,.26)
+          rgba(0,0,0,.22),
+          rgba(0,0,0,.04) 32%,
+          rgba(0,0,0,.04) 68%,
+          rgba(0,0,0,.22)
         );
-      z-index:2;
-      pointer-events:none;
     }
 
-    .hero-bottom-fade{
-      position:absolute;
-      left:0;
-      right:0;
-      bottom:0;
-      height:220px;
-      background:
-        linear-gradient(
-          180deg,
-          transparent,
-          rgba(7,7,7,.96)
-        );
-      z-index:3;
-      pointer-events:none;
-    }
 
     .hero-content{
       position:relative;
@@ -436,8 +575,10 @@ function buildDestinationHtml(destino) {
       width:min(920px,90%);
       margin:0 auto;
       text-align:center;
-      transform:translateY(28px);
+      transform:
+        translateY(30px);
     }
+
 
     .hero-country{
       color:var(--gold);
@@ -446,20 +587,32 @@ function buildDestinationHtml(destino) {
       text-transform:uppercase;
       font-weight:700;
       text-shadow:
-        0 3px 20px rgba(0,0,0,.85);
+        0 3px 20px
+        rgba(0,0,0,.90);
     }
+
 
     .hero-content h1{
       margin:10px 0 0;
       color:#fff;
-      font-family:"Cinzel","Georgia",serif;
-      font-size:clamp(72px,10vw,142px);
+      font-family:
+        "Cinzel",
+        "Georgia",
+        serif;
+      font-size:
+        clamp(
+          72px,
+          10vw,
+          142px
+        );
       line-height:.92;
       letter-spacing:2px;
       text-transform:uppercase;
       text-shadow:
-        0 8px 42px rgba(0,0,0,.80);
+        0 8px 42px
+        rgba(0,0,0,.86);
     }
+
 
     .hero-divider{
       width:120px;
@@ -474,31 +627,46 @@ function buildDestinationHtml(destino) {
         );
     }
 
+
     .hero-description{
       width:min(790px,100%);
       margin:0 auto;
-      color:rgba(255,255,255,.96);
+      color:
+        rgba(255,255,255,.98);
       font-size:16px;
       line-height:1.8;
       text-shadow:
-        0 3px 15px rgba(0,0,0,.95);
+        0 3px 16px
+        rgba(0,0,0,.95);
     }
 
+
     /* =====================================================
-       SEÇÕES
+       ESTRUTURA DAS SEÇÕES
     ===================================================== */
 
     .content-section{
-      padding:82px 40px;
+      position:relative;
+      padding:
+        90px 40px;
+      overflow:hidden;
     }
+
 
     .content-shell{
-      width:min(1120px,100%);
+      width:min(
+        1120px,
+        100%
+      );
       margin:0 auto;
+      position:relative;
+      z-index:3;
     }
 
+
     .section-eyebrow{
-      color:rgba(255,255,255,.55);
+      color:
+        rgba(255,255,255,.68);
       text-align:center;
       text-transform:uppercase;
       letter-spacing:2.3px;
@@ -506,41 +674,96 @@ function buildDestinationHtml(destino) {
       margin-bottom:10px;
     }
 
+
     .section-title{
       color:var(--gold);
       text-align:center;
-      font-family:"Cinzel","Georgia",serif;
-      font-size:clamp(30px,4vw,44px);
+      font-family:
+        "Cinzel",
+        "Georgia",
+        serif;
+      font-size:
+        clamp(
+          30px,
+          4vw,
+          44px
+        );
       margin:0 0 14px;
       font-weight:600;
+      text-shadow:
+        0 3px 18px
+        rgba(0,0,0,.75);
     }
 
+
     .section-subtitle{
-      width:min(780px,100%);
-      margin:0 auto 38px;
-      color:rgba(255,255,255,.74);
+      width:min(
+        780px,
+        100%
+      );
+      margin:
+        0 auto 42px;
+      color:
+        rgba(255,255,255,.88);
       text-align:center;
       font-size:15px;
       line-height:1.8;
+      text-shadow:
+        0 2px 12px
+        rgba(0,0,0,.85);
     }
+
+
+    /* =====================================================
+       MATERIAIS — FOTO AO FUNDO
+    ===================================================== */
 
     .materials-section{
       background:
-        radial-gradient(
-          circle at top center,
-          rgba(212,175,55,.055),
-          transparent 32%
-        ),
-        #070707;
-      border-top:1px solid rgba(255,255,255,.05);
-      border-bottom:1px solid rgba(255,255,255,.05);
+        linear-gradient(
+          180deg,
+          rgba(7,7,7,.78),
+          rgba(9,9,9,.84)
+        );
+      border-top:
+        1px solid
+        rgba(255,255,255,.08);
+      border-bottom:
+        1px solid
+        rgba(255,255,255,.08);
+      backdrop-filter:
+        blur(3px);
+      -webkit-backdrop-filter:
+        blur(3px);
     }
+
+
+    .materials-section::before{
+      content:"";
+      position:absolute;
+      inset:0;
+      z-index:0;
+      background:
+        radial-gradient(
+          circle at
+          50% 10%,
+          rgba(212,175,55,.08),
+          transparent 42%
+        );
+      pointer-events:none;
+    }
+
 
     .materials-grid{
       display:grid;
-      grid-template-columns:repeat(3,minmax(0,1fr));
+      grid-template-columns:
+        repeat(
+          3,
+          minmax(0,1fr)
+        );
       gap:18px;
     }
+
 
     .material-card{
       min-height:260px;
@@ -551,33 +774,57 @@ function buildDestinationHtml(destino) {
       background:
         linear-gradient(
           180deg,
-          rgba(15,15,15,.98),
-          rgba(7,7,7,.97)
+          rgba(19,19,18,.90),
+          rgba(7,7,7,.91)
         );
-      border:1px solid rgba(212,175,55,.17);
-      box-shadow:0 16px 40px rgba(0,0,0,.24);
+      border:
+        1px solid
+        rgba(212,175,55,.22);
+      box-shadow:
+        0 16px 45px
+        rgba(0,0,0,.35);
+      backdrop-filter:
+        blur(10px);
+      -webkit-backdrop-filter:
+        blur(10px);
       transition:
         transform .25s ease,
-        border-color .25s ease;
+        border-color .25s ease,
+        background .25s ease;
     }
 
+
     .material-card:hover{
-      transform:translateY(-4px);
-      border-color:rgba(212,175,55,.42);
+      transform:
+        translateY(-4px);
+      border-color:
+        rgba(212,175,55,.52);
+      background:
+        linear-gradient(
+          180deg,
+          rgba(24,23,20,.93),
+          rgba(8,8,8,.94)
+        );
     }
+
 
     .material-icon{
       width:46px;
       height:46px;
       margin-bottom:20px;
       border-radius:50%;
-      border:1px solid rgba(212,175,55,.30);
+      border:
+        1px solid
+        rgba(212,175,55,.34);
       display:flex;
       align-items:center;
       justify-content:center;
       color:var(--gold);
       font-size:19px;
+      background:
+        rgba(0,0,0,.22);
     }
+
 
     .material-card h3{
       color:var(--gold);
@@ -586,13 +833,16 @@ function buildDestinationHtml(destino) {
       line-height:1.35;
     }
 
+
     .material-description{
       margin:0 0 18px;
       flex:1;
-      color:rgba(255,255,255,.72);
+      color:
+        rgba(255,255,255,.83);
       font-size:13.5px;
       line-height:1.65;
     }
+
 
     .material-price{
       color:#fff;
@@ -600,6 +850,7 @@ function buildDestinationHtml(destino) {
       font-weight:700;
       margin-bottom:14px;
     }
+
 
     .material-button{
       width:100%;
@@ -610,7 +861,19 @@ function buildDestinationHtml(destino) {
       color:#000;
       font-weight:800;
       cursor:pointer;
+      transition:
+        transform .20s ease,
+        filter .20s ease;
     }
+
+
+    .material-button:hover{
+      transform:
+        translateY(-1px);
+      filter:
+        brightness(1.04);
+    }
+
 
     .loading-state,
     .empty-state,
@@ -618,37 +881,92 @@ function buildDestinationHtml(destino) {
       grid-column:1/-1;
       padding:30px 20px;
       text-align:center;
-      color:rgba(255,255,255,.68);
-      border:1px dashed rgba(255,255,255,.12);
+      color:
+        rgba(255,255,255,.82);
+      border:
+        1px dashed
+        rgba(255,255,255,.18);
       border-radius:16px;
-      background:rgba(10,10,10,.68);
+      background:
+        rgba(10,10,10,.72);
+      backdrop-filter:
+        blur(8px);
     }
 
+
+    /* =====================================================
+       PREPARANDO SUA VIAGEM
+    ===================================================== */
+
     .tools-section{
-      background:#090909;
+      background:
+        linear-gradient(
+          180deg,
+          rgba(18,18,17,.72),
+          rgba(10,10,10,.84)
+        );
+      backdrop-filter:
+        blur(5px);
+      -webkit-backdrop-filter:
+        blur(5px);
     }
+
+
+    .tools-section::before{
+      content:"";
+      position:absolute;
+      inset:0;
+      z-index:0;
+      pointer-events:none;
+      background:
+        linear-gradient(
+          90deg,
+          rgba(212,175,55,.025),
+          transparent 25%,
+          transparent 75%,
+          rgba(212,175,55,.025)
+        );
+    }
+
 
     .tools-grid{
       display:grid;
-      grid-template-columns:repeat(2,minmax(0,1fr));
+      grid-template-columns:
+        repeat(
+          2,
+          minmax(0,1fr)
+        );
       gap:20px;
-      width:min(920px,100%);
+      width:min(
+        920px,
+        100%
+      );
       margin:0 auto;
     }
 
+
     .tool-card{
-      padding:30px 26px;
+      padding:32px 28px;
       border-radius:20px;
       text-align:center;
       background:
         linear-gradient(
           180deg,
-          rgba(14,14,14,.96),
-          rgba(7,7,7,.94)
+          rgba(20,20,19,.88),
+          rgba(8,8,8,.90)
         );
-      border:1px solid rgba(212,175,55,.18);
-      box-shadow:0 18px 44px rgba(0,0,0,.22);
+      border:
+        1px solid
+        rgba(212,175,55,.24);
+      box-shadow:
+        0 18px 46px
+        rgba(0,0,0,.35);
+      backdrop-filter:
+        blur(10px);
+      -webkit-backdrop-filter:
+        blur(10px);
     }
+
 
     .tool-card h3{
       color:var(--gold);
@@ -656,12 +974,15 @@ function buildDestinationHtml(destino) {
       font-size:21px;
     }
 
+
     .tool-card p{
-      color:rgba(255,255,255,.72);
+      color:
+        rgba(255,255,255,.82);
       line-height:1.7;
       font-size:14px;
       margin:0 0 20px;
     }
+
 
     .tool-card a{
       display:inline-flex;
@@ -676,8 +997,9 @@ function buildDestinationHtml(destino) {
       font-weight:800;
     }
 
+
     /* =====================================================
-       POPUPS
+       POPUPS E CARRINHO
     ===================================================== */
 
     .popup-bg{
@@ -687,38 +1009,57 @@ function buildDestinationHtml(destino) {
       align-items:center;
       justify-content:center;
       padding:18px;
-      background:rgba(0,0,0,.85);
-      z-index:4000;
+      background:
+        rgba(0,0,0,.86);
+      z-index:5000;
     }
+
 
     .popup-bg.active{
       display:flex;
     }
 
+
     .popup-content{
-      width:min(720px,100%);
-      max-height:calc(100vh - 36px);
+      width:min(
+        720px,
+        100%
+      );
+      max-height:
+        calc(
+          100vh - 36px
+        );
       padding:24px;
       display:flex;
       flex-direction:column;
       overflow:hidden;
       text-align:center;
-      background:#111;
-      border:1px solid #222;
+      background:
+        rgba(17,17,17,.98);
+      border:
+        1px solid
+        #272727;
       border-radius:14px;
+      box-shadow:
+        0 25px 70px
+        rgba(0,0,0,.55);
     }
+
 
     .popup-content h3{
       margin:0 0 10px;
       color:var(--gold);
     }
 
+
     .popup-content p{
       margin:0 0 14px;
-      color:rgba(255,255,255,.8);
+      color:
+        rgba(255,255,255,.82);
       line-height:1.6;
       font-size:14px;
     }
+
 
     .popup-actions{
       display:flex;
@@ -727,6 +1068,7 @@ function buildDestinationHtml(destino) {
       gap:12px;
       margin-top:14px;
     }
+
 
     .popup-actions button{
       cursor:pointer;
@@ -738,16 +1080,21 @@ function buildDestinationHtml(destino) {
       font-weight:700;
     }
 
+
     .popup-actions .btn-ghost{
       background:transparent;
-      border:1px solid rgba(212,175,55,.38);
+      border:
+        1px solid
+        rgba(212,175,55,.40);
       color:var(--gold);
     }
+
 
     .popup-actions button:disabled{
       opacity:.55;
       cursor:not-allowed;
     }
+
 
     .popup-rules{
       display:none;
@@ -757,17 +1104,21 @@ function buildDestinationHtml(destino) {
       margin-top:14px;
       padding:16px;
       text-align:left;
-      color:rgba(255,255,255,.78);
+      color:
+        rgba(255,255,255,.80);
       background:#0f0f0f;
-      border:1px solid #222;
+      border:
+        1px solid #242424;
       border-radius:12px;
       font-size:13.5px;
       line-height:1.6;
     }
 
+
     .popup-rules strong{
       color:var(--gold);
     }
+
 
     .consent-wrap{
       display:flex;
@@ -776,18 +1127,22 @@ function buildDestinationHtml(destino) {
       margin-top:12px;
       padding:12px;
       text-align:left;
-      color:rgba(255,255,255,.82);
+      color:
+        rgba(255,255,255,.84);
       background:#0f0f0f;
-      border:1px solid #222;
+      border:
+        1px solid #242424;
       border-radius:12px;
       font-size:13.2px;
       line-height:1.55;
     }
 
+
     .consent-wrap input{
       margin-top:3px;
       accent-color:var(--gold);
     }
+
 
     .cart-list{
       flex:1 1 auto;
@@ -797,21 +1152,27 @@ function buildDestinationHtml(destino) {
       padding:12px;
       text-align:left;
       background:#0f0f0f;
-      border:1px solid #222;
+      border:
+        1px solid #242424;
       border-radius:12px;
     }
+
 
     .cart-item{
       display:flex;
       justify-content:space-between;
       gap:12px;
       padding:12px 10px;
-      border-bottom:1px solid rgba(255,255,255,.08);
+      border-bottom:
+        1px solid
+        rgba(255,255,255,.09);
     }
+
 
     .cart-item:last-child{
       border-bottom:0;
     }
+
 
     .cart-item-title{
       color:#fff;
@@ -820,11 +1181,14 @@ function buildDestinationHtml(destino) {
       font-size:14px;
     }
 
+
     .cart-item-meta{
-      color:rgba(255,255,255,.70);
+      color:
+        rgba(255,255,255,.72);
       font-size:12.5px;
       line-height:1.4;
     }
+
 
     .cart-item-right{
       display:flex;
@@ -834,15 +1198,19 @@ function buildDestinationHtml(destino) {
       white-space:nowrap;
     }
 
+
     .cart-item-right button{
       cursor:pointer;
       padding:9px 13px;
       border-radius:9px;
       background:transparent;
-      border:1px solid rgba(212,175,55,.38);
+      border:
+        1px solid
+        rgba(212,175,55,.40);
       color:var(--gold);
       font-weight:650;
     }
+
 
     .cart-total{
       display:flex;
@@ -853,53 +1221,68 @@ function buildDestinationHtml(destino) {
       padding:12px;
       text-align:left;
       background:#0f0f0f;
-      border:1px solid rgba(255,255,255,.10);
+      border:
+        1px solid
+        rgba(255,255,255,.11);
       border-radius:12px;
     }
+
 
     .cart-total strong{
       color:var(--gold);
     }
 
+
     .total-strike{
-      color:rgba(255,255,255,.55);
+      color:
+        rgba(255,255,255,.55);
       text-decoration:line-through;
       margin-right:10px;
       font-weight:650;
     }
+
 
     .total-final{
       color:var(--gold);
       font-weight:800;
     }
 
+
     .discount-line{
       display:none;
       margin-top:8px;
       text-align:left;
-      color:rgba(255,255,255,.72);
+      color:
+        rgba(255,255,255,.72);
       font-size:12.8px;
     }
+
 
     .discount-line strong{
       color:var(--gold);
     }
+
 
     .coupon-wrap{
       margin-top:10px;
       padding:12px;
       text-align:left;
       background:#0f0f0f;
-      border:1px solid rgba(255,255,255,.10);
+      border:
+        1px solid
+        rgba(255,255,255,.11);
       border-radius:12px;
     }
+
 
     .coupon-label{
       display:block;
       margin-bottom:8px;
-      color:rgba(255,255,255,.75);
+      color:
+        rgba(255,255,255,.77);
       font-size:12.5px;
     }
+
 
     .coupon-row{
       display:flex;
@@ -907,17 +1290,22 @@ function buildDestinationHtml(destino) {
       align-items:center;
     }
 
+
     .coupon-input{
       flex:1;
       width:100%;
       padding:12px 14px;
       outline:none;
       color:#fff;
-      background:rgba(10,10,10,.95);
-      border:1px solid rgba(255,255,255,.10);
+      background:
+        rgba(10,10,10,.96);
+      border:
+        1px solid
+        rgba(255,255,255,.11);
       border-radius:12px;
       font-size:14px;
     }
+
 
     .coupon-apply{
       min-width:120px;
@@ -930,6 +1318,7 @@ function buildDestinationHtml(destino) {
       font-weight:700;
     }
 
+
     .coupon-msg{
       min-height:18px;
       margin-top:8px;
@@ -937,38 +1326,56 @@ function buildDestinationHtml(destino) {
       line-height:1.45;
     }
 
+
     .coupon-msg.ok{
       color:var(--gold);
     }
 
+
     .coupon-msg.err{
-      color:rgba(255,255,255,.72);
+      color:
+        rgba(255,255,255,.74);
     }
+
 
     .coupon-help{
       margin-top:8px;
-      color:rgba(255,255,255,.62);
+      color:
+        rgba(255,255,255,.65);
       font-size:12.5px;
       line-height:1.45;
     }
+
 
     /* =====================================================
        FOOTER
     ===================================================== */
 
     footer{
-      padding:34px 24px 38px;
+      padding:
+        40px 24px 42px;
       text-align:center;
-      color:rgba(255,255,255,.68);
-      border-top:1px solid rgba(255,255,255,.08);
+      color:
+        rgba(255,255,255,.70);
+      border-top:
+        1px solid
+        rgba(255,255,255,.09);
       font-size:14px;
       line-height:1.7;
+      background:
+        rgba(0,0,0,.94);
+      backdrop-filter:
+        blur(10px);
+      -webkit-backdrop-filter:
+        blur(10px);
     }
 
+
     footer > a{
-      color:#1a0dab;
+      color:#826bf5;
       text-decoration:underline;
     }
+
 
     .footer-social{
       display:flex;
@@ -977,6 +1384,7 @@ function buildDestinationHtml(destino) {
       margin-top:16px;
     }
 
+
     .footer-social a{
       width:38px;
       height:38px;
@@ -984,16 +1392,22 @@ function buildDestinationHtml(destino) {
       align-items:center;
       justify-content:center;
       border-radius:50%;
-      border:1px solid rgba(212,175,55,.30);
+      border:
+        1px solid
+        rgba(212,175,55,.32);
       color:var(--gold);
       text-decoration:none;
+      background:
+        rgba(255,255,255,.02);
     }
+
 
     .footer-social svg{
       width:18px;
       height:18px;
       fill:currentColor;
     }
+
 
     /* =====================================================
        RESPONSIVO
@@ -1002,16 +1416,20 @@ function buildDestinationHtml(destino) {
     @media (max-width:980px){
 
       header{
-        padding:14px 16px;
+        padding:
+          14px 16px;
       }
+
 
       .brand{
         min-width:auto;
       }
 
+
       .nav-toggle{
         display:block;
       }
+
 
       .nav-menu{
         display:none;
@@ -1023,50 +1441,68 @@ function buildDestinationHtml(destino) {
         flex-direction:column;
         align-items:flex-start;
         gap:12px;
-        background:rgba(0,0,0,.95);
-        border:1px solid rgba(255,255,255,.10);
+        background:
+          rgba(0,0,0,.96);
+        border:
+          1px solid
+          rgba(255,255,255,.11);
         border-radius:14px;
       }
+
 
       header.nav-open .nav-menu{
         display:flex;
       }
 
+
       .nav-sep{
         display:none;
       }
+
 
       .destination-hero{
         min-height:680px;
         height:88vh;
       }
 
+
       .hero-content{
-        transform:translateY(15px);
+        transform:
+          translateY(15px);
       }
+
 
       .hero-content h1{
-        font-size:clamp(66px,15vw,110px);
+        font-size:
+          clamp(
+            66px,
+            15vw,
+            110px
+          );
       }
 
-      .hero-slide:nth-child(1),
-      .hero-slide:nth-child(2),
-      .hero-slide:nth-child(3){
-        background-position:center;
-      }
 
       .content-section{
-        padding:64px 18px;
+        padding:
+          70px 18px;
       }
 
+
       .materials-grid{
-        grid-template-columns:repeat(2,minmax(0,1fr));
+        grid-template-columns:
+          repeat(
+            2,
+            minmax(0,1fr)
+          );
       }
+
 
       .tools-grid{
         grid-template-columns:1fr;
       }
+
     }
+
 
     @media (max-width:640px){
 
@@ -1074,77 +1510,137 @@ function buildDestinationHtml(destino) {
         font-size:14px;
       }
 
+
       .brand-tagline{
         font-size:10px;
       }
+
 
       .brand img{
         width:30px;
         height:30px;
       }
 
+
       .destination-hero{
         min-height:620px;
         height:82vh;
       }
 
+
       .hero-content{
         width:88%;
-        transform:translateY(24px);
+        transform:
+          translateY(24px);
       }
 
+
       .hero-content h1{
-        font-size:clamp(56px,19vw,84px);
+        font-size:
+          clamp(
+            56px,
+            19vw,
+            84px
+          );
       }
+
 
       .hero-country{
         font-size:12px;
         letter-spacing:3px;
       }
 
+
       .hero-description{
         font-size:14px;
         line-height:1.7;
       }
 
+
       .materials-grid{
         grid-template-columns:1fr;
       }
+
 
       .material-card{
         min-height:0;
       }
 
+
       .cart-item{
         flex-direction:column;
       }
+
 
       .cart-item-right{
         align-items:flex-start;
       }
 
+
       .coupon-row{
         flex-direction:column;
       }
 
+
       .coupon-apply{
         width:100%;
       }
+
     }
 
-    @media (prefers-reduced-motion:reduce){
 
-      .hero-slide{
+    @media (
+      prefers-reduced-motion:
+      reduce
+    ){
+
+      .page-photo-slide{
         transition:none;
         transform:none;
       }
+
     }
 
   </style>
 
 </head>
 
+
 <body>
+
+
+<!-- =====================================================
+     FUNDO CONTÍNUO DA PÁGINA
+====================================================== -->
+
+<div
+  class="page-photo-carousel"
+  aria-hidden="true"
+>
+
+  <div
+    class="page-photo-slide active"
+  ></div>
+
+  <div
+    class="page-photo-slide"
+  ></div>
+
+  <div
+    class="page-photo-slide"
+  ></div>
+
+</div>
+
+
+<div
+  class="page-photo-global-overlay"
+></div>
+
+
+<!-- =====================================================
+     CABEÇALHO
+====================================================== -->
 
 <header id="siteHeader">
 
@@ -1173,6 +1669,7 @@ function buildDestinationHtml(destino) {
 
   </a>
 
+
   <nav>
 
     <button
@@ -1186,12 +1683,24 @@ function buildDestinationHtml(destino) {
       <span></span>
     </button>
 
+
     <div class="nav-menu">
 
-      <a href="/">Início</a>
-      <a href="/?secao=quem">Quem Somos</a>
-      <a href="/?secao=curadoria">Curadoria</a>
-      <a href="/?secao=buscador">Buscador</a>
+      <a href="/">
+        Início
+      </a>
+
+      <a href="/?secao=quem">
+        Quem Somos
+      </a>
+
+      <a href="/?secao=curadoria">
+        Curadoria
+      </a>
+
+      <a href="/?secao=buscador">
+        Buscador
+      </a>
 
       <span class="nav-sep"></span>
 
@@ -1234,27 +1743,15 @@ function buildDestinationHtml(destino) {
 
 </header>
 
+
 <main>
 
+
   <!-- =====================================================
-       HERO NOVO
+       HERO
   ====================================================== -->
 
   <section class="destination-hero">
-
-    <div
-      class="hero-carousel"
-      aria-hidden="true"
-    >
-
-      <div class="hero-slide active"></div>
-      <div class="hero-slide"></div>
-      <div class="hero-slide"></div>
-
-    </div>
-
-    <div class="hero-overlay"></div>
-    <div class="hero-bottom-fade"></div>
 
     <div class="hero-content">
 
@@ -1275,6 +1772,7 @@ function buildDestinationHtml(destino) {
     </div>
 
   </section>
+
 
   <!-- =====================================================
        MATERIAIS
@@ -1315,11 +1813,14 @@ function buildDestinationHtml(destino) {
 
   </section>
 
+
   <!-- =====================================================
-       FERRAMENTAS
+       PREPARANDO SUA VIAGEM
   ====================================================== -->
 
-  <section class="content-section tools-section">
+  <section
+    class="content-section tools-section"
+  >
 
     <div class="content-shell">
 
@@ -1334,6 +1835,7 @@ function buildDestinationHtml(destino) {
       <p class="section-subtitle">
         Acesse ferramentas da Curadoria para consultar informações práticas relacionadas ao destino.
       </p>
+
 
       <div class="tools-grid">
 
@@ -1353,6 +1855,7 @@ function buildDestinationHtml(destino) {
           </a>
 
         </article>
+
 
         <article class="tool-card">
 
@@ -1377,11 +1880,15 @@ function buildDestinationHtml(destino) {
 
   </section>
 
+
 </main>
+
 
 <footer>
 
-  Curadoria Elite Travel · O seu mundo, bem indicado.
+  Curadoria Elite Travel ·
+  O seu mundo, bem indicado.
+
   <br>
 
   São Paulo - SP ·
@@ -1389,6 +1896,7 @@ function buildDestinationHtml(destino) {
   <a href="/contact.html">
     curadoriaelitetravel@gmail.com
   </a>
+
 
   <div class="footer-social">
 
@@ -1398,10 +1906,16 @@ function buildDestinationHtml(destino) {
       rel="noopener noreferrer"
       aria-label="Instagram"
     >
-      <svg viewBox="0 0 24 24">
+
+      <svg
+        viewBox="0 0 24 24"
+        aria-hidden="true"
+      >
         <path d="M7 2h10a5 5 0 0 1 5 5v10a5 5 0 0 1-5 5H7a5 5 0 0 1-5-5V7a5 5 0 0 1 5-5Zm0 2a3 3 0 0 0-3 3v10a3 3 0 0 0 3 3h10a3 3 0 0 0 3-3V7a3 3 0 0 0-3-3H7Zm5 3.5A4.5 4.5 0 1 1 7.5 12 4.5 4.5 0 0 1 12 7.5Zm0 2A2.5 2.5 0 1 0 14.5 12 2.5 2.5 0 0 0 12 9.5Zm5.25-3.1a1.05 1.05 0 1 1-1.05 1.05 1.05 1.05 0 0 1 1.05-1.05Z"/>
       </svg>
+
     </a>
+
 
     <a
       href="https://www.linkedin.com/company/curadoria-elite-travel"
@@ -1409,51 +1923,83 @@ function buildDestinationHtml(destino) {
       rel="noopener noreferrer"
       aria-label="LinkedIn"
     >
-      <svg viewBox="0 0 24 24">
+
+      <svg
+        viewBox="0 0 24 24"
+        aria-hidden="true"
+      >
         <path d="M6.5 8.25H3.25V21H6.5V8.25ZM4.88 3A1.88 1.88 0 1 0 4.9 6.75 1.88 1.88 0 0 0 4.88 3ZM21 13.7c0-3.85-2.05-5.64-4.79-5.64a4.14 4.14 0 0 0-3.74 2.05V8.25H9.22V21h3.25v-6.31c0-1.66.32-3.27 2.38-3.27 2.03 0 2.05 1.9 2.05 3.38V21H21v-7.3Z"/>
       </svg>
+
     </a>
 
   </div>
 
 </footer>
 
-<script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+
+<script
+  src="https://unpkg.com/@supabase/supabase-js@2"
+></script>
+
 
 <script>
 
   /* =====================================================
-     DESTINO
+     CONFIGURAÇÃO
   ===================================================== */
 
-  const DESTINATION = ${destinationData};
+  const DESTINATION =
+    ${destinationData};
+
 
   const SUPABASE_URL =
     ${JSON.stringify(SUPABASE_URL)};
 
+
   const SUPABASE_ANON_KEY =
     ${JSON.stringify(SUPABASE_ANON_KEY)};
+
 
   const CART_STORAGE_KEY =
     "cet_cart_v2";
 
+
   const CHECKOUT_CONTEXT_KEY =
     "cet_checkout_context_v2";
+
 
   const CART_CHECKOUT_ITEMS_KEY =
     "cet_cart_checkout_items_v2";
 
+
   const CART_LAST_CHECKOUT_STARTED_KEY =
     "cet_cart_last_checkout_started_v2";
+
 
   const CART_COUPON_CODE_KEY =
     "cet_cart_coupon_code_v1";
 
-  let supabaseClient = null;
-  let cartPricingPreview = null;
 
-  const categoryPricesMap = new Map();
-  const ownedMap = new Map();
+  let supabaseClient =
+    null;
+
+
+  let cartPricingPreview =
+    null;
+
+
+  const categoryPricesMap =
+    new Map();
+
+
+  const ownedMap =
+    new Map();
+
+
+  /* =====================================================
+     DESCRIÇÕES DAS CATEGORIAS
+  ===================================================== */
 
   const CATEGORY_DESCRIPTIONS = {
 
@@ -1477,31 +2023,50 @@ function buildDestinationHtml(destino) {
 
   };
 
+
   const CATEGORY_ICONS = {
-    "city guide":"◇",
-    "gastronomia":"✦",
-    "atrações turísticas":"⌖",
-    "vida noturna":"☾",
-    "endereços para compras":"⌑",
-    "sugestão de presentes":"◈"
+
+    "city guide":
+      "◇",
+
+    "gastronomia":
+      "✦",
+
+    "atrações turísticas":
+      "⌖",
+
+    "vida noturna":
+      "☾",
+
+    "endereços para compras":
+      "⌑",
+
+    "sugestão de presentes":
+      "◈"
+
   };
 
+
   /* =====================================================
-     HERO CARROSSEL
+     CARROSSEL GLOBAL
   ===================================================== */
 
-  function startHeroCarousel(){
+  function startPagePhotoCarousel(){
 
     const slides =
       Array.from(
         document.querySelectorAll(
-          ".hero-slide"
+          ".page-photo-slide"
         )
       );
 
-    if (slides.length <= 1){
+
+    if (
+      slides.length <= 1
+    ){
       return;
     }
+
 
     const reduceMotion =
       window.matchMedia &&
@@ -1509,11 +2074,15 @@ function buildDestinationHtml(destino) {
         "(prefers-reduced-motion: reduce)"
       ).matches;
 
+
     if (reduceMotion){
       return;
     }
 
-    let current = 0;
+
+    let current =
+      0;
+
 
     window.setInterval(
       () => {
@@ -1523,9 +2092,13 @@ function buildDestinationHtml(destino) {
             "active"
           );
 
+
         current =
-          (current + 1) %
+          (
+            current + 1
+          ) %
           slides.length;
+
 
         slides[current]
           .classList.add(
@@ -1533,10 +2106,11 @@ function buildDestinationHtml(destino) {
           );
 
       },
-      6000
+      6500
     );
 
   }
+
 
   /* =====================================================
      NAVEGAÇÃO
@@ -1549,13 +2123,17 @@ function buildDestinationHtml(destino) {
         "siteHeader"
       );
 
+
     if (header){
+
       header.classList.toggle(
         "nav-open"
       );
+
     }
 
   }
+
 
   /* =====================================================
      NORMALIZAÇÃO
@@ -1563,7 +2141,9 @@ function buildDestinationHtml(destino) {
 
   function normalizeKeyPart(str){
 
-    return String(str || "")
+    return String(
+      str || ""
+    )
       .trim()
       .toLowerCase()
       .normalize("NFD")
@@ -1587,6 +2167,7 @@ function buildDestinationHtml(destino) {
 
   }
 
+
   function normalizeCategoryName(category){
 
     return normalizeKeyPart(
@@ -1594,6 +2175,7 @@ function buildDestinationHtml(destino) {
     );
 
   }
+
 
   function normalizeCityLabel(cityLabel){
 
@@ -1603,21 +2185,27 @@ function buildDestinationHtml(destino) {
 
   }
 
+
   function purchaseKey(
     category,
     cityLabel
   ){
 
     return (
-      normalizeKeyPart(category) +
+      normalizeKeyPart(
+        category
+      ) +
       "||" +
-      normalizeKeyPart(cityLabel)
+      normalizeKeyPart(
+        cityLabel
+      )
     );
 
   }
 
+
   /* =====================================================
-     SUPABASE
+     SUPABASE E SESSÃO
   ===================================================== */
 
   function ensureSupabase(){
@@ -1626,9 +2214,11 @@ function buildDestinationHtml(destino) {
       return supabaseClient;
     }
 
+
     if (!window.supabase){
       return null;
     }
+
 
     supabaseClient =
       window.supabase.createClient(
@@ -1636,39 +2226,52 @@ function buildDestinationHtml(destino) {
         SUPABASE_ANON_KEY
       );
 
+
     return supabaseClient;
 
   }
+
 
   async function getSession(){
 
     const sb =
       ensureSupabase();
 
+
     if (!sb){
       return null;
     }
 
+
     const { data } =
       await sb.auth.getSession();
 
-    return data && data.session
+
+    return (
+      data &&
+      data.session
+    )
       ? data.session
       : null;
 
   }
+
 
   async function getAccessToken(){
 
     const session =
       await getSession();
 
-    return session &&
+
+    return (
+      session &&
       session.access_token
+    )
       ? session.access_token
       : null;
 
   }
+
 
   async function apiPOST(
     url,
@@ -1678,22 +2281,30 @@ function buildDestinationHtml(destino) {
     const token =
       await getAccessToken();
 
+
     const headers = {
       "Content-Type":
         "application/json"
     };
 
+
     if (token){
+
       headers.Authorization =
         "Bearer " + token;
+
     }
+
 
     const response =
       await fetch(
         url,
         {
-          method:"POST",
+          method:
+            "POST",
+
           headers,
+
           body:
             JSON.stringify(
               body || {}
@@ -1701,40 +2312,55 @@ function buildDestinationHtml(destino) {
         }
       );
 
-    let json = null;
+
+    let json =
+      null;
+
 
     try{
+
       json =
         await response.json();
+
     }catch(error){}
 
+
     return {
-      ok:response.ok,
-      status:response.status,
+      ok:
+        response.ok,
+
+      status:
+        response.status,
+
       json
     };
 
   }
+
 
   async function refreshNavAuth(){
 
     const session =
       await getSession();
 
+
     const navLogin =
       document.getElementById(
         "navLogin"
       );
+
 
     const navAccount =
       document.getElementById(
         "navAccount"
       );
 
+
     const navLogout =
       document.getElementById(
         "navLogout"
       );
+
 
     if (
       !navLogin ||
@@ -1744,6 +2370,7 @@ function buildDestinationHtml(destino) {
       return;
     }
 
+
     if (
       session &&
       session.user
@@ -1752,8 +2379,10 @@ function buildDestinationHtml(destino) {
       navLogin.style.display =
         "none";
 
+
       navAccount.style.display =
         "inline";
+
 
       navLogout.style.display =
         "inline";
@@ -1763,8 +2392,10 @@ function buildDestinationHtml(destino) {
       navLogin.style.display =
         "inline";
 
+
       navAccount.style.display =
         "none";
+
 
       navLogout.style.display =
         "none";
@@ -1773,26 +2404,33 @@ function buildDestinationHtml(destino) {
 
   }
 
+
   async function doLogout(event){
 
     if (event){
       event.preventDefault();
     }
 
+
     try{
 
       const sb =
         ensureSupabase();
 
+
       if (sb){
+
         await sb.auth.signOut();
+
       }
 
     }catch(error){}
 
+
     await refreshNavAuth();
 
   }
+
 
   /* =====================================================
      PREÇOS
@@ -1805,18 +2443,25 @@ function buildDestinationHtml(destino) {
       return new Intl.NumberFormat(
         "pt-BR",
         {
-          style:"currency",
-          currency:"BRL"
+          style:
+            "currency",
+
+          currency:
+            "BRL"
         }
       ).format(value);
 
     }catch(error){
 
-      return "R$ " + value;
+      return (
+        "R$ " +
+        value
+      );
 
     }
 
   }
+
 
   function getFallbackPriceForCategory(
     category
@@ -1825,14 +2470,19 @@ function buildDestinationHtml(destino) {
     if (
       normalizeCategoryName(
         category
-      ) === "city guide"
+      ) ===
+      "city guide"
     ){
+
       return 88.92;
+
     }
+
 
     return 57.83;
 
   }
+
 
   function getPriceForCategory(
     category
@@ -1843,6 +2493,7 @@ function buildDestinationHtml(destino) {
         category
       );
 
+
     if (
       categoryPricesMap.has(
         key
@@ -1852,10 +2503,12 @@ function buildDestinationHtml(destino) {
       return Number(
         categoryPricesMap.get(
           key
-        ) || 0
+        ) ||
+        0
       );
 
     }
+
 
     return getFallbackPriceForCategory(
       category
@@ -1863,16 +2516,20 @@ function buildDestinationHtml(destino) {
 
   }
 
+
   async function loadCategoryPrices(){
 
     categoryPricesMap.clear();
 
+
     const sb =
       ensureSupabase();
+
 
     if (!sb){
       return;
     }
+
 
     const {
       data,
@@ -1890,6 +2547,7 @@ function buildDestinationHtml(destino) {
           true
         );
 
+
     if (error){
 
       console.error(
@@ -1901,6 +2559,7 @@ function buildDestinationHtml(destino) {
 
     }
 
+
     (data || []).forEach(
       (row) => {
 
@@ -1909,14 +2568,18 @@ function buildDestinationHtml(destino) {
             row.category || ""
           ).trim();
 
+
         const price =
           Number(
             row.price || 0
           );
 
+
         if (
           category &&
-          Number.isFinite(price) &&
+          Number.isFinite(
+            price
+          ) &&
           price > 0
         ){
 
@@ -1934,6 +2597,7 @@ function buildDestinationHtml(destino) {
 
   }
 
+
   /* =====================================================
      COMPRAS EXISTENTES
   ===================================================== */
@@ -1942,8 +2606,10 @@ function buildDestinationHtml(destino) {
 
     ownedMap.clear();
 
+
     const session =
       await getSession();
+
 
     if (
       !session ||
@@ -1952,19 +2618,24 @@ function buildDestinationHtml(destino) {
       return;
     }
 
+
     const sb =
       ensureSupabase();
+
 
     if (!sb){
       return;
     }
+
 
     const {
       data,
       error
     } =
       await sb
-        .from("purchase")
+        .from(
+          "purchase"
+        )
         .select(
           "category, city, pdf_url"
         )
@@ -1974,21 +2645,28 @@ function buildDestinationHtml(destino) {
         )
         .limit(500);
 
+
     if (error){
       return;
     }
+
 
     (data || []).forEach(
       (row) => {
 
         ownedMap.set(
           purchaseKey(
-            row.category || "",
-            row.city || ""
+            row.category ||
+            "",
+
+            row.city ||
+            ""
           ),
+
           {
             pdf_url:
-              row.pdf_url || null
+              row.pdf_url ||
+              null
           }
         );
 
@@ -1996,6 +2674,7 @@ function buildDestinationHtml(destino) {
     );
 
   }
+
 
   function userOwns(
     category,
@@ -2011,6 +2690,7 @@ function buildDestinationHtml(destino) {
 
   }
 
+
   /* =====================================================
      CARRINHO
   ===================================================== */
@@ -2024,12 +2704,16 @@ function buildDestinationHtml(destino) {
           CART_STORAGE_KEY
         );
 
+
       const parsed =
         raw
           ? JSON.parse(raw)
           : [];
 
-      return Array.isArray(parsed)
+
+      return Array.isArray(
+        parsed
+      )
         ? parsed
         : [];
 
@@ -2041,18 +2725,22 @@ function buildDestinationHtml(destino) {
 
   }
 
+
   function saveCart(items){
 
     localStorage.setItem(
       CART_STORAGE_KEY,
       JSON.stringify(
-        items || []
+        items ||
+        []
       )
     );
+
 
     updateCartBadge();
 
   }
+
 
   function clearCart(){
 
@@ -2060,9 +2748,11 @@ function buildDestinationHtml(destino) {
       CART_STORAGE_KEY
     );
 
+
     updateCartBadge();
 
   }
+
 
   function cartItemKey(
     category,
@@ -2076,12 +2766,14 @@ function buildDestinationHtml(destino) {
 
   }
 
+
   function updateCartBadge(){
 
     const navCart =
       document.getElementById(
         "navCart"
       );
+
 
     if (navCart){
 
@@ -2094,23 +2786,36 @@ function buildDestinationHtml(destino) {
 
   }
 
+
   function calcCartTotal(items){
 
-    return (items || []).reduce(
-      (total,item) =>
+    return (
+      items ||
+      []
+    ).reduce(
+      (
+        total,
+        item
+      ) =>
+
         total +
         (
           Number(
-            item.qty || 0
+            item.qty ||
+            0
           ) *
+
           Number(
-            item.price || 0
+            item.price ||
+            0
           )
         ),
+
       0
     );
 
   }
+
 
   function removeFromCart(key){
 
@@ -2118,16 +2823,20 @@ function buildDestinationHtml(destino) {
       getCart().filter(
         (item) =>
           item &&
-          item.key !== key
+          item.key !==
+          key
       )
     );
+
 
     cartPricingPreview =
       null;
 
+
     renderCart();
 
   }
+
 
   function addToCart(
     category,
@@ -2137,68 +2846,98 @@ function buildDestinationHtml(destino) {
     const items =
       getCart();
 
+
     const key =
       cartItemKey(
         category,
         city
       );
 
+
     if (
       items.some(
         (item) =>
           item &&
-          item.key === key
+          item.key ===
+          key
       )
     ){
+
       return false;
+
     }
+
 
     const price =
       getPriceForCategory(
         category
       );
 
+
     items.push({
+
       key,
+
       category:
         String(
-          category || ""
+          category ||
+          ""
         ).trim(),
+
       city:
         String(
-          city || ""
+          city ||
+          ""
         ).trim(),
-      qty:1,
+
+      qty:
+        1,
+
       price:
         Number(
-          price || 0
+          price ||
+          0
         )
+
     });
 
-    saveCart(items);
+
+    saveCart(
+      items
+    );
+
 
     cartPricingPreview =
       null;
 
+
     trackEvent(
       "add_to_cart",
       {
+
         item_category:
           category,
+
         item_name:
           city,
+
         currency:
           "BRL",
+
         value:
           Number(
-            price || 0
+            price ||
+            0
           )
+
       }
     );
+
 
     return true;
 
   }
+
 
   function addToCartAndOpenCart(
     category,
@@ -2210,9 +2949,11 @@ function buildDestinationHtml(destino) {
       city
     );
 
+
     openCart();
 
   }
+
 
   /* =====================================================
      CUPOM
@@ -2220,16 +2961,23 @@ function buildDestinationHtml(destino) {
 
   function normalizeCouponCode(code){
 
-    return String(code || "")
+    return String(
+      code ||
+      ""
+    )
       .trim()
       .toUpperCase();
 
   }
 
+
   function setCartCouponCode(code){
 
     const value =
-      normalizeCouponCode(code);
+      normalizeCouponCode(
+        code
+      );
+
 
     if (!value){
 
@@ -2248,46 +2996,60 @@ function buildDestinationHtml(destino) {
 
   }
 
+
   function getCartCouponCode(){
 
     return normalizeCouponCode(
       localStorage.getItem(
         CART_COUPON_CODE_KEY
-      ) || ""
+      ) ||
+      ""
     );
 
   }
+
 
   function setCouponMessage(
     text,
     kind
   ){
 
-    const el =
+    const element =
       document.getElementById(
         "couponMsg"
       );
 
-    if (!el){
+
+    if (!element){
       return;
     }
 
-    el.className =
+
+    element.className =
       "coupon-msg";
 
+
     if (kind){
-      el.classList.add(kind);
+
+      element.classList.add(
+        kind
+      );
+
     }
 
-    el.textContent =
-      text || "";
+
+    element.textContent =
+      text ||
+      "";
 
   }
+
 
   async function applyCouponInCart(){
 
     const items =
       getCart();
+
 
     if (!items.length){
 
@@ -2300,8 +3062,10 @@ function buildDestinationHtml(destino) {
 
     }
 
+
     const code =
       getCartCouponCode();
+
 
     if (!code){
 
@@ -2314,8 +3078,10 @@ function buildDestinationHtml(destino) {
 
     }
 
+
     const session =
       await getSession();
+
 
     if (
       !session ||
@@ -2331,43 +3097,59 @@ function buildDestinationHtml(destino) {
 
     }
 
+
     const response =
       await apiPOST(
         "/api/create-checkout-mercadopago",
+
         {
+
           items:
             items.map(
               (item) => ({
+
                 category:
                   item.category,
+
                 city:
                   item.city,
+
                 qty:
                   Number(
-                    item.qty || 1
-                  ) || 1
+                    item.qty ||
+                    1
+                  ) ||
+                  1
+
               })
             ),
+
           coupon_code:
             code,
+
           preview_only:
             true
+
         }
       );
+
 
     if (
       !response.ok ||
       !response.json ||
-      response.json.ok !== true
+      response.json.ok !==
+      true
     ){
 
       cartPricingPreview =
         null;
 
+
       setCouponMessage(
         "Este cupom não está válido. Insira um cupom válido.",
         "err"
       );
+
 
       renderCartTotalsOnly();
 
@@ -2375,8 +3157,10 @@ function buildDestinationHtml(destino) {
 
     }
 
+
     const preview =
       response.json;
+
 
     const matchCount =
       Number(
@@ -2385,6 +3169,7 @@ function buildDestinationHtml(destino) {
           ? preview.applied.match_count
           : 0
       );
+
 
     if (
       matchCount > 0 &&
@@ -2398,6 +3183,7 @@ function buildDestinationHtml(destino) {
       cartPricingPreview =
         preview;
 
+
       setCouponMessage(
         "Cupom aplicado.",
         "ok"
@@ -2408,6 +3194,7 @@ function buildDestinationHtml(destino) {
       cartPricingPreview =
         null;
 
+
       setCouponMessage(
         "Este cupom não está válido. Insira um cupom válido.",
         "err"
@@ -2415,9 +3202,11 @@ function buildDestinationHtml(destino) {
 
     }
 
+
     renderCartTotalsOnly();
 
   }
+
 
   /* =====================================================
      POPUP GERAL
@@ -2433,10 +3222,12 @@ function buildDestinationHtml(destino) {
       return;
     }
 
+
     const wrap =
       document.createElement(
         "div"
       );
+
 
     wrap.innerHTML =
       '<div class="popup-bg" id="popup">' +
@@ -2477,9 +3268,11 @@ function buildDestinationHtml(destino) {
 
       '</div>';
 
+
     document.body.appendChild(
       wrap
     );
+
 
     document
       .getElementById(
@@ -2492,6 +3285,7 @@ function buildDestinationHtml(destino) {
 
   }
 
+
   function closePopup(){
 
     const popup =
@@ -2499,36 +3293,64 @@ function buildDestinationHtml(destino) {
         "popup"
       );
 
+
     if (popup){
+
       popup.classList.remove(
         "active"
       );
+
     }
+
 
     const consent =
       document.getElementById(
         "consent-checkbox-wrap"
       );
 
+
     if (consent){
+
       consent.remove();
+
     }
 
   }
 
+
   function openPopup({
-    title="",
-    text="",
-    showProceed=false,
-    proceedText="Ir para pagamento",
-    showRules=false,
-    requireConsent=false,
-    onProceed=null,
-    secondaryText=null,
-    onSecondary=null
+
+    title =
+      "",
+
+    text =
+      "",
+
+    showProceed =
+      false,
+
+    proceedText =
+      "Ir para pagamento",
+
+    showRules =
+      false,
+
+    requireConsent =
+      false,
+
+    onProceed =
+      null,
+
+    secondaryText =
+      null,
+
+    onSecondary =
+      null
+
   }){
 
     ensurePopupExists();
+
 
     document
       .getElementById(
@@ -2537,12 +3359,14 @@ function buildDestinationHtml(destino) {
       .textContent =
         title;
 
+
     document
       .getElementById(
         "popup-text"
       )
       .textContent =
         text;
+
 
     document
       .getElementById(
@@ -2553,26 +3377,32 @@ function buildDestinationHtml(destino) {
           ? "block"
           : "none";
 
+
     const proceed =
       document.getElementById(
         "popup-proceed"
       );
+
 
     proceed.style.display =
       showProceed
         ? "inline-block"
         : "none";
 
+
     proceed.textContent =
       proceedText;
 
+
     proceed.disabled =
       false;
+
 
     const secondary =
       document.getElementById(
         "popup-secondary"
       );
+
 
     if (
       secondaryText &&
@@ -2583,13 +3413,16 @@ function buildDestinationHtml(destino) {
       secondary.style.display =
         "inline-block";
 
+
       secondary.textContent =
         secondaryText;
+
 
       secondary.onclick =
         () => {
 
           closePopup();
+
           onSecondary();
 
         };
@@ -2599,19 +3432,25 @@ function buildDestinationHtml(destino) {
       secondary.style.display =
         "none";
 
+
       secondary.onclick =
         null;
 
     }
+
 
     const oldConsent =
       document.getElementById(
         "consent-checkbox-wrap"
       );
 
+
     if (oldConsent){
+
       oldConsent.remove();
+
     }
+
 
     if (
       showProceed &&
@@ -2623,11 +3462,14 @@ function buildDestinationHtml(destino) {
           "div"
         );
 
+
       consentWrap.id =
         "consent-checkbox-wrap";
 
+
       consentWrap.className =
         "consent-wrap";
+
 
       consentWrap.innerHTML =
         '<input type="checkbox" id="consent-checkbox">' +
@@ -2638,18 +3480,22 @@ function buildDestinationHtml(destino) {
 
         '</label>';
 
+
       const actions =
         document.querySelector(
           "#popup-content .popup-actions"
         );
+
 
       actions.parentNode.insertBefore(
         consentWrap,
         actions
       );
 
+
       proceed.disabled =
         true;
+
 
       document
         .getElementById(
@@ -2657,6 +3503,7 @@ function buildDestinationHtml(destino) {
         )
         .addEventListener(
           "change",
+
           (event) => {
 
             proceed.disabled =
@@ -2667,8 +3514,10 @@ function buildDestinationHtml(destino) {
 
     }
 
+
     proceed.onclick =
       null;
+
 
     if (
       showProceed &&
@@ -2680,11 +3529,13 @@ function buildDestinationHtml(destino) {
         async () => {
 
           closePopup();
+
           await onProceed();
 
         };
 
     }
+
 
     document
       .getElementById(
@@ -2696,8 +3547,9 @@ function buildDestinationHtml(destino) {
 
   }
 
+
   /* =====================================================
-     CARRINHO
+     POPUP DO CARRINHO
   ===================================================== */
 
   function ensureCartPopupExists(){
@@ -2710,10 +3562,12 @@ function buildDestinationHtml(destino) {
       return;
     }
 
+
     const wrap =
       document.createElement(
         "div"
       );
+
 
     wrap.innerHTML =
       '<div class="popup-bg" id="cartPopup">' +
@@ -2772,20 +3626,25 @@ function buildDestinationHtml(destino) {
 
       '</div>';
 
+
     document.body.appendChild(
       wrap
     );
+
 
     const couponInput =
       document.getElementById(
         "couponInput"
       );
 
+
     couponInput.value =
       getCartCouponCode();
 
+
     couponInput.addEventListener(
       "input",
+
       () => {
 
         couponInput.value =
@@ -2793,22 +3652,27 @@ function buildDestinationHtml(destino) {
             couponInput.value
           );
 
+
         setCartCouponCode(
           couponInput.value
         );
 
+
         cartPricingPreview =
           null;
+
 
         setCouponMessage(
           "",
           ""
         );
 
+
         renderCartTotalsOnly();
 
       }
     );
+
 
     document
       .getElementById(
@@ -2819,6 +3683,7 @@ function buildDestinationHtml(destino) {
         applyCouponInCart
       );
 
+
     document
       .getElementById(
         "cartContinueBtn"
@@ -2827,6 +3692,7 @@ function buildDestinationHtml(destino) {
         "click",
         closeCart
       );
+
 
     document
       .getElementById(
@@ -2837,6 +3703,7 @@ function buildDestinationHtml(destino) {
         closeCart
       );
 
+
     document
       .getElementById(
         "cartProceedBtn"
@@ -2846,12 +3713,14 @@ function buildDestinationHtml(destino) {
         startCartCheckoutFlow
       );
 
+
     document
       .getElementById(
         "cartPopup"
       )
       .addEventListener(
         "click",
+
         (event) => {
 
           if (
@@ -2859,7 +3728,9 @@ function buildDestinationHtml(destino) {
             event.target.id ===
             "cartPopup"
           ){
+
             closeCart();
+
           }
 
         }
@@ -2867,49 +3738,65 @@ function buildDestinationHtml(destino) {
 
   }
 
+
   function renderCartTotalsOnly(){
 
     const items =
       getCart();
+
 
     const totalWrap =
       document.getElementById(
         "cartTotalWrap"
       );
 
+
     const totalValue =
       document.getElementById(
         "cartTotalValue"
       );
+
 
     const discountLine =
       document.getElementById(
         "cartDiscountLine"
       );
 
+
     const discountValue =
       document.getElementById(
         "cartDiscountValue"
       );
 
+
     if (!items.length){
 
       if (totalWrap){
+
         totalWrap.style.display =
           "none";
+
       }
 
+
       if (discountLine){
+
         discountLine.style.display =
           "none";
+
       }
+
 
       return;
 
     }
 
+
     const baseTotal =
-      calcCartTotal(items);
+      calcCartTotal(
+        items
+      );
+
 
     if (
       cartPricingPreview &&
@@ -2922,11 +3809,13 @@ function buildDestinationHtml(destino) {
           0
         );
 
+
       const discountTotal =
         Number(
           cartPricingPreview.totals.discount_total ||
           0
         );
+
 
       if (
         discountTotal > 0 &&
@@ -2935,6 +3824,7 @@ function buildDestinationHtml(destino) {
 
         totalWrap.style.display =
           "flex";
+
 
         totalValue.innerHTML =
           '<span class="total-strike">' +
@@ -2953,13 +3843,16 @@ function buildDestinationHtml(destino) {
 
           '</span>';
 
+
         discountLine.style.display =
           "block";
+
 
         discountValue.textContent =
           formatBRL(
             discountTotal
           );
+
 
         return;
 
@@ -2967,59 +3860,76 @@ function buildDestinationHtml(destino) {
 
     }
 
+
     totalWrap.style.display =
       "flex";
 
+
     totalValue.innerHTML =
       "<strong>" +
+
       formatBRL(
         baseTotal
       ) +
+
       "</strong>";
+
 
     discountLine.style.display =
       "none";
 
   }
 
+
   function renderCart(){
 
     ensureCartPopupExists();
+
 
     const list =
       document.getElementById(
         "cartList"
       );
 
+
     const proceed =
       document.getElementById(
         "cartProceedBtn"
       );
 
+
     const items =
       getCart();
+
 
     if (!items.length){
 
       list.innerHTML =
         '<div style="padding:14px;color:rgba(255,255,255,.7);">Seu carrinho está vazio.</div>';
 
+
       proceed.disabled =
         true;
 
+
       renderCartTotalsOnly();
 
+
       updateCartBadge();
+
 
       return;
 
     }
 
+
     proceed.disabled =
       false;
 
+
     list.innerHTML =
       "";
+
 
     items.forEach(
       (item) => {
@@ -3029,8 +3939,10 @@ function buildDestinationHtml(destino) {
             "div"
           );
 
+
         element.className =
           "cart-item";
+
 
         element.innerHTML =
           '<div class="cart-item-left">' +
@@ -3048,7 +3960,8 @@ function buildDestinationHtml(destino) {
               ' · Quantidade: ' +
 
               Number(
-                item.qty || 1
+                item.qty ||
+                1
               ) +
 
             '</div>' +
@@ -3057,7 +3970,8 @@ function buildDestinationHtml(destino) {
 
               formatBRL(
                 Number(
-                  item.price || 0
+                  item.price ||
+                  0
                 )
               ) +
 
@@ -3075,12 +3989,14 @@ function buildDestinationHtml(destino) {
 
           '</div>';
 
+
         element
           .querySelector(
             "[data-remove]"
           )
           .addEventListener(
             "click",
+
             () => {
 
               removeFromCart(
@@ -3090,6 +4006,7 @@ function buildDestinationHtml(destino) {
             }
           );
 
+
         list.appendChild(
           element
         );
@@ -3097,17 +4014,22 @@ function buildDestinationHtml(destino) {
       }
     );
 
+
     renderCartTotalsOnly();
+
 
     updateCartBadge();
 
   }
 
+
   function openCart(){
 
     ensureCartPopupExists();
 
+
     renderCart();
+
 
     document
       .getElementById(
@@ -3119,12 +4041,14 @@ function buildDestinationHtml(destino) {
 
   }
 
+
   function closeCart(){
 
     const popup =
       document.getElementById(
         "cartPopup"
       );
+
 
     if (popup){
 
@@ -3136,20 +4060,24 @@ function buildDestinationHtml(destino) {
 
   }
 
+
   /* =====================================================
-     CHECKOUT
+     CONTEXTO DE CHECKOUT
   ===================================================== */
 
   function setCheckoutContext(obj){
 
     localStorage.setItem(
       CHECKOUT_CONTEXT_KEY,
+
       JSON.stringify(
-        obj || {}
+        obj ||
+        {}
       )
     );
 
   }
+
 
   function getCheckoutContext(){
 
@@ -3159,6 +4087,7 @@ function buildDestinationHtml(destino) {
         localStorage.getItem(
           CHECKOUT_CONTEXT_KEY
         );
+
 
       return raw
         ? JSON.parse(raw)
@@ -3172,6 +4101,7 @@ function buildDestinationHtml(destino) {
 
   }
 
+
   function clearCheckoutContext(){
 
     localStorage.removeItem(
@@ -3180,11 +4110,13 @@ function buildDestinationHtml(destino) {
 
   }
 
+
   function goLoginWithReturn(){
 
     const returnTo =
       window.location.pathname +
       "?after_login=1";
+
 
     window.location.href =
       "/login.html?return_to=" +
@@ -3194,92 +4126,129 @@ function buildDestinationHtml(destino) {
 
   }
 
+
+  /* =====================================================
+     CHECKOUT
+  ===================================================== */
+
   function goInvoiceCart(
     items,
     couponCode
   ){
 
     const payload =
-      (items || []).map(
+      (
+        items ||
+        []
+      ).map(
         (item) => ({
+
           category:
             item.category,
+
           city:
             item.city,
+
           qty:
             Number(
-              item.qty || 1
-            ) || 1
+              item.qty ||
+              1
+            ) ||
+            1
+
         })
       );
 
+
     localStorage.setItem(
       CART_CHECKOUT_ITEMS_KEY,
+
       JSON.stringify(
         payload
       )
     );
 
+
     localStorage.setItem(
       CART_LAST_CHECKOUT_STARTED_KEY,
+
       String(
         Date.now()
       )
     );
+
 
     setCartCouponCode(
       couponCode ||
       getCartCouponCode()
     );
 
+
     window.location.href =
       "/checkout-success.html?step=invoice&cart=1";
 
   }
+
 
   async function showPolicyThenProceed(
     nextFn
   ){
 
     openPopup({
+
       title:
         "Informações Importantes",
+
       text:
         "Antes de prosseguir, confirme as condições abaixo.",
+
       showProceed:
         true,
+
       proceedText:
         "Ir para pagamento",
+
       showRules:
         true,
+
       requireConsent:
         true,
+
       onProceed:
         nextFn
+
     });
 
   }
+
 
   async function startCartCheckoutFlow(){
 
     const items =
       getCart();
 
+
     if (!items.length){
 
       openPopup({
+
         title:
           "Carrinho",
+
         text:
           "Seu carrinho está vazio."
+
       });
+
 
       return;
 
     }
 
+
     const session =
       await getSession();
+
 
     if (
       !session ||
@@ -3287,31 +4256,41 @@ function buildDestinationHtml(destino) {
     ){
 
       setCheckoutContext({
-        type:"cart"
+        type:
+          "cart"
       });
+
 
       closeCart();
 
+
       goLoginWithReturn();
+
 
       return;
 
     }
 
+
     await loadOwnedPurchases();
+
 
     const currentItems =
       getCart();
 
+
     const filtered =
       currentItems.filter(
         (item) =>
+
           item &&
+
           !userOwns(
             item.category,
             item.city
           )
       );
+
 
     if (
       filtered.length !==
@@ -3322,22 +4301,30 @@ function buildDestinationHtml(destino) {
         filtered
       );
 
+
       cartPricingPreview =
         null;
 
+
       renderCart();
+
 
       if (!filtered.length){
 
         closeCart();
 
+
         openPopup({
+
           title:
             "Carrinho",
+
           text:
             "Os materiais selecionados já estão disponíveis na sua conta.",
+
           secondaryText:
             "Ir para Minha conta",
+
           onSecondary:
             () => {
 
@@ -3345,31 +4332,43 @@ function buildDestinationHtml(destino) {
                 "/account.html";
 
             }
+
         });
+
 
         return;
 
       }
 
+
       openPopup({
+
         title:
           "Carrinho",
+
         text:
           "Um ou mais materiais foram removidos porque você já os possui. Os demais continuam no carrinho.",
+
         secondaryText:
           "Voltar ao carrinho",
+
         onSecondary:
           openCart
+
       });
+
 
       return;
 
     }
 
+
     closeCart();
+
 
     const couponNow =
       getCartCouponCode();
+
 
     await showPolicyThenProceed(
       async () => {
@@ -3377,42 +4376,59 @@ function buildDestinationHtml(destino) {
         const finalItems =
           getCart();
 
+
         if (!finalItems.length){
 
           openPopup({
+
             title:
               "Carrinho",
+
             text:
               "Seu carrinho está vazio."
+
           });
+
 
           return;
 
         }
 
+
         trackEvent(
           "begin_checkout",
           {
-            currency:"BRL",
+
+            currency:
+              "BRL",
+
             value:
               calcCartTotal(
                 finalItems
               ),
+
             items:
               finalItems.map(
                 (item) => ({
+
                   item_name:
                     item.city,
+
                   item_category:
                     item.category,
+
                   price:
                     item.price,
+
                   quantity:
                     item.qty
+
                 })
               )
+
           }
         );
+
 
         goInvoiceCart(
           finalItems,
@@ -3424,6 +4440,7 @@ function buildDestinationHtml(destino) {
 
   }
 
+
   async function resumeAfterLoginIfNeeded(){
 
     const params =
@@ -3431,13 +4448,18 @@ function buildDestinationHtml(destino) {
         window.location.search
       );
 
+
     if (
       params.get(
         "after_login"
-      ) !== "1"
+      ) !==
+      "1"
     ){
+
       return;
+
     }
+
 
     try{
 
@@ -3446,9 +4468,11 @@ function buildDestinationHtml(destino) {
           window.location.href
         );
 
+
       url.searchParams.delete(
         "after_login"
       );
+
 
       window.history.replaceState(
         {},
@@ -3458,31 +4482,43 @@ function buildDestinationHtml(destino) {
 
     }catch(error){}
 
+
     const context =
       getCheckoutContext();
 
+
     if (
       !context ||
-      context.type !== "cart"
+      context.type !==
+      "cart"
     ){
+
       return;
+
     }
+
 
     const session =
       await getSession();
+
 
     if (
       !session ||
       !session.user
     ){
+
       return;
+
     }
 
+
     clearCheckoutContext();
+
 
     await startCartCheckoutFlow();
 
   }
+
 
   /* =====================================================
      MATERIAIS
@@ -3498,10 +4534,12 @@ function buildDestinationHtml(destino) {
           category
         )
       ] ||
+
       "Material digital com indicações e referências selecionadas para apoiar suas escolhas durante a viagem."
     );
 
   }
+
 
   function getCategoryIcon(
     category
@@ -3518,6 +4556,7 @@ function buildDestinationHtml(destino) {
 
   }
 
+
   async function loadDestinationMaterials(){
 
     const grid =
@@ -3525,21 +4564,26 @@ function buildDestinationHtml(destino) {
         "materialsGrid"
       );
 
+
     if (!grid){
       return;
     }
 
+
     const sb =
       ensureSupabase();
+
 
     if (!sb){
 
       grid.innerHTML =
         '<div class="error-state">Não foi possível carregar os materiais disponíveis neste momento.</div>';
 
+
       return;
 
     }
+
 
     const {
       data,
@@ -3559,51 +4603,65 @@ function buildDestinationHtml(destino) {
         .order(
           "category",
           {
-            ascending:true
+            ascending:
+              true
           }
         );
+
 
     if (error){
 
       grid.innerHTML =
         '<div class="error-state">Não foi possível carregar os materiais disponíveis neste momento.</div>';
 
+
       return;
 
     }
+
 
     const destinationKey =
       normalizeCityLabel(
         DESTINATION.cityLabel
       );
 
+
     const materials =
       (
-        Array.isArray(data)
+        Array.isArray(
+          data
+        )
           ? data
           : []
       )
       .filter(
         (row) =>
+
           normalizeCityLabel(
-            row.city_label || ""
-          ) === destinationKey
+            row.city_label ||
+            ""
+          ) ===
+          destinationKey
       );
+
 
     if (!materials.length){
 
       grid.innerHTML =
         '<div class="empty-state">Nenhum material está disponível para este destino no momento.</div>';
 
+
       return;
 
     }
+
 
     renderMaterials(
       materials
     );
 
   }
+
 
   function renderMaterials(
     materials
@@ -3614,25 +4672,32 @@ function buildDestinationHtml(destino) {
         "materialsGrid"
       );
 
+
     if (!grid){
       return;
     }
 
+
     grid.innerHTML =
       "";
+
 
     materials.forEach(
       (material) => {
 
         const category =
           String(
-            material.category || ""
+            material.category ||
+            ""
           ).trim();
+
 
         const cityLabel =
           String(
-            material.city_label || ""
+            material.city_label ||
+            ""
           ).trim();
+
 
         if (
           !category ||
@@ -3641,55 +4706,68 @@ function buildDestinationHtml(destino) {
           return;
         }
 
+
         const article =
           document.createElement(
             "article"
           );
 
+
         article.className =
           "material-card";
+
 
         const icon =
           document.createElement(
             "div"
           );
 
+
         icon.className =
           "material-icon";
+
 
         icon.textContent =
           getCategoryIcon(
             category
           );
 
+
         const title =
           document.createElement(
             "h3"
           );
 
+
         title.textContent =
           category;
+
 
         const description =
           document.createElement(
             "p"
           );
 
+
         description.className =
           "material-description";
+
 
         description.textContent =
           getCategoryDescription(
             category
           );
 
+
         const price =
           document.createElement(
             "div"
           );
 
+
         price.className =
           "material-price";
+
 
         price.textContent =
           formatBRL(
@@ -3698,22 +4776,28 @@ function buildDestinationHtml(destino) {
             )
           );
 
+
         const button =
           document.createElement(
             "button"
           );
 
+
         button.type =
           "button";
+
 
         button.className =
           "material-button";
 
+
         button.textContent =
           "Comprar agora";
 
+
         button.addEventListener(
           "click",
+
           () => {
 
             addToCartAndOpenCart(
@@ -3724,25 +4808,31 @@ function buildDestinationHtml(destino) {
           }
         );
 
+
         article.appendChild(
           icon
         );
+
 
         article.appendChild(
           title
         );
 
+
         article.appendChild(
           description
         );
+
 
         article.appendChild(
           price
         );
 
+
         article.appendChild(
           button
         );
+
 
         grid.appendChild(
           article
@@ -3753,24 +4843,30 @@ function buildDestinationHtml(destino) {
 
   }
 
+
   /* =====================================================
      INICIALIZAÇÃO
   ===================================================== */
 
   document.addEventListener(
     "DOMContentLoaded",
+
     async () => {
 
       ensureSupabase();
 
-      startHeroCarousel();
+
+      startPagePhotoCarousel();
+
 
       updateCartBadge();
+
 
       const logout =
         document.getElementById(
           "navLogout"
         );
+
 
       if (logout){
 
@@ -3781,13 +4877,18 @@ function buildDestinationHtml(destino) {
 
       }
 
+
       await refreshNavAuth();
+
 
       await loadCategoryPrices();
 
+
       await loadOwnedPurchases();
 
+
       await loadDestinationMaterials();
+
 
       await resumeAfterLoginIfNeeded();
 
@@ -3795,6 +4896,7 @@ function buildDestinationHtml(destino) {
   );
 
 </script>
+
 
 <script type="application/ld+json">
 ${JSON.stringify(
@@ -3838,25 +4940,30 @@ ${JSON.stringify(
 )}
 </script>
 
+
 </body>
 </html>`;
 }
 
+
 /* =========================================================
-   JSON
+   LEITURA DOS DESTINOS
 ========================================================= */
 
-function loadDestinationData() {
+function loadDestinationData(){
 
   if (
     !fs.existsSync(
       DESTINOS_DATA_PATH
     )
-  ) {
+  ){
+
     throw new Error(
       "Arquivo data/destinos.json não encontrado."
     );
+
   }
+
 
   const raw =
     fs.readFileSync(
@@ -3864,51 +4971,65 @@ function loadDestinationData() {
       "utf8"
     );
 
+
   const parsed =
-    JSON.parse(raw);
+    JSON.parse(
+      raw
+    );
+
 
   if (
     !parsed ||
     !Array.isArray(
       parsed.destinos
     )
-  ) {
+  ){
+
     throw new Error(
       'data/destinos.json precisa possuir a propriedade "destinos" como array.'
     );
+
   }
 
+
   return parsed.destinos;
+
 }
 
+
 /* =========================================================
-   GERAÇÃO
+   GERAÇÃO INDIVIDUAL
 ========================================================= */
 
 function generateDestination(
   destino,
   index
-) {
+){
 
   validateDestination(
     destino,
     index
   );
 
+
   const outputDirectory =
     path.join(
       DESTINOS_OUTPUT_DIR,
+
       String(
         destino.slugPais
       ).trim(),
+
       String(
         destino.slugCidade
       ).trim()
     );
 
+
   ensureDirectory(
     outputDirectory
   );
+
 
   const outputFile =
     path.join(
@@ -3916,16 +5037,19 @@ function generateDestination(
       "index.html"
     );
 
+
   const html =
     buildDestinationHtml(
       destino
     );
+
 
   fs.writeFileSync(
     outputFile,
     html,
     "utf8"
   );
+
 
   console.log(
     `✓ ${destino.cidade}, ${destino.pais} -> ${path.relative(
@@ -3936,34 +5060,41 @@ function generateDestination(
 
 }
 
+
 /* =========================================================
    EXECUÇÃO
 ========================================================= */
 
-function main() {
+function main(){
 
   console.log("");
+
 
   console.log(
     "Curadoria Elite Travel — geração de destinos"
   );
 
+
   console.log(
     "---------------------------------------------"
   );
 
+
   const destinos =
     loadDestinationData();
 
-  if (!destinos.length) {
+
+  if (!destinos.length){
 
     console.log(
       "Nenhum destino cadastrado."
     );
 
+
     return;
 
   }
+
 
   destinos.forEach(
     (
@@ -3979,29 +5110,35 @@ function main() {
     }
   );
 
+
   console.log(
     "---------------------------------------------"
   );
+
 
   console.log(
     `${destinos.length} destino(s) gerado(s) com sucesso.`
   );
 
+
   console.log("");
 
 }
 
-try {
+
+try{
 
   main();
 
-} catch(error) {
+}catch(error){
 
   console.error("");
+
 
   console.error(
     "Erro ao gerar páginas de destino:"
   );
+
 
   console.error(
     error &&
@@ -4010,7 +5147,9 @@ try {
       : error
   );
 
+
   console.error("");
+
 
   process.exit(1);
 
