@@ -3,6 +3,7 @@
     {
       "cidade": "Paris",
       "pais": "França",
+      "cityLabel": "Paris - França",
       "slugPais": "franca",
       "slugCidade": "paris",
       "url": "/destinos/franca/paris/",
@@ -25,6 +26,7 @@
     {
       "cidade": "New York",
       "pais": "Estados Unidos",
+      "cityLabel": "New York - USA",
       "slugPais": "usa",
       "slugCidade": "new-york",
       "url": "/destinos/usa/new-york/",
