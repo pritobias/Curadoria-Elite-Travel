@@ -30,11 +30,11 @@ jobs:
       - name: Install dependencies
         run: npm install
 
-      - name: Build destination pages
+      - name: Build destination pages and sitemap
         run: npm run build-destinos
 
-      - name: Commit generated destination pages
+      - name: Commit generated destination pages and sitemap
         uses: stefanzweifel/git-auto-commit-action@v5
         with:
-          commit_message: "Generate destination pages"
-          file_pattern: destinos/**
+          commit_message: "Generate destination pages and sitemap"
+          file_pattern: destinos/** sitemap.xml
