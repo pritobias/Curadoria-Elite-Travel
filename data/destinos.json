@@ -3,7 +3,6 @@
     {
       "cidade": "Paris",
       "pais": "França",
-      "cityLabel": "Paris - FRANÇA",
       "slugPais": "franca",
       "slugCidade": "paris",
       "url": "/destinos/franca/paris/",
@@ -20,6 +19,28 @@
         {
           "tipo": "ponto-turistico",
           "arquivo": "/images/destinos/museu-louvre.png"
+        }
+      ]
+    },
+    {
+      "cidade": "New York",
+      "pais": "Estados Unidos",
+      "slugPais": "usa",
+      "slugCidade": "new-york",
+      "url": "/destinos/usa/new-york/",
+      "texto": "New York reúne ritmos, culturas e referências que atravessam o mundo. Entre grandes ícones, bairros distintos e uma vida urbana intensa, a cidade se transforma a cada esquina sem perder sua identidade.",
+      "imagens": [
+        {
+          "tipo": "bandeira",
+          "arquivo": "/images/destinos/new-york-bandeira.png"
+        },
+        {
+          "tipo": "ponto-turistico",
+          "arquivo": "/images/destinos/empire-state.png"
+        },
+        {
+          "tipo": "ponto-turistico",
+          "arquivo": "/images/destinos/brooklin-bridge.png"
         }
       ]
     }
