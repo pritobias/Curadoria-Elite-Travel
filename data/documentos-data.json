@@ -1,5 +1,5 @@
 {
-  "updatedAt": "18/09/2026, 10:24:52",
+  "updatedAt": "19/09/2026, 09:53:40",
   "monitoring": {
     "enabled": true,
     "frequency": "daily",
@@ -93,8 +93,8 @@
           "url": "https://www.auswaertiges-amt.de/en/visa-service"
         }
       ],
-      "lastChecked": "18/09/2026, 10:24:47",
-      "lastAutomaticUpdate": "18/09/2026, 10:24:47",
+      "lastChecked": "19/09/2026, 09:53:36",
+      "lastAutomaticUpdate": "19/09/2026, 09:53:36",
       "origin": "extracted"
     },
     {
@@ -950,7 +950,7 @@
       },
       "health": {
         "title": "Informações de saúde",
-        "summary": "Sem exigência geral de vacina obrigatória na entrada direta."
+        "summary": "Existe exigência sanitária ou vacinal para determinados viajantes."
       },
       "diplomaticSupport": {
         "title": "Apoio diplomático",
@@ -972,8 +972,8 @@
           "url": "https://travel.state.gov/"
         }
       ],
-      "lastChecked": "18/09/2026, 10:24:48",
-      "lastAutomaticUpdate": "18/09/2026, 10:24:48",
+      "lastChecked": "19/09/2026, 09:53:37",
+      "lastAutomaticUpdate": "19/09/2026, 09:53:37",
       "origin": "extracted"
     },
     {
@@ -1099,8 +1099,8 @@
           "url": "https://france-visas.gouv.fr/"
         }
       ],
-      "lastChecked": "18/09/2026, 10:24:52",
-      "lastAutomaticUpdate": "18/09/2026, 10:24:52",
+      "lastChecked": "19/09/2026, 09:53:40",
+      "lastAutomaticUpdate": "19/09/2026, 09:53:40",
       "origin": "extracted"
     },
     {
