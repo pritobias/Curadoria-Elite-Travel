@@ -329,7 +329,7 @@
       padding: 7px;
       background: rgba(0,0,0,.12);
       display: grid;
-      grid-template-columns: 58px minmax(0, 1fr);
+      grid-template-columns: 72px minmax(0, 1fr);
       grid-template-rows: auto auto;
       column-gap: 7px;
       align-items: center;
@@ -340,7 +340,7 @@
       grid-column: 2;
       grid-row: 1;
       color: #d8e1ee;
-      font-size: 9px;
+      font-size: 10px;
       font-weight: 800;
       line-height: 1.2;
       margin: 0;
@@ -350,8 +350,8 @@
     }
 
     .white-label-photo-preview {
-      width: 58px;
-      height: 44px;
+      width: 72px;
+      height: 54px;
       grid-column: 1;
       grid-row: 1 / span 2;
       border: 1px dashed rgba(214,173,50,.35);
@@ -381,8 +381,8 @@
       width: 100%;
       min-width: 0;
       color: #cbd6e6;
-      font-size: 8px;
-      margin: 2px 0 0;
+      font-size: 9px;
+      margin: 3px 0 0;
       line-height: 1.1;
     }
 
@@ -3889,7 +3889,9 @@
           <div class="business-page-kicker">Página 02 • Panorama da cidade</div>
           <h5 class="business-page-title">${city}</h5>
           <div class="business-city-text">${content.panorama}</div>
-          <div class="business-page-footer">Material Partner • ${category}</div>
+          <div class="business-page-footer">${isWhiteLabelMode()
+            ? escapeHtml(getClientBrandName())
+            : `Material Partner • ${category}`}</div>
         </section>
       `;
 
@@ -3901,7 +3903,9 @@
             <div class="business-page-kicker">Página 03 • Indicações selecionadas</div>
             <h5 class="business-page-title">Indicações em preparação</h5>
             <div class="business-city-text">Este material já foi identificado no Supabase. A leitura automática tentará converter o PDF em indicações estruturadas para esta categoria e destino. Se o texto do PDF não estiver em padrão legível, será necessário revisar a conversão.</div>
-            <div class="business-page-footer">Material Partner • ${city}</div>
+            <div class="business-page-footer">${isWhiteLabelMode()
+              ? escapeHtml(getClientBrandName())
+              : `Material Partner • ${city}`}</div>
           </section>
           `,
           renderInlineClosingPage()
@@ -3924,7 +3928,9 @@
                 return renderBusinessItemCard(item, firstItemIndex + itemIndex);
               }).join("")}
             </div>
-            <div class="business-page-footer">${firstItemIndex + 1}–${firstItemIndex + itemsChunk.length} de ${content.items.length} indicações</div>
+            <div class="business-page-footer">${isWhiteLabelMode()
+              ? `${firstItemIndex + 1}–${firstItemIndex + itemsChunk.length} de ${content.items.length} indicações • ${escapeHtml(getClientBrandName())}`
+              : `${firstItemIndex + 1}–${firstItemIndex + itemsChunk.length} de ${content.items.length} indicações`}</div>
           </section>
         `;
       });
@@ -3944,9 +3950,9 @@
 
       if (signature) {
         signature.innerHTML = whiteLabel
-          ? ""
+          ? `Curadoria desenvolvida por<br><strong>${escapeHtml(getClientBrandName())}</strong>`
           : `Curadoria desenvolvida em parceria com<br><strong>Curadoria Elite Travel</strong>`;
-        signature.style.display = whiteLabel ? "none" : "block";
+        signature.style.display = "block";
       }
 
       if (metaLabel) metaLabel.textContent = whiteLabel ? "Apresentação" : "Origem";
@@ -4064,7 +4070,7 @@
                   }).join("")}
                 </div>
                 <div class="page-footer">${whiteLabel
-                  ? `${firstItemIndex + 1}–${firstItemIndex + itemsChunk.length} de ${businessContent.items.length} indicações`
+                  ? `${firstItemIndex + 1}–${firstItemIndex + itemsChunk.length} de ${businessContent.items.length} indicações • ${brandName}`
                   : `${firstItemIndex + 1}–${firstItemIndex + itemsChunk.length} de ${businessContent.items.length} indicações • Curadoria Elite Travel Partner`}</div>
               </section>
             `;
@@ -4214,7 +4220,9 @@
   <section class="paper-page">
     <div class="top">
       <div class="partner-logo">${logoHtml}</div>
-      ${whiteLabel ? "" : `<div class="signature">Curadoria desenvolvida em parceria com<strong>Curadoria Elite Travel</strong></div>`}
+      ${whiteLabel
+        ? `<div class="signature">Curadoria desenvolvida por<strong>${brandName}</strong></div>`
+        : `<div class="signature">Curadoria desenvolvida em parceria com<strong>Curadoria Elite Travel</strong></div>`}
     </div>
 
     <div class="eyebrow">${whiteLabel ? "Material exclusivo" : "Versão Business Partner"}</div>
@@ -4229,14 +4237,18 @@
 
     ${personalizedCoverHtml}
 
-    <div class="page-footer">${whiteLabel ? brandName : "Página 01 • Material Partner • Uso autorizado para clientes da empresa parceira"}</div>
+    <div class="page-footer">${whiteLabel
+      ? `Página 01 • Material feito por ${brandName} • Uso autorizado para clientes da empresa parceira`
+      : "Página 01 • Material Partner • Uso autorizado para clientes da empresa parceira"}</div>
   </section>
 
   <section class="paper-page">
     <div class="page-kicker">Panorama da cidade</div>
     <h2>${city}</h2>
     <p class="lead">${businessContent.panorama}</p>
-    <div class="page-footer">${whiteLabel ? brandName : `Curadoria Elite Travel Partner • ${category}`}</div>
+    <div class="page-footer">${whiteLabel
+      ? brandName
+      : `Curadoria Elite Travel Partner • ${category}`}</div>
   </section>
 
   ${indicationPages}
