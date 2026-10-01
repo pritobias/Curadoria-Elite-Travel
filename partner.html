@@ -294,6 +294,77 @@
       display: block;
     }
 
+    .white-label-photos-panel {
+      margin-top: 12px;
+      border: 1px solid rgba(214,173,50,.22);
+      border-radius: 16px;
+      background: rgba(255,255,255,.03);
+      padding: 14px;
+    }
+
+    .white-label-photos-title {
+      color: #d6ad32;
+      font-size: 13px;
+      font-weight: 900;
+      margin-bottom: 5px;
+    }
+
+    .white-label-photos-help {
+      color: #9fb0c7;
+      font-size: 11px;
+      line-height: 1.5;
+      margin-bottom: 12px;
+    }
+
+    .white-label-photo-row {
+      border-top: 1px solid rgba(255,255,255,.08);
+      padding: 12px 0;
+    }
+
+    .white-label-photo-row:first-child {
+      border-top: none;
+      padding-top: 0;
+    }
+
+    .white-label-photo-label {
+      display: block;
+      color: #d8e1ee;
+      font-size: 12px;
+      font-weight: 800;
+      line-height: 1.35;
+      margin-bottom: 8px;
+    }
+
+    .white-label-photo-preview {
+      width: 100%;
+      height: 105px;
+      border: 1px dashed rgba(214,173,50,.35);
+      border-radius: 12px;
+      background: #050b16;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      margin-bottom: 8px;
+      color: #7f8da3;
+      font-size: 11px;
+      text-align: center;
+      padding: 8px;
+    }
+
+    .white-label-photo-preview img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .white-label-photo-input {
+      width: 100%;
+      color: #cbd6e6;
+      font-size: 11px;
+      margin: 0;
+    }
+
     .client-preview-box {
       border: 1px solid rgba(214,173,50,.18);
       border-radius: 14px;
@@ -814,9 +885,35 @@
       padding: 17px;
       background: rgba(255,255,255,.55);
       display: grid;
-      grid-template-columns: 42px 1fr;
-      gap: 14px;
+      grid-template-columns: 170px 1fr;
+      gap: 18px;
       align-items: start;
+    }
+
+    .business-item-photo {
+      width: 170px;
+      height: 128px;
+      border: 1px solid rgba(214,173,50,.22);
+      border-radius: 12px;
+      background: #eee9dc;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #8b8069;
+      font-size: 10px;
+      text-align: center;
+      line-height: 1.35;
+    }
+
+    .business-item-photo img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .business-item-copy {
+      min-width: 0;
     }
 
     .business-item-number {
@@ -1412,6 +1509,14 @@
             </span>
           </div>
 
+          <div class="white-label-photos-panel" id="whiteLabelPhotosPanel" style="display:none;">
+            <div class="white-label-photos-title">Fotos das indicações</div>
+            <div class="white-label-photos-help">
+              No White Label, escolha a foto que deverá aparecer ao lado de cada indicação.
+            </div>
+            <div id="whiteLabelPhotosList"></div>
+          </div>
+
           <div class="field">
             <small>Status</small>
             <strong>Partner ativo</strong>
@@ -1702,6 +1807,7 @@
     let partnerLogoDataUrl = "";
     let partnerCompanyName = "Ten Group Brasil";
     let clientBrandName = "Mastercard Concierge";
+    const whiteLabelPhotoData = {};
     let clientPersonalization = {
       enabled: false,
       greetingType: "neutral",
@@ -3435,6 +3541,72 @@
       return "Prezado(a)";
     }
 
+    function isWhiteLabelMode() {
+      const input = document.getElementById("presentationModeInput");
+      return Boolean(input && input.value === "whitelabel");
+    }
+
+    function getWhiteLabelPhotoKey(material, index) {
+      const materialKey = getBusinessContentCacheKey(material);
+      return `${materialKey}::${index}`;
+    }
+
+    function getWhiteLabelPhoto(material, index) {
+      return whiteLabelPhotoData[getWhiteLabelPhotoKey(material, index)] || "";
+    }
+
+    function renderWhiteLabelPhotoFields(material) {
+      const panel = document.getElementById("whiteLabelPhotosPanel");
+      const list = document.getElementById("whiteLabelPhotosList");
+
+      if (!panel || !list) return;
+
+      if (!isWhiteLabelMode() || !material) {
+        panel.style.display = "none";
+        list.innerHTML = "";
+        return;
+      }
+
+      const content = getBusinessContentTemplate(material);
+      const items = content && Array.isArray(content.items) ? content.items : [];
+
+      panel.style.display = "block";
+
+      if (!items.length) {
+        list.innerHTML = `<div class="white-label-photos-help">Selecione um destino com indicações disponíveis para escolher as fotos individualmente.</div>`;
+        return;
+      }
+
+      list.innerHTML = items.map(function(item, index) {
+        const photo = getWhiteLabelPhoto(material, index);
+        return `
+          <div class="white-label-photo-row">
+            <span class="white-label-photo-label">${formatBusinessNumber(index)} • ${escapeHtml(item.name || "Indicação")}</span>
+            <div class="white-label-photo-preview">
+              ${photo ? `<img src="${photo}" alt="Foto de ${escapeHtml(item.name || "indicação")}">` : "Escolha a foto que será usada nesta indicação"}
+            </div>
+            <input class="white-label-photo-input" type="file" accept="image/*" data-white-label-photo-index="${index}">
+          </div>
+        `;
+      }).join("");
+
+      list.querySelectorAll("input[data-white-label-photo-index]").forEach(function(input) {
+        input.addEventListener("change", function(event) {
+          const file = event.target.files && event.target.files[0];
+          const index = Number(event.target.dataset.whiteLabelPhotoIndex);
+          if (!file || !material) return;
+
+          const reader = new FileReader();
+          reader.onload = function(loadEvent) {
+            whiteLabelPhotoData[getWhiteLabelPhotoKey(material, index)] = loadEvent.target.result;
+            renderWhiteLabelPhotoFields(material);
+            renderBusinessContentPreview(material);
+          };
+          reader.readAsDataURL(file);
+        });
+      });
+    }
+
     function hasClientPersonalization() {
       return Boolean(
         clientPersonalization.enabled &&
@@ -3525,6 +3697,26 @@
     function renderInlineClosingPage() {
       const brandName = escapeHtml(getClientBrandName());
       const partnerName = escapeHtml(getPartnerCompanyName());
+      const whiteLabel = isWhiteLabelMode();
+
+      if (whiteLabel) {
+        return `
+          <section class="business-a4-page">
+            <div class="business-page-kicker">Encerramento</div>
+            <div class="business-closing-logo">${getBrandLogoHtml("inline")}</div>
+            <h5 class="business-page-title" style="text-align:center;">${brandName}</h5>
+            <div class="business-closing-text">
+              A melhor viagem é aquela que permite viver o destino com mais tranquilidade e menos dúvidas.<br><br>
+              <strong>Tenha uma excelente experiência.</strong>
+            </div>
+            <div class="business-closing-exclusive">
+              <p><strong>Documento disponibilizado para clientes da ${brandName}.</strong></p>
+              <p>Uso destinado ao apoio e orientação durante a viagem.</p>
+            </div>
+            <div class="business-page-footer">© 2026 • ${brandName}</div>
+          </section>
+        `;
+      }
 
       return `
         <section class="business-a4-page">
@@ -3565,10 +3757,17 @@
     }
 
     function renderBusinessItemCard(item, index) {
+      const whiteLabel = isWhiteLabelMode();
+      const photo = whiteLabel && selectedMaterial ? getWhiteLabelPhoto(selectedMaterial, index) : "";
+      const photoHtml = photo
+        ? `<img src="${photo}" alt="Foto de ${escapeHtml(item.name || "indicação")}">`
+        : `<span>${whiteLabel ? "Foto não selecionada" : "Foto do acervo"}</span>`;
+
       return `
         <div class="business-item-card">
-          <div class="business-item-number">${formatBusinessNumber(index)}</div>
-          <div>
+          <div class="business-item-photo">${photoHtml}</div>
+          <div class="business-item-copy">
+            <div class="business-item-number">${formatBusinessNumber(index)}</div>
             <h6>${item.name}</h6>
             <p>${item.description}</p>
             <div class="business-item-details-grid">
@@ -3647,6 +3846,7 @@
 
     function renderBusinessContentPreview(material) {
       updatePersonalizedCoverPreviewBlock(material);
+      renderWhiteLabelPhotoFields(material);
 
       const content = getBusinessContentTemplate(material);
       const category = normalizeCategoryName(material.category);
@@ -3726,7 +3926,9 @@
       }
 
       if (businessPreviewText) {
-        businessPreviewText.innerText = `Material identificado no acervo da Curadoria Elite Travel e pronto para ser apresentado em uma versão business clean, com identidade da marca apresentada ao cliente e assinatura discreta da Curadoria.`;
+        businessPreviewText.innerText = isWhiteLabelMode()
+          ? `Material pronto para ser apresentado exclusivamente com a identidade da marca escolhida, sem assinatura da Curadoria Elite Travel.`
+          : `Material identificado no acervo da Curadoria Elite Travel e pronto para ser apresentado em uma versão business clean, com identidade da marca apresentada ao cliente e assinatura discreta da Curadoria.`;
       }
 
       renderBusinessContentPreview(material);
@@ -3737,10 +3939,12 @@
       const category = normalizeCategoryName(selectedMaterial.category);
       const city = selectedMaterial.city_label || "Destino selecionado";
       const year = selectedMaterial.year || "";
-      const brandName = getClientBrandName();
-      const partnerName = getPartnerCompanyName();
+      const brandName = escapeHtml(getClientBrandName());
+      const partnerName = escapeHtml(getPartnerCompanyName());
+      const whiteLabel = isWhiteLabelMode();
       const logoHtml = getBrandLogoHtml("print");
       const businessContent = getBusinessContentTemplate(selectedMaterial);
+
       const personalizedCoverHtml = hasClientPersonalization()
         ? `<div class="panel personalized-cover-panel">
             <div class="page-kicker">Atendimento personalizado</div>
@@ -3749,16 +3953,27 @@
           </div>
           <div class="panel personalized-cover-panel">
             <h2>${category} • ${city}</h2>
-            <p>Material preparado em versão business clean por ${brandName}, com apoio da Curadoria Elite Travel, para facilitar a consulta e a tomada de decisão durante a viagem.</p>
+            <p>${whiteLabel
+              ? `Material preparado para ${brandName}, para facilitar a consulta e a tomada de decisão durante a viagem.`
+              : `Material preparado em versão business clean por ${brandName}, com apoio da Curadoria Elite Travel, para facilitar a consulta e a tomada de decisão durante a viagem.`}</p>
           </div>`
-        : `<div class="panel">
-            <h2>Uso profissional</h2>
-            <ul>
-              <li>Versão adaptada para envio ao cliente da empresa parceira.</li>
-              <li>Identidade da empresa aplicada ao documento.</li>
-              <li>Assinatura discreta da Curadoria Elite Travel como parceira de curadoria.</li>
-            </ul>
-          </div>`;
+        : whiteLabel
+          ? `<div class="panel">
+              <h2>Uso profissional</h2>
+              <ul>
+                <li>Material preparado para apresentação exclusiva da marca escolhida.</li>
+                <li>Identidade da marca aplicada ao documento.</li>
+                <li>Fotos das indicações escolhidas pela empresa parceira.</li>
+              </ul>
+            </div>`
+          : `<div class="panel">
+              <h2>Uso profissional</h2>
+              <ul>
+                <li>Versão adaptada para envio ao cliente da empresa parceira.</li>
+                <li>Identidade da empresa aplicada ao documento.</li>
+                <li>Assinatura discreta da Curadoria Elite Travel como parceira de curadoria.</li>
+              </ul>
+            </div>`;
 
       const indicationPages = businessContent.items.length
         ? chunkItems(businessContent.items, 3).map(function(itemsChunk, chunkIndex) {
@@ -3771,11 +3986,17 @@
                 <h2>${city}</h2>
                 <div class="items-grid">
                   ${itemsChunk.map(function(item, itemIndex) {
-                    const number = formatBusinessNumber(firstItemIndex + itemIndex);
+                    const index = firstItemIndex + itemIndex;
+                    const photo = whiteLabel ? getWhiteLabelPhoto(selectedMaterial, index) : "";
+                    const photoHtml = photo
+                      ? `<img src="${photo}" alt="Foto de ${escapeHtml(item.name || "indicação")}">`
+                      : `<span>${whiteLabel ? "Foto não selecionada" : "Foto do acervo"}</span>`;
+
                     return `
                       <article class="printed-item-card">
-                        <div class="printed-item-number">${number}</div>
-                        <div>
+                        <div class="printed-item-photo">${photoHtml}</div>
+                        <div class="printed-item-copy">
+                          <div class="printed-item-number">${formatBusinessNumber(index)}</div>
                           <h3>${item.name}</h3>
                           <p>${item.description}</p>
                           ${item.address ? `<div class="detail"><strong>Endereço:</strong> ${item.address}</div>` : ""}
@@ -3786,46 +4007,60 @@
                     `;
                   }).join("")}
                 </div>
-                <div class="page-footer">${firstItemIndex + 1}–${firstItemIndex + itemsChunk.length} de ${businessContent.items.length} indicações • Curadoria Elite Travel Partner</div>
+                <div class="page-footer">${whiteLabel
+                  ? `${firstItemIndex + 1}–${firstItemIndex + itemsChunk.length} de ${businessContent.items.length} indicações`
+                  : `${firstItemIndex + 1}–${firstItemIndex + itemsChunk.length} de ${businessContent.items.length} indicações • Curadoria Elite Travel Partner`}</div>
               </section>
             `;
           }).join("")
-        : `<section class="paper-page"><div class="page-kicker">Página 03 • Indicações selecionadas</div><h2>Indicações em preparação</h2><p class="lead">Este material já foi identificado no Supabase. A leitura automática tentará converter o PDF em indicações estruturadas para esta categoria e destino. Se o texto do PDF não estiver em padrão legível, será necessário revisar a conversão.</p><div class="page-footer">Curadoria Elite Travel Partner</div></section>`;
+        : `<section class="paper-page"><div class="page-kicker">Página 03 • Indicações selecionadas</div><h2>Indicações em preparação</h2><p class="lead">Este material já foi identificado no Supabase. A leitura automática tentará converter o PDF em indicações estruturadas para esta categoria e destino. Se o texto do PDF não estiver em padrão legível, será necessário revisar a conversão.</p><div class="page-footer">${whiteLabel ? brandName : "Curadoria Elite Travel Partner"}</div></section>`;
 
-      const closingPageHtml = `
-        <section class="paper-page closing-page">
-          <div class="page-kicker">Encerramento</div>
-          <div class="closing-logo">${logoHtml}</div>
-          <h2 class="closing-brand">${brandName}</h2>
-
-          <p class="closing-text">
-            A melhor viagem é aquela que permite viver o destino com mais tranquilidade e menos dúvidas.
-          </p>
-
-          <p class="closing-highlight">Tenha uma excelente experiência.</p>
-
-          <div class="closing-signature">
-            Material disponibilizado por<br>
-            <strong>${brandName}</strong><br><br>
-            em parceria com<br>
-            <strong>Curadoria Elite Travel</strong>
-          </div>
-
-          <div class="closing-exclusive">
-            <p><strong>Documento disponibilizado para clientes da ${brandName}.</strong></p>
-            <p>Uso destinado ao apoio e orientação durante a viagem.</p>
-          </div>
-
-          <div class="page-footer">© 2026 • ${brandName} • Curadoria Elite Travel Partner</div>
-        </section>
-      `;
+      const closingPageHtml = whiteLabel
+        ? `
+          <section class="paper-page closing-page">
+            <div class="page-kicker">Encerramento</div>
+            <div class="closing-logo">${logoHtml}</div>
+            <h2 class="closing-brand">${brandName}</h2>
+            <p class="closing-text">
+              A melhor viagem é aquela que permite viver o destino com mais tranquilidade e menos dúvidas.
+            </p>
+            <p class="closing-highlight">Tenha uma excelente experiência.</p>
+            <div class="closing-exclusive">
+              <p><strong>Documento disponibilizado para clientes da ${brandName}.</strong></p>
+              <p>Uso destinado ao apoio e orientação durante a viagem.</p>
+            </div>
+            <div class="page-footer">© 2026 • ${brandName}</div>
+          </section>
+        `
+        : `
+          <section class="paper-page closing-page">
+            <div class="page-kicker">Encerramento</div>
+            <div class="closing-logo">${logoHtml}</div>
+            <h2 class="closing-brand">${brandName}</h2>
+            <p class="closing-text">
+              A melhor viagem é aquela que permite viver o destino com mais tranquilidade e menos dúvidas.
+            </p>
+            <p class="closing-highlight">Tenha uma excelente experiência.</p>
+            <div class="closing-signature">
+              Material disponibilizado por<br>
+              <strong>${brandName}</strong><br><br>
+              em parceria com<br>
+              <strong>Curadoria Elite Travel</strong>
+            </div>
+            <div class="closing-exclusive">
+              <p><strong>Documento disponibilizado para clientes da ${brandName}.</strong></p>
+              <p>Uso destinado ao apoio e orientação durante a viagem.</p>
+            </div>
+            <div class="page-footer">© 2026 • ${brandName} • Curadoria Elite Travel Partner</div>
+          </section>
+        `;
 
       return `<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>${category} • ${city} | Partner</title>
+  <title>${category} • ${city} | ${whiteLabel ? brandName : "Partner"}</title>
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body {
@@ -3870,219 +4105,51 @@
     .signature { text-align: right; font-size: 14px; line-height: 1.4; color: #222; }
     .signature strong { display: block; margin-top: 6px; }
     .eyebrow, .page-kicker {
-      color: #9a7617;
-      text-transform: uppercase;
-      letter-spacing: 3px;
-      font-size: 13px;
-      font-weight: 900;
-      margin-bottom: 18px;
-      position: relative;
-      z-index: 1;
+      color: #9a7617; text-transform: uppercase; letter-spacing: 3px; font-size: 13px; font-weight: 900; margin-bottom: 18px; position: relative; z-index: 1;
     }
-    h1 {
-      font-size: 62px;
-      line-height: .95;
-      letter-spacing: 1px;
-      margin-bottom: 18px;
-      position: relative;
-      z-index: 1;
-    }
-    h2 {
-      font-size: 34px;
-      line-height: 1.1;
-      margin-bottom: 22px;
-      position: relative;
-      z-index: 1;
-    }
-    .subtitle {
-      font-size: 22px;
-      color: #444;
-      margin-bottom: 38px;
-      position: relative;
-      z-index: 1;
-    }
-    .lead {
-      color: #333;
-      font-size: 20px;
-      line-height: 1.85;
-      position: relative;
-      z-index: 1;
-    }
-    .meta {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 14px;
-      margin: 28px 0 42px;
-      position: relative;
-      z-index: 1;
-    }
-    .meta div {
-      border: 1px solid #dfcfaa;
-      border-radius: 16px;
-      padding: 18px;
-      background: rgba(255,255,255,.44);
-    }
-    .meta small {
-      display: block;
-      text-transform: uppercase;
-      color: #8a7a58;
-      font-size: 12px;
-      font-weight: 900;
-      letter-spacing: 1px;
-      margin-bottom: 7px;
-    }
+    h1 { font-size: 62px; line-height: .95; letter-spacing: 1px; margin-bottom: 18px; position: relative; z-index: 1; }
+    h2 { font-size: 34px; line-height: 1.1; margin-bottom: 22px; position: relative; z-index: 1; }
+    .subtitle { font-size: 22px; color: #444; margin-bottom: 38px; position: relative; z-index: 1; }
+    .lead { color: #333; font-size: 20px; line-height: 1.85; position: relative; z-index: 1; }
+    .meta { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin: 28px 0 42px; position: relative; z-index: 1; }
+    .meta div { border: 1px solid #dfcfaa; border-radius: 16px; padding: 18px; background: rgba(255,255,255,.44); }
+    .meta small { display: block; text-transform: uppercase; color: #8a7a58; font-size: 12px; font-weight: 900; letter-spacing: 1px; margin-bottom: 7px; }
     .meta strong { font-size: 16px; }
-    .panel {
-      border: 1px solid #dfcfaa;
-      border-radius: 20px;
-      padding: 26px;
-      background: rgba(255,255,255,.54);
-      position: relative;
-      z-index: 1;
-      margin-top: 24px;
-    }
+    .panel { border: 1px solid #dfcfaa; border-radius: 20px; padding: 26px; background: rgba(255,255,255,.54); position: relative; z-index: 1; margin-top: 24px; }
     .panel h2 { font-size: 26px; margin-bottom: 12px; }
     .panel p, .panel li { color: #333; font-size: 17px; line-height: 1.65; }
     .personalized-cover-panel .page-kicker { margin-bottom: 14px; }
     .personalized-cover-panel h2 { font-size: 28px; margin-bottom: 14px; }
     .personalized-cover-panel p { font-size: 18px; line-height: 1.7; }
-
     .items-grid { display: grid; gap: 18px; position: relative; z-index: 1; }
-    .printed-item-card {
-      border: 1px solid #dfcfaa;
-      border-radius: 20px;
-      padding: 22px;
-      background: rgba(255,255,255,.58);
-      display: grid;
-      grid-template-columns: 52px 1fr;
-      gap: 18px;
-      align-items: start;
-    }
-    .printed-item-number {
-      width: 46px;
-      height: 46px;
-      border-radius: 50%;
-      border: 1px solid rgba(214,173,50,.55);
-      color: #9b7a19;
-      background: rgba(214,173,50,.08);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-weight: 950;
-      font-size: 15px;
-    }
-    .printed-item-card h3 {
-      font-size: 21px;
-      line-height: 1.2;
-      text-transform: uppercase;
-      letter-spacing: .4px;
-      margin-bottom: 10px;
-    }
-    .printed-item-card p {
-      color: #333;
-      font-size: 15px;
-      line-height: 1.62;
-      margin-bottom: 12px;
-    }
+    .printed-item-card { border: 1px solid #dfcfaa; border-radius: 20px; padding: 22px; background: rgba(255,255,255,.58); display: grid; grid-template-columns: 170px 1fr; gap: 18px; align-items: start; }
+    .printed-item-photo { width: 170px; height: 128px; border: 1px solid #dfcfaa; border-radius: 14px; background: #eee9dc; overflow: hidden; display: flex; align-items: center; justify-content: center; color: #8b8069; font-size: 11px; text-align: center; line-height: 1.35; }
+    .printed-item-photo img { width: 100%; height: 100%; object-fit: cover; }
+    .printed-item-copy { min-width: 0; }
+    .printed-item-number { width: 46px; height: 46px; border-radius: 50%; border: 1px solid rgba(214,173,50,.55); color: #9b7a19; background: rgba(214,173,50,.08); display: flex; align-items: center; justify-content: center; font-weight: 950; font-size: 15px; margin-bottom: 10px; }
+    .printed-item-card h3 { font-size: 21px; line-height: 1.2; text-transform: uppercase; letter-spacing: .4px; margin-bottom: 10px; }
+    .printed-item-card p { color: #333; font-size: 15px; line-height: 1.62; margin-bottom: 12px; }
     .detail { color: #333; font-size: 14px; line-height: 1.45; margin-top: 6px; }
     .detail strong { color: #111; }
     ul { padding-left: 20px; }
-    .page-footer {
-      position: absolute;
-      left: 54px;
-      right: 54px;
-      bottom: 38px;
-      border-top: 1px solid rgba(214,173,50,.42);
-      padding-top: 14px;
-      text-align: center;
-      color: #555;
-      font-size: 12px;
-      z-index: 1;
-    }
-
-    .closing-page {
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      text-align: center;
-    }
-    .closing-logo {
-      margin: 0 auto 28px;
-      position: relative;
-      z-index: 1;
-      min-height: 112px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
+    .page-footer { position: absolute; left: 54px; right: 54px; bottom: 38px; border-top: 1px solid rgba(214,173,50,.42); padding-top: 14px; text-align: center; color: #555; font-size: 12px; z-index: 1; }
+    .closing-page { display: flex; flex-direction: column; justify-content: center; text-align: center; }
+    .closing-logo { margin: 0 auto 28px; position: relative; z-index: 1; min-height: 112px; display: flex; align-items: center; justify-content: center; }
     .closing-logo img { max-width: 240px; max-height: 120px; object-fit: contain; }
     .closing-brand { font-size: 34px; margin-bottom: 34px; }
-    .closing-text {
-      color: #333;
-      font-size: 24px;
-      line-height: 1.65;
-      max-width: 610px;
-      margin: 0 auto 20px;
-      position: relative;
-      z-index: 1;
-    }
-    .closing-highlight {
-      color: #111;
-      font-size: 25px;
-      font-weight: 900;
-      margin: 18px auto 42px;
-      position: relative;
-      z-index: 1;
-    }
-    .closing-signature {
-      border-top: 1px solid rgba(214,173,50,.42);
-      border-bottom: 1px solid rgba(214,173,50,.42);
-      padding: 24px 0;
-      color: #444;
-      font-size: 17px;
-      line-height: 1.55;
-      max-width: 500px;
-      margin: 0 auto 28px;
-      position: relative;
-      z-index: 1;
-    }
-    .closing-exclusive {
-      color: #444;
-      font-size: 15px;
-      line-height: 1.65;
-      max-width: 560px;
-      margin: 0 auto;
-      position: relative;
-      z-index: 1;
-    }
+    .closing-text { color: #333; font-size: 24px; line-height: 1.65; max-width: 610px; margin: 0 auto 20px; position: relative; z-index: 1; }
+    .closing-highlight { color: #111; font-size: 25px; font-weight: 900; margin: 18px auto 42px; position: relative; z-index: 1; }
+    .closing-signature { border-top: 1px solid rgba(214,173,50,.42); border-bottom: 1px solid rgba(214,173,50,.42); padding: 24px 0; color: #444; font-size: 17px; line-height: 1.55; max-width: 500px; margin: 0 auto 28px; position: relative; z-index: 1; }
+    .closing-exclusive { border: 1px solid #dfcfaa; border-radius: 16px; padding: 18px 22px; max-width: 560px; margin: 0 auto; color: #444; font-size: 14px; line-height: 1.6; position: relative; z-index: 1; }
     .closing-exclusive strong { color: #222; }
-
     .actions { text-align:center; margin:24px auto 0; max-width:820px; }
-    .print-btn {
-      border: none;
-      border-radius: 14px;
-      background: linear-gradient(135deg, #e3bd43, #b88712);
-      color: #090909;
-      padding: 14px 24px;
-      font-weight: 900;
-      cursor: pointer;
-    }
+    .print-btn { border: none; border-radius: 14px; background: linear-gradient(135deg, #e3bd43, #b88712); color: #090909; padding: 14px 24px; font-weight: 900; cursor: pointer; }
+    @media (max-width: 700px) { .printed-item-card { grid-template-columns: 1fr; } .printed-item-photo { width: 100%; height: 150px; } }
     @page { size: A4; margin: 0; }
     @media print {
       html, body { background: #fff; padding: 0; margin: 0; }
-      .paper-page {
-        box-shadow: none;
-        border-radius: 0;
-        width: 100%;
-        min-height: 100vh;
-        margin: 0;
-        break-after: page;
-        page-break-after: always;
-      }
-      .paper-page:last-of-type {
-        break-after: auto;
-        page-break-after: auto;
-      }
+      .paper-page { box-shadow: none; border-radius: 0; width: 100%; min-height: 100vh; margin: 0; break-after: page; page-break-after: always; }
+      .paper-page:last-of-type { break-after: auto; page-break-after: auto; }
       .actions { display: none; }
     }
   </style>
@@ -4091,29 +4158,29 @@
   <section class="paper-page">
     <div class="top">
       <div class="partner-logo">${logoHtml}</div>
-      <div class="signature">Curadoria desenvolvida em parceria com<strong>Curadoria Elite Travel</strong></div>
+      ${whiteLabel ? "" : `<div class="signature">Curadoria desenvolvida em parceria com<strong>Curadoria Elite Travel</strong></div>`}
     </div>
 
-    <div class="eyebrow">Versão Business Partner</div>
+    <div class="eyebrow">${whiteLabel ? "Material exclusivo" : "Versão Business Partner"}</div>
     <h1>${category.toUpperCase()}</h1>
-    <div class="subtitle">${city} • Material business${year ? " • " + year : ""}</div>
+    <div class="subtitle">${city} • ${whiteLabel ? "Material business" : "Material business"}${year ? " • " + year : ""}</div>
 
     <div class="meta">
       <div><small>Categoria</small><strong>${category}</strong></div>
       <div><small>Destino</small><strong>${city}</strong></div>
-      <div><small>Formato</small><strong>Business clean</strong></div>
+      <div><small>Formato</small><strong>${whiteLabel ? "White Label" : "Business clean"}</strong></div>
     </div>
 
     ${personalizedCoverHtml}
 
-    <div class="page-footer">Página 01 • Material Partner • Uso autorizado para clientes da empresa parceira</div>
+    <div class="page-footer">${whiteLabel ? brandName : "Página 01 • Material Partner • Uso autorizado para clientes da empresa parceira"}</div>
   </section>
 
   <section class="paper-page">
     <div class="page-kicker">Panorama da cidade</div>
     <h2>${city}</h2>
     <p class="lead">${businessContent.panorama}</p>
-    <div class="page-footer">Curadoria Elite Travel Partner • ${category}</div>
+    <div class="page-footer">${whiteLabel ? brandName : `Curadoria Elite Travel Partner • ${category}`}</div>
   </section>
 
   ${indicationPages}
@@ -4121,10 +4188,8 @@
   ${closingPageHtml}
 
   <div class="actions">
-    <button class="print-btn" onclick="window.print()">Salvar ou imprimir versão business</button>
+    <button class="print-btn" onclick="window.print()">Salvar ou imprimir versão ${whiteLabel ? "White Label" : "business"}</button>
   </div>
-
-  ${autoPrint ? '<script>window.addEventListener("load", function(){ setTimeout(function(){ window.print(); }, 500); });<\/script>' : ''}
 </body>
 </html>`;
     }
@@ -4237,6 +4302,12 @@
       }
 
       if (selectedMaterial) {
+        const businessPreviewText = document.getElementById("businessPreviewText");
+        if (businessPreviewText) {
+          businessPreviewText.innerText = presentationModeInput.value === "whitelabel"
+            ? `Material pronto para ser apresentado exclusivamente com a identidade da marca escolhida, sem assinatura da Curadoria Elite Travel.`
+            : `Material identificado no acervo da Curadoria Elite Travel e pronto para ser apresentado em uma versão business clean, com identidade da marca apresentada ao cliente e assinatura discreta da Curadoria.`;
+        }
         renderBusinessContentPreview(selectedMaterial);
       }
     }
