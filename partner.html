@@ -299,57 +299,74 @@
       border: 1px solid rgba(214,173,50,.22);
       border-radius: 16px;
       background: rgba(255,255,255,.03);
-      padding: 14px;
+      padding: 12px;
     }
 
     .white-label-photos-title {
       color: #d6ad32;
       font-size: 13px;
       font-weight: 900;
-      margin-bottom: 5px;
+      margin-bottom: 4px;
     }
 
     .white-label-photos-help {
       color: #9fb0c7;
       font-size: 11px;
-      line-height: 1.5;
-      margin-bottom: 12px;
+      line-height: 1.45;
+      margin-bottom: 10px;
+    }
+
+    #whiteLabelPhotosList {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 8px;
     }
 
     .white-label-photo-row {
-      border-top: 1px solid rgba(255,255,255,.08);
-      padding: 12px 0;
-    }
-
-    .white-label-photo-row:first-child {
-      border-top: none;
-      padding-top: 0;
+      min-width: 0;
+      border: 1px solid rgba(255,255,255,.08);
+      border-radius: 11px;
+      padding: 7px;
+      background: rgba(0,0,0,.12);
+      display: grid;
+      grid-template-columns: 58px minmax(0, 1fr);
+      grid-template-rows: auto auto;
+      column-gap: 7px;
+      align-items: center;
     }
 
     .white-label-photo-label {
       display: block;
+      grid-column: 2;
+      grid-row: 1;
       color: #d8e1ee;
-      font-size: 12px;
+      font-size: 9px;
       font-weight: 800;
-      line-height: 1.35;
-      margin-bottom: 8px;
+      line-height: 1.2;
+      margin: 0;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
 
     .white-label-photo-preview {
-      width: 100%;
-      height: 105px;
+      width: 58px;
+      height: 44px;
+      grid-column: 1;
+      grid-row: 1 / span 2;
       border: 1px dashed rgba(214,173,50,.35);
-      border-radius: 12px;
+      border-radius: 9px;
       background: #050b16;
       display: flex;
       align-items: center;
       justify-content: center;
       overflow: hidden;
-      margin-bottom: 8px;
+      margin-bottom: 0;
       color: #7f8da3;
-      font-size: 11px;
+      font-size: 9px;
       text-align: center;
-      padding: 8px;
+      line-height: 1.25;
+      padding: 5px;
     }
 
     .white-label-photo-preview img {
@@ -359,10 +376,20 @@
     }
 
     .white-label-photo-input {
+      grid-column: 2;
+      grid-row: 2;
       width: 100%;
+      min-width: 0;
       color: #cbd6e6;
-      font-size: 11px;
-      margin: 0;
+      font-size: 8px;
+      margin: 2px 0 0;
+      line-height: 1.1;
+    }
+
+    @media (max-width: 420px) {
+      #whiteLabelPhotosList {
+        grid-template-columns: 1fr;
+      }
     }
 
     .client-preview-box {
@@ -1636,10 +1663,10 @@
                   LOGO DA<br>EMPRESA
                 </div>
 
-                <div class="doc-brand">
-                  Curadoria desenvolvida em parceria com<br>
-                  <strong>Curadoria Elite Travel</strong>
-                </div>
+                <div class="doc-brand" id="docBrandSignature">
+                Curadoria desenvolvida em parceria com<br>
+                <strong>Curadoria Elite Travel</strong>
+              </div>
               </div>
 
               <div class="doc-title" id="docTitle">MATERIAL</div>
@@ -1657,8 +1684,8 @@
                     <strong>Business clean</strong>
                   </div>
                   <div>
-                    <small>Origem</small>
-                    <strong>Acervo Curadoria</strong>
+                    <small id="businessPreviewMetaLabel">Origem</small>
+                    <strong id="businessPreviewMetaValue">Acervo Curadoria</strong>
                   </div>
                 </div>
               </div>
@@ -1672,7 +1699,7 @@
                   <div class="business-city-text">
                     Selecione um destino para visualizar a versão business em páginas organizadas.
                   </div>
-                  <div class="business-page-footer">Curadoria Elite Travel Partner</div>
+                  <div class="business-page-footer" id="businessInitialPreviewFooter">Material aguardando seleção</div>
                 </section>
               </div>
 
@@ -3370,7 +3397,7 @@
             <div class="business-page-kicker">Leitura do acervo Partner</div>
             <h5 class="business-page-title">Carregando versão business</h5>
             <div class="business-city-text">Estamos verificando se este destino já possui itens estruturados no Supabase. Se não houver registros prontos, a ferramenta usará a leitura automática do PDF como apoio.</div>
-            <div class="business-page-footer">Curadoria Elite Travel Partner</div>
+            <div class="business-page-footer">Material aguardando seleção</div>
           </section>
         `;
       }
@@ -3680,6 +3707,9 @@
     function renderPersonalizedCoverBlock(category, city) {
       if (!hasClientPersonalization()) return "";
 
+      const whiteLabel = isWhiteLabelMode();
+      const brandName = escapeHtml(getClientBrandName());
+
       return `
         <div class="business-client-card personalized-cover-preview">
           <h6>Atendimento personalizado</h6>
@@ -3688,7 +3718,9 @@
         </div>
         <div class="business-client-card personalized-cover-preview">
           <h6>${category} • ${city}</h6>
-          <p>Material preparado em versão business clean por ${escapeHtml(getClientBrandName())}, com apoio da Curadoria Elite Travel, para facilitar a consulta e a tomada de decisão durante a viagem.</p>
+          <p>${whiteLabel
+            ? `Material preparado para ${brandName}, para facilitar a consulta e a tomada de decisão durante a viagem.`
+            : `Material preparado em versão business clean por ${brandName}, com apoio da Curadoria Elite Travel, para facilitar a consulta e a tomada de decisão durante a viagem.`}</p>
         </div>
       `;
     }
@@ -3903,6 +3935,29 @@
     }
 
 
+    function updatePresentationModePreviewChrome() {
+      const whiteLabel = isWhiteLabelMode();
+      const signature = document.getElementById("docBrandSignature");
+      const metaLabel = document.getElementById("businessPreviewMetaLabel");
+      const metaValue = document.getElementById("businessPreviewMetaValue");
+      const initialFooter = document.getElementById("businessInitialPreviewFooter");
+
+      if (signature) {
+        signature.innerHTML = whiteLabel
+          ? ""
+          : `Curadoria desenvolvida em parceria com<br><strong>Curadoria Elite Travel</strong>`;
+        signature.style.display = whiteLabel ? "none" : "block";
+      }
+
+      if (metaLabel) metaLabel.textContent = whiteLabel ? "Apresentação" : "Origem";
+      if (metaValue) metaValue.textContent = whiteLabel ? "White Label" : "Acervo Curadoria";
+      if (initialFooter) {
+        initialFooter.textContent = whiteLabel
+          ? "Material aguardando seleção"
+          : "Curadoria Elite Travel Partner";
+      }
+    }
+
     function selectMaterial(material) {
       selectedMaterial = material;
 
@@ -3931,6 +3986,7 @@
           : `Material identificado no acervo da Curadoria Elite Travel e pronto para ser apresentado em uma versão business clean, com identidade da marca apresentada ao cliente e assinatura discreta da Curadoria.`;
       }
 
+      updatePresentationModePreviewChrome();
       renderBusinessContentPreview(material);
       loadAndRenderBusinessContent(material);
     }
@@ -4301,6 +4357,8 @@
         `;
       }
 
+      updatePresentationModePreviewChrome();
+
       if (selectedMaterial) {
         const businessPreviewText = document.getElementById("businessPreviewText");
         if (businessPreviewText) {
@@ -4315,6 +4373,7 @@
     if (presentationModeInput) {
       presentationModeInput.addEventListener("change", updatePresentationModeInfo);
       updatePresentationModeInfo();
+      updatePresentationModePreviewChrome();
     }
 
     if (partnerCompanyInput) {
