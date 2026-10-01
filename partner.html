@@ -2199,8 +2199,9 @@
     }
 
 
-    function isAttractionsMaterial(material) {
-      return normalizeCategoryName(material && material.category) === "Atrações Turísticas";
+    function isBusinessItemsMaterial(material) {
+      const category = normalizeCategoryName(material && material.category);
+      return Boolean(category) && category !== "City Guide";
     }
 
     function getBusinessContentCacheKey(material) {
@@ -3262,7 +3263,7 @@
     }
 
     async function fetchStructuredBusinessContent(material) {
-      if (!material || !isAttractionsMaterial(material)) {
+      if (!material || !isBusinessItemsMaterial(material)) {
         return null;
       }
 
@@ -3311,14 +3312,20 @@
     }
 
     async function ensureBusinessContentLoaded(material) {
-      if (!material || !isAttractionsMaterial(material) || !material.pdf_url) {
+      if (!material || !isBusinessItemsMaterial(material) || !material.pdf_url) {
         return getBusinessContentTemplate(material);
       }
 
       const cacheKey = getBusinessContentCacheKey(material);
 
       if (businessContentCache[cacheKey]) {
-        return businessContentCache[cacheKey];
+        const cachedItems = Array.isArray(businessContentCache[cacheKey].items)
+          ? businessContentCache[cacheKey].items
+          : [];
+
+        if (cachedItems.length || normalizeCategoryName(material.category) === "City Guide") {
+          return businessContentCache[cacheKey];
+        }
       }
 
       if (businessContentLoading[cacheKey]) {
@@ -3366,7 +3373,7 @@
     }
 
     async function loadAndRenderBusinessContent(material) {
-      if (!material || !isAttractionsMaterial(material)) return;
+      if (!material || !isBusinessItemsMaterial(material)) return;
 
       const cacheKey = getBusinessContentCacheKey(material);
 
@@ -3403,7 +3410,13 @@
       const cacheKey = getBusinessContentCacheKey(material);
 
       if (businessContentCache[cacheKey]) {
-        return businessContentCache[cacheKey];
+        const cachedItems = Array.isArray(businessContentCache[cacheKey].items)
+          ? businessContentCache[cacheKey].items
+          : [];
+
+        if (cachedItems.length || normalizeCategoryName(material.category) === "City Guide") {
+          return businessContentCache[cacheKey];
+        }
       }
 
       if (category === "Atrações Turísticas" && cityLower.includes("new york")) {
