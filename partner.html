@@ -265,6 +265,35 @@
       box-shadow: 0 0 0 3px rgba(214,173,50,.08);
     }
 
+    .presentation-mode-help {
+      display: block;
+      margin-top: 7px;
+      color: #8fa0b8;
+      font-size: 11px;
+      line-height: 1.5;
+    }
+
+    .presentation-mode-info {
+      margin-top: 10px;
+      padding: 13px 14px;
+      border: 1px solid rgba(214,173,50,.20);
+      border-radius: 13px;
+      background: rgba(214,173,50,.045);
+      color: #d8e1ee;
+      font-size: 12px;
+      line-height: 1.5;
+    }
+
+    .presentation-mode-info strong {
+      display: block;
+      color: #d6ad32;
+      margin-bottom: 4px;
+    }
+
+    .presentation-mode-info span {
+      display: block;
+    }
+
     .client-preview-box {
       border: 1px solid rgba(214,173,50,.18);
       border-radius: 14px;
@@ -1362,6 +1391,25 @@
           <div class="form-group">
             <label for="clientBrandInput">Marca apresentada ao cliente</label>
             <input class="partner-input" id="clientBrandInput" type="text" value="Mastercard Concierge" placeholder="Ex.: Mastercard Concierge" />
+          </div>
+
+          <div class="form-group">
+            <label for="presentationModeInput">Apresentação do material</label>
+            <select class="partner-select" id="presentationModeInput">
+              <option value="curadoria">Com assinatura Curadoria Elite Travel</option>
+              <option value="whitelabel">White Label</option>
+            </select>
+            <small class="presentation-mode-help">
+              Escolha como o material será apresentado ao cliente final.
+            </small>
+          </div>
+
+          <div class="presentation-mode-info" id="presentationModeInfo">
+            <strong>Com assinatura Curadoria Elite Travel</strong>
+            <span>
+              O material mantém a identidade da marca apresentada ao cliente
+              e a assinatura discreta da Curadoria Elite Travel.
+            </span>
           </div>
 
           <div class="field">
@@ -2946,9 +2994,30 @@
       });
 
       const fallbackNames = extractCandidateNamesInTextOrder(cleaned);
-      const orderedFallbackNames = fallbackNames.length >= descriptionIndexes.length
-        ? fallbackNames.slice(0, descriptionIndexes.length)
-        : [];
+
+      /*
+        CORREÇÃO PONTUAL — somente para a ordenação dos nomes das atrações.
+
+        Em New York, a extração textual pode omitir o primeiro título
+        (Empire State Building). Quando isso acontece, fallbackNames desloca
+        todos os nomes seguintes uma posição para cima.
+
+        Como o próprio parser já possui a lista oficial de nomes da cidade,
+        usamos essa lista somente quando ela cobre todos os blocos de
+        descrição. Descrição, endereço, site, entrada e restante do parser
+        permanecem inalterados.
+      */
+      const configuredCityNames = getKnownAttractionNamesForCity(city);
+
+      const orderedFallbackNames =
+        configuredCityNames.length >= descriptionIndexes.length
+          ? configuredCityNames.slice(0, descriptionIndexes.length)
+          : (
+              fallbackNames.length >= descriptionIndexes.length
+                ? fallbackNames.slice(0, descriptionIndexes.length)
+                : []
+            );
+
       const correctionNames = getGlobalAttractionNameCorrections();
       const removalNames = fallbackNames.concat(correctionNames).filter(function(name, index, array) {
         return name && array.indexOf(name) === index;
@@ -4142,6 +4211,40 @@
 
     const partnerCompanyInput = document.getElementById("partnerCompanyInput");
     const clientBrandInput = document.getElementById("clientBrandInput");
+
+    const presentationModeInput = document.getElementById("presentationModeInput");
+    const presentationModeInfo = document.getElementById("presentationModeInfo");
+
+    function updatePresentationModeInfo() {
+      if (!presentationModeInput || !presentationModeInfo) return;
+
+      if (presentationModeInput.value === "whitelabel") {
+        presentationModeInfo.innerHTML = `
+          <strong>White Label</strong>
+          <span>
+            O material será preparado para apresentação exclusiva da marca escolhida,
+            sem a assinatura visual da Curadoria Elite Travel.
+          </span>
+        `;
+      } else {
+        presentationModeInfo.innerHTML = `
+          <strong>Com assinatura Curadoria Elite Travel</strong>
+          <span>
+            O material mantém a identidade da marca apresentada ao cliente
+            e a assinatura discreta da Curadoria Elite Travel.
+          </span>
+        `;
+      }
+
+      if (selectedMaterial) {
+        renderBusinessContentPreview(selectedMaterial);
+      }
+    }
+
+    if (presentationModeInput) {
+      presentationModeInput.addEventListener("change", updatePresentationModeInfo);
+      updatePresentationModeInfo();
+    }
 
     if (partnerCompanyInput) {
       partnerCompanyInput.addEventListener("input", syncPartnerBrandData);
