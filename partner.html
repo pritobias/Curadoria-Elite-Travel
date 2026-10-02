@@ -4218,10 +4218,9 @@
     <h1>${category.toUpperCase()}</h1>
     <div class="subtitle">${city} • ${whiteLabel ? "Material business" : "Material business"}${year ? " • " + year : ""}</div>
 
-    <div class="meta">
+    <div class="meta" style="grid-template-columns: repeat(2, 1fr);">
       <div><small>Categoria</small><strong>${category}</strong></div>
       <div><small>Destino</small><strong>${city}</strong></div>
-      <div><small>Formato</small><strong>${whiteLabel ? "White Label" : "Business clean"}</strong></div>
     </div>
 
     ${personalizedCoverHtml}
