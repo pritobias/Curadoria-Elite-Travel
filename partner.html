@@ -1661,9 +1661,10 @@
                   LOGO DA<br>EMPRESA
                 </div>
 
-                <div class="doc-brand">
-                  Curadoria desenvolvida em parceria com<br>
-                  <strong>Curadoria Elite Travel</strong>
+                <div class="doc-brand" id="docBrand">
+                  Material apresentado por<br>
+                  <strong>Mastercard Concierge</strong><br>
+                  <span>em parceria com Curadoria Elite Travel</span>
                 </div>
               </div>
 
@@ -3554,9 +3555,30 @@
       return `<div class="logo-placeholder">LOGO DA MARCA</div>`;
     }
 
+    function renderPartnerBrandHeader() {
+      const brandElement = document.getElementById("docBrand");
+      if (!brandElement) return;
+
+      const brandName = escapeHtml(getClientBrandName());
+
+      if (isWhiteLabelMode()) {
+        brandElement.innerHTML = `
+          Material apresentado por<br>
+          <strong>${brandName}</strong>
+        `;
+      } else {
+        brandElement.innerHTML = `
+          Material apresentado por<br>
+          <strong>${brandName}</strong><br>
+          <span>em parceria com Curadoria Elite Travel</span>
+        `;
+      }
+    }
+
     function syncPartnerBrandData() {
       partnerCompanyName = getPartnerCompanyName();
       clientBrandName = getClientBrandName();
+      renderPartnerBrandHeader();
 
       if (selectedMaterial) {
         renderBusinessContentPreview(selectedMaterial);
@@ -4131,7 +4153,8 @@
     .partner-logo img { max-width: 220px; max-height: 110px; object-fit: contain; }
     .logo-placeholder { font-size: 23px; line-height: 1.05; font-weight: 950; letter-spacing: .5px; }
     .signature { text-align: right; font-size: 14px; line-height: 1.4; color: #222; }
-    .signature strong { display: block; margin-top: 6px; }
+    .signature strong { display: block; margin-top: 6px; font-size: 17px; }
+    .signature span { display: block; margin-top: 4px; font-size: 12px; }
     .eyebrow, .page-kicker {
       color: #9a7617; text-transform: uppercase; letter-spacing: 3px; font-size: 13px; font-weight: 900; margin-bottom: 18px; position: relative; z-index: 1;
     }
@@ -4186,7 +4209,9 @@
   <section class="paper-page">
     <div class="top">
       <div class="partner-logo">${logoHtml}</div>
-      ${whiteLabel ? "" : `<div class="signature">Curadoria desenvolvida em parceria com<strong>Curadoria Elite Travel</strong></div>`}
+      ${whiteLabel
+        ? `<div class="signature">Material apresentado por<strong>${brandName}</strong></div>`
+        : `<div class="signature">Material apresentado por<strong>${brandName}</strong><span>em parceria com Curadoria Elite Travel</span></div>`}
     </div>
 
     <div class="eyebrow">${whiteLabel ? "Material exclusivo" : "Versão Business Partner"}</div>
@@ -4328,6 +4353,8 @@
           </span>
         `;
       }
+
+      renderPartnerBrandHeader();
 
       if (selectedMaterial) {
         const businessPreviewText = document.getElementById("businessPreviewText");
