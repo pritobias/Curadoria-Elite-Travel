@@ -294,74 +294,62 @@
       display: block;
     }
 
-    /* White Label: seleção de fotos compacta para não alongar a coluna lateral. */
     .white-label-photos-panel {
       margin-top: 12px;
       border: 1px solid rgba(214,173,50,.22);
       border-radius: 16px;
       background: rgba(255,255,255,.03);
-      padding: 12px;
+      padding: 14px;
     }
 
     .white-label-photos-title {
       color: #d6ad32;
       font-size: 13px;
       font-weight: 900;
-      margin-bottom: 4px;
+      margin-bottom: 5px;
     }
 
     .white-label-photos-help {
       color: #9fb0c7;
-      font-size: 10px;
-      line-height: 1.4;
-      margin-bottom: 9px;
-    }
-
-    #whiteLabelPhotosList {
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 8px;
-      max-height: 430px;
-      overflow-y: auto;
-      padding-right: 3px;
+      font-size: 11px;
+      line-height: 1.5;
+      margin-bottom: 12px;
     }
 
     .white-label-photo-row {
-      min-width: 0;
-      border: 1px solid rgba(255,255,255,.08);
-      border-radius: 11px;
-      padding: 7px;
-      background: rgba(0,0,0,.12);
+      border-top: 1px solid rgba(255,255,255,.08);
+      padding: 12px 0;
+    }
+
+    .white-label-photo-row:first-child {
+      border-top: none;
+      padding-top: 0;
     }
 
     .white-label-photo-label {
       display: block;
       color: #d8e1ee;
-      font-size: 10px;
+      font-size: 12px;
       font-weight: 800;
-      line-height: 1.2;
-      margin-bottom: 5px;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
+      line-height: 1.35;
+      margin-bottom: 8px;
     }
 
     .white-label-photo-preview {
       width: 100%;
-      height: 52px;
+      height: 105px;
       border: 1px dashed rgba(214,173,50,.35);
-      border-radius: 8px;
+      border-radius: 12px;
       background: #050b16;
       display: flex;
       align-items: center;
       justify-content: center;
       overflow: hidden;
-      margin-bottom: 5px;
+      margin-bottom: 8px;
       color: #7f8da3;
-      font-size: 9px;
-      line-height: 1.2;
+      font-size: 11px;
       text-align: center;
-      padding: 5px;
+      padding: 8px;
     }
 
     .white-label-photo-preview img {
@@ -372,9 +360,8 @@
 
     .white-label-photo-input {
       width: 100%;
-      max-width: 100%;
       color: #cbd6e6;
-      font-size: 9px;
+      font-size: 11px;
       margin: 0;
     }
 
@@ -1649,7 +1636,7 @@
                   LOGO DA<br>EMPRESA
                 </div>
 
-                <div class="doc-brand" id="docBrandPresentation">
+                <div class="doc-brand">
                   Curadoria desenvolvida em parceria com<br>
                   <strong>Curadoria Elite Travel</strong>
                 </div>
@@ -1670,8 +1657,8 @@
                     <strong>Business clean</strong>
                   </div>
                   <div>
-                    <small>Apresentação</small>
-                    <strong id="businessPreviewBrandName">Mastercard Concierge</strong>
+                    <small>Origem</small>
+                    <strong>Acervo Curadoria</strong>
                   </div>
                 </div>
               </div>
@@ -1685,7 +1672,7 @@
                   <div class="business-city-text">
                     Selecione um destino para visualizar a versão business em páginas organizadas.
                   </div>
-                  <div class="business-page-footer" id="initialBusinessPreviewFooter">Material aguardando seleção</div>
+                  <div class="business-page-footer">Curadoria Elite Travel Partner</div>
                 </section>
               </div>
 
@@ -2199,9 +2186,11 @@
     }
 
 
-    function isBusinessItemsMaterial(material) {
+    function isPhotoSelectableMaterial(material) {
       const category = normalizeCategoryName(material && material.category);
-      return Boolean(category) && category !== "City Guide";
+      // City Guide não usa painel de fotos. As demais categorias usam
+      // exclusivamente as indicações do próprio material/categoria.
+      return Boolean(material) && category !== "City Guide";
     }
 
     function getBusinessContentCacheKey(material) {
@@ -3263,7 +3252,7 @@
     }
 
     async function fetchStructuredBusinessContent(material) {
-      if (!material || !isBusinessItemsMaterial(material)) {
+      if (!material || !isPhotoSelectableMaterial(material)) {
         return null;
       }
 
@@ -3312,20 +3301,14 @@
     }
 
     async function ensureBusinessContentLoaded(material) {
-      if (!material || !isBusinessItemsMaterial(material) || !material.pdf_url) {
+      if (!material || !isPhotoSelectableMaterial(material) || !material.pdf_url) {
         return getBusinessContentTemplate(material);
       }
 
       const cacheKey = getBusinessContentCacheKey(material);
 
       if (businessContentCache[cacheKey]) {
-        const cachedItems = Array.isArray(businessContentCache[cacheKey].items)
-          ? businessContentCache[cacheKey].items
-          : [];
-
-        if (cachedItems.length || normalizeCategoryName(material.category) === "City Guide") {
-          return businessContentCache[cacheKey];
-        }
+        return businessContentCache[cacheKey];
       }
 
       if (businessContentLoading[cacheKey]) {
@@ -3373,7 +3356,7 @@
     }
 
     async function loadAndRenderBusinessContent(material) {
-      if (!material || !isBusinessItemsMaterial(material)) return;
+      if (!material || !isPhotoSelectableMaterial(material)) return;
 
       const cacheKey = getBusinessContentCacheKey(material);
 
@@ -3410,13 +3393,7 @@
       const cacheKey = getBusinessContentCacheKey(material);
 
       if (businessContentCache[cacheKey]) {
-        const cachedItems = Array.isArray(businessContentCache[cacheKey].items)
-          ? businessContentCache[cacheKey].items
-          : [];
-
-        if (cachedItems.length || normalizeCategoryName(material.category) === "City Guide") {
-          return businessContentCache[cacheKey];
-        }
+        return businessContentCache[cacheKey];
       }
 
       if (category === "Atrações Turísticas" && cityLower.includes("new york")) {
@@ -3555,19 +3532,6 @@
     function syncPartnerBrandData() {
       partnerCompanyName = getPartnerCompanyName();
       clientBrandName = getClientBrandName();
-
-      const docBrandPresentation = document.getElementById("docBrandPresentation");
-      const businessPreviewBrandName = document.getElementById("businessPreviewBrandName");
-
-      if (docBrandPresentation) {
-        docBrandPresentation.innerHTML = isWhiteLabelMode()
-          ? `Curadoria desenvolvida por<br><strong>${escapeHtml(clientBrandName || "Marca apresentada ao cliente")}</strong>`
-          : `Curadoria desenvolvida em parceria com<br><strong>Curadoria Elite Travel</strong>`;
-      }
-
-      if (businessPreviewBrandName) {
-        businessPreviewBrandName.textContent = clientBrandName || "Marca apresentada ao cliente";
-      }
 
       if (selectedMaterial) {
         renderBusinessContentPreview(selectedMaterial);
@@ -3896,7 +3860,7 @@
           <div class="business-page-kicker">Página 02 • Panorama da cidade</div>
           <h5 class="business-page-title">${city}</h5>
           <div class="business-city-text">${content.panorama}</div>
-          <div class="business-page-footer">${isWhiteLabelMode() ? escapeHtml(getClientBrandName()) : `Material Partner • ${category}`}</div>
+          <div class="business-page-footer">Material Partner • ${category}</div>
         </section>
       `;
 
@@ -3931,7 +3895,7 @@
                 return renderBusinessItemCard(item, firstItemIndex + itemIndex);
               }).join("")}
             </div>
-            <div class="business-page-footer">${isWhiteLabelMode() ? `${firstItemIndex + 1}–${firstItemIndex + itemsChunk.length} de ${content.items.length} indicações • ${escapeHtml(getClientBrandName())}` : `${firstItemIndex + 1}–${firstItemIndex + itemsChunk.length} de ${content.items.length} indicações`}</div>
+            <div class="business-page-footer">${firstItemIndex + 1}–${firstItemIndex + itemsChunk.length} de ${content.items.length} indicações</div>
           </section>
         `;
       });
@@ -3954,9 +3918,7 @@
       }
 
       if (docSubtitle) {
-        docSubtitle.innerText = isWhiteLabelMode()
-          ? `${material.city_label} • Material business${material.year ? " • " + material.year : ""}`
-          : `${material.city_label} • Versão Business Partner${material.year ? " • " + material.year : ""}`;
+        docSubtitle.innerText = `${material.city_label} • Versão Business Partner${material.year ? " • " + material.year : ""}`;
       }
 
       const businessPreviewTitle = document.getElementById("businessPreviewTitle");
@@ -4049,7 +4011,7 @@
                   }).join("")}
                 </div>
                 <div class="page-footer">${whiteLabel
-                  ? `${firstItemIndex + 1}–${firstItemIndex + itemsChunk.length} de ${businessContent.items.length} indicações • ${brandName}`
+                  ? `${firstItemIndex + 1}–${firstItemIndex + itemsChunk.length} de ${businessContent.items.length} indicações`
                   : `${firstItemIndex + 1}–${firstItemIndex + itemsChunk.length} de ${businessContent.items.length} indicações • Curadoria Elite Travel Partner`}</div>
               </section>
             `;
@@ -4199,7 +4161,7 @@
   <section class="paper-page">
     <div class="top">
       <div class="partner-logo">${logoHtml}</div>
-      ${whiteLabel ? `<div class="signature">Curadoria desenvolvida por<strong>${brandName}</strong></div>` : `<div class="signature">Curadoria desenvolvida em parceria com<strong>Curadoria Elite Travel</strong></div>`}
+      ${whiteLabel ? "" : `<div class="signature">Curadoria desenvolvida em parceria com<strong>Curadoria Elite Travel</strong></div>`}
     </div>
 
     <div class="eyebrow">${whiteLabel ? "Material exclusivo" : "Versão Business Partner"}</div>
@@ -4209,12 +4171,12 @@
     <div class="meta">
       <div><small>Categoria</small><strong>${category}</strong></div>
       <div><small>Destino</small><strong>${city}</strong></div>
-      ${whiteLabel ? "" : `<div><small>Formato</small><strong>Business clean</strong></div>`}
+      <div><small>Formato</small><strong>${whiteLabel ? "White Label" : "Business clean"}</strong></div>
     </div>
 
     ${personalizedCoverHtml}
 
-    <div class="page-footer">${whiteLabel ? `Página 01 • Material feito por ${brandName} • Uso autorizado para clientes da empresa parceira` : "Página 01 • Material Partner • Uso autorizado para clientes da empresa parceira"}</div>
+    <div class="page-footer">${whiteLabel ? brandName : "Página 01 • Material Partner • Uso autorizado para clientes da empresa parceira"}</div>
   </section>
 
   <section class="paper-page">
@@ -4340,19 +4302,6 @@
             e a assinatura discreta da Curadoria Elite Travel.
           </span>
         `;
-      }
-
-      const docBrandPresentation = document.getElementById("docBrandPresentation");
-      const businessPreviewBrandName = document.getElementById("businessPreviewBrandName");
-
-      if (docBrandPresentation) {
-        docBrandPresentation.innerHTML = presentationModeInput.value === "whitelabel"
-          ? `Curadoria desenvolvida por<br><strong>${escapeHtml(getClientBrandName() || "Marca apresentada ao cliente")}</strong>`
-          : `Curadoria desenvolvida em parceria com<br><strong>Curadoria Elite Travel</strong>`;
-      }
-
-      if (businessPreviewBrandName) {
-        businessPreviewBrandName.textContent = getClientBrandName() || "Marca apresentada ao cliente";
       }
 
       if (selectedMaterial) {
