@@ -1075,11 +1075,21 @@
       const items = (extraction.items || []).map((item, index) => {
         const saved = savedItems[index];
         if (!saved) return item;
-        return {
+        const merged = {
           ...item,
           ...saved,
           item_order: index + 1
         };
+
+        // O rascunho antigo pode ter sido salvo antes de o sistema encontrar
+        // automaticamente as fotos. Nunca deixe uma foto extraída agora ser
+        // apagada por um photoDataUrl vazio do rascunho.
+        if (item.photoDataUrl && !saved.photoDataUrl) {
+          merged.photoDataUrl = item.photoDataUrl;
+          merged.photoSource = item.photoSource || "PDF · captura automática";
+        }
+
+        return merged;
       });
 
       return {
