@@ -717,6 +717,207 @@
       renderProgress();
     }
 
+        function multiplyPdfMatrices(m1, m2) {
+      return pdfjsLib.Util.transform(m1, m2);
+    }
+
+    function transformPdfPoint(matrix, x, y) {
+      return [
+        matrix[0] * x + matrix[2] * y + matrix[4],
+        matrix[1] * x + matrix[3] * y + matrix[5]
+      ];
+    }
+
+    function getImageBoundsFromMatrix(matrix) {
+      const points = [
+        transformPdfPoint(matrix, 0, 0),
+        transformPdfPoint(matrix, 1, 0),
+        transformPdfPoint(matrix, 0, 1),
+        transformPdfPoint(matrix, 1, 1)
+      ];
+      const xs = points.map(point => point[0]);
+      const ys = points.map(point => point[1]);
+      return {
+        xMin: Math.min(...xs),
+        xMax: Math.max(...xs),
+        yMin: Math.min(...ys),
+        yMax: Math.max(...ys),
+        xCenter: (Math.min(...xs) + Math.max(...xs)) / 2,
+        yCenter: (Math.min(...ys) + Math.max(...ys)) / 2
+      };
+    }
+
+    function getPdfObjectAsync(store, objectId) {
+      return new Promise((resolve, reject) => {
+        try {
+          if (!store || !objectId) {
+            resolve(null);
+            return;
+          }
+          store.get(objectId, object => resolve(object));
+        } catch (error) {
+          reject(error);
+        }
+      });
+    }
+
+    async function imageObjectToDataUrl(imageObject) {
+      if (!imageObject) return "";
+
+      try {
+        if (imageObject.bitmap) {
+          const canvas = document.createElement("canvas");
+          canvas.width = imageObject.width || imageObject.bitmap.width;
+          canvas.height = imageObject.height || imageObject.bitmap.height;
+          const context = canvas.getContext("2d");
+          if (!context) return "";
+          context.drawImage(imageObject.bitmap, 0, 0, canvas.width, canvas.height);
+          return canvas.toDataURL("image/jpeg", 0.86);
+        }
+
+        if (imageObject.src && typeof imageObject.src === "string") {
+          return await new Promise(resolve => {
+            const image = new Image();
+            image.onload = () => {
+              const canvas = document.createElement("canvas");
+              canvas.width = image.naturalWidth || image.width;
+              canvas.height = image.naturalHeight || image.height;
+              const context = canvas.getContext("2d");
+              if (!context) {
+                resolve("");
+                return;
+              }
+              context.drawImage(image, 0, 0);
+              resolve(canvas.toDataURL("image/jpeg", 0.86));
+            };
+            image.onerror = () => resolve("");
+            image.src = imageObject.src;
+          });
+        }
+
+        const width = Number(imageObject.width || 0);
+        const height = Number(imageObject.height || 0);
+        const data = imageObject.data;
+        if (!width || !height || !data) return "";
+
+        const canvas = document.createElement("canvas");
+        canvas.width = width;
+        canvas.height = height;
+        const context = canvas.getContext("2d");
+        if (!context) return "";
+
+        const rgba = new Uint8ClampedArray(width * height * 4);
+        const kind = Number(imageObject.kind || 0);
+
+        if (data.length === width * height * 4 || kind === 3) {
+          rgba.set(new Uint8ClampedArray(data).subarray(0, rgba.length));
+        } else if (data.length === width * height * 3 || kind === 2) {
+          const source = new Uint8ClampedArray(data);
+          for (let i = 0, j = 0; i < source.length && j < rgba.length; i += 3, j += 4) {
+            rgba[j] = source[i];
+            rgba[j + 1] = source[i + 1];
+            rgba[j + 2] = source[i + 2];
+            rgba[j + 3] = 255;
+          }
+        } else if (data.length === width * height) {
+          const source = new Uint8ClampedArray(data);
+          for (let i = 0, j = 0; i < source.length && j < rgba.length; i++, j += 4) {
+            rgba[j] = source[i];
+            rgba[j + 1] = source[i];
+            rgba[j + 2] = source[i];
+            rgba[j + 3] = 255;
+          }
+        } else {
+          return "";
+        }
+
+        context.putImageData(new ImageData(rgba, width, height), 0, 0);
+        return canvas.toDataURL("image/jpeg", 0.86);
+      } catch (error) {
+        console.warn("Falha ao converter imagem incorporada do PDF:", error);
+        return "";
+      }
+    }
+
+    async function extractEmbeddedPageImages(page) {
+      const operatorList = await page.getOperatorList();
+      const images = [];
+      const seen = new Set();
+      const transformStack = [];
+      let ctm = [1, 0, 0, 1, 0, 0];
+
+      for (let i = 0; i < operatorList.fnArray.length; i++) {
+        const fn = operatorList.fnArray[i];
+        const args = operatorList.argsArray[i] || [];
+
+        if (fn === pdfjsLib.OPS.save) {
+          transformStack.push(ctm.slice());
+          continue;
+        }
+
+        if (fn === pdfjsLib.OPS.restore) {
+          ctm = transformStack.pop() || [1, 0, 0, 1, 0, 0];
+          continue;
+        }
+
+        if (fn === pdfjsLib.OPS.transform) {
+          ctm = multiplyPdfMatrices(ctm, args);
+          continue;
+        }
+
+        if (
+          fn !== pdfjsLib.OPS.paintImageXObject &&
+          fn !== pdfjsLib.OPS.paintJpegXObject &&
+          fn !== pdfjsLib.OPS.paintInlineImageXObject
+        ) {
+          continue;
+        }
+
+        const bounds = getImageBoundsFromMatrix(ctm);
+        let imageObject = null;
+        let objectId = null;
+
+        try {
+          if (fn === pdfjsLib.OPS.paintInlineImageXObject) {
+            imageObject = args[0];
+            objectId = "inline-" + i;
+          } else {
+            objectId = args[0];
+            if (seen.has(objectId)) continue;
+            seen.add(objectId);
+            const store = String(objectId).startsWith("g_") ? page.commonObjs : page.objs;
+            imageObject = await getPdfObjectAsync(store, objectId);
+          }
+
+          if (!imageObject) continue;
+          const width = Number(imageObject.width || args[1] || 0);
+          const height = Number(imageObject.height || args[2] || 0);
+          const area = width * height;
+          const aspect = height ? width / height : 0;
+
+          // Ícones, logos e pequenos elementos decorativos não são candidatos.
+          if (area < 30000 || aspect < 0.35 || aspect > 3.2) continue;
+
+          const dataUrl = await imageObjectToDataUrl(imageObject);
+          if (!dataUrl || dataUrl.length < 5000) continue;
+
+          images.push({
+            objectId,
+            width,
+            height,
+            area,
+            aspect,
+            dataUrl,
+            bounds
+          });
+        } catch (error) {
+          console.warn("Não foi possível extrair uma imagem incorporada:", error);
+        }
+      }
+
+      return images;
+    }
+
     async function extractPdfTextAndPhotos(url, firstPage, lastPage) {
       const response = await fetch(url);
       if (!response.ok) throw new Error("Não foi possível baixar o PDF: " + response.status);
@@ -734,29 +935,71 @@
         const strings = content.items.map(item => item.str).filter(Boolean);
         pageTexts.push("\n--- PÁGINA " + pageNumber + " ---\n" + strings.join("\n"));
 
-        // Melhor esforço para capturar automaticamente as fotos das indicações.
-        // O layout atual dos PDFs coloca a foto à esquerda e os dados à direita.
         const descriptionItems = content.items.filter(item => /descri[cç][aã]o/i.test(cleanValue(item.str || "")));
         if (!descriptionItems.length) continue;
 
-        const scale = 1.6;
-        const viewport = page.getViewport({ scale });
-        const canvas = document.createElement("canvas");
-        canvas.width = Math.ceil(viewport.width);
-        canvas.height = Math.ceil(viewport.height);
-        const context = canvas.getContext("2d", { alpha: false });
-        await page.render({ canvasContext: context, viewport }).promise;
+        // Primeiro tentamos extrair a fotografia ORIGINAL incorporada no PDF.
+        // Isso é importante porque o título da atração é uma camada separada
+        // sobre a fotografia; uma captura da página inevitavelmente leva o título junto.
+        let embeddedImages = [];
+        try {
+          embeddedImages = await extractEmbeddedPageImages(page);
+        } catch (error) {
+          console.warn("Extração de imagens incorporadas falhou:", error);
+        }
+
+        const availableImages = embeddedImages.slice();
+        const usedImages = new Set();
 
         for (const item of descriptionItems) {
-          const pdfY = item.transform && item.transform.length >= 6 ? item.transform[5] : 0;
-          const baselineY = viewport.height - (pdfY * scale);
+          const descriptionY = item.transform && item.transform.length >= 6
+            ? Number(item.transform[5])
+            : 0;
+
+          let best = null;
+          let bestScore = Infinity;
+
+          for (const candidate of availableImages) {
+            if (usedImages.has(candidate.objectId)) continue;
+
+            const yDistance = Math.abs(candidate.bounds.yCenter - descriptionY);
+            const pageWidth = page.getViewport({ scale: 1 }).width || 600;
+            const xPenalty = candidate.bounds.xCenter > pageWidth * 0.58 ? 10000 : 0;
+            const score = yDistance + xPenalty;
+
+            if (score < bestScore) {
+              best = candidate;
+              bestScore = score;
+            }
+          }
+
+          if (best) {
+            usedImages.add(best.objectId);
+            photos.push({
+              page: pageNumber,
+              dataUrl: best.dataUrl,
+              source: "PDF · imagem original incorporada"
+            });
+            continue;
+          }
+
+          // Fallback somente quando o PDF não disponibilizar a imagem original.
+          const scale = 1.6;
+          const viewport = page.getViewport({ scale });
+          const canvas = document.createElement("canvas");
+          canvas.width = Math.ceil(viewport.width);
+          canvas.height = Math.ceil(viewport.height);
+          const context = canvas.getContext("2d", { alpha: false });
+          await page.render({ canvasContext: context, viewport }).promise;
+
+          const baselineY = viewport.height - (descriptionY * scale);
           const cropWidth = Math.min(viewport.width * 0.46, 560);
           const cropHeight = Math.min(viewport.height * 0.32, 420);
           const cropX = Math.max(0, Math.floor(viewport.width * 0.025));
-          // O título da indicação fica sobreposto na parte superior da foto no PDF.
-          // Mantemos a captura automática, mas deslocamos o recorte para baixo para
-          // evitar levar o título junto. O restante da foto continua sendo preservado.
-          const cropY = Math.max(0, Math.min(viewport.height - cropHeight, Math.floor(baselineY - cropHeight * 0.03)));
+          const cropY = Math.max(0, Math.min(
+            viewport.height - cropHeight,
+            Math.floor(baselineY - cropHeight * 0.03)
+          ));
 
           const cropCanvas = document.createElement("canvas");
           cropCanvas.width = Math.max(1, Math.floor(cropWidth));
@@ -773,7 +1016,7 @@
             photos.push({
               page: pageNumber,
               dataUrl,
-              source: "PDF · captura automática"
+              source: "PDF · captura automática (fallback)"
             });
           }
         }
@@ -785,7 +1028,7 @@
       };
     }
 
-    async function extractPdfTextFromUrl(url, firstPage, lastPage) {
+async function extractPdfTextFromUrl(url, firstPage, lastPage) {
       const result = await extractPdfTextAndPhotos(url, firstPage, lastPage);
       return result.rawText;
     }
