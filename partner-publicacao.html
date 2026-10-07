@@ -753,7 +753,10 @@
           const cropWidth = Math.min(viewport.width * 0.46, 560);
           const cropHeight = Math.min(viewport.height * 0.32, 420);
           const cropX = Math.max(0, Math.floor(viewport.width * 0.025));
-          const cropY = Math.max(0, Math.min(viewport.height - cropHeight, Math.floor(baselineY - cropHeight * 0.18)));
+          // O título da indicação fica sobreposto na parte superior da foto no PDF.
+          // Mantemos a captura automática, mas deslocamos o recorte para baixo para
+          // evitar levar o título junto. O restante da foto continua sendo preservado.
+          const cropY = Math.max(0, Math.min(viewport.height - cropHeight, Math.floor(baselineY - cropHeight * 0.03)));
 
           const cropCanvas = document.createElement("canvas");
           cropCanvas.width = Math.max(1, Math.floor(cropWidth));
