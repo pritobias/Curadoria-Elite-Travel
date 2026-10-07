@@ -202,16 +202,6 @@
     .mini-btn{border:1px solid rgba(212,175,55,.35);background:rgba(0,0,0,.15);color:#d4af37;border-radius:12px;padding:10px 12px;font-weight:800;cursor:pointer}
     .mini-btn.danger{border-color:rgba(255,155,155,.40);color:#ffb3b3}
     .item-editor-field input:focus,.item-editor-field textarea:focus{border-color:rgba(212,175,55,.55);box-shadow:0 0 0 3px rgba(212,175,55,.10);outline:none}
-    .item-photo-wrap{display:grid;grid-template-columns:150px 1fr;gap:14px;align-items:start;margin-bottom:14px;padding:14px;border:1px solid rgba(255,255,255,.09);border-radius:16px;background:rgba(255,255,255,.025)}
-    .item-photo-preview{width:150px;height:108px;border:1px dashed rgba(212,175,55,.38);border-radius:12px;background:#050b14;display:flex;align-items:center;justify-content:center;overflow:hidden;color:rgba(255,255,255,.45);font-size:12px;text-align:center;padding:8px}
-    .item-photo-preview img{width:100%;height:100%;object-fit:cover;display:block}
-    .item-photo-help{color:rgba(255,255,255,.68);font-size:12px;line-height:1.5}
-    .item-photo-help strong{color:var(--gold2)}
-    .item-save-row{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:14px;padding-top:14px;border-top:1px solid rgba(255,255,255,.08)}
-    .item-save-status{font-size:12px;font-weight:900;color:var(--muted)}
-    .item-save-status.saved{color:var(--ok)}
-    .item-save-status.error{color:var(--danger)}
-    .progress-note{margin:14px 0;padding:13px 15px;border:1px solid rgba(212,175,55,.20);background:rgba(212,175,55,.06);border-radius:14px;color:rgba(255,255,255,.78);font-size:13px;line-height:1.5}
     .critical-block{border:1px solid rgba(255,155,155,.34);background:rgba(255,155,155,.06);color:var(--danger);border-radius:16px;padding:14px;font-size:13px;line-height:1.5;margin-bottom:14px}
 
     .quality-list{display:grid;gap:10px}
@@ -222,6 +212,30 @@
 
     .raw-box{display:none;margin-top:20px}
     textarea{width:100%;min-height:220px;border:1px solid rgba(255,255,255,.12);background:#050b14;color:#dce9ff;border-radius:16px;padding:16px;font-family:Consolas,monospace;font-size:12px;line-height:1.45}
+
+
+    .progress-box{border:1px solid rgba(212,175,55,.24);background:rgba(212,175,55,.05);border-radius:18px;padding:18px;margin:18px 0}
+    .progress-head{display:flex;justify-content:space-between;align-items:center;gap:14px;flex-wrap:wrap}
+    .progress-head strong{font-size:18px;color:#fff}
+    .progress-count{color:var(--gold2);font-weight:900}
+    .progress-bar{height:10px;border-radius:999px;background:rgba(255,255,255,.08);overflow:hidden;margin:12px 0}
+    .progress-fill{height:100%;width:0;background:linear-gradient(90deg,#d4af37,#e7c64a);transition:width .25s ease}
+    .progress-details{display:flex;gap:8px;flex-wrap:wrap}
+    .progress-pill{border:1px solid rgba(255,255,255,.10);border-radius:999px;padding:7px 10px;color:var(--muted);font-size:12px;font-weight:900}
+    .progress-pill.ok{border-color:rgba(168,240,176,.30);color:var(--ok)}
+    .progress-pill.warn{border-color:rgba(255,211,106,.30);color:var(--warn)}
+    .photo-editor{margin-top:14px;border:1px solid rgba(255,255,255,.10);border-radius:16px;padding:14px;background:rgba(0,0,0,.18)}
+    .photo-preview{display:flex;align-items:center;justify-content:center;min-height:180px;border-radius:13px;background:#050b14;overflow:hidden;border:1px solid rgba(255,255,255,.08)}
+    .photo-preview img{display:block;max-width:100%;max-height:260px;object-fit:contain}
+    .photo-empty{padding:30px;text-align:center;color:var(--muted);font-size:13px;line-height:1.5}
+    .photo-source{margin-top:8px;color:var(--gold2);font-size:12px;font-weight:900}
+    .photo-paste{margin-top:10px;border:1px dashed rgba(212,175,55,.38);border-radius:13px;padding:13px;text-align:center;color:var(--muted);font-size:12px;line-height:1.45;cursor:pointer;outline:none}
+    .photo-paste:focus{border-color:var(--gold2);box-shadow:0 0 0 3px rgba(212,175,55,.10);color:#fff}
+    .photo-paste.active{border-color:var(--gold2);background:rgba(212,175,55,.06);color:#fff}
+    .photo-actions{display:flex;gap:9px;flex-wrap:wrap;margin-top:10px}
+    .save-state{color:var(--ok);font-size:12px;font-weight:900;margin-top:8px}
+    .draft-note{border:1px solid rgba(168,240,176,.22);background:rgba(168,240,176,.05);color:var(--ok);border-radius:14px;padding:12px;font-size:13px;line-height:1.5;margin-bottom:14px}
+    .publish-note{border:1px solid rgba(255,211,106,.24);background:rgba(255,211,106,.05);color:var(--warn);border-radius:14px;padding:12px;font-size:13px;line-height:1.5;margin-top:14px}
 
     @media(max-width:1100px){
       .grid,.preview-layout{grid-template-columns:1fr}
@@ -280,8 +294,6 @@
           <option value="Endereços para Compras">Endereços para Compras</option>
           <option value="Sugestão de Presentes">Sugestão de Presentes</option>
           <option value="City Guide">City Guide</option>
-          <option value="Documentos, Vistos e Saúde">Documentos, Vistos e Saúde</option>
-          <option value="Malha de Transportes">Malha de Transportes</option>
         </select>
 
         <label for="yearSelect">Ano</label>
@@ -311,15 +323,25 @@
         <div class="summary-grid">
           <div class="metric"><span>Acervo filtrado</span><strong id="metricMaterials">--</strong><small>curadoria_materials</small></div>
           <div class="metric"><span>Selecionado</span><strong id="metricSelected">--</strong><small>destino</small></div>
-          <div class="metric"><span>Indicações</span><strong id="metricItems">--</strong><small>extraídas</small></div>
-          <div class="metric"><span>Revisadas</span><strong id="metricReviewed">0</strong><small id="metricReviewedDetail">salvas</small></div>
+          <div class="metric"><span>Itens extraídos</span><strong id="metricItems">--</strong><small>prévia</small></div>
+          <div class="metric"><span>Status</span><strong id="metricStatus">Pronto</strong><small>admin</small></div>
         </div>
 
         <div class="selected-box" id="selectedBox">
           <h3>Nenhum material selecionado</h3>
           <p>Selecione um destino na lista à esquerda para iniciar o processamento.</p>
         </div>
-        <div class="progress-note" id="reviewProgress" style="display:none;"></div>
+
+        <div class="progress-box" id="progressBox">
+          <div class="progress-head">
+            <strong>Progressão do material</strong>
+            <span class="progress-count" id="progressCount">0%</span>
+          </div>
+          <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+          <div class="progress-details" id="progressDetails">
+            <span class="progress-pill">Nenhum material selecionado</span>
+          </div>
+        </div>
 
         <div class="stepper">
           <div class="step" id="stepLoad">1. Material</div>
@@ -331,7 +353,7 @@
         <div class="actions">
           <button class="btn btn-primary" id="processBtn" disabled>Processar PDF</button>
           <button class="btn" id="toggleRawBtn" disabled>Mostrar/Ocultar texto bruto</button>
-          <button class="btn btn-primary" id="publishBtn" disabled>Publicar material aprovado</button>
+          <button class="btn btn-primary" id="publishBtn" disabled>Publicar em b2b_material_items</button>
           <button class="btn btn-danger" id="replaceBtn" disabled>Substituir publicação existente</button>
         </div>
 
@@ -379,20 +401,14 @@
       "Atrações Turísticas",
       "Vida Noturna",
       "Endereços para Compras",
-      "Sugestão de Presentes",
-      "Documentos, Vistos e Saúde",
-      "Malha de Transportes"
+      "Sugestão de Presentes"
     ];
-
-    const PARTNER_IMAGE_BUCKET = "materiais";
-    const PARTNER_IMAGE_ROOT = "partner-review";
 
     let allMaterials = [];
     let filteredMaterials = [];
     let selectedMaterial = null;
     let currentExtraction = null;
     let existingStructuredMap = new Map();
-    let savedReviewMap = new Map();
 
     const el = (id) => document.getElementById(id);
 
@@ -427,12 +443,7 @@
         "enderecos para compras": "Endereços para Compras",
         "sugestao-de-presentes": "Sugestão de Presentes",
         "sugestão de presentes": "Sugestão de Presentes",
-        "sugestao de presentes": "Sugestão de Presentes",
-        "documentos, vistos e saude": "Documentos, Vistos e Saúde",
-        "documentos, vistos e saúde": "Documentos, Vistos e Saúde",
-        "documentos-vistos-e-saude": "Documentos, Vistos e Saúde",
-        "malha de transportes": "Malha de Transportes",
-        "malha-de-transportes": "Malha de Transportes"
+        "sugestao de presentes": "Sugestão de Presentes"
       };
       return map[value] || String(category || "").trim();
     }
@@ -470,18 +481,8 @@
     }
 
     function setStatus(message, type) {
-      const statusNode = el("listStatus");
-      if (statusNode) statusNode.innerHTML = message;
-
-      // metricStatus não faz parte do layout atual.
-      // O status visual principal fica em #listStatus.
-      const metricStatusNode = el("metricStatus");
-      if (metricStatusNode) {
-        metricStatusNode.textContent =
-          type === "error" ? "Erro" :
-          type === "busy" ? "Processando" :
-          "Pronto";
-      }
+      el("listStatus").innerHTML = message;
+      el("metricStatus").textContent = type === "error" ? "Erro" : type === "busy" ? "Processando" : "Pronto";
     }
 
     function setStep(stepId, state) {
@@ -532,7 +533,6 @@
         // Primeiro mostra e seleciona o material imediatamente.
         // A leitura de b2b_material_items é secundária e não pode travar a seleção.
         existingStructuredMap = new Map();
-        savedReviewMap = new Map();
         filterMaterials();
         setStep("stepLoad", "done");
 
@@ -557,10 +557,9 @@
 
     async function loadExistingStructuredItems() {
       existingStructuredMap = new Map();
-      savedReviewMap = new Map();
       const { data, error } = await supabaseClient
         .from("b2b_material_items")
-        .select("category, city_label, year, item_order, is_active, item_name");
+        .select("category, city_label, year, item_order, is_active");
 
       if (error) {
         console.warn("Não foi possível ler b2b_material_items", error);
@@ -569,15 +568,10 @@
 
       (data || []).forEach(row => {
         const key = materialKey(row.category, row.city_label, row.year);
-        const current = existingStructuredMap.get(key) || { total: 0, active: 0, reviewed: 0, orders: new Set() };
+        const current = existingStructuredMap.get(key) || { total: 0, active: 0 };
         current.total += 1;
         if (row.is_active) current.active += 1;
-        current.reviewed += 1;
-        current.orders.add(Number(row.item_order));
         existingStructuredMap.set(key, current);
-
-        if (!savedReviewMap.has(key)) savedReviewMap.set(key, new Map());
-        savedReviewMap.get(key).set(Number(row.item_order), row);
       });
     }
 
@@ -602,6 +596,7 @@
       el("toggleRawBtn").disabled = true;
       el("publishBtn").disabled = true;
       el("replaceBtn").disabled = true;
+      renderProgress();
     }
 
     function filterMaterials() {
@@ -645,13 +640,9 @@
         const key = materialKey(material.category, material.city_label, material.year);
         const existing = existingStructuredMap.get(key);
         const isSelected = selectedMaterial && getMaterialIdentity(material) === getMaterialIdentity(selectedMaterial);
-        const reviewedCount = existing ? existing.reviewed : 0;
-        const activeCount = existing ? existing.active : 0;
-        const statusBadge = activeCount
-          ? `<span class="badge ok">Publicado · ${activeCount} itens</span>`
-          : reviewedCount
-            ? `<span class="badge warn">${reviewedCount} revisadas</span>`
-            : `<span class="badge warn">Ainda não revisado</span>`;
+        const statusBadge = existing && existing.active
+          ? `<span class="badge ok">Publicado · ${existing.active} itens</span>`
+          : `<span class="badge warn">Pendente</span>`;
 
         const row = document.createElement("div");
         row.className = "material-row" + (isSelected ? " active" : "");
@@ -679,17 +670,17 @@
       selectedMaterial = material;
       currentExtraction = null;
       resetPreview();
+      const savedDraft = readDraft(material);
 
       el("selectedBox").innerHTML = `
+
         <h3>${material.city_label}</h3>
         <p>${normalizeCategoryName(material.category)} · ${normalizeYear(material.year)} · Fonte: curadoria_materials</p>
+        ${savedDraft ? `<div class="draft-note" style="margin-top:14px">Rascunho encontrado neste navegador. Depois de processar o PDF, o sistema poderá continuar de onde você parou.</div>` : ""}
       `;
 
       el("metricSelected").textContent = material.city_label.split(" - ")[0] || material.city_label;
       el("metricItems").textContent = "--";
-      el("metricReviewed").textContent = "0";
-      el("metricReviewedDetail").textContent = "salvas";
-      el("reviewProgress").style.display = "none";
       el("processBtn").disabled = false;
       el("toggleRawBtn").disabled = true;
       el("publishBtn").disabled = true;
@@ -719,12 +710,14 @@
       setDisplay("rawBox", "none");
       const rawTextNode = el("rawText");
       if (rawTextNode) rawTextNode.value = "";
-      setText("panoramaPreview", "");
+      const panoramaNode = el("panoramaPreview");
+      if (panoramaNode) panoramaNode.value = "";
       setHtml("itemsEditor", "");
       setHtml("qualityList", "");
+      renderProgress();
     }
 
-    async function extractPdfTextFromUrl(url, firstPage, lastPage) {
+    async function extractPdfTextAndPhotos(url, firstPage, lastPage) {
       const response = await fetch(url);
       if (!response.ok) throw new Error("Não foi possível baixar o PDF: " + response.status);
       const arrayBuffer = await response.arrayBuffer();
@@ -733,15 +726,92 @@
       const start = Math.max(1, firstPage || 1);
       const end = Math.min(totalPages, lastPage || totalPages);
       const pageTexts = [];
+      const photos = [];
 
       for (let pageNumber = start; pageNumber <= end; pageNumber++) {
         const page = await pdf.getPage(pageNumber);
         const content = await page.getTextContent();
         const strings = content.items.map(item => item.str).filter(Boolean);
         pageTexts.push("\n--- PÁGINA " + pageNumber + " ---\n" + strings.join("\n"));
+
+        // Melhor esforço para capturar automaticamente as fotos das indicações.
+        // O layout atual dos PDFs coloca a foto à esquerda e os dados à direita.
+        const descriptionItems = content.items.filter(item => /^descri[cç][aã]o\\s*:/i.test(cleanValue(item.str || "")));
+        if (!descriptionItems.length) continue;
+
+        const scale = 1.6;
+        const viewport = page.getViewport({ scale });
+        const canvas = document.createElement("canvas");
+        canvas.width = Math.ceil(viewport.width);
+        canvas.height = Math.ceil(viewport.height);
+        const context = canvas.getContext("2d", { alpha: false });
+        await page.render({ canvasContext: context, viewport }).promise;
+
+        for (const item of descriptionItems) {
+          const pdfY = item.transform && item.transform.length >= 6 ? item.transform[5] : 0;
+          const baselineY = viewport.height - (pdfY * scale);
+          const cropWidth = Math.min(viewport.width * 0.46, 560);
+          const cropHeight = Math.min(viewport.height * 0.27, 340);
+          const cropX = Math.max(0, Math.floor(viewport.width * 0.025));
+          const cropY = Math.max(0, Math.min(viewport.height - cropHeight, Math.floor(baselineY - 18)));
+
+          const cropCanvas = document.createElement("canvas");
+          cropCanvas.width = Math.max(1, Math.floor(cropWidth));
+          cropCanvas.height = Math.max(1, Math.floor(cropHeight));
+          const cropContext = cropCanvas.getContext("2d");
+          cropContext.drawImage(
+            canvas,
+            cropX, cropY, cropCanvas.width, cropCanvas.height,
+            0, 0, cropCanvas.width, cropCanvas.height
+          );
+
+          const dataUrl = cropCanvas.toDataURL("image/jpeg", 0.78);
+          if (dataUrl && dataUrl.length > 5000) {
+            photos.push({
+              page: pageNumber,
+              dataUrl,
+              source: "PDF · captura automática"
+            });
+          }
+        }
       }
 
-      return pageTexts.join("\n");
+      return {
+        rawText: pageTexts.join("\n"),
+        photos
+      };
+    }
+
+    async function extractPdfTextFromUrl(url, firstPage, lastPage) {
+      const result = await extractPdfTextAndPhotos(url, firstPage, lastPage);
+      return result.rawText;
+    }
+
+    function compressImageDataUrl(dataUrl, maxSide = 1000, quality = 0.78) {
+      return new Promise((resolve, reject) => {
+        const image = new Image();
+        image.onload = () => {
+          const ratio = Math.min(1, maxSide / Math.max(image.naturalWidth, image.naturalHeight));
+          const canvas = document.createElement("canvas");
+          canvas.width = Math.max(1, Math.round(image.naturalWidth * ratio));
+          canvas.height = Math.max(1, Math.round(image.naturalHeight * ratio));
+          const ctx = canvas.getContext("2d");
+          ctx.drawImage(image, 0, 0, canvas.width, canvas.height);
+          resolve(canvas.toDataURL("image/jpeg", quality));
+        };
+        image.onerror = reject;
+        image.src = dataUrl;
+      });
+    }
+
+    async function fileToCompressedDataUrl(file) {
+      const dataUrl = await new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = () => resolve(reader.result);
+        reader.onerror = reject;
+        reader.readAsDataURL(file);
+      });
+      return compressImageDataUrl(dataUrl);
     }
 
     function normalizePdfText(text) {
@@ -857,10 +927,7 @@
         address: "",
         phone: "",
         site: "",
-        entry_price: "",
-        photo_data_url: "",
-        photo_url: "",
-        saved: false
+        entry_price: ""
       };
     }
 
@@ -943,6 +1010,124 @@
       return problems;
     }
 
+    function getDraftKey(material = selectedMaterial) {
+      if (!material) return "";
+      return [
+        "cet_partner_draft_v2",
+        normalizeCategoryName(material.category),
+        String(material.city_label || "").trim(),
+        normalizeYear(material.year),
+        String(material.pdf_url || "").trim()
+      ].join("::");
+    }
+
+    function readDraft(material = selectedMaterial) {
+      const key = getDraftKey(material);
+      if (!key) return null;
+      try {
+        const raw = localStorage.getItem(key);
+        return raw ? JSON.parse(raw) : null;
+      } catch (error) {
+        console.warn("Não foi possível ler o rascunho local.", error);
+        return null;
+      }
+    }
+
+    function writeDraft(draft, material = selectedMaterial) {
+      const key = getDraftKey(material);
+      if (!key) return false;
+      try {
+        localStorage.setItem(key, JSON.stringify({
+          version: 2,
+          saved_at: new Date().toISOString(),
+          material: {
+            category: normalizeCategoryName(material.category),
+            city_label: material.city_label,
+            year: normalizeYear(material.year),
+            pdf_url: material.pdf_url
+          },
+          panorama: draft.panorama || "",
+          panoramaSaved: !!draft.panoramaSaved,
+          items: Array.isArray(draft.items) ? draft.items : []
+        }));
+        return true;
+      } catch (error) {
+        console.error(error);
+        setStatus("Não foi possível salvar o rascunho local. O navegador pode estar sem espaço.", "error");
+        return false;
+      }
+    }
+
+    function saveDraftState() {
+      if (!selectedMaterial || !currentExtraction) return false;
+      return writeDraft({
+        panorama: currentExtraction.panorama || "",
+        panoramaSaved: !!currentExtraction.panoramaSaved,
+        items: currentExtraction.items || []
+      });
+    }
+
+    function applySavedDraft(extraction) {
+      const draft = readDraft();
+      if (!draft) return extraction;
+
+      const savedItems = Array.isArray(draft.items) ? draft.items : [];
+      const items = (extraction.items || []).map((item, index) => {
+        const saved = savedItems[index];
+        if (!saved) return item;
+        return {
+          ...item,
+          ...saved,
+          item_order: index + 1
+        };
+      });
+
+      return {
+        ...extraction,
+        panorama: draft.panoramaSaved ? (draft.panorama || extraction.panorama || "") : extraction.panorama,
+        panoramaSaved: !!draft.panoramaSaved,
+        items,
+        draftSavedAt: draft.saved_at || null
+      };
+    }
+
+    function getProgressState() {
+      const items = currentExtraction && Array.isArray(currentExtraction.items) ? currentExtraction.items : [];
+      const savedItems = items.filter(item => item && item.saved === true).length;
+      const photos = items.filter(item => item && item.photoDataUrl).length;
+      const panoramaSaved = !!(currentExtraction && currentExtraction.panoramaSaved);
+      const total = items.length;
+      const components = (total * 2) + 1;
+      const completed = (panoramaSaved ? 1 : 0) + savedItems + photos;
+      const percent = components ? Math.round((completed / components) * 100) : 0;
+      const ready = !!currentExtraction && total > 0 && panoramaSaved && savedItems === total;
+      return { total, savedItems, photos, panoramaSaved, completed, components, percent, ready };
+    }
+
+    function renderProgress() {
+      const count = el("progressCount");
+      const fill = el("progressFill");
+      const details = el("progressDetails");
+      if (!count || !fill || !details) return;
+
+      const state = getProgressState();
+      count.textContent = state.total ? state.percent + "%" : "0%";
+      fill.style.width = state.percent + "%";
+
+      if (!currentExtraction) {
+        details.innerHTML = `<span class="progress-pill">Nenhum material processado</span>`;
+        return;
+      }
+
+      const pills = [
+        `<span class="progress-pill ${state.panoramaSaved ? "ok" : "warn"}">Panorama ${state.panoramaSaved ? "✓ salvo" : "○ pendente"}</span>`,
+        `<span class="progress-pill ${state.savedItems === state.total && state.total ? "ok" : "warn"}">Indicações ${state.savedItems}/${state.total} salvas</span>`,
+        `<span class="progress-pill ${state.photos === state.total && state.total ? "ok" : "warn"}">Fotos ${state.photos}/${state.total}</span>`,
+        `<span class="progress-pill ${state.ready ? "ok" : "warn"}">${state.ready ? "Pronto para revisão final" : "Em revisão"}</span>`
+      ];
+      details.innerHTML = pills.join("");
+    }
+
     function hasCriticalProblems(extraction) {
       const items = extraction && extraction.items ? extraction.items : [];
       if (!items.length) return true;
@@ -981,10 +1166,20 @@
       if (withoutPrice) warnings.push(withoutPrice + " item(ns) sem entrada/valor. Revise se o PDF original não tiver essa informação.");
       else if (items.length) oks.push("Entrada/valor identificados.");
 
+      const withoutPhoto = items.filter(item => !item.photoDataUrl).length;
+      if (withoutPhoto) warnings.push(withoutPhoto + " item(ns) sem foto. Revise ou substitua a foto antes de publicar.");
+      else if (items.length) oks.push("Fotos presentes em todas as indicações.");
+
+      const state = getProgressState();
+      if (!state.panoramaSaved) critical.push("O panorama ainda não foi salvo.");
+      if (state.savedItems !== state.total) critical.push("Ainda existem indicações não salvas individualmente.");
+      if (state.total && state.photos !== state.total) critical.push("Ainda existem indicações sem foto.");
+
       return { oks, warnings, critical };
     }
 
     function renderQualityList(quality) {
+
       const qualityHtml = [
         ...quality.oks.map(text => `<div class="quality-item ok">✓ ${escapeHtml(text)}</div>`),
         ...quality.warnings.map(text => `<div class="quality-item warn">⚠ ${escapeHtml(text)}</div>`),
@@ -994,30 +1189,122 @@
     }
 
     function refreshPublishAvailability() {
-      if (!currentExtraction) return;
+      if (!currentExtraction) {
+        renderProgress();
+        return;
+      }
       const quality = validateExtraction(currentExtraction);
       const blocked = quality.critical.length > 0;
       el("publishBtn").disabled = blocked;
       el("replaceBtn").disabled = blocked;
       el("metricItems").textContent = String((currentExtraction.items || []).length);
       renderQualityList(quality);
+      renderProgress();
     }
 
     function updateCurrentPanorama(value) {
       if (!currentExtraction) return;
       currentExtraction.panorama = value;
+      currentExtraction.panoramaSaved = false;
       refreshPublishAvailability();
     }
 
     function updateCurrentItem(index, field, value) {
       if (!currentExtraction || !currentExtraction.items || !currentExtraction.items[index]) return;
       currentExtraction.items[index][field] = value;
+      currentExtraction.items[index].saved = false;
       refreshPublishAvailability();
     }
 
     function renumberCurrentItems() {
+
       if (!currentExtraction || !currentExtraction.items) return;
       currentExtraction.items.forEach((item, idx) => { item.item_order = idx + 1; });
+    }
+
+
+    function collectItemFromCard(index) {
+      if (!currentExtraction || !currentExtraction.items || !currentExtraction.items[index]) return null;
+      const card = document.querySelectorAll('[data-item-card="true"]')[index];
+      if (!card) return currentExtraction.items[index];
+
+      const read = (field) => {
+        const input = card.querySelector(`[data-field="${field}"]`);
+        return input ? String(input.value || "").trim() : "";
+      };
+
+      const item = currentExtraction.items[index];
+      item.name = read("name");
+      item.description = read("description");
+      item.address = read("address");
+      item.site = read("site");
+      item.entry_price = read("entry_price");
+      return item;
+    }
+
+    function savePanorama() {
+      if (!currentExtraction) return;
+      const panorama = String(el("panoramaPreview")?.value || "").trim();
+      if (!panorama) {
+        alert("O panorama ainda está vazio. Digite ou revise o texto antes de salvar.");
+        return;
+      }
+
+      currentExtraction.panorama = panorama;
+      currentExtraction.panoramaSaved = true;
+      saveDraftState();
+      renderExtraction(currentExtraction);
+      setStatus("Panorama salvo. Você pode sair e continuar depois sem perder esta etapa.", "ok");
+    }
+
+    function saveCurrentItem(index) {
+      if (!currentExtraction || !currentExtraction.items || !currentExtraction.items[index]) return;
+      const item = collectItemFromCard(index);
+      const problems = getItemProblems(item);
+
+      if (problems.length) {
+        alert("Esta indicação ainda precisa de revisão:\\n\\n" + problems.join("\\n"));
+        return;
+      }
+
+      item.saved = true;
+      currentExtraction.items[index] = item;
+      saveDraftState();
+      renderExtraction(currentExtraction);
+      setStatus("Indicação " + String(index + 1).padStart(2, "0") + " salva. Progresso preservado.", "ok");
+    }
+
+    async function handlePhotoFile(index, file) {
+      if (!file || !file.type || !file.type.startsWith("image/")) {
+        alert("Selecione uma imagem válida.");
+        return;
+      }
+      try {
+        const dataUrl = await fileToCompressedDataUrl(file);
+        currentExtraction.items[index].photoDataUrl = dataUrl;
+        currentExtraction.items[index].photoSource = "Imagem inserida manualmente";
+        currentExtraction.items[index].saved = false;
+        saveDraftState();
+        renderExtraction(currentExtraction);
+        setStatus("Foto substituída. Salve a indicação para confirmar esta alteração.", "ok");
+      } catch (error) {
+        console.error(error);
+        alert("Não foi possível preparar essa imagem.");
+      }
+    }
+
+    let activePhotoPasteIndex = null;
+
+    async function handlePhotoPaste(index, file) {
+      if (!file) return;
+      await handlePhotoFile(index, file);
+    }
+
+    function focusPhotoPaste(index, node) {
+      activePhotoPasteIndex = index;
+      document.querySelectorAll(".photo-paste").forEach(item => item.classList.remove("active"));
+      if (node) node.classList.add("active");
+      setStatus("Campo de foto ativo. Agora use Ctrl+V para colar a imagem copiada.", "ok");
     }
 
     function addManualItem() {
@@ -1051,206 +1338,7 @@
       renderExtraction(currentExtraction);
     }
 
-    function getReviewKey(material, itemOrder) {
-      return materialKey(material.category, material.city_label, material.year) + "::" + Number(itemOrder);
-    }
-
-    function getPartnerImagePath(material, itemOrder) {
-      const safe = (value) => String(value || "")
-        .normalize("NFD").replace(/[\u0300-\u036f]/g, "")
-        .toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "");
-      return `${PARTNER_IMAGE_ROOT}/${safe(material.category)}/${safe(material.city_label)}/${normalizeYear(material.year)}/item-${String(itemOrder).padStart(2,"0")}.png`;
-    }
-
-    function getPartnerImagePublicUrl(path) {
-      const { data } = supabaseClient.storage.from(PARTNER_IMAGE_BUCKET).getPublicUrl(path);
-      return data && data.publicUrl ? data.publicUrl : "";
-    }
-
-    async function uploadPartnerImage(material, itemOrder, dataUrl) {
-      if (!dataUrl || !String(dataUrl).startsWith("data:image/")) return "";
-      const response = await fetch(dataUrl);
-      const blob = await response.blob();
-      const path = getPartnerImagePath(material, itemOrder);
-      const { error } = await supabaseClient.storage.from(PARTNER_IMAGE_BUCKET).upload(path, blob, {
-        contentType: blob.type || "image/png",
-        upsert: true,
-        cacheControl: "31536000"
-      });
-      if (error) throw error;
-      return getPartnerImagePublicUrl(path);
-    }
-
-    function dataUrlFromImageElement(img) {
-      if (!img || !img.src || !img.src.startsWith("data:image/")) return "";
-      return img.src;
-    }
-
-    function readPhotoFromCard(card) {
-      const preview = card.querySelector("[data-photo-preview]");
-      const img = preview ? preview.querySelector("img") : null;
-      return img ? dataUrlFromImageElement(img) : "";
-    }
-
-    function setCardPhoto(index, dataUrl) {
-      if (!currentExtraction || !currentExtraction.items[index]) return;
-      currentExtraction.items[index].photo_data_url = dataUrl || "";
-      currentExtraction.items[index].photo_url = dataUrl || "";
-      renderExtraction(currentExtraction, { preserveFocus: true });
-    }
-
-    async function saveIndividualItem(index) {
-      if (!selectedMaterial || !currentExtraction || !currentExtraction.items[index]) return;
-
-      const finalExtraction = collectExtractionFromScreen();
-      const item = finalExtraction.items[index];
-      const problems = getItemProblems(item);
-      const card = document.querySelector(`[data-item-index="${index}"]`);
-      const status = card ? card.querySelector("[data-save-status]") : null;
-      const button = card ? card.querySelector("[data-save-item]") : null;
-
-      if (problems.length) {
-        if (status) { status.textContent = problems.join(" "); status.className = "item-save-status error"; }
-        alert("Corrija esta indicação antes de salvar:\n\n" + problems.join("\n"));
-        return;
-      }
-
-      try {
-        if (button) button.disabled = true;
-        if (status) { status.textContent = "Salvando..."; status.className = "item-save-status"; }
-
-        let photoUrl = "";
-        if (item.photo_data_url) {
-          photoUrl = await uploadPartnerImage(selectedMaterial, item.item_order, item.photo_data_url);
-        } else if (item.photo_url && !item.photo_url.startsWith("data:")) {
-          photoUrl = item.photo_url;
-        } else {
-          photoUrl = getPartnerImagePublicUrl(getPartnerImagePath(selectedMaterial, item.item_order));
-        }
-
-        const category = normalizeCategoryName(selectedMaterial.category);
-        const city = String(selectedMaterial.city_label || "").trim();
-        const year = normalizeYear(selectedMaterial.year);
-
-        // Salva uma indicação por vez e mantém is_active=false.
-        // Assim ela fica registrada para sua revisão, mas não aparece no Partner.
-        const { data: oldRows, error: oldError } = await supabaseClient
-          .from("b2b_material_items")
-          .select("id, is_active")
-          .eq("category", category)
-          .eq("city_label", city)
-          .eq("year", year)
-          .eq("item_order", item.item_order);
-        if (oldError) throw oldError;
-
-        // Não apagamos uma indicação já publicada. Para uma indicação ainda não publicada,
-        // substituímos o registro anterior para manter apenas a versão mais recente.
-        const inactiveIds = (oldRows || []).filter(row => !row.is_active).map(row => row.id);
-        if (inactiveIds.length) {
-          const { error: deleteError } = await supabaseClient
-            .from("b2b_material_items")
-            .delete()
-            .in("id", inactiveIds);
-          if (deleteError) throw deleteError;
-        }
-
-        const row = {
-          category,
-          city_label: city,
-          year,
-          panorama: finalExtraction.panorama || "",
-          item_order: item.item_order,
-          item_name: item.name,
-          description: item.description,
-          address: item.address || "",
-          site: item.site || "",
-          entry_price: item.entry_price || "",
-          is_active: false
-        };
-
-        // A foto fica no Storage com caminho determinístico. O Partner poderá usar o mesmo caminho.
-        const { error: insertError } = await supabaseClient
-          .from("b2b_material_items")
-          .insert(row);
-        if (insertError) throw insertError;
-
-        item.saved = true;
-        item.photo_url = photoUrl || item.photo_url || "";
-        item.photo_data_url = item.photo_data_url || "";
-
-        if (status) { status.textContent = "✓ Indicação salva"; status.className = "item-save-status saved"; }
-        await loadExistingStructuredItems();
-        renderMaterialsList();
-        updateReviewProgress();
-      } catch (error) {
-        console.error(error);
-        if (status) { status.textContent = "Erro ao salvar"; status.className = "item-save-status error"; }
-        alert("Não foi possível salvar esta indicação.\n\n" + (error.message || error));
-      } finally {
-        if (button) button.disabled = false;
-      }
-    }
-
-    async function publishApprovedMaterial() {
-      if (!selectedMaterial || !currentExtraction) return;
-      const finalExtraction = collectExtractionFromScreen();
-      const category = normalizeCategoryName(selectedMaterial.category);
-      const city = String(selectedMaterial.city_label || "").trim();
-      const year = normalizeYear(selectedMaterial.year);
-      const savedMap = savedReviewMap.get(materialKey(category, city, year)) || new Map();
-      const missing = finalExtraction.items.filter(item => !savedMap.has(Number(item.item_order)));
-
-      if (missing.length) {
-        alert(`Ainda faltam ${missing.length} indicação(ões) salvas. Salve cada indicação antes de publicar o material.`);
-        return;
-      }
-
-      const confirmed = confirm(`Publicar ${category} · ${city} · ${year}?\n\nTodas as ${finalExtraction.items.length} indicações estão salvas. Elas passarão a aparecer no Partner.`);
-      if (!confirmed) return;
-
-      try {
-        setStep("stepPublish", "active");
-        setStatus("Publicando o material aprovado no Partner...", "busy");
-        el("publishBtn").disabled = true;
-
-        const { error } = await supabaseClient
-          .from("b2b_material_items")
-          .update({ is_active: true })
-          .eq("category", category)
-          .eq("city_label", city)
-          .eq("year", year);
-        if (error) throw error;
-
-        setStep("stepPublish", "done");
-        setStatus("Material publicado. As indicações aprovadas agora podem aparecer no Partner.", "ok");
-        await loadExistingStructuredItems();
-        renderMaterialsList();
-        updateReviewProgress();
-      } catch (error) {
-        console.error(error);
-        setStep("stepPublish", "error");
-        setStatus("Erro ao publicar: <strong>" + escapeHtml(error.message || error) + "</strong>", "error");
-      } finally {
-        el("publishBtn").disabled = false;
-      }
-    }
-
-    function updateReviewProgress() {
-      if (!selectedMaterial || !currentExtraction) return;
-      const key = materialKey(selectedMaterial.category, selectedMaterial.city_label, selectedMaterial.year);
-      const saved = savedReviewMap.get(key) || new Map();
-      const total = currentExtraction.items.length;
-      const reviewed = currentExtraction.items.filter(item => saved.has(Number(item.item_order)) || item.saved).length;
-      const published = Array.from(saved.values()).filter(row => row.is_active).length;
-      el("metricReviewed").textContent = String(reviewed);
-      el("metricReviewedDetail").textContent = total ? `${reviewed} de ${total} salvas` : "salvas";
-      const box = el("reviewProgress");
-      box.style.display = "block";
-      box.innerHTML = `<strong>Revisão do material:</strong> ${reviewed} de ${total} indicações salvas. ${published ? "Material publicado." : reviewed === total && total ? "Todas as indicações foram salvas. Você já pode publicar o material." : "Continue salvando indicação por indicação."}`;
-      el("publishBtn").disabled = !(total && reviewed === total);
-    }
-
-    function renderExtraction(extraction, options = {}) {
+    function renderExtraction(extraction) {
       const items = extraction.items || [];
       el("previewLayout").style.display = "grid";
       el("panoramaPreview").value = extraction.panorama || "";
@@ -1263,14 +1351,26 @@
       el("publishBtn").disabled = blocked;
       el("replaceBtn").disabled = blocked;
 
-      const criticalHtml = blocked
+      const criticalHtml = quality.critical.length
         ? `<div class="critical-block"><strong>Publicação bloqueada:</strong><br>${quality.critical.map(escapeHtml).join("<br>")}</div>`
         : "";
 
+      const draftState = getProgressState();
       const editorToolbar = `
         <div class="preview-card">
+          <h4>Panorama editável</h4>
+          <p class="muted-text">Revise o texto e salve esta etapa separadamente. Salvar o panorama não publica o material.</p>
+          <div class="mini-actions">
+            <button type="button" class="mini-btn" onclick="savePanorama()">Salvar panorama</button>
+            <span class="save-state">${extraction.panoramaSaved ? "✓ Panorama salvo" : "○ Panorama ainda não salvo"}</span>
+          </div>
+        </div>
+
+        ${draftState.ready ? `<div class="draft-note"><strong>Material completo para revisão final.</strong> Todas as etapas obrigatórias foram salvas. A publicação continua sendo uma ação separada.</div>` : ""}
+
+        <div class="preview-card">
           <h4>Cards editáveis</h4>
-          <p class="muted-text">Você pode ajustar nome, descrição, endereço, site e entrada de cada indicação. Também pode adicionar ou remover um card antes de publicar.</p>
+          <p class="muted-text">Cada indicação é salva individualmente. A foto é capturada do PDF quando possível; se estiver errada, clique no campo e use Ctrl+V ou escolha um arquivo.</p>
           <div class="mini-actions">
             <button type="button" class="mini-btn" onclick="addManualItem()">+ Adicionar card</button>
           </div>
@@ -1279,11 +1379,15 @@
 
       el("itemsEditor").innerHTML = criticalHtml + editorToolbar + items.map((item, index) => {
         const problems = getItemProblems(item);
-        const statusClass = problems.length ? "warn" : "ok";
-        const cardClass = problems.length ? "problem" : "ok";
-        const statusText = problems.length ? "Revisar" : "OK";
+        const statusClass = problems.length ? "warn" : (item.saved ? "ok" : "warn");
+        const cardClass = problems.length ? "problem" : (item.saved ? "ok" : "");
+        const statusText = problems.length ? (item.saved ? "Salvo · revisar" : "Revisar") : (item.saved ? "Salvo ✓" : "Não salvo");
+        const photo = item.photoDataUrl
+          ? `<img src="${item.photoDataUrl}" alt="Foto de ${escapeHtml(item.name || "indicação")}">`
+          : `<div class="photo-empty">Nenhuma foto disponível.<br>Use o campo abaixo para colar uma imagem ou escolher um arquivo.</div>`;
+
         return `
-          <article class="item-editor-card ${cardClass}" data-item-card="true" data-item-index="${index}">
+          <article class="item-editor-card ${cardClass}" data-item-card="true">
             <div class="item-editor-head">
               <div class="item-editor-title"><span class="item-editor-number">${String(item.item_order || index + 1).padStart(2,"0")}</span> Card completo</div>
               <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
@@ -1292,85 +1396,69 @@
               </div>
             </div>
             ${problems.length ? `<div class="critical-block">${problems.map(escapeHtml).join("<br>")}</div>` : ""}
-            <div class="item-photo-wrap">
-              <div class="item-photo-preview" data-photo-preview>
-                ${item.photo_data_url ? `<img src="${escapeHtml(item.photo_data_url)}" alt="Foto da indicação">` : item.photo_url ? `<img src="${escapeHtml(item.photo_url)}" alt="Foto da indicação">` : "Cole a foto aqui"}
+
+            <div class="photo-editor">
+              <div class="photo-preview">${photo}</div>
+              <div class="photo-source">${escapeHtml(item.photoSource || (item.photoDataUrl ? "Foto disponível" : "Foto pendente"))}</div>
+              <div class="photo-paste" tabindex="0" onclick="focusPhotoPaste(${index}, this)">
+                Clique aqui para ativar e depois use <strong>Ctrl+V</strong> para colar a foto copiada.
               </div>
-              <div class="item-photo-help">
-                <strong>Foto da indicação</strong><br>
-                Copie a imagem no Canva e clique nesta área. Depois use <strong>Ctrl + V</strong> para colar.<br><br>
-                A foto será enviada para o armazenamento da Curadoria quando você salvar esta indicação.
-                <div class="mini-actions">
-                  <button type="button" class="mini-btn" onclick="clearItemPhoto(${index})">Remover foto</button>
-                </div>
+              <div class="photo-actions">
+                <label class="mini-btn" style="margin:0;display:inline-flex;align-items:center;cursor:pointer">
+                  Escolher arquivo
+                  <input type="file" accept="image/*" style="display:none" onchange="handlePhotoFile(${index}, this.files[0])">
+                </label>
+                ${item.photoDataUrl ? `<button type="button" class="mini-btn danger" onclick="removePhoto(${index})">Remover foto</button>` : ""}
               </div>
             </div>
-            <div class="item-editor-grid">
+
+            <div class="item-editor-grid" style="margin-top:14px">
               <div class="item-editor-field full">
                 <label>Nome da indicação</label>
-                <input data-field="name" value="${escapeHtml(item.name || "")}" oninput="updateCurrentItem(${index}, 'name', this.value)" onblur="renderExtraction(currentExtraction)">
+                <input data-field="name" value="${escapeHtml(item.name || "")}" oninput="updateCurrentItem(${index}, 'name', this.value)">
               </div>
               <div class="item-editor-field full">
                 <label>Descrição</label>
-                <textarea data-field="description" oninput="updateCurrentItem(${index}, 'description', this.value)" onblur="renderExtraction(currentExtraction)">${escapeHtml(item.description || "")}</textarea>
+                <textarea data-field="description" oninput="updateCurrentItem(${index}, 'description', this.value)">${escapeHtml(item.description || "")}</textarea>
               </div>
               <div class="item-editor-field">
                 <label>Endereço</label>
-                <input data-field="address" value="${escapeHtml(item.address || "")}" oninput="updateCurrentItem(${index}, 'address', this.value)" onblur="renderExtraction(currentExtraction)">
+                <input data-field="address" value="${escapeHtml(item.address || "")}" oninput="updateCurrentItem(${index}, 'address', this.value)">
               </div>
               <div class="item-editor-field">
                 <label>Site</label>
-                <input data-field="site" value="${escapeHtml(item.site || "")}" oninput="updateCurrentItem(${index}, 'site', this.value)" onblur="renderExtraction(currentExtraction)">
+                <input data-field="site" value="${escapeHtml(item.site || "")}" oninput="updateCurrentItem(${index}, 'site', this.value)">
               </div>
               <div class="item-editor-field">
                 <label>Entrada / valor</label>
-                <input data-field="entry_price" value="${escapeHtml(item.entry_price || "")}" oninput="updateCurrentItem(${index}, 'entry_price', this.value)" onblur="renderExtraction(currentExtraction)">
+                <input data-field="entry_price" value="${escapeHtml(item.entry_price || "")}" oninput="updateCurrentItem(${index}, 'entry_price', this.value)">
               </div>
             </div>
-            <div class="item-save-row">
-              <div class="item-save-status ${item.saved ? "saved" : ""}" data-save-status>${item.saved ? "✓ Indicação salva" : "Ainda não salva"}</div>
-              <button type="button" class="mini-btn" data-save-item onclick="saveIndividualItem(${index})">Salvar indicação</button>
+
+            <div class="mini-actions">
+              <button type="button" class="mini-btn" onclick="saveCurrentItem(${index})">Salvar esta indicação</button>
+              <span class="save-state">${item.saved ? (problems.length ? "✓ Salva, mas ainda com pendências" : "✓ Esta indicação está salva") : "○ Alterações ainda não salvas"}</span>
             </div>
           </article>
         `;
       }).join("");
 
       renderQualityList(quality);
+      renderProgress();
     }
 
-    function clearItemPhoto(index) {
-      if (!currentExtraction || !currentExtraction.items[index]) return;
-      currentExtraction.items[index].photo_data_url = "";
-      currentExtraction.items[index].photo_url = "";
-      renderExtraction(currentExtraction, { preserveFocus: true });
-    }
-
-    function attachPasteHandlers() {
-      document.addEventListener("paste", function(event) {
-        const target = event.target;
-        const card = target && target.closest ? target.closest('[data-item-card="true"]') : null;
-        if (!card || !currentExtraction) return;
-
-        const items = Array.from(document.querySelectorAll('[data-item-card="true"]'));
-        const index = items.indexOf(card);
-        if (index < 0) return;
-
-        const clipboardItems = event.clipboardData && event.clipboardData.items ? Array.from(event.clipboardData.items) : [];
-        const imageItem = clipboardItems.find(item => item.type && item.type.startsWith("image/"));
-        if (!imageItem) return;
-
-        event.preventDefault();
-        const file = imageItem.getAsFile();
-        if (!file) return;
-        const reader = new FileReader();
-        reader.onload = function(loadEvent) {
-          setCardPhoto(index, loadEvent.target.result);
-        };
-        reader.readAsDataURL(file);
-      });
+    function removePhoto(index) {
+      if (!currentExtraction || !currentExtraction.items || !currentExtraction.items[index]) return;
+      currentExtraction.items[index].photoDataUrl = "";
+      currentExtraction.items[index].photoSource = "";
+      currentExtraction.items[index].saved = false;
+      saveDraftState();
+      renderExtraction(currentExtraction);
+      setStatus("Foto removida. Insira a foto correta e salve novamente a indicação.", "ok");
     }
 
     function escapeHtml(value) {
+
       return String(value || "")
         .replace(/&/g, "&amp;")
         .replace(/</g, "&lt;")
@@ -1387,19 +1475,35 @@
         setStep("stepRead", "active");
         setStep("stepExtract", "");
         setStep("stepPublish", "");
-        setStatus("Lendo PDF de <strong>" + selectedMaterial.city_label + "</strong>...", "busy");
+        setStatus("Lendo PDF de <strong>" + selectedMaterial.city_label + "</strong> e procurando as fotos automaticamente...", "busy");
         el("processBtn").disabled = true;
 
-        const rawText = await extractPdfTextFromUrl(selectedMaterial.pdf_url, 4, 10);
+        const result = await extractPdfTextAndPhotos(selectedMaterial.pdf_url, 4, 10);
         setStep("stepRead", "done");
         setStep("stepExtract", "active");
 
-        const extraction = parseGenericMaterial(rawText, selectedMaterial);
-        currentExtraction = extraction;
-        renderExtraction(extraction);
+        let extraction = parseGenericMaterial(result.rawText, selectedMaterial);
+        const autoPhotos = result.photos || [];
 
+        extraction.items.forEach((item, index) => {
+          if (autoPhotos[index]) {
+            item.photoDataUrl = autoPhotos[index].dataUrl;
+            item.photoSource = autoPhotos[index].source + " · pág. " + autoPhotos[index].page;
+          }
+          item.saved = false;
+        });
+
+        currentExtraction = applySavedDraft(extraction);
+
+        renderExtraction(currentExtraction);
         setStep("stepExtract", "done");
-        setStatus("Prévia estruturada gerada. Revise a validação antes de publicar.", "ok");
+
+        const draftState = getProgressState();
+        if (draftState.savedItems || draftState.panoramaSaved) {
+          setStatus("Material processado e rascunho anterior recuperado. Continue a revisão de onde parou.", "ok");
+        } else {
+          setStatus("Prévia estruturada gerada. As fotos foram capturadas automaticamente quando possível. Revise antes de salvar.", "ok");
+        }
       } catch (error) {
         console.error(error);
         setStep("stepRead", "error");
@@ -1408,7 +1512,6 @@
         el("processBtn").disabled = false;
       }
     }
-
 
     function collectExtractionFromScreen() {
       if (!currentExtraction) return null;
@@ -1422,16 +1525,15 @@
           const input = card.querySelector(`[data-field="${field}"]`);
           return input ? String(input.value || "").trim() : "";
         };
+        const original = currentExtraction.items[index] || {};
         return {
+          ...original,
           item_order: index + 1,
           name: read("name"),
           description: read("description"),
           address: read("address"),
           site: read("site"),
-          entry_price: read("entry_price"),
-          photo_data_url: currentExtraction.items[index] && currentExtraction.items[index].photo_data_url ? currentExtraction.items[index].photo_data_url : "",
-          photo_url: currentExtraction.items[index] && currentExtraction.items[index].photo_url ? currentExtraction.items[index].photo_url : "",
-          saved: currentExtraction.items[index] && currentExtraction.items[index].saved ? true : false
+          entry_price: read("entry_price")
         };
       });
 
@@ -1445,6 +1547,7 @@
     }
 
     async function publishExtraction(replaceExisting) {
+
       if (!selectedMaterial || !currentExtraction) return;
 
       const finalExtraction = collectExtractionFromScreen();
@@ -1510,6 +1613,13 @@
 
         setStep("stepPublish", "done");
         setStatus("Publicado com sucesso. A Área Partner poderá consumir esses dados estruturados.", "ok");
+        const draft = readDraft(selectedMaterial) || {};
+        writeDraft({
+          panorama: finalExtraction.panorama,
+          panoramaSaved: true,
+          items: finalExtraction.items.map(item => ({...item, saved: true})),
+          published_at: new Date().toISOString()
+        }, selectedMaterial);
         await loadExistingStructuredItems();
         renderMaterialsList();
       } catch (error) {
@@ -1543,6 +1653,18 @@
       box.style.display = box.style.display === "block" ? "none" : "block";
     }
 
+
+    document.addEventListener("paste", async function(event) {
+      if (activePhotoPasteIndex === null || !currentExtraction) return;
+      const items = event.clipboardData && event.clipboardData.items ? Array.from(event.clipboardData.items) : [];
+      const imageItem = items.find(item => item.type && item.type.startsWith("image/"));
+      if (!imageItem) return;
+      event.preventDefault();
+      const file = imageItem.getAsFile();
+      await handlePhotoPaste(activePhotoPasteIndex, file);
+      activePhotoPasteIndex = null;
+    });
+
     document.addEventListener("DOMContentLoaded", async function() {
       const ok = await requireSession();
       if (!ok) return;
@@ -1555,9 +1677,8 @@
       el("searchInput").addEventListener("input", filterMaterials);
       el("processBtn").addEventListener("click", processSelectedPdf);
       el("toggleRawBtn").addEventListener("click", toggleRawBox);
-      el("publishBtn").addEventListener("click", publishApprovedMaterial);
+      el("publishBtn").addEventListener("click", () => publishExtraction(false));
       el("replaceBtn").addEventListener("click", () => publishExtraction(true));
-      attachPasteHandlers();
 
       await loadMaterials();
     });
