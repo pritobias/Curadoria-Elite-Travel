@@ -470,8 +470,18 @@
     }
 
     function setStatus(message, type) {
-      el("listStatus").innerHTML = message;
-      el("metricStatus").textContent = type === "error" ? "Erro" : type === "busy" ? "Processando" : "Pronto";
+      const statusNode = el("listStatus");
+      if (statusNode) statusNode.innerHTML = message;
+
+      // metricStatus não faz parte do layout atual.
+      // O status visual principal fica em #listStatus.
+      const metricStatusNode = el("metricStatus");
+      if (metricStatusNode) {
+        metricStatusNode.textContent =
+          type === "error" ? "Erro" :
+          type === "busy" ? "Processando" :
+          "Pronto";
+      }
     }
 
     function setStep(stepId, state) {
