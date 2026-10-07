@@ -736,7 +736,7 @@
 
         // Melhor esforço para capturar automaticamente as fotos das indicações.
         // O layout atual dos PDFs coloca a foto à esquerda e os dados à direita.
-        const descriptionItems = content.items.filter(item => /^descri[cç][aã]o\\s*:/i.test(cleanValue(item.str || "")));
+        const descriptionItems = content.items.filter(item => /descri[cç][aã]o/i.test(cleanValue(item.str || "")));
         if (!descriptionItems.length) continue;
 
         const scale = 1.6;
@@ -751,9 +751,9 @@
           const pdfY = item.transform && item.transform.length >= 6 ? item.transform[5] : 0;
           const baselineY = viewport.height - (pdfY * scale);
           const cropWidth = Math.min(viewport.width * 0.46, 560);
-          const cropHeight = Math.min(viewport.height * 0.27, 340);
+          const cropHeight = Math.min(viewport.height * 0.32, 420);
           const cropX = Math.max(0, Math.floor(viewport.width * 0.025));
-          const cropY = Math.max(0, Math.min(viewport.height - cropHeight, Math.floor(baselineY - 18)));
+          const cropY = Math.max(0, Math.min(viewport.height - cropHeight, Math.floor(baselineY - cropHeight * 0.18)));
 
           const cropCanvas = document.createElement("canvas");
           cropCanvas.width = Math.max(1, Math.floor(cropWidth));
@@ -1502,7 +1502,7 @@
         if (draftState.savedItems || draftState.panoramaSaved) {
           setStatus("Material processado e rascunho anterior recuperado. Continue a revisão de onde parou.", "ok");
         } else {
-          setStatus("Prévia estruturada gerada. As fotos foram capturadas automaticamente quando possível. Revise antes de salvar.", "ok");
+          setStatus("Prévia estruturada gerada. As fotos foram capturadas automaticamente quando identificadas no PDF. Revise antes de salvar.", "ok");
         }
       } catch (error) {
         console.error(error);
