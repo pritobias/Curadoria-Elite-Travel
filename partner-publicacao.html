@@ -717,207 +717,6 @@
       renderProgress();
     }
 
-        function multiplyPdfMatrices(m1, m2) {
-      return pdfjsLib.Util.transform(m1, m2);
-    }
-
-    function transformPdfPoint(matrix, x, y) {
-      return [
-        matrix[0] * x + matrix[2] * y + matrix[4],
-        matrix[1] * x + matrix[3] * y + matrix[5]
-      ];
-    }
-
-    function getImageBoundsFromMatrix(matrix) {
-      const points = [
-        transformPdfPoint(matrix, 0, 0),
-        transformPdfPoint(matrix, 1, 0),
-        transformPdfPoint(matrix, 0, 1),
-        transformPdfPoint(matrix, 1, 1)
-      ];
-      const xs = points.map(point => point[0]);
-      const ys = points.map(point => point[1]);
-      return {
-        xMin: Math.min(...xs),
-        xMax: Math.max(...xs),
-        yMin: Math.min(...ys),
-        yMax: Math.max(...ys),
-        xCenter: (Math.min(...xs) + Math.max(...xs)) / 2,
-        yCenter: (Math.min(...ys) + Math.max(...ys)) / 2
-      };
-    }
-
-    function getPdfObjectAsync(store, objectId) {
-      return new Promise((resolve, reject) => {
-        try {
-          if (!store || !objectId) {
-            resolve(null);
-            return;
-          }
-          store.get(objectId, object => resolve(object));
-        } catch (error) {
-          reject(error);
-        }
-      });
-    }
-
-    async function imageObjectToDataUrl(imageObject) {
-      if (!imageObject) return "";
-
-      try {
-        if (imageObject.bitmap) {
-          const canvas = document.createElement("canvas");
-          canvas.width = imageObject.width || imageObject.bitmap.width;
-          canvas.height = imageObject.height || imageObject.bitmap.height;
-          const context = canvas.getContext("2d");
-          if (!context) return "";
-          context.drawImage(imageObject.bitmap, 0, 0, canvas.width, canvas.height);
-          return canvas.toDataURL("image/jpeg", 0.86);
-        }
-
-        if (imageObject.src && typeof imageObject.src === "string") {
-          return await new Promise(resolve => {
-            const image = new Image();
-            image.onload = () => {
-              const canvas = document.createElement("canvas");
-              canvas.width = image.naturalWidth || image.width;
-              canvas.height = image.naturalHeight || image.height;
-              const context = canvas.getContext("2d");
-              if (!context) {
-                resolve("");
-                return;
-              }
-              context.drawImage(image, 0, 0);
-              resolve(canvas.toDataURL("image/jpeg", 0.86));
-            };
-            image.onerror = () => resolve("");
-            image.src = imageObject.src;
-          });
-        }
-
-        const width = Number(imageObject.width || 0);
-        const height = Number(imageObject.height || 0);
-        const data = imageObject.data;
-        if (!width || !height || !data) return "";
-
-        const canvas = document.createElement("canvas");
-        canvas.width = width;
-        canvas.height = height;
-        const context = canvas.getContext("2d");
-        if (!context) return "";
-
-        const rgba = new Uint8ClampedArray(width * height * 4);
-        const kind = Number(imageObject.kind || 0);
-
-        if (data.length === width * height * 4 || kind === 3) {
-          rgba.set(new Uint8ClampedArray(data).subarray(0, rgba.length));
-        } else if (data.length === width * height * 3 || kind === 2) {
-          const source = new Uint8ClampedArray(data);
-          for (let i = 0, j = 0; i < source.length && j < rgba.length; i += 3, j += 4) {
-            rgba[j] = source[i];
-            rgba[j + 1] = source[i + 1];
-            rgba[j + 2] = source[i + 2];
-            rgba[j + 3] = 255;
-          }
-        } else if (data.length === width * height) {
-          const source = new Uint8ClampedArray(data);
-          for (let i = 0, j = 0; i < source.length && j < rgba.length; i++, j += 4) {
-            rgba[j] = source[i];
-            rgba[j + 1] = source[i];
-            rgba[j + 2] = source[i];
-            rgba[j + 3] = 255;
-          }
-        } else {
-          return "";
-        }
-
-        context.putImageData(new ImageData(rgba, width, height), 0, 0);
-        return canvas.toDataURL("image/jpeg", 0.86);
-      } catch (error) {
-        console.warn("Falha ao converter imagem incorporada do PDF:", error);
-        return "";
-      }
-    }
-
-    async function extractEmbeddedPageImages(page) {
-      const operatorList = await page.getOperatorList();
-      const images = [];
-      const seen = new Set();
-      const transformStack = [];
-      let ctm = [1, 0, 0, 1, 0, 0];
-
-      for (let i = 0; i < operatorList.fnArray.length; i++) {
-        const fn = operatorList.fnArray[i];
-        const args = operatorList.argsArray[i] || [];
-
-        if (fn === pdfjsLib.OPS.save) {
-          transformStack.push(ctm.slice());
-          continue;
-        }
-
-        if (fn === pdfjsLib.OPS.restore) {
-          ctm = transformStack.pop() || [1, 0, 0, 1, 0, 0];
-          continue;
-        }
-
-        if (fn === pdfjsLib.OPS.transform) {
-          ctm = multiplyPdfMatrices(ctm, args);
-          continue;
-        }
-
-        if (
-          fn !== pdfjsLib.OPS.paintImageXObject &&
-          fn !== pdfjsLib.OPS.paintJpegXObject &&
-          fn !== pdfjsLib.OPS.paintInlineImageXObject
-        ) {
-          continue;
-        }
-
-        const bounds = getImageBoundsFromMatrix(ctm);
-        let imageObject = null;
-        let objectId = null;
-
-        try {
-          if (fn === pdfjsLib.OPS.paintInlineImageXObject) {
-            imageObject = args[0];
-            objectId = "inline-" + i;
-          } else {
-            objectId = args[0];
-            if (seen.has(objectId)) continue;
-            seen.add(objectId);
-            const store = String(objectId).startsWith("g_") ? page.commonObjs : page.objs;
-            imageObject = await getPdfObjectAsync(store, objectId);
-          }
-
-          if (!imageObject) continue;
-          const width = Number(imageObject.width || args[1] || 0);
-          const height = Number(imageObject.height || args[2] || 0);
-          const area = width * height;
-          const aspect = height ? width / height : 0;
-
-          // Ícones, logos e pequenos elementos decorativos não são candidatos.
-          if (area < 30000 || aspect < 0.35 || aspect > 3.2) continue;
-
-          const dataUrl = await imageObjectToDataUrl(imageObject);
-          if (!dataUrl || dataUrl.length < 5000) continue;
-
-          images.push({
-            objectId,
-            width,
-            height,
-            area,
-            aspect,
-            dataUrl,
-            bounds
-          });
-        } catch (error) {
-          console.warn("Não foi possível extrair uma imagem incorporada:", error);
-        }
-      }
-
-      return images;
-    }
-
     async function extractPdfTextAndPhotos(url, firstPage, lastPage) {
       const response = await fetch(url);
       if (!response.ok) throw new Error("Não foi possível baixar o PDF: " + response.status);
@@ -929,79 +728,61 @@
       const pageTexts = [];
       const photos = [];
 
-      async function imageObjectToDataUrl(imageObject) {
-        if (!imageObject) return null;
-        try {
-          const width = Number(imageObject.width || imageObject.originalWidth || 0);
-          const height = Number(imageObject.height || imageObject.originalHeight || 0);
-          if (!width || !height) return null;
-          const canvas = document.createElement("canvas");
-          canvas.width = width; canvas.height = height;
-          const ctx = canvas.getContext("2d", { alpha: true });
-          if (imageObject.bitmap) ctx.drawImage(imageObject.bitmap, 0, 0, width, height);
-          else if (imageObject.canvas) ctx.drawImage(imageObject.canvas, 0, 0, width, height);
-          else if (imageObject.data && imageObject.data.length >= width * height * 4) {
-            const rgba = new Uint8ClampedArray(imageObject.data);
-            ctx.putImageData(new ImageData(rgba, width, height), 0, 0);
-          } else return null;
-          const dataUrl = canvas.toDataURL("image/jpeg", 0.90);
-          return dataUrl && dataUrl.length > 5000 ? dataUrl : null;
-        } catch (error) {
-          console.warn("Não foi possível converter imagem incorporada do PDF:", error);
-          return null;
-        }
-      }
-
-      async function extractOriginalImages(page) {
-        const images = [];
-        try {
-          const operatorList = await page.getOperatorList();
-          const imageOps = new Set([
-            pdfjsLib.OPS.paintImageXObject,
-            pdfjsLib.OPS.paintImageXObjectRepeat,
-            pdfjsLib.OPS.paintImageMaskXObject
-          ]);
-          for (let i = 0; i < operatorList.fnArray.length; i++) {
-            if (!imageOps.has(operatorList.fnArray[i])) continue;
-            const args = operatorList.argsArray[i] || [];
-            const objectId = args[0];
-            if (!objectId || !page.objs || typeof page.objs.get !== "function") continue;
-            let imageObject = null;
-            try { imageObject = page.objs.get(objectId); } catch (_) {}
-            if (!imageObject) continue;
-            const width = Number(imageObject.width || imageObject.originalWidth || 0);
-            const height = Number(imageObject.height || imageObject.originalHeight || 0);
-            if (!width || !height || width * height < 25000) continue;
-            const dataUrl = await imageObjectToDataUrl(imageObject);
-            if (dataUrl) images.push({ width, height, area: width * height, dataUrl });
-          }
-        } catch (error) {
-          console.warn("Falha ao procurar imagens originais do PDF:", error);
-        }
-        images.sort((a,b) => b.area - a.area);
-        return images;
-      }
-
       for (let pageNumber = start; pageNumber <= end; pageNumber++) {
         const page = await pdf.getPage(pageNumber);
         const content = await page.getTextContent();
         const strings = content.items.map(item => item.str).filter(Boolean);
         pageTexts.push("\n--- PÁGINA " + pageNumber + " ---\n" + strings.join("\n"));
+
+        // Melhor esforço para capturar automaticamente as fotos das indicações.
+        // O layout atual dos PDFs coloca a foto à esquerda e os dados à direita.
         const descriptionItems = content.items.filter(item => /descri[cç][aã]o/i.test(cleanValue(item.str || "")));
         if (!descriptionItems.length) continue;
 
-        // Primeiro tenta recuperar a fotografia ORIGINAL incorporada no PDF.
-        // Assim textos/tarjas desenhados por cima da foto não entram na imagem.
-        const originalImages = await extractOriginalImages(page);
-        if (originalImages.length) {
-          for (let i = 0; i < descriptionItems.length; i++) {
-            const image = originalImages[Math.min(i, originalImages.length - 1)];
-            photos.push({ page: pageNumber, dataUrl: image.dataUrl, source: "PDF · imagem original incorporada" });
+        const scale = 1.6;
+        const viewport = page.getViewport({ scale });
+        const canvas = document.createElement("canvas");
+        canvas.width = Math.ceil(viewport.width);
+        canvas.height = Math.ceil(viewport.height);
+        const context = canvas.getContext("2d", { alpha: false });
+        await page.render({ canvasContext: context, viewport }).promise;
+
+        for (const item of descriptionItems) {
+          const pdfY = item.transform && item.transform.length >= 6 ? item.transform[5] : 0;
+          const baselineY = viewport.height - (pdfY * scale);
+          const cropWidth = Math.min(viewport.width * 0.46, 560);
+          const cropHeight = Math.min(viewport.height * 0.32, 420);
+          const cropX = Math.max(0, Math.floor(viewport.width * 0.025));
+          // O título da indicação fica sobreposto na parte superior da foto no PDF.
+          // Mantemos a captura automática, mas deslocamos o recorte para baixo para
+          // evitar levar o título junto. O restante da foto continua sendo preservado.
+          const cropY = Math.max(0, Math.min(viewport.height - cropHeight, Math.floor(baselineY - cropHeight * 0.03)));
+
+          const cropCanvas = document.createElement("canvas");
+          cropCanvas.width = Math.max(1, Math.floor(cropWidth));
+          cropCanvas.height = Math.max(1, Math.floor(cropHeight));
+          const cropContext = cropCanvas.getContext("2d");
+          cropContext.drawImage(
+            canvas,
+            cropX, cropY, cropCanvas.width, cropCanvas.height,
+            0, 0, cropCanvas.width, cropCanvas.height
+          );
+
+          const dataUrl = cropCanvas.toDataURL("image/jpeg", 0.78);
+          if (dataUrl && dataUrl.length > 5000) {
+            photos.push({
+              page: pageNumber,
+              dataUrl,
+              source: "PDF · captura automática"
+            });
           }
         }
       }
 
-      return { rawText: pageTexts.join("\n"), photos };
+      return {
+        rawText: pageTexts.join("\n"),
+        photos
+      };
     }
 
     async function extractPdfTextFromUrl(url, firstPage, lastPage) {
@@ -1779,18 +1560,27 @@
     }
 
     async function publishExtraction(replaceExisting) {
-
       if (!selectedMaterial || !currentExtraction) return;
 
       const finalExtraction = collectExtractionFromScreen();
-      if (!finalExtraction || !finalExtraction.items || !finalExtraction.items.length) {
+
+      if (
+        !finalExtraction ||
+        !finalExtraction.items ||
+        !finalExtraction.items.length
+      ) {
         alert("Não há cards na tela para publicar.");
         return;
       }
 
       const quality = validateExtraction(finalExtraction);
+
       if (quality.critical && quality.critical.length) {
-        alert("Este material ainda não pode ser publicado. Corrija os cards sinalizados antes de salvar em b2b_material_items.");
+        alert(
+          "Este material ainda não pode ser publicado. " +
+          "Corrija os cards sinalizados antes de salvar em b2b_material_items."
+        );
+
         renderExtraction(currentExtraction);
         return;
       }
@@ -1799,19 +1589,97 @@
       const city = String(selectedMaterial.city_label || "").trim();
       const year = normalizeYear(selectedMaterial.year);
 
+      if (!category || !city || !year) {
+        alert(
+          "Não foi possível identificar corretamente categoria, destino ou ano."
+        );
+        return;
+      }
+
+      /*
+       * Primeiro verificamos diretamente no Supabase se já existe uma
+       * publicação ativa para este destino, categoria e ano.
+       *
+       * Isso evita depender somente do estado visual da tela.
+       */
+      const { data: existingRows, error: existingError } = await supabaseClient
+        .from("b2b_material_items")
+        .select(
+          "id, category, city_label, year, item_order, item_name, is_active"
+        )
+        .eq("category", category)
+        .eq("city_label", city)
+        .eq("year", year)
+        .order("item_order", { ascending: true });
+
+      if (existingError) {
+        console.error(existingError);
+
+        alert(
+          "Não foi possível verificar a publicação atual no Supabase.\n\n" +
+          existingError.message
+        );
+
+        return;
+      }
+
+      const existingActiveRows = (existingRows || []).filter(function(row) {
+        return row.is_active === true;
+      });
+
+      if (!replaceExisting && existingActiveRows.length) {
+        alert(
+          "Este destino já possui uma publicação ativa.\n\n" +
+          category +
+          " · " +
+          city +
+          " · " +
+          year +
+          "\n\n" +
+          "Itens ativos encontrados: " +
+          existingActiveRows.length +
+          "\n\n" +
+          "Use “Substituir publicação existente” para substituir a versão atual."
+        );
+
+        updatePublishButtons(false);
+        return;
+      }
+
       const confirmed = confirm(
-        (replaceExisting ? "Substituir" : "Publicar") + " dados estruturados?\n\n" +
-        category + " · " + city + " · " + year + "\n" +
-        finalExtraction.items.length + " itens serão salvos em b2b_material_items."
+        (replaceExisting ? "Substituir" : "Publicar") +
+          " dados estruturados?\n\n" +
+          category +
+          " · " +
+          city +
+          " · " +
+          year +
+          "\n\n" +
+          finalExtraction.items.length +
+          " itens serão publicados em b2b_material_items."
       );
+
       if (!confirmed) return;
 
       try {
         setStep("stepPublish", "active");
-        setStatus("Publicando dados estruturados em <strong>b2b_material_items</strong>...", "busy");
+
+        setStatus(
+          "Publicando <strong>" +
+            escapeHtml(category) +
+            "</strong> · <strong>" +
+            escapeHtml(city) +
+            "</strong> em <strong>b2b_material_items</strong>...",
+          "busy"
+        );
+
         el("publishBtn").disabled = true;
         el("replaceBtn").disabled = true;
 
+        /*
+         * Se for substituição, remove SOMENTE os registros deste
+         * destino + categoria + ano.
+         */
         if (replaceExisting) {
           const { error: deleteError } = await supabaseClient
             .from("b2b_material_items")
@@ -1820,47 +1688,188 @@
             .eq("city_label", city)
             .eq("year", year);
 
-          if (deleteError) throw deleteError;
+          if (deleteError) {
+            throw deleteError;
+          }
         }
 
-        const rows = finalExtraction.items.map(item => ({
+        /*
+         * Monta exatamente as linhas que serão publicadas.
+         */
+        const rows = finalExtraction.items.map(function(item, index) {
+          return {
+            category: category,
+            city_label: city,
+            year: year,
+            panorama: finalExtraction.panorama || "",
+            item_order: index + 1,
+            item_name: String(item.name || "").trim(),
+            description: String(item.description || "").trim(),
+            address: String(item.address || "").trim(),
+            site: String(item.site || "").trim(),
+            entry_price: String(item.entry_price || "").trim(),
+            is_active: true
+          };
+        });
+
+        /*
+         * Validação final antes do INSERT.
+         */
+        const invalidRows = rows.filter(function(row) {
+          return !row.item_name || !row.description;
+        });
+
+        if (invalidRows.length) {
+          throw new Error(
+            "Existem itens sem nome ou descrição. A publicação foi interrompida."
+          );
+        }
+
+        /*
+         * PUBLICAÇÃO REAL NO SUPABASE.
+         */
+        const { data: insertedRows, error: insertError } = await supabaseClient
+          .from("b2b_material_items")
+          .insert(rows)
+          .select(
+            "id, category, city_label, year, item_order, item_name, is_active"
+          );
+
+        if (insertError) {
+          throw insertError;
+        }
+
+        /*
+         * VERIFICAÇÃO REAL NO BANCO.
+         *
+         * Não consideramos a publicação concluída apenas porque o INSERT
+         * retornou sucesso. Consultamos novamente o banco.
+         */
+        const { data: verifiedRows, error: verifyError } = await supabaseClient
+          .from("b2b_material_items")
+          .select(
+            "id, category, city_label, year, item_order, item_name, is_active"
+          )
+          .eq("category", category)
+          .eq("city_label", city)
+          .eq("year", year)
+          .order("item_order", { ascending: true });
+
+        if (verifyError) {
+          throw verifyError;
+        }
+
+        const verifiedActiveRows = (verifiedRows || []).filter(function(row) {
+          return row.is_active === true;
+        });
+
+        /*
+         * A publicação só é considerada concluída se a quantidade ativa
+         * encontrada no banco for exatamente a quantidade publicada.
+         */
+        if (verifiedActiveRows.length !== rows.length) {
+          throw new Error(
+            "A publicação não passou na verificação final.\n\n" +
+            "Esperados: " +
+            rows.length +
+            "\n" +
+            "Ativos encontrados: " +
+            verifiedActiveRows.length
+          );
+        }
+
+        /*
+         * Confirma que todos os registros pertencem à identidade correta.
+         */
+        const wrongIdentity = verifiedActiveRows.some(function(row) {
+          return (
+            normalizeCategoryName(row.category) !== category ||
+            String(row.city_label || "").trim() !== city ||
+            normalizeYear(row.year) !== year
+          );
+        });
+
+        if (wrongIdentity) {
+          throw new Error(
+            "A verificação encontrou registros com categoria, destino ou ano incorretos."
+          );
+        }
+
+        /*
+         * O rascunho local continua existindo como apoio à tela administrativa.
+         * A fonte oficial da publicação continua sendo b2b_material_items.
+         */
+        writeDraft(
+          {
+            panorama: finalExtraction.panorama,
+            panoramaSaved: true,
+            items: finalExtraction.items.map(function(item) {
+              return {
+                ...item,
+                saved: true
+              };
+            }),
+            published_at: new Date().toISOString()
+          },
+          selectedMaterial
+        );
+
+        /*
+         * Atualiza o status das publicações existentes.
+         */
+        await loadExistingStructuredItems();
+        renderMaterialsList();
+
+        setStep("stepPublish", "done");
+
+        setStatus(
+          "<strong>Publicado com sucesso.</strong><br>" +
+            escapeHtml(category) +
+            " · " +
+            escapeHtml(city) +
+            " · " +
+            year +
+            "<br>" +
+            verifiedActiveRows.length +
+            " itens ativos confirmados em <strong>b2b_material_items</strong>.",
+          "ok"
+        );
+
+        /*
+         * Registro útil no console para diagnóstico administrativo.
+         */
+        console.info("PUBLICAÇÃO PARTNER CONFIRMADA", {
           category: category,
           city_label: city,
           year: year,
-          panorama: finalExtraction.panorama || "",
-          item_order: item.item_order,
-          item_name: item.name,
-          description: item.description,
-          address: item.address || "",
-          site: item.site || "",
-          entry_price: item.entry_price || "",
-          is_active: true
-        }));
-
-        const { error } = await supabaseClient
-          .from("b2b_material_items")
-          .insert(rows);
-
-        if (error) throw error;
-
-        setStep("stepPublish", "done");
-        setStatus("Publicado com sucesso. A Área Partner poderá consumir esses dados estruturados.", "ok");
-        const draft = readDraft(selectedMaterial) || {};
-        writeDraft({
-          panorama: finalExtraction.panorama,
-          panoramaSaved: true,
-          items: finalExtraction.items.map(item => ({...item, saved: true})),
-          published_at: new Date().toISOString()
-        }, selectedMaterial);
-        await loadExistingStructuredItems();
-        renderMaterialsList();
+          items: verifiedActiveRows.length,
+          inserted_ids: (insertedRows || []).map(function(row) {
+            return row.id;
+          })
+        });
       } catch (error) {
-        console.error(error);
+        console.error("Erro na publicação Partner:", error);
+
         setStep("stepPublish", "error");
-        setStatus("Erro ao publicar: <strong>" + escapeHtml(error.message || error) + "</strong>", "error");
+
+        setStatus(
+          "Erro ao publicar: <strong>" +
+            escapeHtml(error.message || error) +
+            "</strong>",
+          "error"
+        );
+
+        alert(
+          "A publicação não foi concluída.\n\n" +
+          (error.message || error)
+        );
       } finally {
         el("publishBtn").disabled = false;
         el("replaceBtn").disabled = false;
+
+        if (currentExtraction) {
+          refreshPublishAvailability();
+        }
       }
     }
 
