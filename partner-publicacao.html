@@ -929,106 +929,82 @@
       const pageTexts = [];
       const photos = [];
 
+      async function imageObjectToDataUrl(imageObject) {
+        if (!imageObject) return null;
+        try {
+          const width = Number(imageObject.width || imageObject.originalWidth || 0);
+          const height = Number(imageObject.height || imageObject.originalHeight || 0);
+          if (!width || !height) return null;
+          const canvas = document.createElement("canvas");
+          canvas.width = width; canvas.height = height;
+          const ctx = canvas.getContext("2d", { alpha: true });
+          if (imageObject.bitmap) ctx.drawImage(imageObject.bitmap, 0, 0, width, height);
+          else if (imageObject.canvas) ctx.drawImage(imageObject.canvas, 0, 0, width, height);
+          else if (imageObject.data && imageObject.data.length >= width * height * 4) {
+            const rgba = new Uint8ClampedArray(imageObject.data);
+            ctx.putImageData(new ImageData(rgba, width, height), 0, 0);
+          } else return null;
+          const dataUrl = canvas.toDataURL("image/jpeg", 0.90);
+          return dataUrl && dataUrl.length > 5000 ? dataUrl : null;
+        } catch (error) {
+          console.warn("Não foi possível converter imagem incorporada do PDF:", error);
+          return null;
+        }
+      }
+
+      async function extractOriginalImages(page) {
+        const images = [];
+        try {
+          const operatorList = await page.getOperatorList();
+          const imageOps = new Set([
+            pdfjsLib.OPS.paintImageXObject,
+            pdfjsLib.OPS.paintImageXObjectRepeat,
+            pdfjsLib.OPS.paintImageMaskXObject
+          ]);
+          for (let i = 0; i < operatorList.fnArray.length; i++) {
+            if (!imageOps.has(operatorList.fnArray[i])) continue;
+            const args = operatorList.argsArray[i] || [];
+            const objectId = args[0];
+            if (!objectId || !page.objs || typeof page.objs.get !== "function") continue;
+            let imageObject = null;
+            try { imageObject = page.objs.get(objectId); } catch (_) {}
+            if (!imageObject) continue;
+            const width = Number(imageObject.width || imageObject.originalWidth || 0);
+            const height = Number(imageObject.height || imageObject.originalHeight || 0);
+            if (!width || !height || width * height < 25000) continue;
+            const dataUrl = await imageObjectToDataUrl(imageObject);
+            if (dataUrl) images.push({ width, height, area: width * height, dataUrl });
+          }
+        } catch (error) {
+          console.warn("Falha ao procurar imagens originais do PDF:", error);
+        }
+        images.sort((a,b) => b.area - a.area);
+        return images;
+      }
+
       for (let pageNumber = start; pageNumber <= end; pageNumber++) {
         const page = await pdf.getPage(pageNumber);
         const content = await page.getTextContent();
         const strings = content.items.map(item => item.str).filter(Boolean);
         pageTexts.push("\n--- PÁGINA " + pageNumber + " ---\n" + strings.join("\n"));
-
         const descriptionItems = content.items.filter(item => /descri[cç][aã]o/i.test(cleanValue(item.str || "")));
         if (!descriptionItems.length) continue;
 
-        // Primeiro tentamos extrair a fotografia ORIGINAL incorporada no PDF.
-        // Isso é importante porque o título da atração é uma camada separada
-        // sobre a fotografia; uma captura da página inevitavelmente leva o título junto.
-        let embeddedImages = [];
-        try {
-          embeddedImages = await extractEmbeddedPageImages(page);
-        } catch (error) {
-          console.warn("Extração de imagens incorporadas falhou:", error);
-        }
-
-        const availableImages = embeddedImages.slice();
-        const usedImages = new Set();
-
-        for (const item of descriptionItems) {
-          const descriptionY = item.transform && item.transform.length >= 6
-            ? Number(item.transform[5])
-            : 0;
-
-          let best = null;
-          let bestScore = Infinity;
-
-          for (const candidate of availableImages) {
-            if (usedImages.has(candidate.objectId)) continue;
-
-            const yDistance = Math.abs(candidate.bounds.yCenter - descriptionY);
-            const pageWidth = page.getViewport({ scale: 1 }).width || 600;
-            const xPenalty = candidate.bounds.xCenter > pageWidth * 0.58 ? 10000 : 0;
-            const score = yDistance + xPenalty;
-
-            if (score < bestScore) {
-              best = candidate;
-              bestScore = score;
-            }
-          }
-
-          if (best) {
-            usedImages.add(best.objectId);
-            photos.push({
-              page: pageNumber,
-              dataUrl: best.dataUrl,
-              source: "PDF · imagem original incorporada"
-            });
-            continue;
-          }
-
-          // Fallback somente quando o PDF não disponibilizar a imagem original.
-          const scale = 1.6;
-          const viewport = page.getViewport({ scale });
-          const canvas = document.createElement("canvas");
-          canvas.width = Math.ceil(viewport.width);
-          canvas.height = Math.ceil(viewport.height);
-          const context = canvas.getContext("2d", { alpha: false });
-          await page.render({ canvasContext: context, viewport }).promise;
-
-          const baselineY = viewport.height - (descriptionY * scale);
-          const cropWidth = Math.min(viewport.width * 0.46, 560);
-          const cropHeight = Math.min(viewport.height * 0.32, 420);
-          const cropX = Math.max(0, Math.floor(viewport.width * 0.025));
-          const cropY = Math.max(0, Math.min(
-            viewport.height - cropHeight,
-            Math.floor(baselineY - cropHeight * 0.03)
-          ));
-
-          const cropCanvas = document.createElement("canvas");
-          cropCanvas.width = Math.max(1, Math.floor(cropWidth));
-          cropCanvas.height = Math.max(1, Math.floor(cropHeight));
-          const cropContext = cropCanvas.getContext("2d");
-          cropContext.drawImage(
-            canvas,
-            cropX, cropY, cropCanvas.width, cropCanvas.height,
-            0, 0, cropCanvas.width, cropCanvas.height
-          );
-
-          const dataUrl = cropCanvas.toDataURL("image/jpeg", 0.78);
-          if (dataUrl && dataUrl.length > 5000) {
-            photos.push({
-              page: pageNumber,
-              dataUrl,
-              source: "PDF · captura automática (fallback)"
-            });
+        // Primeiro tenta recuperar a fotografia ORIGINAL incorporada no PDF.
+        // Assim textos/tarjas desenhados por cima da foto não entram na imagem.
+        const originalImages = await extractOriginalImages(page);
+        if (originalImages.length) {
+          for (let i = 0; i < descriptionItems.length; i++) {
+            const image = originalImages[Math.min(i, originalImages.length - 1)];
+            photos.push({ page: pageNumber, dataUrl: image.dataUrl, source: "PDF · imagem original incorporada" });
           }
         }
       }
 
-      return {
-        rawText: pageTexts.join("\n"),
-        photos
-      };
+      return { rawText: pageTexts.join("\n"), photos };
     }
 
-async function extractPdfTextFromUrl(url, firstPage, lastPage) {
+    async function extractPdfTextFromUrl(url, firstPage, lastPage) {
       const result = await extractPdfTextAndPhotos(url, firstPage, lastPage);
       return result.rawText;
     }
