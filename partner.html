@@ -1618,7 +1618,7 @@
         <p class="sub">Escolha uma categoria para visualizar os destinos disponíveis.</p>
 
         <div id="materialsLoading" class="loading-state">
-          Carregando materiais Partner do Supabase...
+          Carregando materiais publicados pelo Partner-publicação...
         </div>
 
         <div class="categories" id="categoriesContainer"></div>
@@ -1801,18 +1801,7 @@
     </section>
   </main>
 
-  <script src="https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/build/pdf.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
   <script>
-    const SUPABASE_URL = "https://lnyoqoezezisakghtmim.supabase.co";
-    const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxueW9xb2V6ZXppc2FrZ2h0bWltIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjQxNjI4OTMsImV4cCI6MjA3OTczODg5M30.Nn9ZPRXeJlvCGJ2kXQ3XBvT743pQn2VIXEsT9pexqnA";
-
-    const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-
-    if (window.pdfjsLib) {
-      pdfjsLib.GlobalWorkerOptions.workerSrc = "https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/build/pdf.worker.min.js";
-    }
 
     const ITEMS_PER_PAGE = 10;
     const MONTHLY_DOWNLOAD_LIMIT = 30;
@@ -1963,71 +1952,91 @@
 
       if (isLoading) {
         loading.style.display = "block";
-        loading.textContent = message || "Carregando materiais Partner do Supabase...";
+        loading.textContent = message || "Carregando materiais publicados pelo Partner-publicação...";
       } else {
         loading.style.display = "none";
       }
     }
 
-    async function loadMaterialsFromPublication() {
-      setLoadingState(true, "Carregando materiais publicados no Partner...");
+    function getPublicationMaterialsFromLocalStorage() {
+      const materials = new Map();
+      const prefix = "cet_partner_draft_v2::";
 
-      const { data, error } = await supabaseClient
-        .from("b2b_material_items")
-        .select("id, category, city_label, year, item_order, item_name, description, address, site, entry_price, panorama, is_active")
-        .eq("is_active", true)
-        .order("category", { ascending: true })
-        .order("city_label", { ascending: true })
-        .order("year", { ascending: false })
-        .order("item_order", { ascending: true });
+      for (let index = 0; index < localStorage.length; index += 1) {
+        const key = localStorage.key(index);
+        if (!key || !key.startsWith(prefix)) continue;
 
-      if (error) {
-        console.error("Erro ao carregar publicações Partner:", error);
-        setLoadingState(true, "Não foi possível carregar as publicações aprovadas. Verifique o acesso aos dados publicados pelo Partner-publicação.");
-        return;
+        try {
+          const raw = localStorage.getItem(key);
+          if (!raw) continue;
+          const draft = JSON.parse(raw);
+          if (!draft || !draft.material) continue;
+
+          const material = draft.material;
+          const category = normalizeCategoryName(material.category);
+          const city = String(material.city_label || "").trim();
+          const year = normalizeYearValue(material.year);
+          const items = Array.isArray(draft.items) ? draft.items : [];
+
+          // O Partner só enxerga materiais que já passaram pelo fluxo de revisão.
+          // A publicação grava panorama e itens no mesmo draft, portanto esse
+          // draft é a fonte operacional do partner.html.
+          const hasPublishedContent = !!(
+            draft.panoramaSaved ||
+            items.some(function(item) { return item && item.saved === true; }) ||
+            draft.published_at
+          );
+
+          if (!category || !city || !year || !hasPublishedContent) continue;
+
+          const identity = `${category}||${city}||${year}`;
+          const existing = materials.get(identity);
+          if (!existing || String(draft.saved_at || "") > String(existing.saved_at || "")) {
+            materials.set(identity, {
+              id: identity,
+              category: category,
+              city_label: city,
+              year: year,
+              published: !!draft.published_at,
+              saved_at: draft.saved_at || "",
+              pdf_url: material.pdf_url || "",
+              item_count: items.length
+            });
+          }
+        } catch (error) {
+          console.warn("Rascunho do Partner-publicação ignorado:", error);
+        }
       }
 
-      const rows = Array.isArray(data) ? data : [];
-      const grouped = new Map();
+      return Array.from(materials.values());
+    }
 
-      rows.forEach(function(row) {
-        if (!row || !row.category || !row.city_label) return;
-        const category = normalizeCategoryName(row.category);
-        const city = String(row.city_label || "").trim();
-        const year = normalizeYearValue(row.year);
-        const key = `${category}||${city}||${year}`;
+    async function loadMaterialsFromPublication() {
+      setLoadingState(true, "Carregando materiais publicados pelo Partner-publicação...");
 
-        if (!grouped.has(key)) {
-          grouped.set(key, {
-            id: key,
-            category: category,
-            city_label: city,
-            year: year,
-            published: true,
-            item_count: 0
-          });
+      try {
+        allMaterials = getPublicationMaterialsFromLocalStorage();
+
+        const dashboardMaterialsCount = document.getElementById("dashboardMaterialsCount");
+        if (dashboardMaterialsCount) {
+          dashboardMaterialsCount.textContent = String(allMaterials.length);
         }
 
-        grouped.get(key).item_count += 1;
-      });
+        if (!allMaterials.length) {
+          setLoadingState(true, "Nenhum material revisado foi salvo pelo Partner-publicação neste navegador.");
+          renderCategories();
+          return;
+        }
 
-      allMaterials = Array.from(grouped.values());
+        setLoadingState(false);
+        renderCategories();
 
-      const dashboardMaterialsCount = document.getElementById("dashboardMaterialsCount");
-      if (dashboardMaterialsCount) {
-        dashboardMaterialsCount.textContent = String(allMaterials.length);
+        const firstCategory = getUniqueCategories()[0];
+        if (firstCategory) selectCategory(firstCategory);
+      } catch (error) {
+        console.error("Erro ao carregar publicações salvas:", error);
+        setLoadingState(true, "Não foi possível ler as publicações salvas pelo Partner-publicação.");
       }
-
-      if (!allMaterials.length) {
-        setLoadingState(true, "Nenhum material aprovado foi publicado pelo Partner-publicação ainda.");
-        return;
-      }
-
-      setLoadingState(false);
-      renderCategories();
-
-      const firstCategory = getUniqueCategories()[0];
-      if (firstCategory) selectCategory(firstCategory);
     }
 
     function getUniqueCategories() {
@@ -3358,59 +3367,37 @@
       };
     }
 
-    async function fetchStructuredBusinessContent(material) {
+    function fetchStructuredBusinessContent(material) {
       if (!material) return null;
 
-      const normalizedCategory = normalizeCategoryName(material.category);
-      const cityLabel = String(material.city_label || "").trim();
-      const year = normalizeYearValue(material.year);
-      if (!cityLabel) return null;
-
-      let query = supabaseClient
-        .from("b2b_material_items")
-        .select("id, category, city_label, year, panorama, item_order, item_name, description, address, site, entry_price, is_active, version_id")
-        .eq("category", normalizedCategory)
-        .eq("city_label", cityLabel)
-        .eq("is_active", true)
-        .order("item_order", { ascending: true });
-
-      if (year) query = query.eq("year", year);
-
-      const { data, error } = await query;
-      if (error) {
-        console.warn("Não foi possível ler a publicação estruturada:", error);
-        return null;
-      }
-
-      const rows = Array.isArray(data) ? data : [];
-      if (!rows.length) return null;
-
       const draft = getPublicationDraft(material);
-      const draftItems = draft && Array.isArray(draft.items) ? draft.items : [];
-      const draftPanorama = draft && draft.panorama ? String(draft.panorama) : "";
+      if (!draft || !Array.isArray(draft.items)) return null;
 
-      const items = rows
-        .sort(function(a, b) { return Number(a.item_order || 0) - Number(b.item_order || 0); })
-        .map(function(row, index) {
-          const draftItem = draftItems[index] || {};
+      const items = draft.items
+        .slice()
+        .sort(function(a, b) {
+          return Number(a.item_order || 0) - Number(b.item_order || 0);
+        })
+        .map(function(item) {
           return {
-            name: cleanExtractedValue(row.item_name || draftItem.name || ""),
-            description: cleanBusinessDescriptionText(row.description || draftItem.description || "", []),
-            address: cleanExtractedValue(row.address || draftItem.address || ""),
-            site: normalizeSiteValue(row.site || draftItem.site || ""),
-            price: cleanExtractedValue(row.entry_price || draftItem.entry_price || draftItem.price || ""),
-            photoDataUrl: draftItem.photoDataUrl || "",
-            photoSource: draftItem.photoSource || ""
+            name: cleanExtractedValue(item.name || item.item_name || ""),
+            description: cleanBusinessDescriptionText(item.description || "", []),
+            address: cleanExtractedValue(item.address || ""),
+            site: normalizeSiteValue(item.site || ""),
+            price: cleanExtractedValue(item.entry_price || item.price || ""),
+            photoDataUrl: item.photoDataUrl || "",
+            photoSource: item.photoSource || ""
           };
         })
-        .filter(function(item) { return item.name && item.description; });
+        .filter(function(item) {
+          return item.name && item.description;
+        });
 
       return {
-        panorama: draftPanorama || String(rows[0].panorama || ""),
+        panorama: draft.panorama ? String(draft.panorama) : "",
         items: items
       };
     }
-
 
     async function ensureBusinessContentLoaded(material) {
       if (!material) return getBusinessContentTemplate(material);
@@ -3425,622 +3412,21 @@
         return businessContentLoading[cacheKey];
       }
 
-      businessContentLoading[cacheKey] = (async function() {
-        try {
-          const structured = await fetchStructuredBusinessContent(material);
+      businessContentLoading[cacheKey] = Promise.resolve().then(function() {
+        const structured = fetchStructuredBusinessContent(material);
 
-          if (structured && structured.items && structured.items.length) {
-            businessContentCache[cacheKey] = structured;
-            return structured;
-          }
-        } catch (error) {
-          console.warn("Não foi possível carregar a publicação estruturada:", error);
-        }
-
-        const draft = getPublicationDraft(material);
-        if (draft && Array.isArray(draft.items) && draft.items.length) {
-          const draftContent = {
-            panorama: draft.panorama || "",
-            items: draft.items.map(function(item) {
-              return {
-                name: cleanExtractedValue(item.name || item.item_name || ""),
-                description: cleanBusinessDescriptionText(item.description || "", []),
-                address: cleanExtractedValue(item.address || ""),
-                site: normalizeSiteValue(item.site || ""),
-                price: cleanExtractedValue(item.entry_price || item.price || ""),
-                photoDataUrl: item.photoDataUrl || "",
-                photoSource: item.photoSource || ""
-              };
-            }).filter(function(item) { return item.name && item.description; })
-          };
-          businessContentCache[cacheKey] = draftContent;
-          return draftContent;
+        if (structured && structured.items && structured.items.length) {
+          businessContentCache[cacheKey] = structured;
+          return structured;
         }
 
         const fallback = getBusinessContentTemplate(material);
         businessContentCache[cacheKey] = fallback;
         return fallback;
-      })();
+      });
 
       return businessContentLoading[cacheKey];
     }
-
-
-    async function loadAndRenderBusinessContent(material) {
-      if (!material || !isPhotoSelectableMaterial(material)) return;
-
-      const cacheKey = getBusinessContentCacheKey(material);
-
-      if (businessContentCache[cacheKey]) {
-        renderBusinessContentPreview(material);
-        return;
-      }
-
-      const contentEl = document.getElementById("businessContentPreview");
-
-      if (contentEl) {
-        contentEl.innerHTML = `
-          <section class="business-a4-page">
-            <div class="business-page-kicker">Leitura do acervo Partner</div>
-            <h5 class="business-page-title">Carregando versão business</h5>
-            <div class="business-city-text">Estamos carregando a publicação aprovada pelo Partner-publicação.</div>
-            <div class="business-page-footer">Curadoria Elite Travel Partner</div>
-          </section>
-        `;
-      }
-
-      await ensureBusinessContentLoaded(material);
-
-      if (selectedMaterial && getBusinessContentCacheKey(selectedMaterial) === cacheKey) {
-        renderBusinessContentPreview(selectedMaterial);
-      }
-    }
-
-
-    function getBusinessContentTemplate(material) {
-      const category = normalizeCategoryName(material.category);
-      const city = String(material.city_label || "");
-      const cityLower = city.toLowerCase();
-      const cacheKey = getBusinessContentCacheKey(material);
-
-      if (businessContentCache[cacheKey]) {
-        return businessContentCache[cacheKey];
-      }
-
-      const draft = getPublicationDraft(material);
-      if (draft && Array.isArray(draft.items) && draft.items.length) {
-        const published = {
-          panorama: draft.panorama || "",
-          items: draft.items.map(function(item) {
-            return {
-              name: cleanExtractedValue(item.name || ""),
-              description: cleanBusinessDescriptionText(item.description || "", []),
-              address: cleanExtractedValue(item.address || ""),
-              site: normalizeSiteValue(item.site || ""),
-              price: cleanExtractedValue(item.entry_price || item.price || ""),
-              photoDataUrl: item.photoDataUrl || "",
-              photoSource: item.photoSource || ""
-            };
-          }).filter(function(item) { return item.name && item.description; })
-        };
-        if (published.items.length) {
-          businessContentCache[cacheKey] = published;
-          return published;
-        }
-      }
-
-      if (category === "Atrações Turísticas" && cityLower.includes("new york")) {
-        return {
-          panorama: "Nova York não dorme, mas ela sabe como sonhar acordada — e convida você a fazer o mesmo. Para além das luzes ofuscantes da Times Square, existe uma metrópole de detalhes silenciosos: o eco do jazz em porões escondidos, o reflexo do skyline em águas calmas no Central Park e a alma cosmopolita gravada nos tijolos avermelhados do Village. Aqui, a pressa do mundo encontra a pausa da arte; o asfalto rústico dá lugar a jardins secretos que flutuam sobre a história da cidade. Nós atravessamos as avenidas icônicas para revelar uma Nova York que pulsa em um ritmo só dela, elegante e inesquecível. Porque conhecer a Capital do Mundo não é apenas percorrer distâncias — é habitar momentos. E nós sabemos exatamente em qual esquina o extraordinário está à sua espera.",
-          items: [
-            {
-              name: "EMPIRE STATE BUILDING",
-              description: "O observatório mais famoso do mundo oferece uma vista de 360 graus que define o horizonte de Manhattan. Este ícone art déco é um marco da engenharia e proporciona uma experiência inesquecível, onde cada andar revela a grandiosidade de Nova York.",
-              address: "20 West 34th Street, New York, NY 10001",
-              site: "https://www.esbnyc.com/",
-              price: "A partir de US$ 44,00"
-            },
-            {
-              name: "ESTÁTUA DA LIBERDADE",
-              description: "Símbolo máximo de liberdade e esperança, o monumento na Ilha da Liberdade é uma parada obrigatória. O passeio de balsa oferece ângulos únicos da cidade, permitindo uma imersão profunda na história dos imigrantes que moldaram a alma dos EUA.",
-              address: "Liberty Island, New York, NY 10004",
-              site: "https://www.statuecitycruises.com",
-              price: "A partir de US$ 25,00 (inclui ferry)"
-            },
-            {
-              name: "METROPOLITAN MUSEUM OF ART (THE MET)",
-              description: "Com mais de cinco mil anos de arte mundial, o Met é um dos maiores e melhores museus do planeta. Suas galerias grandiosas transportam o visitante do Egito Antigo ao design moderno, criando uma jornada cultural sem paralelos no coração da ilha.",
-              address: "1000 Fifth Avenue, New York, NY 10028",
-              site: "https://www.metmuseum.org/",
-              price: "A partir de US$ 30,00"
-            },
-            {
-              name: "TOP OF THE ROCK",
-              description: "Localizado no Rockefeller Center, este observatório é amado por oferecer a melhor vista do Central Park e do Empire State. Com três níveis de terraços ao ar livre, o espaço garante fotos perfeitas da metrópole em um ambiente elegante e histórico.",
-              address: "30 Rockefeller Plaza, New York, NY 10112",
-              site: "https://www.rockefellercenter.com/",
-              price: "A partir de US$ 40,00"
-            },
-            {
-              name: "CENTRAL PARK ZOO",
-              description: "Situado em meio ao pulmão verde de Manhattan, este zoológico charmoso é um refúgio para diversas espécies exóticas. É o destino ideal para famílias, unindo educação ambiental e lazer em um cenário icônico que parece saído de um filme clássico.",
-              address: "Brooklyn Bridge, New York, NY 10038",
-              site: "https://centralparkzoo.com/",
-              price: "A partir de US$ 19,95"
-            },
-            {
-              name: "BROOKLYN BRIDGE",
-              description: "Atravessar esta ponte histórica a pé é um dos rituais mais autênticos de quem visita a cidade. Sua arquitetura de cabos de aço e arcos de pedra oferece o cenário ideal para apreciar o pôr do sol, conectando Manhattan ao pulsar do Brooklyn.",
-              address: "Brooklyn Bridge, New York, NY 10038",
-              site: "https://www.nyc.gov/",
-              price: "Gratuita"
-            },
-            {
-              name: "SUMMIT ONE VANDERBILT",
-              description: "Esta experiência imersiva usa espelhos e tecnologia para transformar a forma como você vê Nova York. Muito além de um mirante, o local desafia os sentidos e a gravidade, criando um espetáculo visual de luzes e reflexos no topo de um arranha-céu.",
-              address: "45 East 42nd Street, New York, NY 10017",
-              site: "https://summitov.com/pt/",
-              price: "A partir de US$ 43,00"
-            },
-            {
-              name: "LITTLE ISLAND",
-              description: "Este parque flutuante sobre o Rio Hudson parece flutuar em estruturas que lembram tulipas de concreto. Com jardins exuberantes e anfiteatros, o espaço é um prodígio do design moderno, oferecendo um respiro de paz e arte longe do asfalto comum.",
-              address: "Pier 55 at Hudson River Park, New York, NY 10014",
-              site: "https://littleisland.org/",
-              price: "Gratuita"
-            },
-            {
-              name: "THE MET CLOISTERS",
-              description: "Localizado ao norte de Manhattan, este museu é dedicado à arte e arquitetura medieval europeia. Seus claustros e jardins tranquilos fazem o visitante esquecer que está em uma metrópole, oferecendo uma imersão rara em um castelo reconstruído.",
-              address: "99 Margaret Corbin Drive, New York, NY 10040",
-              site: "https://www.metmuseum.org/plan-your-visit/met-cloisters",
-              price: "A partir de US$ 30,00"
-            },
-            {
-              name: "THE VESSEL",
-              description: "Esta estrutura escultural em Hudson Yards é composta por lances de escada interconectados que formam uma colmeia gigante. O design arrojado convida à exploração vertical, proporcionando novas perspectivas urbanas e uma estética futurista única.",
-              address: "20 Hudson Yards, New York, NY 10001",
-              site: "https://www.hudsonyardsnewyork.com/discover/vessel",
-              price: "A partir de US$ 10,00"
-            },
-            {
-              name: "ROOSEVELT ISLAND TRAMWAY",
-              description: "Este teleférico atravessa o East River e oferece uma das viagens mais cênicas e baratas da cidade. O trajeto conecta Manhattan à Ilha Roosevelt, permitindo visualizar as ruas e os prédios de um ângulo aéreo que poucos turistas costumam ver.",
-              address: "59th Street & Second Avenue, New York, NY 10022",
-              site: "https://rioc.ny.gov/302/Tram",
-              price: "A partir de US$ 2,90"
-            },
-            {
-              name: "THE HIGH LINE",
-              description: "Uma antiga linha ferroviária suspensa foi transformada em um parque linear cheio de arte e plantas nativas. Caminhar por este jardim elevado permite observar a arquitetura do Chelsea de cima, unindo renovação urbana e natureza de forma genial.",
-              address: "Gansevoort St. to West 30th St., New York, NY 10014",
-              site: "https://www.thehighline.org/",
-              price: "Gratuita"
-            }
-          ]
-        };
-      }
-
-      return {
-        panorama: `${city || "O destino selecionado"} reúne experiências selecionadas com foco em praticidade, clareza e orientação profissional para apoiar empresas parceiras no atendimento aos seus clientes.`,
-        items: []
-      };
-    }
-
-
-
-    function escapeHtml(value) {
-      return String(value || "")
-        .replace(/&/g, "&amp;")
-        .replace(/</g, "&lt;")
-        .replace(/>/g, "&gt;")
-        .replace(/"/g, "&quot;")
-        .replace(/'/g, "&#039;");
-    }
-
-    function getPartnerCompanyName() {
-      const input = document.getElementById("partnerCompanyInput");
-      const value = input ? input.value.trim() : partnerCompanyName;
-      return value || "Empresa Parceira";
-    }
-
-    function getClientBrandName() {
-      const input = document.getElementById("clientBrandInput");
-      const value = input ? input.value.trim() : clientBrandName;
-      return value || getPartnerCompanyName();
-    }
-
-    function getBrandLogoHtml(context) {
-      if (partnerLogoDataUrl) {
-        return `<img src="${partnerLogoDataUrl}" alt="Logo da marca apresentada">`;
-      }
-
-      if (context === "inline") {
-        return `<div class="business-closing-logo-placeholder">LOGO DA<br>MARCA</div>`;
-      }
-
-      return `<div class="logo-placeholder">LOGO DA MARCA</div>`;
-    }
-
-    function syncPartnerBrandData() {
-      partnerCompanyName = getPartnerCompanyName();
-      clientBrandName = getClientBrandName();
-
-      if (selectedMaterial) {
-        renderBusinessContentPreview(selectedMaterial);
-      }
-    }
-
-    function getGreetingPrefix(type) {
-      if (type === "male") return "Prezado Sr.";
-      if (type === "female") return "Prezada Sra.";
-      return "Prezado(a)";
-    }
-
-    function isWhiteLabelMode() {
-      const input = document.getElementById("presentationModeInput");
-      return Boolean(input && input.value === "whitelabel");
-    }
-
-    function getWhiteLabelPhotoKey(material, index) {
-      const materialKey = getBusinessContentCacheKey(material);
-      return `${materialKey}::${index}`;
-    }
-
-    function getWhiteLabelPhoto(material, index) {
-      return whiteLabelPhotoData[getWhiteLabelPhotoKey(material, index)] || getPublishedPhoto(material, index) || "";
-    }
-
-    function renderWhiteLabelPhotoFields(material) {
-      const panel = document.getElementById("whiteLabelPhotosPanel");
-      const list = document.getElementById("whiteLabelPhotosList");
-
-      if (!panel || !list) return;
-
-      if (!isWhiteLabelMode() || !material) {
-        panel.style.display = "none";
-        list.innerHTML = "";
-        return;
-      }
-
-      const content = getBusinessContentTemplate(material);
-      const items = content && Array.isArray(content.items) ? content.items : [];
-
-      panel.style.display = "block";
-
-      if (!items.length) {
-        list.innerHTML = `<div class="white-label-photos-help">Selecione um destino com indicações disponíveis para escolher as fotos individualmente.</div>`;
-        return;
-      }
-
-      list.innerHTML = items.map(function(item, index) {
-        const photo = getWhiteLabelPhoto(material, index);
-        return `
-          <div class="white-label-photo-row">
-            <span class="white-label-photo-label">${formatBusinessNumber(index)} • ${escapeHtml(item.name || "Indicação")}</span>
-            <div class="white-label-photo-preview">
-              ${photo ? `<img src="${photo}" alt="Foto de ${escapeHtml(item.name || "indicação")}">` : "Foto aprovada não disponível"}
-            </div>
-            <div class="white-label-photo-source">${photo ? "Foto da publicação aprovada. Você pode substituir somente neste White Label." : "Sem foto aprovada disponível."}</div>
-            <input class="white-label-photo-input" type="file" accept="image/*" data-white-label-photo-index="${index}">
-          </div>
-        `;
-      }).join("");
-
-      list.querySelectorAll("input[data-white-label-photo-index]").forEach(function(input) {
-        input.addEventListener("change", function(event) {
-          const file = event.target.files && event.target.files[0];
-          const index = Number(event.target.dataset.whiteLabelPhotoIndex);
-          if (!file || !material) return;
-
-          const reader = new FileReader();
-          reader.onload = function(loadEvent) {
-            whiteLabelPhotoData[getWhiteLabelPhotoKey(material, index)] = loadEvent.target.result;
-            renderWhiteLabelPhotoFields(material);
-            renderBusinessContentPreview(material);
-          };
-          reader.readAsDataURL(file);
-        });
-      });
-    }
-
-    function hasClientPersonalization() {
-      return Boolean(
-        clientPersonalization.enabled &&
-        (clientPersonalization.name.trim() || clientPersonalization.message.trim())
-      );
-    }
-
-    function getClientGreetingLine() {
-      const prefix = getGreetingPrefix(clientPersonalization.greetingType);
-      const name = clientPersonalization.name.trim() || "Cliente";
-      return `${prefix} ${name},`;
-    }
-
-    function getClientMessageText() {
-      return clientPersonalization.message.trim() ||
-        "Preparamos esta seleção para apoiar sua experiência durante a viagem, com informações organizadas para facilitar suas escolhas no destino.";
-    }
-
-    function renderClientPreviewText() {
-      const preview = document.getElementById("clientGreetingPreview");
-      if (!preview) return;
-
-      const name = document.getElementById("clientNameInput")?.value.trim() || "Cliente";
-      const type = document.getElementById("clientGreetingType")?.value || "neutral";
-      const message = document.getElementById("clientMessageInput")?.value.trim() ||
-        "Preparamos esta seleção para apoiar sua experiência durante a viagem.";
-
-      preview.innerHTML = `<strong>Prévia:</strong><br>${getGreetingPrefix(type)} ${name},<br>${message}`;
-    }
-
-    function applyClientPersonalization() {
-      clientPersonalization = {
-        enabled: true,
-        greetingType: document.getElementById("clientGreetingType")?.value || "neutral",
-        name: document.getElementById("clientNameInput")?.value.trim() || "",
-        message: document.getElementById("clientMessageInput")?.value.trim() || ""
-      };
-
-      renderClientPreviewText();
-
-      if (selectedMaterial) {
-        renderBusinessContentPreview(selectedMaterial);
-      }
-    }
-
-    function clearClientPersonalization() {
-      clientPersonalization = {
-        enabled: false,
-        greetingType: "neutral",
-        name: "",
-        message: ""
-      };
-
-      const type = document.getElementById("clientGreetingType");
-      const name = document.getElementById("clientNameInput");
-      const message = document.getElementById("clientMessageInput");
-      const preview = document.getElementById("clientGreetingPreview");
-
-      if (type) type.value = "neutral";
-      if (name) name.value = "";
-      if (message) message.value = "";
-      if (preview) {
-        preview.innerHTML = `<strong>Prévia:</strong><br>O material seguirá no modelo business padrão até que os dados do cliente sejam preenchidos.`;
-      }
-
-      if (selectedMaterial) {
-        renderBusinessContentPreview(selectedMaterial);
-      }
-    }
-
-    function renderPersonalizedCoverBlock(category, city) {
-      if (!hasClientPersonalization()) return "";
-
-      return `
-        <div class="business-client-card personalized-cover-preview">
-          <h6>Atendimento personalizado</h6>
-          <p><strong>${getClientGreetingLine()}</strong></p>
-          <p>${getClientMessageText()}</p>
-        </div>
-        <div class="business-client-card personalized-cover-preview">
-          <h6>${category} • ${city}</h6>
-          <p>Material preparado em versão business clean por ${escapeHtml(getClientBrandName())}, com apoio da Curadoria Elite Travel, para facilitar a consulta e a tomada de decisão durante a viagem.</p>
-        </div>
-      `;
-    }
-
-
-    function renderInlineClosingPage() {
-      const brandName = escapeHtml(getClientBrandName());
-      const partnerName = escapeHtml(getPartnerCompanyName());
-      const whiteLabel = isWhiteLabelMode();
-
-      if (whiteLabel) {
-        return `
-          <section class="business-a4-page">
-            <div class="business-page-kicker">Encerramento</div>
-            <div class="business-closing-logo">${getBrandLogoHtml("inline")}</div>
-            <h5 class="business-page-title" style="text-align:center;">${brandName}</h5>
-            <div class="business-closing-text">
-              A melhor viagem é aquela que permite viver o destino com mais tranquilidade e menos dúvidas.<br><br>
-              <strong>Tenha uma excelente experiência.</strong>
-            </div>
-            <div class="business-closing-exclusive">
-              <p><strong>Documento disponibilizado para clientes da ${brandName}.</strong></p>
-              <p>Uso destinado ao apoio e orientação durante a viagem.</p>
-            </div>
-            <div class="business-page-footer">© 2026 • ${brandName}</div>
-          </section>
-        `;
-      }
-
-      return `
-        <section class="business-a4-page">
-          <div class="business-page-kicker">Encerramento</div>
-          <div class="business-closing-logo">${getBrandLogoHtml("inline")}</div>
-          <h5 class="business-page-title" style="text-align:center;">${brandName}</h5>
-          <div class="business-closing-text">
-            A melhor viagem é aquela que permite viver o destino com mais tranquilidade e menos dúvidas.<br><br>
-            <strong>Tenha uma excelente experiência.</strong>
-          </div>
-          <div class="business-closing-partner">
-            Material disponibilizado por<br>
-            <strong>${brandName}</strong><br><br>
-            em parceria com<br>
-            <strong>Curadoria Elite Travel</strong>
-          </div>
-          <div class="business-closing-exclusive">
-            <p><strong>Documento disponibilizado para clientes da ${brandName}.</strong></p>
-            <p>Uso destinado ao apoio e orientação durante a viagem.</p>
-          </div>
-          <div class="business-page-footer">© 2026 • ${brandName} • Curadoria Elite Travel Partner • Conta: ${partnerName}</div>
-        </section>
-      `;
-    }
-
-    function formatBusinessNumber(index) {
-      return String(index + 1).padStart(2, "0");
-    }
-
-    function chunkItems(items, size) {
-      const chunks = [];
-
-      for (let index = 0; index < items.length; index += size) {
-        chunks.push(items.slice(index, index + size));
-      }
-
-      return chunks;
-    }
-
-    function renderBusinessItemCard(item, index) {
-      const whiteLabel = isWhiteLabelMode();
-      const photo = whiteLabel && selectedMaterial
-        ? getWhiteLabelPhoto(selectedMaterial, index)
-        : (item.photoDataUrl || getPublishedPhoto(selectedMaterial, index) || "");
-      const photoHtml = photo
-        ? `<img src="${photo}" alt="Foto de ${escapeHtml(item.name || "indicação")}">`
-        : `<span>Foto aprovada não disponível</span>`;
-
-      return `
-        <div class="business-item-card">
-          <div class="business-item-photo">${photoHtml}</div>
-          <div class="business-item-copy">
-            <div class="business-item-number">${formatBusinessNumber(index)}</div>
-            <h6>${item.name}</h6>
-            <p>${item.description}</p>
-            <div class="business-item-details-grid">
-              ${item.address ? `<div class="business-item-detail"><strong>Endereço:</strong> ${item.address}</div>` : ""}
-              ${item.site ? `<div class="business-item-detail"><strong>Site:</strong> ${item.site}</div>` : ""}
-              ${item.price ? `<div class="business-item-detail"><strong>Entrada:</strong> ${item.price}</div>` : ""}
-            </div>
-          </div>
-        </div>
-      `;
-    }
-
-    function renderBusinessPreviewCurrentPage() {
-      const contentEl = document.getElementById("businessContentPreview");
-      const controls = document.getElementById("businessPreviewControls");
-      const label = document.getElementById("businessPreviewPageLabel");
-      const prevButton = document.getElementById("businessPreviewPrev");
-      const nextButton = document.getElementById("businessPreviewNext");
-
-      if (!contentEl) return;
-
-      if (!businessPreviewPages.length) {
-        contentEl.innerHTML = `
-          <section class="business-a4-page">
-            <div class="business-page-kicker">Prévia Business Partner</div>
-            <h5 class="business-page-title">Material aguardando seleção</h5>
-            <div class="business-city-text">Selecione um destino para visualizar a versão business em páginas organizadas.</div>
-            <div class="business-page-footer">Curadoria Elite Travel Partner</div>
-          </section>
-        `;
-        if (controls) controls.style.display = "none";
-        return;
-      }
-
-      if (businessPreviewPageIndex < 0) businessPreviewPageIndex = 0;
-      if (businessPreviewPageIndex > businessPreviewPages.length - 1) businessPreviewPageIndex = businessPreviewPages.length - 1;
-
-      contentEl.innerHTML = businessPreviewPages[businessPreviewPageIndex];
-
-      if (controls) {
-        controls.style.display = businessPreviewPages.length > 1 ? "flex" : "none";
-      }
-
-      if (label) {
-        label.textContent = `Página ${businessPreviewPageIndex + 1} de ${businessPreviewPages.length}`;
-      }
-
-      if (prevButton) {
-        prevButton.disabled = businessPreviewPageIndex <= 0;
-      }
-
-      if (nextButton) {
-        nextButton.disabled = businessPreviewPageIndex >= businessPreviewPages.length - 1;
-      }
-    }
-
-    function changeBusinessPreviewPage(direction) {
-      businessPreviewPageIndex = businessPreviewPageIndex + direction;
-      renderBusinessPreviewCurrentPage();
-    }
-
-    function updatePersonalizedCoverPreviewBlock(material) {
-      const block = document.getElementById("personalizedCoverPreviewBlock");
-      if (!block) return;
-
-      if (!material || !hasClientPersonalization()) {
-        block.innerHTML = "";
-        return;
-      }
-
-      const category = normalizeCategoryName(material.category);
-      const city = material.city_label || "Destino selecionado";
-
-      block.innerHTML = renderPersonalizedCoverBlock(category, city);
-    }
-
-    function renderBusinessContentPreview(material) {
-      updatePersonalizedCoverPreviewBlock(material);
-      renderWhiteLabelPhotoFields(material);
-
-      const content = getBusinessContentTemplate(material);
-      const category = normalizeCategoryName(material.category);
-      const city = material.city_label || "Destino selecionado";
-
-      const panoramaPage = `
-        <section class="business-a4-page">
-          <div class="business-page-kicker">Página 02 • Panorama da cidade</div>
-          <h5 class="business-page-title">${city}</h5>
-          <div class="business-city-text">${content.panorama}</div>
-          <div class="business-page-footer">Material Partner • ${category}</div>
-        </section>
-      `;
-
-      if (!content.items.length) {
-        businessPreviewPages = [
-          panoramaPage,
-          `
-          <section class="business-a4-page">
-            <div class="business-page-kicker">Página 03 • Indicações selecionadas</div>
-            <h5 class="business-page-title">Indicações em preparação</h5>
-            <div class="business-city-text">Este destino ainda não possui uma publicação aprovada disponível para apresentação no Partner.</div>
-            <div class="business-page-footer">Material Partner • ${city}</div>
-          </section>
-          `,
-          renderInlineClosingPage()
-        ].filter(Boolean);
-        businessPreviewPageIndex = 0;
-        renderBusinessPreviewCurrentPage();
-        return;
-      }
-
-      const indicationPages = chunkItems(content.items, 3).map(function(itemsChunk, chunkIndex) {
-        const firstItemIndex = chunkIndex * 3;
-        const pageNumber = String(chunkIndex + 3).padStart(2, "0");
-
-        return `
-          <section class="business-a4-page">
-            <div class="business-page-kicker">Página ${pageNumber} • Indicações selecionadas</div>
-            <h5 class="business-page-title">${city}</h5>
-            <div class="business-items-grid">
-              ${itemsChunk.map(function(item, itemIndex) {
-                return renderBusinessItemCard(item, firstItemIndex + itemIndex);
-              }).join("")}
-            </div>
-            <div class="business-page-footer">${firstItemIndex + 1}–${firstItemIndex + itemsChunk.length} de ${content.items.length} indicações</div>
-          </section>
-        `;
-      });
-
-      businessPreviewPages = [panoramaPage].concat(indicationPages).concat([renderInlineClosingPage()]).filter(Boolean);
-      businessPreviewPageIndex = 0;
-      renderBusinessPreviewCurrentPage();
-    }
-
 
     function selectMaterial(material) {
       selectedMaterial = material;
@@ -4126,10 +3512,13 @@
                 <div class="items-grid">
                   ${itemsChunk.map(function(item, itemIndex) {
                     const index = firstItemIndex + itemIndex;
-                    const photo = whiteLabel ? getWhiteLabelPhoto(selectedMaterial, index) : "";
+                    const approvedPhoto = item.photoDataUrl || getPublishedPhoto(selectedMaterial, index) || "";
+                    const photo = whiteLabel
+                      ? getWhiteLabelPhoto(selectedMaterial, index)
+                      : approvedPhoto;
                     const photoHtml = photo
                       ? `<img src="${photo}" alt="Foto de ${escapeHtml(item.name || "indicação")}">`
-                      : `<span>${whiteLabel ? "Foto não selecionada" : "Foto do acervo"}</span>`;
+                      : `<span>Foto não disponível</span>`;
 
                     return `
                       <article class="printed-item-card">
@@ -4146,13 +3535,15 @@
                     `;
                   }).join("")}
                 </div>
-                <div class="page-footer">${whiteLabel
-                  ? `${firstItemIndex + 1}–${firstItemIndex + itemsChunk.length} de ${businessContent.items.length} indicações`
-                  : `${firstItemIndex + 1}–${firstItemIndex + itemsChunk.length} de ${businessContent.items.length} indicações • Curadoria Elite Travel Partner`}</div>
+                <div class="page-footer">
+                  ${whiteLabel
+                    ? `<span class="footer-brand">${brandName}</span><span class="footer-tagline">Material exclusivo</span><span class="footer-page">${firstItemIndex + 1}–${firstItemIndex + itemsChunk.length} de ${businessContent.items.length}</span>`
+                    : `<span class="footer-brand">Curadoria Elite Travel</span><span class="footer-tagline">O seu mundo, bem indicado.</span><span class="footer-page">${firstItemIndex + 1}–${firstItemIndex + itemsChunk.length} de ${businessContent.items.length}</span>`}
+                </div>
               </section>
             `;
           }).join("")
-        : `<section class="paper-page"><div class="page-kicker">Página 03 • Indicações selecionadas</div><h2>Indicações em preparação</h2><p class="lead">Este material já foi identificado no Supabase. A leitura automática tentará converter o PDF em indicações estruturadas para esta categoria e destino. Se o texto do PDF não estiver em padrão legível, será necessário revisar a conversão.</p><div class="page-footer">${whiteLabel ? brandName : "Curadoria Elite Travel Partner"}</div></section>`;
+        : `<section class="paper-page"><div class="page-kicker">Página 03 • Indicações selecionadas</div><h2>Indicações em preparação</h2><p class="lead">Este material já foi revisado no Partner-publicação, mas ainda não possui indicações salvas disponíveis para apresentação.</p><div class="page-footer">${whiteLabel ? brandName : "Curadoria Elite Travel Partner"}</div></section>`;
 
       const closingPageHtml = whiteLabel
         ? `
@@ -4168,7 +3559,7 @@
               <p><strong>Documento disponibilizado para clientes da ${brandName}.</strong></p>
               <p>Uso destinado ao apoio e orientação durante a viagem.</p>
             </div>
-            <div class="page-footer">© 2026 • ${brandName}</div>
+            <div class="page-footer"><span class="footer-brand">${brandName}</span><span class="footer-tagline">Material exclusivo</span><span class="footer-page">Encerramento</span></div>
           </section>
         `
         : `
@@ -4190,7 +3581,7 @@
               <p><strong>Documento disponibilizado para clientes da ${brandName}.</strong></p>
               <p>Uso destinado ao apoio e orientação durante a viagem.</p>
             </div>
-            <div class="page-footer">© 2026 • ${brandName} • Curadoria Elite Travel Partner</div>
+            <div class="page-footer"><span class="footer-brand">Curadoria Elite Travel</span><span class="footer-tagline">O seu mundo, bem indicado.</span><span class="footer-page">Encerramento</span></div>
           </section>
         `;
 
@@ -4241,8 +3632,10 @@
     }
     .partner-logo img { max-width: 220px; max-height: 110px; object-fit: contain; }
     .logo-placeholder { font-size: 23px; line-height: 1.05; font-weight: 950; letter-spacing: .5px; }
-    .signature { text-align: right; font-size: 14px; line-height: 1.4; color: #222; }
-    .signature strong { display: block; margin-top: 6px; }
+    .signature { text-align: right; font-size: 14px; line-height: 1.4; color: #222; border: 1px solid #dfcfaa; border-radius: 14px; padding: 14px 16px; min-height: 74px; display: flex; flex-direction: column; justify-content: center; }
+    .signature strong { display: block; margin-top: 6px; font-size: 15px; }
+    .white-label-signature { text-align: right; font-size: 14px; line-height: 1.45; color: #222; border: 1px solid #dfcfaa; border-radius: 14px; padding: 14px 16px; min-height: 74px; display: flex; flex-direction: column; justify-content: center; }
+    .white-label-signature strong { display:block; margin-top:6px; font-size:16px; }
     .eyebrow, .page-kicker {
       color: #9a7617; text-transform: uppercase; letter-spacing: 3px; font-size: 13px; font-weight: 900; margin-bottom: 18px; position: relative; z-index: 1;
     }
@@ -4261,8 +3654,8 @@
     .personalized-cover-panel h2 { font-size: 28px; margin-bottom: 14px; }
     .personalized-cover-panel p { font-size: 18px; line-height: 1.7; }
     .items-grid { display: grid; gap: 18px; position: relative; z-index: 1; }
-    .printed-item-card { border: 1px solid #dfcfaa; border-radius: 20px; padding: 22px; background: rgba(255,255,255,.58); display: grid; grid-template-columns: 170px 1fr; gap: 18px; align-items: start; }
-    .printed-item-photo { width: 170px; height: 128px; border: 1px solid #dfcfaa; border-radius: 14px; background: #eee9dc; overflow: hidden; display: flex; align-items: center; justify-content: center; color: #8b8069; font-size: 11px; text-align: center; line-height: 1.35; }
+    .printed-item-card { border: 1px solid #dfcfaa; border-radius: 20px; padding: 22px; background: rgba(255,255,255,.58); display: grid; grid-template-columns: 210px 1fr; gap: 20px; align-items: start; }
+    .printed-item-photo { width: 210px; height: 158px; border: 1px solid #dfcfaa; border-radius: 14px; background: #eee9dc; overflow: hidden; display: flex; align-items: center; justify-content: center; color: #8b8069; font-size: 11px; text-align: center; line-height: 1.35; }
     .printed-item-photo img { width: 100%; height: 100%; object-fit: cover; }
     .printed-item-copy { min-width: 0; }
     .printed-item-number { width: 46px; height: 46px; border-radius: 50%; border: 1px solid rgba(214,173,50,.55); color: #9b7a19; background: rgba(214,173,50,.08); display: flex; align-items: center; justify-content: center; font-weight: 950; font-size: 15px; margin-bottom: 10px; }
@@ -4271,7 +3664,10 @@
     .detail { color: #333; font-size: 14px; line-height: 1.45; margin-top: 6px; }
     .detail strong { color: #111; }
     ul { padding-left: 20px; }
-    .page-footer { position: absolute; left: 54px; right: 54px; bottom: 38px; border-top: 1px solid rgba(214,173,50,.42); padding-top: 14px; text-align: center; color: #555; font-size: 12px; z-index: 1; }
+    .page-footer { position: absolute; left: 54px; right: 54px; bottom: 28px; border-top: 1px solid rgba(214,173,50,.42); padding-top: 11px; display:flex; align-items:center; justify-content:space-between; gap:18px; color:#555; font-size:11px; z-index:1; }
+    .page-footer .footer-brand { font-weight:800; color:#333; }
+    .page-footer .footer-tagline { color:#7b715f; text-align:center; flex:1; }
+    .page-footer .footer-page { min-width:90px; text-align:right; color:#7b715f; }
     .closing-page { display: flex; flex-direction: column; justify-content: center; text-align: center; }
     .closing-logo { margin: 0 auto 28px; position: relative; z-index: 1; min-height: 112px; display: flex; align-items: center; justify-content: center; }
     .closing-logo img { max-width: 240px; max-height: 120px; object-fit: contain; }
@@ -4283,7 +3679,7 @@
     .closing-exclusive strong { color: #222; }
     .actions { text-align:center; margin:24px auto 0; max-width:820px; }
     .print-btn { border: none; border-radius: 14px; background: linear-gradient(135deg, #e3bd43, #b88712); color: #090909; padding: 14px 24px; font-weight: 900; cursor: pointer; }
-    @media (max-width: 700px) { .printed-item-card { grid-template-columns: 1fr; } .printed-item-photo { width: 100%; height: 150px; } }
+    @media (max-width: 700px) { .printed-item-card { grid-template-columns: 1fr; } .printed-item-photo { width: 100%; height: 170px; } }
     @page { size: A4; margin: 0; }
     @media print {
       html, body { background: #fff; padding: 0; margin: 0; }
@@ -4297,7 +3693,9 @@
   <section class="paper-page">
     <div class="top">
       <div class="partner-logo">${logoHtml}</div>
-      ${whiteLabel ? "" : `<div class="signature">Curadoria desenvolvida em parceria com<strong>Curadoria Elite Travel</strong></div>`}
+      ${whiteLabel
+        ? `<div class="white-label-signature">Material elaborado pela<strong>${brandName}</strong></div>`
+        : `<div class="signature">Curadoria desenvolvida em parceria com<strong>Curadoria Elite Travel</strong></div>`}
     </div>
 
     <div class="eyebrow">${whiteLabel ? "Material exclusivo" : "Versão Business Partner"}</div>
@@ -4312,14 +3710,18 @@
 
     ${personalizedCoverHtml}
 
-    <div class="page-footer">${whiteLabel ? brandName : "Página 01 • Material Partner • Uso autorizado para clientes da empresa parceira"}</div>
+    <div class="page-footer">${whiteLabel
+      ? `<span class="footer-brand">${brandName}</span><span class="footer-tagline">Material exclusivo</span><span class="footer-page">Página 01</span>`
+      : `<span class="footer-brand">Curadoria Elite Travel</span><span class="footer-tagline">O seu mundo, bem indicado.</span><span class="footer-page">Página 01</span>`}</div>
   </section>
 
   <section class="paper-page">
     <div class="page-kicker">Panorama da cidade</div>
     <h2>${city}</h2>
     <p class="lead">${businessContent.panorama}</p>
-    <div class="page-footer">${whiteLabel ? brandName : `Curadoria Elite Travel Partner • ${category}`}</div>
+    <div class="page-footer">${whiteLabel
+      ? `<span class="footer-brand">${brandName}</span><span class="footer-tagline">Material exclusivo</span><span class="footer-page">Página 02</span>`
+      : `<span class="footer-brand">Curadoria Elite Travel</span><span class="footer-tagline">O seu mundo, bem indicado.</span><span class="footer-page">Página 02</span>`}</div>
   </section>
 
   ${indicationPages}
