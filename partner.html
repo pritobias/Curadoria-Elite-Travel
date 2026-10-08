@@ -3421,6 +3421,12 @@
         return businessContentCache[cacheKey];
       }
 
+      const prepared = getPreparedPartnerContent(material);
+      if (prepared && prepared.items && prepared.items.length) {
+        businessContentCache[cacheKey] = prepared;
+        return prepared;
+      }
+
       if (category === "Atrações Turísticas" && cityLower.includes("new york")) {
         return {
           panorama: "Nova York não dorme, mas ela sabe como sonhar acordada — e convida você a fazer o mesmo. Para além das luzes ofuscantes da Times Square, existe uma metrópole de detalhes silenciosos: o eco do jazz em porões escondidos, o reflexo do skyline em águas calmas no Central Park e a alma cosmopolita gravada nos tijolos avermelhados do Village. Aqui, a pressa do mundo encontra a pausa da arte; o asfalto rústico dá lugar a jardins secretos que flutuam sobre a história da cidade. Nós atravessamos as avenidas icônicas para revelar uma Nova York que pulsa em um ritmo só dela, elegante e inesquecível. Porque conhecer a Capital do Mundo não é apenas percorrer distâncias — é habitar momentos. E nós sabemos exatamente em qual esquina o extraordinário está à sua espera.",
@@ -3574,10 +3580,86 @@
       return Boolean(input && input.value === "whitelabel");
     }
 
+    function getPartnerDraftKey(material) {
+      if (!material) return "";
+      return [
+        "cet_partner_draft_v2",
+        normalizeCategoryName(material.category),
+        String(material.city_label || "").trim(),
+        normalizeYear(material.year),
+        String(material.pdf_url || "").trim()
+      ].join("::");
+    }
+
+    function getPartnerDraft(material) {
+      const key = getPartnerDraftKey(material);
+      if (!key) return null;
+      try {
+        const raw = localStorage.getItem(key);
+        return raw ? JSON.parse(raw) : null;
+      } catch (error) {
+        console.warn("Não foi possível ler a publicação Partner preparada.", error);
+        return null;
+      }
+    }
+
+    function getPreparedPartnerContent(material) {
+      const draft = getPartnerDraft(material);
+      if (!draft || !Array.isArray(draft.items) || !draft.items.length) return null;
+
+      const items = draft.items
+        .filter(function(item) {
+          return item && item.name && item.description;
+        })
+        .map(function(item, index) {
+          return {
+            name: cleanExtractedValue(item.name),
+            description: cleanBusinessDescriptionText(item.description, []),
+            address: cleanExtractedValue(item.address || ""),
+            site: normalizeSiteValue(item.site || ""),
+            price: cleanExtractedValue(item.entry_price || item.price || ""),
+            photoDataUrl: String(item.photoDataUrl || "").trim(),
+            photoSource: String(item.photoSource || "").trim(),
+            item_order: index + 1
+          };
+        });
+
+      if (!items.length) return null;
+
+      const fallback = {
+        panorama: "",
+        items: items
+      };
+
+      return {
+        panorama: draft.panoramaSaved && draft.panorama
+          ? cleanExtractedValue(draft.panorama)
+          : fallback.panorama,
+        items: items
+      };
+    }
+
+    function getPartnerFooterHtml() {
+      const brandName = escapeHtml(getClientBrandName());
+      const partnerName = escapeHtml(getPartnerCompanyName());
+      if (isWhiteLabelMode()) {
+        return `Material elaborado por <strong>${brandName}</strong>`;
+      }
+      return `Material elaborado por <strong>${brandName}</strong> • em parceria com <strong>Curadoria Elite Travel</strong> • ${partnerName}`;
+    }
+
+    function getPartnerHeaderSignatureHtml() {
+      const brandName = escapeHtml(getClientBrandName());
+      if (isWhiteLabelMode()) {
+        return `<div class="signature">Material elaborado por<strong>${brandName}</strong></div>`;
+      }
+      return `<div class="signature">Material elaborado por<strong>${brandName}</strong><span>em parceria com Curadoria Elite Travel</span></div>`;
+    }
+
     function getPublishedPhoto(material, index, item) {
-      // 1) Prefer a photo stored with the published structured item, when available.
       if (item && typeof item === "object") {
         const directCandidates = [
+          item.photoDataUrl,
           item.photo_url,
           item.image_url,
           item.photo,
@@ -3593,31 +3675,23 @@
         }
       }
 
-      // 2) The current partner-publicacao workflow stores the reviewed photo
-      // in its material draft. Read that same prepared result instead of
-      // going back to the B2C PDF/acervo and re-identifying the image.
-      if (material) {
-        try {
-          const key = [
-            "cet_partner_draft_v2",
-            normalizeCategoryName(material.category),
-            String(material.city_label || "").trim(),
-            normalizeYear(material.year),
-            String(material.pdf_url || "").trim()
-          ].join("::");
-          const raw = localStorage.getItem(key);
-          if (raw) {
-            const draft = JSON.parse(raw);
-            const draftItem = Array.isArray(draft.items) ? draft.items[index] : null;
-            const photo = String(draftItem && draftItem.photoDataUrl || "").trim();
-            if (photo) return photo;
-          }
-        } catch (error) {
-          console.warn("Não foi possível ler a foto preparada no Partner-publicacao.", error);
-        }
+      const draft = getPartnerDraft(material);
+      if (!draft || !Array.isArray(draft.items)) return "";
+
+      // Primeiro tenta casar pelo nome. Isso evita perder a foto se a ordem
+      // dos registros do Supabase mudar em relação à publicação revisada.
+      const itemName = String(item && item.name || "").trim().toLowerCase();
+      let draftItem = itemName
+        ? draft.items.find(function(candidate) {
+            return String(candidate && candidate.name || "").trim().toLowerCase() === itemName;
+          })
+        : null;
+
+      if (!draftItem) {
+        draftItem = draft.items[index] || null;
       }
 
-      return "";
+      return String(draftItem && draftItem.photoDataUrl || "").trim();
     }
 
     function getWhiteLabelPhotoKey(material, index) {
@@ -3794,14 +3868,14 @@
             <div class="business-closing-logo">${getBrandLogoHtml("inline")}</div>
             <h5 class="business-page-title" style="text-align:center;">${brandName}</h5>
             <div class="business-closing-text">
-              A melhor viagem é aquela que permite viver o destino com mais tranquilidade e menos dúvidas.<br><br>
+              Obrigado por escolher a Curadoria Elite Travel Partner.<br><br>
               <strong>Tenha uma excelente experiência.</strong>
             </div>
             <div class="business-closing-exclusive">
               <p><strong>Documento disponibilizado para clientes da ${brandName}.</strong></p>
               <p>Uso destinado ao apoio e orientação durante a viagem.</p>
             </div>
-            <div class="business-page-footer">© 2026 • ${brandName}</div>
+            <div class="business-page-footer">O seu mundo, bem indicado. • ${brandName}</div>
           </section>
         `;
       }
@@ -3825,7 +3899,7 @@
             <p><strong>Documento disponibilizado para clientes da ${brandName}.</strong></p>
             <p>Uso destinado ao apoio e orientação durante a viagem.</p>
           </div>
-          <div class="business-page-footer">© 2026 • ${brandName} • Curadoria Elite Travel Partner • Conta: ${partnerName}</div>
+          <div class="business-page-footer">O seu mundo, bem indicado. • ${brandName} • Curadoria Elite Travel Partner</div>
         </section>
       `;
     }
@@ -3947,7 +4021,7 @@
           <div class="business-page-kicker">Página 02 • Panorama da cidade</div>
           <h5 class="business-page-title">${city}</h5>
           <div class="business-city-text">${content.panorama}</div>
-          <div class="business-page-footer">Material Partner • ${category}</div>
+          <div class="business-page-footer">${getPartnerFooterHtml()}</div>
         </section>
       `;
 
@@ -3959,7 +4033,7 @@
             <div class="business-page-kicker">Página 03 • Indicações selecionadas</div>
             <h5 class="business-page-title">Indicações em preparação</h5>
             <div class="business-city-text">Este material já foi identificado no Supabase. A leitura automática tentará converter o PDF em indicações estruturadas para esta categoria e destino. Se o texto do PDF não estiver em padrão legível, será necessário revisar a conversão.</div>
-            <div class="business-page-footer">Material Partner • ${city}</div>
+            <div class="business-page-footer">${getPartnerFooterHtml()}</div>
           </section>
           `,
           renderInlineClosingPage()
@@ -3982,7 +4056,7 @@
                 return renderBusinessItemCard(item, firstItemIndex + itemIndex);
               }).join("")}
             </div>
-            <div class="business-page-footer">${firstItemIndex + 1}–${firstItemIndex + itemsChunk.length} de ${content.items.length} indicações</div>
+            <div class="business-page-footer">${getPartnerFooterHtml()} • ${firstItemIndex + 1}–${firstItemIndex + itemsChunk.length} de ${content.items.length} indicações</div>
           </section>
         `;
       });
@@ -4099,13 +4173,11 @@
                     `;
                   }).join("")}
                 </div>
-                <div class="page-footer">${whiteLabel
-                  ? `${firstItemIndex + 1}–${firstItemIndex + itemsChunk.length} de ${businessContent.items.length} indicações`
-                  : `${firstItemIndex + 1}–${firstItemIndex + itemsChunk.length} de ${businessContent.items.length} indicações • Curadoria Elite Travel Partner`}</div>
+                <div class="page-footer">${getPartnerFooterHtml()} • ${firstItemIndex + 1}–${firstItemIndex + itemsChunk.length} de ${businessContent.items.length} indicações</div>
               </section>
             `;
           }).join("")
-        : `<section class="paper-page"><div class="page-kicker">Página 03 • Indicações selecionadas</div><h2>Indicações em preparação</h2><p class="lead">Este material já foi identificado no Supabase. A leitura automática tentará converter o PDF em indicações estruturadas para esta categoria e destino. Se o texto do PDF não estiver em padrão legível, será necessário revisar a conversão.</p><div class="page-footer">${whiteLabel ? brandName : "Curadoria Elite Travel Partner"}</div></section>`;
+        : `<section class="paper-page"><div class="page-kicker">Página 03 • Indicações selecionadas</div><h2>Indicações em preparação</h2><p class="lead">Este material já foi identificado no Supabase. A leitura automática tentará converter o PDF em indicações estruturadas para esta categoria e destino. Se o texto do PDF não estiver em padrão legível, será necessário revisar a conversão.</p><div class="page-footer">${getPartnerFooterHtml()}</div></section>`;
 
       const closingPageHtml = whiteLabel
         ? `
@@ -4114,14 +4186,14 @@
             <div class="closing-logo">${logoHtml}</div>
             <h2 class="closing-brand">${brandName}</h2>
             <p class="closing-text">
-              A melhor viagem é aquela que permite viver o destino com mais tranquilidade e menos dúvidas.
+              Obrigado por escolher a Curadoria Elite Travel Partner.
             </p>
             <p class="closing-highlight">Tenha uma excelente experiência.</p>
             <div class="closing-exclusive">
               <p><strong>Documento disponibilizado para clientes da ${brandName}.</strong></p>
               <p>Uso destinado ao apoio e orientação durante a viagem.</p>
             </div>
-            <div class="page-footer">© 2026 • ${brandName}</div>
+            <div class="page-footer">O seu mundo, bem indicado. • ${brandName}</div>
           </section>
         `
         : `
@@ -4130,7 +4202,7 @@
             <div class="closing-logo">${logoHtml}</div>
             <h2 class="closing-brand">${brandName}</h2>
             <p class="closing-text">
-              A melhor viagem é aquela que permite viver o destino com mais tranquilidade e menos dúvidas.
+              Obrigado por escolher a Curadoria Elite Travel Partner.
             </p>
             <p class="closing-highlight">Tenha uma excelente experiência.</p>
             <div class="closing-signature">
@@ -4143,7 +4215,7 @@
               <p><strong>Documento disponibilizado para clientes da ${brandName}.</strong></p>
               <p>Uso destinado ao apoio e orientação durante a viagem.</p>
             </div>
-            <div class="page-footer">© 2026 • ${brandName} • Curadoria Elite Travel Partner</div>
+            <div class="page-footer">O seu mundo, bem indicado. • ${brandName} • Curadoria Elite Travel Partner</div>
           </section>
         `;
 
@@ -4265,14 +4337,14 @@
 
     ${personalizedCoverHtml}
 
-    <div class="page-footer">${whiteLabel ? brandName : "Página 01 • Material Partner • Uso autorizado para clientes da empresa parceira"}</div>
+    <div class="page-footer">${getPartnerFooterHtml()}</div>
   </section>
 
   <section class="paper-page">
     <div class="page-kicker">Panorama da cidade</div>
     <h2>${city}</h2>
     <p class="lead">${businessContent.panorama}</p>
-    <div class="page-footer">${whiteLabel ? brandName : `Curadoria Elite Travel Partner • ${category}`}</div>
+    <div class="page-footer">${getPartnerFooterHtml()}</div>
   </section>
 
   ${indicationPages}
