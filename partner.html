@@ -1537,7 +1537,7 @@
           <div class="white-label-photos-panel" id="whiteLabelPhotosPanel" style="display:none;">
             <div class="white-label-photos-title">Fotos das indicações</div>
             <div class="white-label-photos-help">
-              No White Label, escolha a foto que deverá aparecer ao lado de cada indicação.
+              No White Label, a foto do material publicado já aparece automaticamente. Se quiser, você pode substituir individualmente uma ou mais fotos sem alterar a foto original.
             </div>
             <div id="whiteLabelPhotosList"></div>
           </div>
@@ -1661,10 +1661,9 @@
                   LOGO DA<br>EMPRESA
                 </div>
 
-                <div class="doc-brand" id="docBrand">
-                  Material apresentado por<br>
-                  <strong>Mastercard Concierge</strong><br>
-                  <span>em parceria com Curadoria Elite Travel</span>
+                <div class="doc-brand">
+                  Curadoria desenvolvida em parceria com<br>
+                  <strong>Curadoria Elite Travel</strong>
                 </div>
               </div>
 
@@ -3555,30 +3554,9 @@
       return `<div class="logo-placeholder">LOGO DA MARCA</div>`;
     }
 
-    function renderPartnerBrandHeader() {
-      const brandElement = document.getElementById("docBrand");
-      if (!brandElement) return;
-
-      const brandName = escapeHtml(getClientBrandName());
-
-      if (isWhiteLabelMode()) {
-        brandElement.innerHTML = `
-          Material apresentado por<br>
-          <strong>${brandName}</strong>
-        `;
-      } else {
-        brandElement.innerHTML = `
-          Material apresentado por<br>
-          <strong>${brandName}</strong><br>
-          <span>em parceria com Curadoria Elite Travel</span>
-        `;
-      }
-    }
-
     function syncPartnerBrandData() {
       partnerCompanyName = getPartnerCompanyName();
       clientBrandName = getClientBrandName();
-      renderPartnerBrandHeader();
 
       if (selectedMaterial) {
         renderBusinessContentPreview(selectedMaterial);
@@ -3594,6 +3572,52 @@
     function isWhiteLabelMode() {
       const input = document.getElementById("presentationModeInput");
       return Boolean(input && input.value === "whitelabel");
+    }
+
+    function getPublishedPhoto(material, index, item) {
+      // 1) Prefer a photo stored with the published structured item, when available.
+      if (item && typeof item === "object") {
+        const directCandidates = [
+          item.photo_url,
+          item.image_url,
+          item.photo,
+          item.image,
+          item.foto_url,
+          item.foto,
+          item.photo_data_url,
+          item.image_data_url
+        ];
+        for (const value of directCandidates) {
+          const photo = String(value || "").trim();
+          if (photo) return photo;
+        }
+      }
+
+      // 2) The current partner-publicacao workflow stores the reviewed photo
+      // in its material draft. Read that same prepared result instead of
+      // going back to the B2C PDF/acervo and re-identifying the image.
+      if (material) {
+        try {
+          const key = [
+            "cet_partner_draft_v2",
+            normalizeCategoryName(material.category),
+            String(material.city_label || "").trim(),
+            normalizeYear(material.year),
+            String(material.pdf_url || "").trim()
+          ].join("::");
+          const raw = localStorage.getItem(key);
+          if (raw) {
+            const draft = JSON.parse(raw);
+            const draftItem = Array.isArray(draft.items) ? draft.items[index] : null;
+            const photo = String(draftItem && draftItem.photoDataUrl || "").trim();
+            if (photo) return photo;
+          }
+        } catch (error) {
+          console.warn("Não foi possível ler a foto preparada no Partner-publicacao.", error);
+        }
+      }
+
+      return "";
     }
 
     function getWhiteLabelPhotoKey(material, index) {
@@ -3628,14 +3652,18 @@
       }
 
       list.innerHTML = items.map(function(item, index) {
-        const photo = getWhiteLabelPhoto(material, index);
+        const publishedPhoto = getPublishedPhoto(material, index, item);
+        const customPhoto = getWhiteLabelPhoto(material, index);
+        const photo = customPhoto || publishedPhoto;
         return `
           <div class="white-label-photo-row">
             <span class="white-label-photo-label">${formatBusinessNumber(index)} • ${escapeHtml(item.name || "Indicação")}</span>
             <div class="white-label-photo-preview">
-              ${photo ? `<img src="${photo}" alt="Foto de ${escapeHtml(item.name || "indicação")}">` : "Escolha a foto que será usada nesta indicação"}
+              ${photo ? `<img src="${photo}" alt="Foto de ${escapeHtml(item.name || "indicação")}">` : "Foto não disponível no material publicado"}
             </div>
+            <div class="white-label-photo-source">${customPhoto ? "Foto personalizada para este White Label" : "Foto do material publicado"}</div>
             <input class="white-label-photo-input" type="file" accept="image/*" data-white-label-photo-index="${index}">
+            ${customPhoto ? `<button class="btn white-label-photo-reset" type="button" data-white-label-photo-reset="${index}">Usar foto do material publicado</button>` : ""}
           </div>
         `;
       }).join("");
@@ -3653,6 +3681,16 @@
             renderBusinessContentPreview(material);
           };
           reader.readAsDataURL(file);
+        });
+      });
+
+      list.querySelectorAll("button[data-white-label-photo-reset]").forEach(function(button) {
+        button.addEventListener("click", function() {
+          const index = Number(button.dataset.whiteLabelPhotoReset);
+          if (!material || !Number.isInteger(index)) return;
+          delete whiteLabelPhotoData[getWhiteLabelPhotoKey(material, index)];
+          renderWhiteLabelPhotoFields(material);
+          renderBusinessContentPreview(material);
         });
       });
     }
@@ -3808,10 +3846,12 @@
 
     function renderBusinessItemCard(item, index) {
       const whiteLabel = isWhiteLabelMode();
-      const photo = whiteLabel && selectedMaterial ? getWhiteLabelPhoto(selectedMaterial, index) : "";
+      const publishedPhoto = selectedMaterial ? getPublishedPhoto(selectedMaterial, index, item) : "";
+      const customPhoto = whiteLabel && selectedMaterial ? getWhiteLabelPhoto(selectedMaterial, index) : "";
+      const photo = customPhoto || publishedPhoto;
       const photoHtml = photo
         ? `<img src="${photo}" alt="Foto de ${escapeHtml(item.name || "indicação")}">`
-        : `<span>${whiteLabel ? "Foto não selecionada" : "Foto do acervo"}</span>`;
+        : `<span>${whiteLabel ? "Foto não disponível no material publicado" : "Foto não disponível no material publicado"}</span>`;
 
       return `
         <div class="business-item-card">
@@ -4037,10 +4077,12 @@
                 <div class="items-grid">
                   ${itemsChunk.map(function(item, itemIndex) {
                     const index = firstItemIndex + itemIndex;
-                    const photo = whiteLabel ? getWhiteLabelPhoto(selectedMaterial, index) : "";
+                    const publishedPhoto = selectedMaterial ? getPublishedPhoto(selectedMaterial, index, item) : "";
+                    const customPhoto = whiteLabel ? getWhiteLabelPhoto(selectedMaterial, index) : "";
+                    const photo = customPhoto || publishedPhoto;
                     const photoHtml = photo
                       ? `<img src="${photo}" alt="Foto de ${escapeHtml(item.name || "indicação")}">`
-                      : `<span>${whiteLabel ? "Foto não selecionada" : "Foto do acervo"}</span>`;
+                      : `<span>${whiteLabel ? "Foto não disponível no material publicado" : "Foto não disponível no material publicado"}</span>`;
 
                     return `
                       <article class="printed-item-card">
@@ -4153,8 +4195,7 @@
     .partner-logo img { max-width: 220px; max-height: 110px; object-fit: contain; }
     .logo-placeholder { font-size: 23px; line-height: 1.05; font-weight: 950; letter-spacing: .5px; }
     .signature { text-align: right; font-size: 14px; line-height: 1.4; color: #222; }
-    .signature strong { display: block; margin-top: 6px; font-size: 17px; }
-    .signature span { display: block; margin-top: 4px; font-size: 12px; }
+    .signature strong { display: block; margin-top: 6px; }
     .eyebrow, .page-kicker {
       color: #9a7617; text-transform: uppercase; letter-spacing: 3px; font-size: 13px; font-weight: 900; margin-bottom: 18px; position: relative; z-index: 1;
     }
@@ -4209,18 +4250,17 @@
   <section class="paper-page">
     <div class="top">
       <div class="partner-logo">${logoHtml}</div>
-      ${whiteLabel
-        ? `<div class="signature">Material apresentado por<strong>${brandName}</strong></div>`
-        : `<div class="signature">Material apresentado por<strong>${brandName}</strong><span>em parceria com Curadoria Elite Travel</span></div>`}
+      ${whiteLabel ? "" : `<div class="signature">Curadoria desenvolvida em parceria com<strong>Curadoria Elite Travel</strong></div>`}
     </div>
 
     <div class="eyebrow">${whiteLabel ? "Material exclusivo" : "Versão Business Partner"}</div>
     <h1>${category.toUpperCase()}</h1>
     <div class="subtitle">${city} • ${whiteLabel ? "Material business" : "Material business"}${year ? " • " + year : ""}</div>
 
-    <div class="meta" style="grid-template-columns: repeat(2, 1fr);">
+    <div class="meta">
       <div><small>Categoria</small><strong>${category}</strong></div>
       <div><small>Destino</small><strong>${city}</strong></div>
+      <div><small>Formato</small><strong>${whiteLabel ? "White Label" : "Business clean"}</strong></div>
     </div>
 
     ${personalizedCoverHtml}
@@ -4352,8 +4392,6 @@
           </span>
         `;
       }
-
-      renderPartnerBrandHeader();
 
       if (selectedMaterial) {
         const businessPreviewText = document.getElementById("businessPreviewText");
