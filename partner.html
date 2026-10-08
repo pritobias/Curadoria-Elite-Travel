@@ -1463,7 +1463,9 @@
         font-size: 30px;
       }
     }
-  </style>
+  
+    .white-label-photo-source{margin-top:6px;color:rgba(255,255,255,.55);font-size:11px;line-height:1.35;}
+</style>
 </head>
 
 <body>
@@ -1537,7 +1539,7 @@
           <div class="white-label-photos-panel" id="whiteLabelPhotosPanel" style="display:none;">
             <div class="white-label-photos-title">Fotos das indicações</div>
             <div class="white-label-photos-help">
-              No White Label, a foto do material publicado já aparece automaticamente. Se quiser, você pode substituir individualmente uma ou mais fotos sem alterar a foto original.
+              No White Label, escolha a foto que deverá aparecer ao lado de cada indicação.
             </div>
             <div id="whiteLabelPhotosList"></div>
           </div>
@@ -1967,40 +1969,65 @@
       }
     }
 
-    async function loadMaterialsFromSupabase() {
-      setLoadingState(true, "Carregando materiais Partner do Supabase...");
+    async function loadMaterialsFromPublication() {
+      setLoadingState(true, "Carregando materiais publicados no Partner...");
 
       const { data, error } = await supabaseClient
-        .from("curadoria_materials")
-        .select("id, category, city_label, pdf_url, year")
+        .from("b2b_material_items")
+        .select("id, category, city_label, year, item_order, item_name, description, address, site, entry_price, panorama, is_active")
+        .eq("is_active", true)
         .order("category", { ascending: true })
-        .order("city_label", { ascending: true });
+        .order("city_label", { ascending: true })
+        .order("year", { ascending: false })
+        .order("item_order", { ascending: true });
 
       if (error) {
-        console.error("Erro ao carregar materiais:", error);
-        setLoadingState(true, "Não foi possível carregar os materiais. Verifique as permissões da tabela no Supabase.");
+        console.error("Erro ao carregar publicações Partner:", error);
+        setLoadingState(true, "Não foi possível carregar as publicações aprovadas. Verifique o acesso aos dados publicados pelo Partner-publicação.");
         return;
       }
 
-      allMaterials = (data || []).filter(function(item) {
-        return item.category && item.city_label && item.pdf_url;
+      const rows = Array.isArray(data) ? data : [];
+      const grouped = new Map();
+
+      rows.forEach(function(row) {
+        if (!row || !row.category || !row.city_label) return;
+        const category = normalizeCategoryName(row.category);
+        const city = String(row.city_label || "").trim();
+        const year = normalizeYearValue(row.year);
+        const key = `${category}||${city}||${year}`;
+
+        if (!grouped.has(key)) {
+          grouped.set(key, {
+            id: key,
+            category: category,
+            city_label: city,
+            year: year,
+            published: true,
+            item_count: 0
+          });
+        }
+
+        grouped.get(key).item_count += 1;
       });
 
-      if (!allMaterials.length) {
-        setLoadingState(true, "Nenhum material encontrado na tabela curadoria_materials.");
-        return;
-      }
+      allMaterials = Array.from(grouped.values());
 
       const dashboardMaterialsCount = document.getElementById("dashboardMaterialsCount");
       if (dashboardMaterialsCount) {
         dashboardMaterialsCount.textContent = String(allMaterials.length);
       }
 
+      if (!allMaterials.length) {
+        setLoadingState(true, "Nenhum material aprovado foi publicado pelo Partner-publicação ainda.");
+        return;
+      }
+
       setLoadingState(false);
       renderCategories();
 
       const firstCategory = getUniqueCategories()[0];
-      selectCategory(firstCategory);
+      if (firstCategory) selectCategory(firstCategory);
     }
 
     function getUniqueCategories() {
@@ -3243,6 +3270,61 @@
       return String(value || "").trim();
     }
 
+    // Compatibilidade interna: toda normalização de ano usa a mesma função.
+    function normalizeYear(value) {
+      return normalizeYearValue(value);
+    }
+
+
+    function getPublicationDraftPrefix(material) {
+      if (!material) return "";
+      return [
+        "cet_partner_draft_v2",
+        normalizeCategoryName(material.category),
+        String(material.city_label || "").trim(),
+        normalizeYearValue(material.year)
+      ].join("::") + "::";
+    }
+
+    function getPublicationDraft(material) {
+      const prefix = getPublicationDraftPrefix(material);
+      if (!prefix) return null;
+
+      try {
+        for (let index = 0; index < localStorage.length; index += 1) {
+          const key = localStorage.key(index);
+          if (!key || !key.startsWith(prefix)) continue;
+
+          const raw = localStorage.getItem(key);
+          if (!raw) continue;
+
+          const draft = JSON.parse(raw);
+          if (draft && draft.material) return draft;
+          if (draft && Array.isArray(draft.items)) return draft;
+        }
+      } catch (error) {
+        console.warn("Não foi possível ler a publicação salva pelo Partner-publicação.", error);
+      }
+
+      return null;
+    }
+
+    function getPublicationDraftItem(material, index) {
+      const draft = getPublicationDraft(material);
+      if (!draft || !Array.isArray(draft.items)) return null;
+      return draft.items[index] || null;
+    }
+
+    function getPublishedPhoto(material, index) {
+      const item = getPublicationDraftItem(material, index);
+      return item && item.photoDataUrl ? item.photoDataUrl : "";
+    }
+
+    function getPublishedPanorama(material) {
+      const draft = getPublicationDraft(material);
+      return draft && draft.panorama ? String(draft.panorama) : "";
+    }
+
     function buildStructuredBusinessContentFromRows(rows, material) {
       const orderedRows = (rows || [])
         .slice()
@@ -3277,58 +3359,61 @@
     }
 
     async function fetchStructuredBusinessContent(material) {
-      if (!material || !isPhotoSelectableMaterial(material)) {
+      if (!material) return null;
+
+      const normalizedCategory = normalizeCategoryName(material.category);
+      const cityLabel = String(material.city_label || "").trim();
+      const year = normalizeYearValue(material.year);
+      if (!cityLabel) return null;
+
+      let query = supabaseClient
+        .from("b2b_material_items")
+        .select("id, category, city_label, year, panorama, item_order, item_name, description, address, site, entry_price, is_active, version_id")
+        .eq("category", normalizedCategory)
+        .eq("city_label", cityLabel)
+        .eq("is_active", true)
+        .order("item_order", { ascending: true });
+
+      if (year) query = query.eq("year", year);
+
+      const { data, error } = await query;
+      if (error) {
+        console.warn("Não foi possível ler a publicação estruturada:", error);
         return null;
       }
 
-      const normalizedCategory = normalizeCategoryName(material.category);
-      const originalCategory = String(material.category || "").trim();
-      const cityLabel = String(material.city_label || "").trim();
-      const year = normalizeYearValue(material.year);
+      const rows = Array.isArray(data) ? data : [];
+      if (!rows.length) return null;
 
-      if (!cityLabel) return null;
+      const draft = getPublicationDraft(material);
+      const draftItems = draft && Array.isArray(draft.items) ? draft.items : [];
+      const draftPanorama = draft && draft.panorama ? String(draft.panorama) : "";
 
-      const categoryCandidates = [normalizedCategory, originalCategory]
-        .filter(Boolean)
-        .filter(function(value, index, array) {
-          return array.indexOf(value) === index;
-        });
+      const items = rows
+        .sort(function(a, b) { return Number(a.item_order || 0) - Number(b.item_order || 0); })
+        .map(function(row, index) {
+          const draftItem = draftItems[index] || {};
+          return {
+            name: cleanExtractedValue(row.item_name || draftItem.name || ""),
+            description: cleanBusinessDescriptionText(row.description || draftItem.description || "", []),
+            address: cleanExtractedValue(row.address || draftItem.address || ""),
+            site: normalizeSiteValue(row.site || draftItem.site || ""),
+            price: cleanExtractedValue(row.entry_price || draftItem.entry_price || draftItem.price || ""),
+            photoDataUrl: draftItem.photoDataUrl || "",
+            photoSource: draftItem.photoSource || ""
+          };
+        })
+        .filter(function(item) { return item.name && item.description; });
 
-      for (const categoryCandidate of categoryCandidates) {
-        let query = supabaseClient
-          .from("b2b_material_items")
-          .select("id, category, city_label, year, panorama, item_order, item_name, description, address, site, entry_price, is_active, version_id")
-          .eq("category", categoryCandidate)
-          .eq("city_label", cityLabel)
-          .eq("is_active", true)
-          .order("item_order", { ascending: true });
-
-        if (year) {
-          query = query.eq("year", year);
-        }
-
-        const { data, error } = await query;
-
-        if (error) {
-          console.warn("Não foi possível ler b2b_material_items:", error);
-          continue;
-        }
-
-        if (data && data.length) {
-          const structured = buildStructuredBusinessContentFromRows(data, material);
-          if (structured.items && structured.items.length) {
-            return structured;
-          }
-        }
-      }
-
-      return null;
+      return {
+        panorama: draftPanorama || String(rows[0].panorama || ""),
+        items: items
+      };
     }
 
+
     async function ensureBusinessContentLoaded(material) {
-      if (!material || !isPhotoSelectableMaterial(material) || !material.pdf_url) {
-        return getBusinessContentTemplate(material);
-      }
+      if (!material) return getBusinessContentTemplate(material);
 
       const cacheKey = getBusinessContentCacheKey(material);
 
@@ -3349,27 +3434,27 @@
             return structured;
           }
         } catch (error) {
-          console.warn("Não foi possível carregar itens estruturados do Supabase:", error);
+          console.warn("Não foi possível carregar a publicação estruturada:", error);
         }
 
-        try {
-          const fullText = await extractPdfTextFromUrl(material.pdf_url, 5, 9);
-          const extracted = parseAttractionsBusinessContent(fullText, material.city_label);
-
-          if (extracted && extracted.items && extracted.items.length) {
-            businessContentCache[cacheKey] = extracted;
-            return extracted;
-          }
-
-          const fallbackFullText = await extractPdfTextFromUrl(material.pdf_url, 1, 12);
-          const fallbackExtracted = parseAttractionsBusinessContent(fallbackFullText, material.city_label);
-
-          if (fallbackExtracted && fallbackExtracted.items && fallbackExtracted.items.length) {
-            businessContentCache[cacheKey] = fallbackExtracted;
-            return fallbackExtracted;
-          }
-        } catch (error) {
-          console.warn("Não foi possível extrair o PDF automaticamente:", error);
+        const draft = getPublicationDraft(material);
+        if (draft && Array.isArray(draft.items) && draft.items.length) {
+          const draftContent = {
+            panorama: draft.panorama || "",
+            items: draft.items.map(function(item) {
+              return {
+                name: cleanExtractedValue(item.name || item.item_name || ""),
+                description: cleanBusinessDescriptionText(item.description || "", []),
+                address: cleanExtractedValue(item.address || ""),
+                site: normalizeSiteValue(item.site || ""),
+                price: cleanExtractedValue(item.entry_price || item.price || ""),
+                photoDataUrl: item.photoDataUrl || "",
+                photoSource: item.photoSource || ""
+              };
+            }).filter(function(item) { return item.name && item.description; })
+          };
+          businessContentCache[cacheKey] = draftContent;
+          return draftContent;
         }
 
         const fallback = getBusinessContentTemplate(material);
@@ -3379,6 +3464,7 @@
 
       return businessContentLoading[cacheKey];
     }
+
 
     async function loadAndRenderBusinessContent(material) {
       if (!material || !isPhotoSelectableMaterial(material)) return;
@@ -3397,7 +3483,7 @@
           <section class="business-a4-page">
             <div class="business-page-kicker">Leitura do acervo Partner</div>
             <h5 class="business-page-title">Carregando versão business</h5>
-            <div class="business-city-text">Estamos verificando se este destino já possui itens estruturados no Supabase. Se não houver registros prontos, a ferramenta usará a leitura automática do PDF como apoio.</div>
+            <div class="business-city-text">Estamos carregando a publicação aprovada pelo Partner-publicação.</div>
             <div class="business-page-footer">Curadoria Elite Travel Partner</div>
           </section>
         `;
@@ -3421,10 +3507,26 @@
         return businessContentCache[cacheKey];
       }
 
-      const prepared = getPreparedPartnerContent(material);
-      if (prepared && prepared.items && prepared.items.length) {
-        businessContentCache[cacheKey] = prepared;
-        return prepared;
+      const draft = getPublicationDraft(material);
+      if (draft && Array.isArray(draft.items) && draft.items.length) {
+        const published = {
+          panorama: draft.panorama || "",
+          items: draft.items.map(function(item) {
+            return {
+              name: cleanExtractedValue(item.name || ""),
+              description: cleanBusinessDescriptionText(item.description || "", []),
+              address: cleanExtractedValue(item.address || ""),
+              site: normalizeSiteValue(item.site || ""),
+              price: cleanExtractedValue(item.entry_price || item.price || ""),
+              photoDataUrl: item.photoDataUrl || "",
+              photoSource: item.photoSource || ""
+            };
+          }).filter(function(item) { return item.name && item.description; })
+        };
+        if (published.items.length) {
+          businessContentCache[cacheKey] = published;
+          return published;
+        }
       }
 
       if (category === "Atrações Turísticas" && cityLower.includes("new york")) {
@@ -3580,127 +3682,13 @@
       return Boolean(input && input.value === "whitelabel");
     }
 
-    function getPartnerDraftKey(material) {
-      if (!material) return "";
-      return [
-        "cet_partner_draft_v2",
-        normalizeCategoryName(material.category),
-        String(material.city_label || "").trim(),
-        normalizeYear(material.year),
-        String(material.pdf_url || "").trim()
-      ].join("::");
-    }
-
-    function getPartnerDraft(material) {
-      const key = getPartnerDraftKey(material);
-      if (!key) return null;
-      try {
-        const raw = localStorage.getItem(key);
-        return raw ? JSON.parse(raw) : null;
-      } catch (error) {
-        console.warn("Não foi possível ler a publicação Partner preparada.", error);
-        return null;
-      }
-    }
-
-    function getPreparedPartnerContent(material) {
-      const draft = getPartnerDraft(material);
-      if (!draft || !Array.isArray(draft.items) || !draft.items.length) return null;
-
-      const items = draft.items
-        .filter(function(item) {
-          return item && item.name && item.description;
-        })
-        .map(function(item, index) {
-          return {
-            name: cleanExtractedValue(item.name),
-            description: cleanBusinessDescriptionText(item.description, []),
-            address: cleanExtractedValue(item.address || ""),
-            site: normalizeSiteValue(item.site || ""),
-            price: cleanExtractedValue(item.entry_price || item.price || ""),
-            photoDataUrl: String(item.photoDataUrl || "").trim(),
-            photoSource: String(item.photoSource || "").trim(),
-            item_order: index + 1
-          };
-        });
-
-      if (!items.length) return null;
-
-      const fallback = {
-        panorama: "",
-        items: items
-      };
-
-      return {
-        panorama: draft.panoramaSaved && draft.panorama
-          ? cleanExtractedValue(draft.panorama)
-          : fallback.panorama,
-        items: items
-      };
-    }
-
-    function getPartnerFooterHtml() {
-      const brandName = escapeHtml(getClientBrandName());
-      const partnerName = escapeHtml(getPartnerCompanyName());
-      if (isWhiteLabelMode()) {
-        return `Material elaborado por <strong>${brandName}</strong>`;
-      }
-      return `Material elaborado por <strong>${brandName}</strong> • em parceria com <strong>Curadoria Elite Travel</strong> • ${partnerName}`;
-    }
-
-    function getPartnerHeaderSignatureHtml() {
-      const brandName = escapeHtml(getClientBrandName());
-      if (isWhiteLabelMode()) {
-        return `<div class="signature">Material elaborado por<strong>${brandName}</strong></div>`;
-      }
-      return `<div class="signature">Material elaborado por<strong>${brandName}</strong><span>em parceria com Curadoria Elite Travel</span></div>`;
-    }
-
-    function getPublishedPhoto(material, index, item) {
-      if (item && typeof item === "object") {
-        const directCandidates = [
-          item.photoDataUrl,
-          item.photo_url,
-          item.image_url,
-          item.photo,
-          item.image,
-          item.foto_url,
-          item.foto,
-          item.photo_data_url,
-          item.image_data_url
-        ];
-        for (const value of directCandidates) {
-          const photo = String(value || "").trim();
-          if (photo) return photo;
-        }
-      }
-
-      const draft = getPartnerDraft(material);
-      if (!draft || !Array.isArray(draft.items)) return "";
-
-      // Primeiro tenta casar pelo nome. Isso evita perder a foto se a ordem
-      // dos registros do Supabase mudar em relação à publicação revisada.
-      const itemName = String(item && item.name || "").trim().toLowerCase();
-      let draftItem = itemName
-        ? draft.items.find(function(candidate) {
-            return String(candidate && candidate.name || "").trim().toLowerCase() === itemName;
-          })
-        : null;
-
-      if (!draftItem) {
-        draftItem = draft.items[index] || null;
-      }
-
-      return String(draftItem && draftItem.photoDataUrl || "").trim();
-    }
-
     function getWhiteLabelPhotoKey(material, index) {
       const materialKey = getBusinessContentCacheKey(material);
       return `${materialKey}::${index}`;
     }
 
     function getWhiteLabelPhoto(material, index) {
-      return whiteLabelPhotoData[getWhiteLabelPhotoKey(material, index)] || "";
+      return whiteLabelPhotoData[getWhiteLabelPhotoKey(material, index)] || getPublishedPhoto(material, index) || "";
     }
 
     function renderWhiteLabelPhotoFields(material) {
@@ -3726,18 +3714,15 @@
       }
 
       list.innerHTML = items.map(function(item, index) {
-        const publishedPhoto = getPublishedPhoto(material, index, item);
-        const customPhoto = getWhiteLabelPhoto(material, index);
-        const photo = customPhoto || publishedPhoto;
+        const photo = getWhiteLabelPhoto(material, index);
         return `
           <div class="white-label-photo-row">
             <span class="white-label-photo-label">${formatBusinessNumber(index)} • ${escapeHtml(item.name || "Indicação")}</span>
             <div class="white-label-photo-preview">
-              ${photo ? `<img src="${photo}" alt="Foto de ${escapeHtml(item.name || "indicação")}">` : "Foto não disponível no material publicado"}
+              ${photo ? `<img src="${photo}" alt="Foto de ${escapeHtml(item.name || "indicação")}">` : "Foto aprovada não disponível"}
             </div>
-            <div class="white-label-photo-source">${customPhoto ? "Foto personalizada para este White Label" : "Foto do material publicado"}</div>
+            <div class="white-label-photo-source">${photo ? "Foto da publicação aprovada. Você pode substituir somente neste White Label." : "Sem foto aprovada disponível."}</div>
             <input class="white-label-photo-input" type="file" accept="image/*" data-white-label-photo-index="${index}">
-            ${customPhoto ? `<button class="btn white-label-photo-reset" type="button" data-white-label-photo-reset="${index}">Usar foto do material publicado</button>` : ""}
           </div>
         `;
       }).join("");
@@ -3755,16 +3740,6 @@
             renderBusinessContentPreview(material);
           };
           reader.readAsDataURL(file);
-        });
-      });
-
-      list.querySelectorAll("button[data-white-label-photo-reset]").forEach(function(button) {
-        button.addEventListener("click", function() {
-          const index = Number(button.dataset.whiteLabelPhotoReset);
-          if (!material || !Number.isInteger(index)) return;
-          delete whiteLabelPhotoData[getWhiteLabelPhotoKey(material, index)];
-          renderWhiteLabelPhotoFields(material);
-          renderBusinessContentPreview(material);
         });
       });
     }
@@ -3868,14 +3843,14 @@
             <div class="business-closing-logo">${getBrandLogoHtml("inline")}</div>
             <h5 class="business-page-title" style="text-align:center;">${brandName}</h5>
             <div class="business-closing-text">
-              Obrigado por escolher a Curadoria Elite Travel Partner.<br><br>
+              A melhor viagem é aquela que permite viver o destino com mais tranquilidade e menos dúvidas.<br><br>
               <strong>Tenha uma excelente experiência.</strong>
             </div>
             <div class="business-closing-exclusive">
               <p><strong>Documento disponibilizado para clientes da ${brandName}.</strong></p>
               <p>Uso destinado ao apoio e orientação durante a viagem.</p>
             </div>
-            <div class="business-page-footer">O seu mundo, bem indicado. • ${brandName}</div>
+            <div class="business-page-footer">© 2026 • ${brandName}</div>
           </section>
         `;
       }
@@ -3899,7 +3874,7 @@
             <p><strong>Documento disponibilizado para clientes da ${brandName}.</strong></p>
             <p>Uso destinado ao apoio e orientação durante a viagem.</p>
           </div>
-          <div class="business-page-footer">O seu mundo, bem indicado. • ${brandName} • Curadoria Elite Travel Partner</div>
+          <div class="business-page-footer">© 2026 • ${brandName} • Curadoria Elite Travel Partner • Conta: ${partnerName}</div>
         </section>
       `;
     }
@@ -3920,12 +3895,12 @@
 
     function renderBusinessItemCard(item, index) {
       const whiteLabel = isWhiteLabelMode();
-      const publishedPhoto = selectedMaterial ? getPublishedPhoto(selectedMaterial, index, item) : "";
-      const customPhoto = whiteLabel && selectedMaterial ? getWhiteLabelPhoto(selectedMaterial, index) : "";
-      const photo = customPhoto || publishedPhoto;
+      const photo = whiteLabel && selectedMaterial
+        ? getWhiteLabelPhoto(selectedMaterial, index)
+        : (item.photoDataUrl || getPublishedPhoto(selectedMaterial, index) || "");
       const photoHtml = photo
         ? `<img src="${photo}" alt="Foto de ${escapeHtml(item.name || "indicação")}">`
-        : `<span>${whiteLabel ? "Foto não disponível no material publicado" : "Foto não disponível no material publicado"}</span>`;
+        : `<span>Foto aprovada não disponível</span>`;
 
       return `
         <div class="business-item-card">
@@ -4021,7 +3996,7 @@
           <div class="business-page-kicker">Página 02 • Panorama da cidade</div>
           <h5 class="business-page-title">${city}</h5>
           <div class="business-city-text">${content.panorama}</div>
-          <div class="business-page-footer">${getPartnerFooterHtml()}</div>
+          <div class="business-page-footer">Material Partner • ${category}</div>
         </section>
       `;
 
@@ -4032,8 +4007,8 @@
           <section class="business-a4-page">
             <div class="business-page-kicker">Página 03 • Indicações selecionadas</div>
             <h5 class="business-page-title">Indicações em preparação</h5>
-            <div class="business-city-text">Este material já foi identificado no Supabase. A leitura automática tentará converter o PDF em indicações estruturadas para esta categoria e destino. Se o texto do PDF não estiver em padrão legível, será necessário revisar a conversão.</div>
-            <div class="business-page-footer">${getPartnerFooterHtml()}</div>
+            <div class="business-city-text">Este destino ainda não possui uma publicação aprovada disponível para apresentação no Partner.</div>
+            <div class="business-page-footer">Material Partner • ${city}</div>
           </section>
           `,
           renderInlineClosingPage()
@@ -4056,7 +4031,7 @@
                 return renderBusinessItemCard(item, firstItemIndex + itemIndex);
               }).join("")}
             </div>
-            <div class="business-page-footer">${getPartnerFooterHtml()} • ${firstItemIndex + 1}–${firstItemIndex + itemsChunk.length} de ${content.items.length} indicações</div>
+            <div class="business-page-footer">${firstItemIndex + 1}–${firstItemIndex + itemsChunk.length} de ${content.items.length} indicações</div>
           </section>
         `;
       });
@@ -4151,12 +4126,10 @@
                 <div class="items-grid">
                   ${itemsChunk.map(function(item, itemIndex) {
                     const index = firstItemIndex + itemIndex;
-                    const publishedPhoto = selectedMaterial ? getPublishedPhoto(selectedMaterial, index, item) : "";
-                    const customPhoto = whiteLabel ? getWhiteLabelPhoto(selectedMaterial, index) : "";
-                    const photo = customPhoto || publishedPhoto;
+                    const photo = whiteLabel ? getWhiteLabelPhoto(selectedMaterial, index) : "";
                     const photoHtml = photo
                       ? `<img src="${photo}" alt="Foto de ${escapeHtml(item.name || "indicação")}">`
-                      : `<span>${whiteLabel ? "Foto não disponível no material publicado" : "Foto não disponível no material publicado"}</span>`;
+                      : `<span>${whiteLabel ? "Foto não selecionada" : "Foto do acervo"}</span>`;
 
                     return `
                       <article class="printed-item-card">
@@ -4173,11 +4146,13 @@
                     `;
                   }).join("")}
                 </div>
-                <div class="page-footer">${getPartnerFooterHtml()} • ${firstItemIndex + 1}–${firstItemIndex + itemsChunk.length} de ${businessContent.items.length} indicações</div>
+                <div class="page-footer">${whiteLabel
+                  ? `${firstItemIndex + 1}–${firstItemIndex + itemsChunk.length} de ${businessContent.items.length} indicações`
+                  : `${firstItemIndex + 1}–${firstItemIndex + itemsChunk.length} de ${businessContent.items.length} indicações • Curadoria Elite Travel Partner`}</div>
               </section>
             `;
           }).join("")
-        : `<section class="paper-page"><div class="page-kicker">Página 03 • Indicações selecionadas</div><h2>Indicações em preparação</h2><p class="lead">Este material já foi identificado no Supabase. A leitura automática tentará converter o PDF em indicações estruturadas para esta categoria e destino. Se o texto do PDF não estiver em padrão legível, será necessário revisar a conversão.</p><div class="page-footer">${getPartnerFooterHtml()}</div></section>`;
+        : `<section class="paper-page"><div class="page-kicker">Página 03 • Indicações selecionadas</div><h2>Indicações em preparação</h2><p class="lead">Este material já foi identificado no Supabase. A leitura automática tentará converter o PDF em indicações estruturadas para esta categoria e destino. Se o texto do PDF não estiver em padrão legível, será necessário revisar a conversão.</p><div class="page-footer">${whiteLabel ? brandName : "Curadoria Elite Travel Partner"}</div></section>`;
 
       const closingPageHtml = whiteLabel
         ? `
@@ -4186,14 +4161,14 @@
             <div class="closing-logo">${logoHtml}</div>
             <h2 class="closing-brand">${brandName}</h2>
             <p class="closing-text">
-              Obrigado por escolher a Curadoria Elite Travel Partner.
+              A melhor viagem é aquela que permite viver o destino com mais tranquilidade e menos dúvidas.
             </p>
             <p class="closing-highlight">Tenha uma excelente experiência.</p>
             <div class="closing-exclusive">
               <p><strong>Documento disponibilizado para clientes da ${brandName}.</strong></p>
               <p>Uso destinado ao apoio e orientação durante a viagem.</p>
             </div>
-            <div class="page-footer">O seu mundo, bem indicado. • ${brandName}</div>
+            <div class="page-footer">© 2026 • ${brandName}</div>
           </section>
         `
         : `
@@ -4202,7 +4177,7 @@
             <div class="closing-logo">${logoHtml}</div>
             <h2 class="closing-brand">${brandName}</h2>
             <p class="closing-text">
-              Obrigado por escolher a Curadoria Elite Travel Partner.
+              A melhor viagem é aquela que permite viver o destino com mais tranquilidade e menos dúvidas.
             </p>
             <p class="closing-highlight">Tenha uma excelente experiência.</p>
             <div class="closing-signature">
@@ -4215,7 +4190,7 @@
               <p><strong>Documento disponibilizado para clientes da ${brandName}.</strong></p>
               <p>Uso destinado ao apoio e orientação durante a viagem.</p>
             </div>
-            <div class="page-footer">O seu mundo, bem indicado. • ${brandName} • Curadoria Elite Travel Partner</div>
+            <div class="page-footer">© 2026 • ${brandName} • Curadoria Elite Travel Partner</div>
           </section>
         `;
 
@@ -4337,14 +4312,14 @@
 
     ${personalizedCoverHtml}
 
-    <div class="page-footer">${getPartnerFooterHtml()}</div>
+    <div class="page-footer">${whiteLabel ? brandName : "Página 01 • Material Partner • Uso autorizado para clientes da empresa parceira"}</div>
   </section>
 
   <section class="paper-page">
     <div class="page-kicker">Panorama da cidade</div>
     <h2>${city}</h2>
     <p class="lead">${businessContent.panorama}</p>
-    <div class="page-footer">${getPartnerFooterHtml()}</div>
+    <div class="page-footer">${whiteLabel ? brandName : `Curadoria Elite Travel Partner • ${category}`}</div>
   </section>
 
   ${indicationPages}
@@ -4517,7 +4492,7 @@
       reader.readAsDataURL(file);
     });
 
-    loadMaterialsFromSupabase();
+    loadMaterialsFromPublication();
   </script>
 </body>
 </html>
