@@ -1465,6 +1465,19 @@
     }
   
     .white-label-photo-source{margin-top:6px;color:rgba(255,255,255,.55);font-size:11px;line-height:1.35;}
+
+    [hidden]{display:none !important}
+    a.btn{text-decoration:none;display:inline-flex;align-items:center;justify-content:center}
+    button:disabled{opacity:.45;cursor:not-allowed}
+    .grid,.workspace,.preview-area,.viewer,.card{min-width:0}
+    #partnerLogin{max-width:560px;margin:0 auto}
+    #refreshMaterialsButton{margin-bottom:20px}
+    .business-a4-page{width:100%;flex:auto;transform:none}
+    .business-city-text,.business-item-copy p{white-space:pre-line;overflow-wrap:anywhere}
+    .business-a4-page .logo-placeholder{color:#111;font-weight:800;margin-bottom:20px}
+    .business-a4-page > img{max-width:180px;max-height:100px;object-fit:contain;margin-bottom:20px}
+    .business-item-photo img{object-fit:contain}
+    @media(max-width:680px){header{height:auto;padding:16px;flex-wrap:wrap;gap:12px}.business-item-card{grid-template-columns:1fr}.business-item-photo{width:100%;height:180px}.business-a4-page{padding:18px}.doc-title{overflow-wrap:anywhere}}
 </style>
 </head>
 
@@ -1479,8 +1492,8 @@
     </div>
 
     <div class="top-actions">
-      <button class="btn" type="button">Voltar ao site</button>
-      <button class="btn gold" type="button">Sair</button>
+      <a class="btn" href="index.html">Voltar ao site</a>
+      <button class="btn gold" id="partnerSignOut" type="button">Sair</button>
     </div>
   </header>
 
@@ -1495,7 +1508,17 @@
       </p>
     </section>
 
-    <section class="grid">
+    <section class="card" id="partnerLogin" hidden>
+      <h3>Entrar na Área Partner</h3>
+      <p class="sub">Use sua conta para consultar os materiais aprovados.</p>
+      <form id="partnerLoginForm">
+        <div class="form-group"><label for="partnerEmail">E-mail</label><input class="partner-input" id="partnerEmail" type="email" autocomplete="username" required></div>
+        <div class="form-group"><label for="partnerPassword">Senha</label><input class="partner-input" id="partnerPassword" type="password" autocomplete="current-password" required></div>
+        <button class="btn gold" id="partnerLoginButton" type="submit">Entrar</button>
+        <p class="sub" id="loginStatus" role="status" style="margin-top:16px"></p>
+      </form>
+    </section>
+    <section class="grid" hidden>
       <aside class="card">
         <h3>Perfil da empresa</h3>
         <p class="sub">Dados usados para personalizar os materiais Partner.</p>
@@ -1509,12 +1532,12 @@
         <div class="company-box">
           <div class="form-group">
             <label for="partnerCompanyInput">Empresa parceira</label>
-            <input class="partner-input" id="partnerCompanyInput" type="text" value="Ten Group Brasil" placeholder="Ex.: Ten Group Brasil" />
+            <input class="partner-input" id="partnerCompanyInput" type="text" value="" placeholder="Ex.: Ten Group Brasil" />
           </div>
 
           <div class="form-group">
             <label for="clientBrandInput">Marca apresentada ao cliente</label>
-            <input class="partner-input" id="clientBrandInput" type="text" value="Mastercard Concierge" placeholder="Ex.: Mastercard Concierge" />
+            <input class="partner-input" id="clientBrandInput" type="text" value="" placeholder="Ex.: Mastercard Concierge" />
           </div>
 
           <div class="form-group">
@@ -1539,19 +1562,19 @@
           <div class="white-label-photos-panel" id="whiteLabelPhotosPanel" style="display:none;">
             <div class="white-label-photos-title">Fotos das indicações</div>
             <div class="white-label-photos-help">
-              No White Label, escolha a foto que deverá aparecer ao lado de cada indicação.
+              As fotos aprovadas já estão disponíveis. Você pode substituí-las por Ctrl+V ou arquivo. As alterações valem para esta sessão e para o documento gerado; o original da CET é preservado.
             </div>
             <div id="whiteLabelPhotosList"></div>
           </div>
 
           <div class="field">
             <small>Status</small>
-            <strong>Partner ativo</strong>
+            <strong id="partnerSessionStatus">Verificando sessão</strong>
           </div>
 
           <div class="field">
             <small>Plano</small>
-            <strong>Partner Access</strong>
+            <strong>Não configurado</strong>
           </div>
 
           <div class="field">
@@ -1602,11 +1625,11 @@
               </div>
 
               <p class="client-delivery-note">
-                Envie a versão business personalizada diretamente para o cliente, sem precisar baixar o arquivo.
+                O envio automático ainda não está configurado. Salve como PDF e encaminhe pelo seu e-mail.
               </p>
 
               <div class="client-delivery-actions">
-                <button class="btn gold" id="sendClientEmailButton" type="button">Enviar por e-mail</button>
+                <button class="btn gold" id="sendClientEmailButton" type="button" disabled>Envio em configuração</button>
               </div>
             </div>
           </div>
@@ -1618,9 +1641,10 @@
         <p class="sub">Escolha uma categoria para visualizar os destinos disponíveis.</p>
 
         <div id="materialsLoading" class="loading-state">
-          Carregando materiais publicados pelo Partner-publicação...
+          Carregando materiais aprovados...
         </div>
 
+        <button class="btn" id="refreshMaterialsButton" type="button">Atualizar acervo</button>
         <div class="categories" id="categoriesContainer"></div>
 
         <div class="workspace">
@@ -1710,7 +1734,7 @@
               </div>
 
               <div class="doc-block partner-summary-block">
-                <h5>Seleção premium organizada</h5>
+                <h5>Seleção organizada</h5>
                 <p>
                   Material estruturado para envio direto ao cliente, com informações objetivas,
                   linguagem profissional e apresentação elegante.
@@ -1739,7 +1763,7 @@
 
             <div class="download-row">
               <button class="btn gold" id="downloadButton" type="button">
-                Baixar versão personalizada
+                Salvar como PDF / imprimir
               </button>
 
               <button class="btn" id="previewButton" type="button">
@@ -1753,33 +1777,32 @@
           <div class="partner-dashboard-header">
             <h3>Dashboard Partner</h3>
             <p>
-              Acompanhe o uso da empresa, os limites mensais de downloads e envios por e-mail, além do status do plano ativo.
-              Os valores de assinatura ficam na tela de contratação; aqui aparece apenas a operação da empresa logada.
+              Consulte o acervo aprovado e as janelas de impressão abertas nesta sessão. O plano, a renovação e os limites por empresa serão exibidos após a integração da assinatura.
             </p>
           </div>
 
           <div class="partner-dashboard-grid">
             <div class="partner-dashboard-card">
-              <small>Plano ativo</small>
-              <strong>Partner Access</strong>
-              <span>Status ativo</span>
+              <small>Plano</small>
+              <strong>Não configurado</strong>
+              <span>Assinatura ainda não integrada</span>
             </div>
 
             <div class="partner-dashboard-card">
-              <small>Downloads do mês</small>
-              <strong id="dashboardDownloadsCount">12 de 30</strong>
-              <span>Materiais baixados</span>
+              <small>Impressões nesta sessão</small>
+              <strong id="dashboardDownloadsCount">0</strong>
+              <span>Janelas de impressão abertas</span>
             </div>
 
             <div class="partner-dashboard-card">
               <small>Envios por e-mail</small>
-              <strong id="dashboardEmailsCount">0 de 100</strong>
+              <strong id="dashboardEmailsCount">Em configuração</strong>
               <span>Envio ao cliente</span>
             </div>
 
             <div class="partner-dashboard-card">
               <small>Renovação</small>
-              <strong>12/08/2026</strong>
+              <strong>Não configurada</strong>
               <span>Ciclo mensal</span>
             </div>
 
@@ -1792,23 +1815,23 @@
 
           <div class="fair-use">
             <strong>Política de uso profissional:</strong>
-            para garantir estabilidade e qualidade operacional da plataforma Partner,
-            o plano contempla uma capacidade mensal compatível com o uso profissional da empresa parceira.
+            materiais destinados aos clientes da empresa parceira. A assinatura e o controle de uso por empresa ainda serão integrados.
           </div>
-        </section>
         </section>
       </section>
     </section>
   </main>
 
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script>
+
 
     const ITEMS_PER_PAGE = 10;
     const MONTHLY_DOWNLOAD_LIMIT = 30;
     const MONTHLY_EMAIL_LIMIT = 100;
 
-    let monthlyDownloads = Number(localStorage.getItem("partnerMonthlyDownloads") || "12");
-    let monthlyEmailSends = Number(localStorage.getItem("partnerMonthlyEmailSends") || "0");
+    let monthlyDownloads = 0;
+    let monthlyEmailSends = 0;
 
     let allMaterials = [];
     let currentCategory = "";
@@ -1821,8 +1844,8 @@
     let businessPreviewPages = [];
     let businessPreviewPageIndex = 0;
     let partnerLogoDataUrl = "";
-    let partnerCompanyName = "Ten Group Brasil";
-    let clientBrandName = "Mastercard Concierge";
+    let partnerCompanyName = "";
+    let clientBrandName = "";
     const whiteLabelPhotoData = {};
     let clientPersonalization = {
       enabled: false,
@@ -1832,45 +1855,17 @@
     };
 
     function updatePartnerUsageDashboard() {
-      const downloadsCount = document.getElementById("dashboardDownloadsCount");
-      const emailsCount = document.getElementById("dashboardEmailsCount");
-
-      if (downloadsCount) {
-        downloadsCount.textContent = `${monthlyDownloads} de ${MONTHLY_DOWNLOAD_LIMIT}`;
-      }
-
-      if (emailsCount) {
-        emailsCount.textContent = `${monthlyEmailSends} de ${MONTHLY_EMAIL_LIMIT}`;
-      }
+      document.getElementById("dashboardDownloadsCount").textContent = String(monthlyDownloads);
+      document.getElementById("dashboardEmailsCount").textContent = "Em configuração";
     }
 
-    function isValidEmail(email) {
-      return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
-    }
 
     function registerPartnerDownload() {
-      if (monthlyDownloads >= MONTHLY_DOWNLOAD_LIMIT) {
-        alert("O limite mensal de downloads foi atingido para este ciclo.");
-        return false;
-      }
-
       monthlyDownloads += 1;
-      localStorage.setItem("partnerMonthlyDownloads", String(monthlyDownloads));
       updatePartnerUsageDashboard();
       return true;
     }
 
-    function registerPartnerEmailSend() {
-      if (monthlyEmailSends >= MONTHLY_EMAIL_LIMIT) {
-        alert("O limite mensal de envios por e-mail foi atingido para este ciclo.");
-        return false;
-      }
-
-      monthlyEmailSends += 1;
-      localStorage.setItem("partnerMonthlyEmailSends", String(monthlyEmailSends));
-      updatePartnerUsageDashboard();
-      return true;
-    }
 
     const categoryVisuals = {
       "City Guide": {
@@ -1942,7 +1937,7 @@
     }
 
     function getMaterialKey(material) {
-      return String(material.id || `${material.category}-${material.city_label}-${material.pdf_url}`);
+      return String(material.id || `${material.category}-${escapeHtml(material.city_label)}-${material.pdf_url}`);
     }
 
     function setLoadingState(isLoading, message) {
@@ -1958,84 +1953,43 @@
       }
     }
 
-    function getPublicationMaterialsFromLocalStorage() {
-      const materials = new Map();
-      const prefix = "cet_partner_draft_v2::";
-
-      for (let index = 0; index < localStorage.length; index += 1) {
-        const key = localStorage.key(index);
-        if (!key || !key.startsWith(prefix)) continue;
-
-        try {
-          const raw = localStorage.getItem(key);
-          if (!raw) continue;
-          const draft = JSON.parse(raw);
-          if (!draft || !draft.material) continue;
-
-          const material = draft.material;
-          const category = normalizeCategoryName(material.category);
-          const city = String(material.city_label || "").trim();
-          const year = normalizeYearValue(material.year);
-          const items = Array.isArray(draft.items) ? draft.items : [];
-
-          // O Partner só enxerga materiais que já passaram pelo fluxo de revisão.
-          // A publicação grava panorama e itens no mesmo draft, portanto esse
-          // draft é a fonte operacional do partner.html.
-          const hasPublishedContent = !!(
-            draft.panoramaSaved ||
-            items.some(function(item) { return item && item.saved === true; }) ||
-            draft.published_at
-          );
-
-          if (!category || !city || !year || !hasPublishedContent) continue;
-
-          const identity = `${category}||${city}||${year}`;
-          const existing = materials.get(identity);
-          if (!existing || String(draft.saved_at || "") > String(existing.saved_at || "")) {
-            materials.set(identity, {
-              id: identity,
-              category: category,
-              city_label: city,
-              year: year,
-              published: !!draft.published_at,
-              saved_at: draft.saved_at || "",
-              pdf_url: material.pdf_url || "",
-              item_count: items.length
-            });
-          }
-        } catch (error) {
-          console.warn("Rascunho do Partner-publicação ignorado:", error);
-        }
-      }
-
-      return Array.from(materials.values());
-    }
 
     async function loadMaterialsFromPublication() {
-      setLoadingState(true, "Carregando materiais publicados pelo Partner-publicação...");
-
+      setLoadingState(true, "Carregando materiais aprovados...");
+      clearMaterialSelection();
+      allMaterials = [];
+      renderCategories();
+      currentCategoryMaterials = []; filteredMaterials = []; renderDestinationsPage();
       try {
-        allMaterials = getPublicationMaterialsFromLocalStorage();
-
-        const dashboardMaterialsCount = document.getElementById("dashboardMaterialsCount");
-        if (dashboardMaterialsCount) {
-          dashboardMaterialsCount.textContent = String(allMaterials.length);
+        const rows = [];
+        for (let offset = 0; ; offset += 500) {
+          const { data, error } = await supabaseClient.from("b2b_material_versions")
+            .select("id, source_material_id, category, city_label, year, panorama, updated_at, status, is_ready, is_active")
+            .eq("status", "published").eq("is_ready", true).eq("is_active", true)
+            .order("id", { ascending: false }).range(offset, offset + 499);
+          if (error) throw error;
+          rows.push(...(data || []));
+          if (!data || data.length < 500) break;
         }
-
+        const latest = new Map();
+        rows.forEach(row => {
+          if (row.status !== "published" || row.is_ready !== true || row.is_active !== true) return;
+          const key = row.source_material_id != null ? "source:" + row.source_material_id
+            : [row.category, row.city_label, row.year].join("||");
+          if (!latest.has(key)) latest.set(key, {...row, category: normalizeCategoryName(row.category)});
+        });
+        allMaterials = Array.from(latest.values());
+        document.getElementById("dashboardMaterialsCount").textContent = String(allMaterials.length);
+        renderCategories();
         if (!allMaterials.length) {
-          setLoadingState(true, "Nenhum material revisado foi salvo pelo Partner-publicação neste navegador.");
-          renderCategories();
+          setLoadingState(true, "Nenhum material aprovado está disponível para esta conta.");
           return;
         }
-
         setLoadingState(false);
-        renderCategories();
-
-        const firstCategory = getUniqueCategories()[0];
-        if (firstCategory) selectCategory(firstCategory);
+        selectCategory(getUniqueCategories()[0]);
       } catch (error) {
-        console.error("Erro ao carregar publicações salvas:", error);
-        setLoadingState(true, "Não foi possível ler as publicações salvas pelo Partner-publicação.");
+        document.getElementById("dashboardMaterialsCount").textContent = "--";
+        setLoadingState(true, "Não foi possível carregar o acervo aprovado: " + (error.message || error));
       }
     }
 
@@ -2079,8 +2033,8 @@
         card.innerHTML = `
           <div class="category-img" style="background-image: url('${visual.image}');"></div>
           <div class="category-body">
-            <h4>${category}</h4>
-            <p>${visual.description}</p>
+            <h4>${escapeHtml(category)}</h4>
+            <p>${escapeHtml(visual.description)}</p>
           </div>
         `;
 
@@ -2126,7 +2080,7 @@
 
       if (filteredMaterials.length) {
         selectMaterial(filteredMaterials[0]);
-      }
+      } else { clearMaterialSelection(); }
     }
 
     function filterDestinations() {
@@ -2143,7 +2097,7 @@
 
       if (filteredMaterials.length) {
         selectMaterial(filteredMaterials[0]);
-      }
+      } else { clearMaterialSelection(); }
     }
 
     function renderDestinationsPage() {
@@ -2191,12 +2145,12 @@
           const materialKey = getMaterialKey(material);
           const selectedKey = selectedMaterial ? getMaterialKey(selectedMaterial) : "";
 
-          item.className = "list-item" + (materialKey === selectedKey || index === 0 ? " active" : "");
+          item.className = "list-item" + (materialKey === selectedKey ? " active" : "");
           item.dataset.materialKey = materialKey;
 
           item.innerHTML = `
-            <strong>${material.city_label}</strong>
-            <span>Disponível para personalização${material.year ? " • " + material.year : ""}</span>
+            <strong>${escapeHtml(material.city_label)}</strong>
+            <span>Disponível para personalização${material.year ? " • " + escapeHtml(material.year) : ""}</span>
             <div class="status">Disponível</div>
           `;
 
@@ -2255,1024 +2209,7 @@
     }
 
     function getBusinessContentCacheKey(material) {
-      return String(material && (material.id || `${material.category}-${material.city_label}-${material.pdf_url}`));
-    }
-
-    function normalizeExtractedPdfText(text) {
-      return String(text || "")
-        .replace(/\r/g, "\n")
-        .replace(/[ \t]+/g, " ")
-        .replace(/\n{3,}/g, "\n\n")
-        .trim();
-    }
-
-    function cleanExtractedValue(value) {
-      return String(value || "")
-        .replace(/\s+/g, " ")
-        .replace(/\s+([,.;:])/g, "$1")
-        .replace(/\bGratuit\b/gi, "Gratuita")
-        .trim();
-    }
-
-    function groupPdfTextItemsByRows(textItems) {
-      const rows = [];
-
-      textItems
-        .filter(function(item) {
-          return item && String(item.str || "").trim();
-        })
-        .map(function(item) {
-          const transform = item.transform || [1, 0, 0, 1, 0, 0];
-          return {
-            text: String(item.str || "").trim(),
-            x: transform[4] || 0,
-            y: transform[5] || 0
-          };
-        })
-        .sort(function(a, b) {
-          if (Math.abs(b.y - a.y) > 4) return b.y - a.y;
-          return a.x - b.x;
-        })
-        .forEach(function(item) {
-          const lastRow = rows[rows.length - 1];
-
-          if (!lastRow || Math.abs(lastRow.y - item.y) > 4) {
-            rows.push({ y: item.y, items: [item] });
-          } else {
-            lastRow.items.push(item);
-          }
-        });
-
-      return rows.map(function(row) {
-        return row.items
-          .sort(function(a, b) { return a.x - b.x; })
-          .map(function(item) { return item.text; })
-          .join(" ")
-          .replace(/\s+/g, " ")
-          .trim();
-      }).filter(Boolean);
-    }
-
-    async function extractPdfTextFromUrl(pdfUrl, pageStart, pageEnd) {
-      if (!window.pdfjsLib) {
-        throw new Error("PDF.js não foi carregado.");
-      }
-
-      const loadingTask = pdfjsLib.getDocument({
-        url: pdfUrl,
-        withCredentials: false,
-        disableAutoFetch: false,
-        disableStream: false
-      });
-
-      const pdf = await loadingTask.promise;
-      const firstPage = Math.max(1, pageStart || 1);
-      const lastPage = Math.min(pdf.numPages, pageEnd || pdf.numPages);
-      const pages = [];
-
-      for (let pageNumber = firstPage; pageNumber <= lastPage; pageNumber += 1) {
-        const page = await pdf.getPage(pageNumber);
-        const textContent = await page.getTextContent();
-        const rows = groupPdfTextItemsByRows(textContent.items || []);
-        pages.push(rows.join("\n"));
-      }
-
-      return normalizeExtractedPdfText(pages.join("\n\n"));
-    }
-
-    function extractPanoramaFromText(text, city) {
-      const cleaned = normalizeExtractedPdfText(text);
-      const cityName = cleanExtractedValue(String(city || "").split(" - ")[0]);
-
-      function cleanPanoramaCandidate(candidate) {
-        let value = cleanExtractedValue(candidate)
-          .replace(/Cart[aã]o Postal Vivo/gi, "")
-          .replace(/A Arte dos Destinos/gi, "")
-          .replace(/Lugares que inspiram\s+olhares,?\s+momentos que\s+conquistam cora[cç][õo]es/gi, "")
-          .replace(/Lugares que inspiram/gi, "")
-          .replace(/olhares,?\s+momentos que/gi, "")
-          .replace(/conquistam cora[cç][õo]es/gi, "")
-          .trim();
-
-        if (cityName) {
-          const cityIndex = value.toLowerCase().indexOf(cityName.toLowerCase());
-          if (cityIndex >= 0) {
-            value = value.slice(cityIndex).trim();
-          }
-        }
-
-        value = value
-          .split(/(?:\b(?:Descri[cç][aã]o\s*:|Endere[cç]o\s*:|Site\s*:|Entrada\s*:|SAGRADA FAM[IÍ]LIA|PARK G[ÜU]ELL|CASA BATLL[ÓO]|LA PEDRERA|BAIRRO G[ÓO]TICO)\b|PONTOS\s+TUR[IÍ]STICOS?|PONTOS\s+TURISTICOS?|CURADORIA\s+ELITE\s+TRAVEL|Mais que paisagens|Porque o verdadeiro destino|Lugares que inspiram)/i)[0]
-          .trim();
-
-        return cleanExtractedValue(value);
-      }
-
-      const beforeFirstDescription = cleaned.split(/Descri[cç][aã]o\s*:/i)[0] || cleaned;
-      const lines = beforeFirstDescription
-        .split("\n")
-        .map(cleanExtractedValue)
-        .filter(Boolean);
-
-      if (cityName) {
-        const startIndex = lines.findIndex(function(line) {
-          return line.toLowerCase().includes(cityName.toLowerCase()) &&
-            !/^\s*(?:categoria|destino|material|www|atra[cç][õo]es|pontos)/i.test(line);
-        });
-
-        if (startIndex >= 0) {
-          const collected = [];
-
-          for (let index = startIndex; index < lines.length; index += 1) {
-            const line = lines[index];
-
-            if (/^\s*(?:CURADORIA|ELITE TRAVEL|PONTOS TUR|Descri[cç][aã]o\s*:|Endere[cç]o\s*:|Site\s*:|Entrada\s*:)/i.test(line)) {
-              break;
-            }
-
-            if (/^(?:Lugares que inspiram|olhares,? momentos|conquistam cora[cç][õo]es)$/i.test(line)) {
-              continue;
-            }
-
-            collected.push(line);
-          }
-
-          const panorama = cleanPanoramaCandidate(collected.join(" "));
-          if (panorama.length > 120) {
-            return panorama;
-          }
-        }
-      }
-
-      const panoramaMatch = cleaned.match(/(?:Cart[aã]o Postal Vivo|A Arte dos Destinos|panorama(?: da cidade)?|intro|introdução)\s+([\s\S]{120,1600}?)(?=\n\s*(?:Descri[cç][aã]o\s*:|Endere[cç]o\s*:|Site\s*:|Entrada\s*:))/i);
-
-      if (panoramaMatch && panoramaMatch[1]) {
-        const panorama = cleanPanoramaCandidate(panoramaMatch[1]);
-        if (panorama.length > 120) {
-          return panorama;
-        }
-      }
-
-      const paragraphs = cleaned
-        .split(/\n{2,}/)
-        .map(function(paragraph) { return cleanPanoramaCandidate(paragraph); })
-        .filter(function(paragraph) {
-          return paragraph.length > 160 &&
-            !/^(nome|descrição|endereço|site|entrada|indicações|www\.|https?:\/\/)/i.test(paragraph) &&
-            !/curadoria elite travel/i.test(paragraph) &&
-            !/^um brinde/i.test(paragraph) &&
-            !/^seu guia/i.test(paragraph);
-        });
-
-      return paragraphs[0] || `${city || "O destino selecionado"} reúne experiências selecionadas com foco em praticidade, clareza e orientação profissional para apoiar empresas parceiras no atendimento aos seus clientes.`;
-    }
-
-    function isLikelyAttractionName(line) {
-      const value = cleanExtractedValue(line)
-        .replace(/^(nome\s*:\s*)/i, "")
-        .trim();
-
-      if (!value || value.length < 4 || value.length > 90) return false;
-      if (isInvalidAttractionNameCandidate(value)) return false;
-      if (/^(descri[cç][aã]o|endere[cç]o|site|entrada|p[áa]gina|curadoria|elite travel|travel|pontos tur[ií]sticos|atra[cç][õo]es tur[ií]sticas|porque|mais que|cada p[áa]gina|by curadoria|www\.|https?:)/i.test(value)) return false;
-      if (/\d{2,}|@|\.com|curadoriaelitetravel|instagram|linkedin/i.test(value)) return false;
-      if (/[.!?]$/.test(value)) return false;
-
-      const letters = value.replace(/[^A-Za-zÀ-ÿ]/g, "");
-      if (!letters) return false;
-
-      const upperLetters = letters.replace(/[a-zà-ÿ]/g, "").length;
-      return upperLetters / letters.length > 0.62;
-    }
-
-    function cleanAttractionsExtractionText(text) {
-      return normalizeExtractedPdfText(text)
-        .split("\n")
-        .map(cleanExtractedValue)
-        .filter(function(line) {
-          return line &&
-            !/curadoria\s*elite\s*travel/i.test(line) &&
-            !/@curadoriaelitetravel/i.test(line) &&
-            !/^o seu mundo/i.test(line) &&
-            !/^pontos tur[ií]sticos$/i.test(line) &&
-            !/^pontos tur[ií]stiicos$/i.test(line) &&
-            !/^atra[cç][õo]es tur[ií]sticas$/i.test(line) &&
-            !/^by curadoria/i.test(line) &&
-            !/^www\.?\s*curadoria/i.test(line) &&
-            !/porque o verdadeiro destino/i.test(line) &&
-            !/mais que paisagens/i.test(line) &&
-            !/cada p[áa]gina foi pensada/i.test(line) &&
-            !/agrade[cç]o sua confian[cç]a/i.test(line) &&
-            !/que nossos caminhos/i.test(line) &&
-            !/^lugares que inspiram/i.test(line) &&
-            !/^olhares,? momentos/i.test(line) &&
-            !/^conquistam cora[cç][õo]es/i.test(line);
-        })
-        .join("\n");
-    }
-
-    function normalizeForSearch(value) {
-      return cleanExtractedValue(value)
-        .normalize("NFD")
-        .replace(/[\u0300-\u036f]/g, "")
-        .toUpperCase();
-    }
-
-    function isInvalidAttractionNameCandidate(value) {
-      const text = cleanExtractedValue(value);
-      const normalized = normalizeForSearch(text);
-
-      if (!text || !normalized) return true;
-      if (/^INDICACAO\s*\d+$/.test(normalized)) return true;
-      if (/^(I|II|III|IV|V|VI|VII|VIII|IX|X|XI|XII|XIII|XIV|XV|XVI|XVII|XVIII|XIX|XX|XXI|XXII|XXIII|XXIV|XXV|XXVI|XXVII|XXVIII|XXIX|XXX)$/.test(normalized)) return true;
-      if (/^SECULO\s+(I|V|X|L|C|D|M)+$/.test(normalized)) return true;
-      if (/^(US|R|ARS|EUR|BRL|USD|MXN)$/.test(normalized)) return true;
-      if (/^(GRATUITA|GRATUITO|GRATUIT|ENTRADA|SITE|ENDERECO|ENDEREÇO)$/.test(normalized)) return true;
-
-      return false;
-    }
-
-    function getKnownAttractionNamesForCity(city) {
-      const normalizedCity = normalizeForSearch(city || "");
-
-      if (normalizedCity.includes("BARCELONA")) {
-        return [
-          "SAGRADA FAMÍLIA",
-          "PARK GÜELL",
-          "CASA BATLLÓ",
-          "LA PEDRERA (CASA MILÀ)",
-          "BAIRRO GÓTICO",
-          "MERCADO DE LA BOQUERIA",
-          "MUSEU PICASSO",
-          "FONTE MÁGICA DE MONTJUÏC",
-          "BUNKERS DEL CARMEL",
-          "RECINTO MODERNISTA DE SANT PAU",
-          "LABERINT D'HORTA",
-          "FABRA I COATS"
-        ];
-      }
-
-      if (normalizedCity.includes("NEW YORK") || normalizedCity.includes("NOVA YORK")) {
-        return [
-          "EMPIRE STATE BUILDING",
-          "ESTÁTUA DA LIBERDADE",
-          "METROPOLITAN MUSEUM OF ART (THE MET)",
-          "TOP OF THE ROCK",
-          "CENTRAL PARK ZOO",
-          "BROOKLYN BRIDGE",
-          "SUMMIT ONE VANDERBILT",
-          "LITTLE ISLAND",
-          "THE MET CLOISTERS",
-          "THE VESSEL",
-          "ROOSEVELT ISLAND TRAMWAY",
-          "THE HIGH LINE"
-        ];
-      }
-
-      if (normalizedCity.includes("PARIS")) {
-        return [
-          "TORRE EIFFEL",
-          "MUSEU DO LOUVRE",
-          "ARCO DO TRIUNFO",
-          "SACRÉ-CŒUR",
-          "MUSEU D'ORSAY",
-          "CATEDRAL DE NOTRE-DAME",
-          "SAINTE-CHAPELLE",
-          "PANTEÃO",
-          "ATELIER DES LUMIÈRES",
-          "CANAL SAINT-MARTIN",
-          "MUSÉE DE LA CHASSE",
-          "LA PETITE CEINTURE"
-        ];
-      }
-
-      return [];
-    }
-
-    function extractKnownNamesInConfiguredOrder(text, city) {
-      const knownNames = getKnownAttractionNamesForCity(city);
-      if (!knownNames.length) return [];
-
-      const normalizedText = normalizeForSearch(text);
-
-      return knownNames.filter(function(name) {
-        return normalizedText.includes(normalizeForSearch(name));
-      });
-    }
-
-    function extractCandidateNamesInTextOrder(text) {
-      const names = [];
-
-      cleanAttractionsExtractionText(text)
-        .split("\n")
-        .map(cleanExtractedValue)
-        .filter(Boolean)
-        .forEach(function(line) {
-          if (!isLikelyAttractionName(line)) return;
-          const name = line.replace(/^nome\s*:\s*/i, "");
-          if (!names.includes(name)) names.push(name);
-        });
-
-      return names;
-    }
-
-    function removeTrailingAttractionNamesFromField(value, knownNames) {
-      let text = cleanExtractedValue(value);
-      if (!text) return "";
-
-      const namesToRemove = (knownNames || []).slice().sort(function(a, b) {
-        return b.length - a.length;
-      });
-
-      namesToRemove.forEach(function(name) {
-        const escaped = name.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-        text = text.replace(new RegExp("\\s*" + escaped + "\\s*", "gi"), " ");
-      });
-
-      return cleanExtractedValue(text)
-        .replace(/\s*(?:CURADORIA|ELITE|TRAVEL|PONTOS TURISTICOS|PONTOS TURÍSTICOS).*$/i, "")
-        .trim();
-    }
-
-    function normalizeSiteValue(value) {
-      return cleanExtractedValue(value)
-        .replace(/\s+/g, "")
-        .replace(/https:\/\/https:\/\//gi, "https://")
-        .replace(/http:\/\/http:\/\//gi, "http://")
-        .replace(/visite\s*s-guiadas/i, "visites-guiades");
-    }
-
-    function splitEntryPriceAndTrailingText(value, knownNames) {
-      const text = cleanExtractedValue(value);
-      if (!text) return { price: "", trailingText: "" };
-
-      const pricePattern = /(a partir de\s*(?:US\$|R\$|€)?\s*[\d.,]+(?:\s*\([^)]*\))?|gratuita?|entrada gratuita|sob consulta)/i;
-      const match = text.match(pricePattern);
-
-      if (!match) {
-        return {
-          price: removeTrailingAttractionNamesFromField(text, knownNames),
-          trailingText: ""
-        };
-      }
-
-      return {
-        price: cleanExtractedValue(match[1]),
-        trailingText: removeTrailingAttractionNamesFromField(text.slice(match.index + match[1].length), knownNames)
-      };
-    }
-
-    function parseDescriptionSegments(text) {
-      return cleanAttractionsExtractionText(text)
-        .replace(/https:\s*\/\//gi, "https://")
-        .replace(/http:\s*\/\//gi, "http://")
-        .split(/(?=Descri[cç][aã]o\s*:)/i)
-        .filter(function(segment) {
-          return /^Descri[cç][aã]o\s*:/i.test(segment.trim());
-        })
-        .map(function(segment) {
-          return segment
-            .split(/(?=\n\s*(?:Cada p[aá]gina|É um prazer|Agrade[cç]o|Porque acreditamos|By Curadoria|ATRAÇÕES TURÍSTICAS|CURADORIA\s+ELITE))/i)[0];
-        });
-    }
-
-    function parseAttractionDetailsFromSegment(segment, knownNames) {
-      const block = normalizeExtractedPdfText(segment)
-        .replace(/https:\s*\/\//gi, "https://")
-        .replace(/http:\s*\/\//gi, "http://");
-
-      const descriptionMatch = block.match(/Descri[cç][aã]o\s*:\s*([\s\S]*?)(?=(?:\s|\n)*Endere[cç]o\s*:|$)/i);
-      const addressMatch = block.match(/Endere[cç]o\s*:\s*([\s\S]*?)(?=(?:\s|\n)*Site\s*:|(?:\s|\n)*Entrada\s*:|$)/i);
-      const siteMatch = block.match(/Site\s*:\s*([\s\S]*?)(?=(?:\s|\n)*Entrada\s*:|$)/i);
-      const entryMatch = block.match(/Entrada\s*:\s*([\s\S]*?)$/i);
-      const entryParts = splitEntryPriceAndTrailingText(entryMatch ? entryMatch[1] : "", knownNames);
-
-      return {
-        description: removeTrailingAttractionNamesFromField(descriptionMatch ? descriptionMatch[1] : "", knownNames),
-        address: removeTrailingAttractionNamesFromField(addressMatch ? addressMatch[1] : "", knownNames),
-        site: normalizeSiteValue(removeTrailingAttractionNamesFromField(siteMatch ? siteMatch[1] : "", knownNames)),
-        price: entryParts.price
-      };
-    }
-
-    function findKnownAttractionNameInSegment(segment, knownNames, usedNames) {
-      const normalizedSegment = normalizeForSearch(segment);
-      const used = usedNames || [];
-
-      const matches = (knownNames || [])
-        .filter(function(name) {
-          return normalizedSegment.includes(normalizeForSearch(name)) && !used.includes(name);
-        })
-        .sort(function(a, b) {
-          return normalizedSegment.indexOf(normalizeForSearch(a)) - normalizedSegment.indexOf(normalizeForSearch(b));
-        });
-
-      return matches[0] || "";
-    }
-
-    function findCandidateNameInSegment(segment, candidateNames, usedNames) {
-      const normalizedSegment = normalizeForSearch(segment);
-      const used = usedNames || [];
-
-      return (candidateNames || []).find(function(name) {
-        return !used.includes(name) && normalizedSegment.includes(normalizeForSearch(name));
-      }) || "";
-    }
-
-    function getNextUnusedName(names, usedNames) {
-      return (names || []).find(function(name) {
-        return name && !(usedNames || []).includes(name);
-      }) || "";
-    }
-
-
-
-    function extractEmbeddedAttractionNameFromDescription(description, configuredNames, fallbackNames) {
-      const candidate = getTitleRepairCandidateFromDescription(description);
-      const allowedNames = (configuredNames || []).concat(fallbackNames || []).filter(Boolean);
-
-      if (!candidate) return "";
-
-      if (!allowedNames.length) {
-        return candidate;
-      }
-
-      const exactAllowed = allowedNames.find(function(name) {
-        return normalizeForSearch(name) === normalizeForSearch(candidate);
-      });
-
-      return exactAllowed || candidate;
-    }
-    function removeEmbeddedAttractionNameFromDescription(description, embeddedName) {
-      let text = cleanExtractedValue(description);
-      if (!text || !embeddedName) return text;
-
-      const escaped = embeddedName.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-      text = text.replace(new RegExp("\\s*" + escaped + "\\s*", "gi"), " ");
-      return cleanExtractedValue(text);
-    }
-
-    function getAttractionNameBeforeDescription(lines, descriptionIndex, usedNames) {
-      const used = usedNames || [];
-      const startIndex = Math.max(0, descriptionIndex - 6);
-      const currentLineBeforeDescription = cleanExtractedValue(String(lines[descriptionIndex] || "").split(/Descri[cç][aã]o\s*:/i)[0] || "")
-        .replace(/^nome\s*:\s*/i, "")
-        .trim();
-
-      if (currentLineBeforeDescription && !used.includes(currentLineBeforeDescription) && isLikelyAttractionName(currentLineBeforeDescription)) {
-        return currentLineBeforeDescription;
-      }
-
-      for (let index = descriptionIndex - 1; index >= startIndex; index -= 1) {
-        const candidate = cleanExtractedValue(lines[index] || "")
-          .replace(/^nome\s*:\s*/i, "")
-          .trim();
-
-        if (!candidate) continue;
-        if (isInvalidAttractionNameCandidate(candidate)) continue;
-        if (used.includes(candidate)) continue;
-        if (/^(descri[cç][aã]o|endere[cç]o|site|entrada)\s*:/i.test(candidate)) continue;
-        if (/^(p[áa]gina|curadoria|elite travel|travel|pontos tur[ií]sticos|atra[cç][õo]es tur[ií]sticas|www\.|https?:)/i.test(candidate)) continue;
-        if (/^(lugares que inspiram|olhares,? momentos|conquistam cora[cç][õo]es)$/i.test(candidate)) continue;
-
-        if (isLikelyAttractionName(candidate)) {
-          return candidate;
-        }
-
-        const letters = candidate.replace(/[^A-Za-zÀ-ÿ]/g, "");
-        const upperLetters = letters.replace(/[a-zà-ÿ]/g, "").length;
-        const looksLikeShortTitle = letters.length >= 6 && upperLetters / Math.max(letters.length, 1) > 0.52 && !/[.!?]$/.test(candidate);
-
-        if (looksLikeShortTitle) {
-          return candidate;
-        }
-      }
-
-      return "";
-    }
-
-    function removeNextBlockTitleFromSegmentLines(segmentLines) {
-      const lines = (segmentLines || []).slice();
-
-      while (lines.length > 1) {
-        const lastLine = cleanExtractedValue(lines[lines.length - 1] || "");
-
-        if (isLikelyAttractionName(lastLine)) {
-          lines.pop();
-          continue;
-        }
-
-        break;
-      }
-
-      return lines;
-    }
-
-
-    function getGlobalAttractionNameCorrections() {
-      return [
-        "EMPIRE STATE BUILDING",
-        "ESTÁTUA DA LIBERDADE",
-        "METROPOLITAN MUSEUM OF ART (THE MET)",
-        "TOP OF THE ROCK",
-        "CENTRAL PARK ZOO",
-        "BROOKLYN BRIDGE",
-        "SUMMIT ONE VANDERBILT",
-        "LITTLE ISLAND",
-        "THE MET CLOISTERS",
-        "THE VESSEL",
-        "ROOSEVELT ISLAND TRAMWAY",
-        "THE HIGH LINE",
-        "TORRE EIFFEL",
-        "MUSEU DO LOUVRE",
-        "ARCO DO TRIUNFO",
-        "SACRÉ-CŒUR",
-        "MUSEU D'ORSAY",
-        "CATEDRAL DE NOTRE-DAME",
-        "SAINTE-CHAPELLE",
-        "PANTEÃO",
-        "ATELIER DES LUMIÈRES",
-        "CANAL SAINT-MARTIN",
-        "MUSÉE DE LA CHASSE",
-        "LA PETITE CEINTURE",
-        "HARRY P. LEU GARDENS"
-      ];
-    }
-
-    function repairAttractionName(name, city, configuredNames, fallbackNames) {
-      let value = cleanExtractedValue(name)
-        .replace(/^nome\s*:\s*/i, "")
-        .replace(/\s+/g, " ")
-        .trim();
-
-      if (!value) return value;
-
-      const normalizedValue = normalizeForSearch(value);
-      const allNames = (configuredNames || [])
-        .concat(fallbackNames || [])
-        .concat(getKnownAttractionNamesForCity(city))
-        .concat(getGlobalAttractionNameCorrections())
-        .filter(Boolean);
-
-      const exactMatch = allNames.find(function(candidate) {
-        return normalizeForSearch(candidate) === normalizedValue;
-      });
-
-      if (exactMatch) return exactMatch;
-
-      const startsWithMatch = allNames.find(function(candidate) {
-        const normalizedCandidate = normalizeForSearch(candidate);
-        return normalizedValue.length >= 7 && normalizedCandidate.indexOf(normalizedValue) === 0;
-      });
-
-      if (startsWithMatch) return startsWithMatch;
-
-      if (/^HARRY\s+P\.?\s+LE$/i.test(value) || normalizedValue === "HARRY P LE") {
-        return "HARRY P. LEU GARDENS";
-      }
-
-      return value;
-    }
-
-
-    function inferAttractionNameFromDetails(details, city) {
-      const site = normalizeForSearch(details && details.site ? details.site : "");
-      const address = normalizeForSearch(details && details.address ? details.address : "");
-      const description = normalizeForSearch(details && details.description ? details.description : "");
-      const haystack = [site, address, description].join(" ");
-
-      const detailRules = [
-        { pattern: /LEUGARDENS|1920 N FOREST/, name: "HARRY P. LEU GARDENS" },
-        { pattern: /ORLANDOSCIENCE|777 E PRINCETON/, name: "ORLANDO SCIENCE CENTER" },
-        { pattern: /KENNEDYSPACECENTER|SPACE CENTER/, name: "KENNEDY SPACE CENTER" },
-        { pattern: /UNIVERSALORLANDO|UNIVERSAL ORLANDO/, name: "UNIVERSAL ORLANDO RESORT" },
-        { pattern: /DISNEYWORLD|MAGIC KINGDOM|WALT DISNEY WORLD/, name: "WALT DISNEY WORLD" },
-        { pattern: /BAYSIDEMARKETPLACE|401 BISCAYNE/, name: "BAYSIDE MARKETPLACE" },
-        { pattern: /LINCOLNROAD|LINCOLN RD/, name: "LINCOLN ROAD" },
-        { pattern: /VIZCAYA|3251 S MIAMI/, name: "VIZCAYA MUSEUM AND GARDENS" },
-        { pattern: /WYNWOODWALLS|WYNWOOD WALLS/, name: "WYNWOOD WALLS" },
-        { pattern: /PAMM|PEREZARTMUSEUM|PÉREZ ART MUSEUM/, name: "PÉREZ ART MUSEUM MIAMI" },
-        { pattern: /FROSTSCIENCE|FROST MUSEUM/, name: "PHILLIP AND PATRICIA FROST MUSEUM OF SCIENCE" },
-        { pattern: /CASAROSADA|BALCARCE 50/, name: "CASA ROSADA" },
-        { pattern: /TEATROCOLON|CERRITO 628/, name: "TEATRO COLÓN" },
-        { pattern: /ELATENEO|SANTA FE 1860/, name: "LIBRERÍA EL ATENEO GRAND SPLENDID" },
-        { pattern: /PUENTE DE LA MUJER|PIERINA DEALESSI/, name: "PUENTE DE LA MUJER" },
-        { pattern: /VIRGENDEGUADALUPE|PLAZA DE LAS AMERICAS 1|PLAZA DE LAS AMÉRICAS 1/, name: "BASÍLICA DE GUADALUPE" },
-        { pattern: /MUSEOFRIDAKAHLO|MUSEO FRIDA KAHLO|CASA AZUL/, name: "MUSEO FRIDA KAHLO" }
-      ];
-
-      const matchedRule = detailRules.find(function(rule) {
-        return rule.pattern.test(haystack);
-      });
-
-      return matchedRule ? matchedRule.name : "";
-    }
-
-    function shouldPreferDetailInferredName(currentName, inferredName) {
-      /*
-        Segurança geral:
-        não usamos site, endereço ou descrição para trocar o nome da atração.
-        Esses campos ajudam a validar o bloco, mas não devem inventar/corrigir título,
-        porque isso pode gerar nomes formais demais ou nomes errados em outros destinos.
-      */
-      return false;
-    }
-
-
-    function getTitleRepairCandidateFromDescription(description) {
-      const text = cleanExtractedValue(description);
-      if (!text) return "";
-
-      const ignored = new Set([
-        "A", "O", "AS", "OS", "DE", "DA", "DO", "DAS", "DOS", "E", "EM",
-        "NO", "NA", "NOS", "NAS", "AO", "AOS", "À", "ÀS", "UM", "UMA",
-        "ESTE", "ESTA", "ESSE", "ESSA", "AQUI", "PARIS", "MIAMI",
-        "ORLANDO", "MADRID", "BARCELONA", "BUENOS", "AIRES", "MEXICO",
-        "MÉXICO", "NEW", "YORK", "USA", "FRANÇA", "ESPANHA", "ARGENTINA",
-        "BRASIL", "FL", "NY", "US", "R", "ARS", "MXN", "EUR", "BRL", "USD"
-      ]);
-
-      const matches = text.match(/\b[A-ZÀ-Ú][A-ZÀ-Ú0-9'’.\-]*(?:\s+(?:DE|DA|DO|DAS|DOS|DEL|DES|DU|LA|LE|LES|THE|OF|AND|Y|E|A|O|[A-ZÀ-Ú][A-ZÀ-Ú0-9'’.\-]*)){0,7}\b/g) || [];
-
-      const candidates = matches
-        .map(function(match) {
-          return cleanExtractedValue(match)
-            .replace(/^[,.;:\-–—]+|[,.;:\-–—]+$/g, "")
-            .trim();
-        })
-        .filter(function(match) {
-          const normalized = normalizeForSearch(match);
-          if (!match || match.length < 5 || match.length > 80) return false;
-          if (isInvalidAttractionNameCandidate(match)) return false;
-          if (/^(DESCRICAO|DESCRIÇÃO|ENDERECO|ENDEREÇO|SITE|ENTRADA|PAGINA|PÁGINA|CURADORIA|ELITE|TRAVEL|PONTOS|TURISTICOS|TURÍSTICOS)$/i.test(normalized)) return false;
-          if (/^(US|R|ARS|MXN|EUR|BRL|USD|FL|NY)$/.test(normalized)) return false;
-          if (/^\d/.test(normalized)) return false;
-          if (ignored.has(normalized)) return false;
-
-          const words = normalized.split(/\s+/).filter(Boolean);
-          const meaningfulWords = words.filter(function(word) {
-            return !ignored.has(word) && !/^(DE|DA|DO|DAS|DOS|DEL|DES|DU|LA|LE|LES|THE|OF|AND|Y|E|A|O)$/.test(word);
-          });
-
-          if (!meaningfulWords.length) return false;
-
-          return meaningfulWords.some(function(word) {
-            return word.length >= 4;
-          });
-        });
-
-      if (!candidates.length) return "";
-
-      candidates.sort(function(a, b) {
-        const aWords = normalizeForSearch(a).split(/\s+/).length;
-        const bWords = normalizeForSearch(b).split(/\s+/).length;
-        if (bWords !== aWords) return bWords - aWords;
-        return b.length - a.length;
-      });
-
-      return candidates[0] || "";
-    }
-
-    function removeTitleRepairCandidateFromDescription(description, titleCandidate) {
-      let text = cleanExtractedValue(description);
-      if (!text || !titleCandidate) return text;
-
-      const escaped = titleCandidate.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-
-      text = text
-        .replace(new RegExp("\\b" + escaped + "\\b", "gi"), " ")
-        .replace(/\s+([,.;:])/g, "$1")
-        .replace(/,\s*,/g, ",")
-        .replace(/\s{2,}/g, " ");
-
-      return cleanExtractedValue(text);
-    }
-    function repairSplitAttractionNameFromDescription(name, description, city, fallbackNames) {
-      let repairedName = cleanExtractedValue(name);
-      let repairedDescription = cleanExtractedValue(description);
-      if (!repairedName || !repairedDescription) {
-        return { name: repairedName, description: repairedDescription };
-      }
-
-      const cityNames = getKnownAttractionNamesForCity(city);
-      const allNames = (fallbackNames || [])
-        .concat(cityNames)
-        .concat(getGlobalAttractionNameCorrections())
-        .filter(Boolean);
-
-      const normalizedName = normalizeForSearch(repairedName);
-      const knownCompletion = allNames.find(function(candidate) {
-        const normalizedCandidate = normalizeForSearch(candidate);
-        return normalizedName.length >= 6 && normalizedCandidate.indexOf(normalizedName) === 0 && normalizedCandidate.length > normalizedName.length;
-      });
-
-      if (knownCompletion) {
-        const missingPart = cleanExtractedValue(knownCompletion.slice(repairedName.length));
-        if (missingPart) {
-          const escapedMissing = missingPart.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-          repairedDescription = cleanExtractedValue(repairedDescription.replace(new RegExp("^" + escapedMissing + "\\b\\s*", "i"), ""));
-        }
-        return { name: knownCompletion, description: repairedDescription };
-      }
-
-      const words = repairedName.split(/\s+/);
-      const lastWord = words[words.length - 1] || "";
-      const normalizedLastWord = normalizeForSearch(lastWord);
-      const firstChunk = repairedDescription.slice(0, 170);
-      const upperTokens = firstChunk.match(/\b[A-ZÀ-Ú]{1,18}\b/g) || [];
-
-      for (const token of upperTokens) {
-        const normalizedToken = normalizeForSearch(token);
-        if (!normalizedToken || normalizedToken.length < 1 || normalizedToken.length > 18) continue;
-        if (/^(A|O|AS|OS|DE|DA|DO|DAS|DOS|E|EM|NO|NA|NOS|NAS|RUA|AV|MXN|R|US)$/.test(normalizedToken)) continue;
-
-        const joined = normalizedLastWord + normalizedToken;
-        const mergedLastWord = lastWord + token.toLowerCase();
-        const mergedName = cleanExtractedValue(words.slice(0, -1).concat([mergedLastWord]).join(" "));
-        const normalizedMergedName = normalizeForSearch(mergedName);
-
-        const knownMergedMatch = allNames.find(function(candidate) {
-          return normalizeForSearch(candidate) === normalizedMergedName || normalizeForSearch(candidate).indexOf(normalizedMergedName) === 0;
-        });
-
-        if (knownMergedMatch) {
-          repairedName = knownMergedMatch;
-          const escapedToken = token.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-          repairedDescription = cleanExtractedValue(repairedDescription.replace(new RegExp("\\b" + escapedToken + "\\b", "i"), ""));
-          return { name: repairedName, description: repairedDescription };
-        }
-
-        if (/^(LA|LE)$/.test(normalizedLastWord) && normalizedToken.length >= 2) {
-          repairedName = cleanExtractedValue(words.slice(0, -1).concat([lastWord + token.toLowerCase()]).join(" "));
-          const escapedToken = token.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-          repairedDescription = cleanExtractedValue(repairedDescription.replace(new RegExp("\\b" + escapedToken + "\\b", "i"), ""));
-          return { name: repairedName, description: repairedDescription };
-        }
-
-        if (/^(DO|DA|DE)$/.test(normalizedLastWord) && normalizedToken.length <= 2) {
-          const nextWordsMatch = firstChunk.match(new RegExp("\\b" + token.replace(/[.*+?^${}()|[\]\\]/g, "\\$&") + "\\s+([A-ZÀ-Ú][A-ZÀ-Ú'’\\-]+(?:\\s+[A-ZÀ-Ú][A-ZÀ-Ú'’\\-]+){0,3})"));
-          const complement = cleanExtractedValue((nextWordsMatch ? token + " " + nextWordsMatch[1] : token));
-          repairedName = cleanExtractedValue(repairedName + complement.toLowerCase());
-          const escapedComplement = complement.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-          repairedDescription = cleanExtractedValue(repairedDescription.replace(new RegExp("\\b" + escapedComplement + "\\b", "i"), ""));
-          return { name: repairedName, description: repairedDescription };
-        }
-      }
-
-      const titleCandidate = getTitleRepairCandidateFromDescription(repairedDescription);
-      if (titleCandidate) {
-        const normalizedCandidate = normalizeForSearch(titleCandidate);
-        const normalizedCurrent = normalizeForSearch(repairedName);
-        const currentLooksGeneric = /^INDICACAO\s+\d+$/.test(normalizedCurrent) || normalizedCurrent.length < 5;
-        const currentLikelyShifted = !normalizedCandidate.includes(normalizedCurrent) && !normalizedCurrent.includes(normalizedCandidate);
-
-        if (currentLooksGeneric || currentLikelyShifted) {
-          repairedName = titleCandidate;
-          repairedDescription = removeTitleRepairCandidateFromDescription(repairedDescription, titleCandidate);
-        }
-      }
-
-      return { name: repairedName, description: repairedDescription };
-    }
-
-
-    function cleanBusinessDescriptionText(description, knownNames) {
-      let value = cleanExtractedValue(description)
-        .replace(/\bGratuit\b/g, "Gratuita")
-        .replace(/\bgratuït\b/gi, "gratuita")
-        .replace(/\bDescri[cç][aã]o\s*:\s*/gi, "")
-        .replace(/\bEndere[cç]o\s*:\s*$/gi, "")
-        .replace(/\bSite\s*:\s*$/gi, "")
-        .replace(/\bEntrada\s*:\s*$/gi, "")
-        .replace(/\s+([,.;:])/g, "$1")
-        .trim();
-
-      value = removeTrailingAttractionNamesFromField(value, knownNames || []);
-
-      return cleanExtractedValue(value);
-    }
-
-    function getTitleMeaningfulWords(value) {
-      const ignored = new Set([
-        "A", "O", "AS", "OS", "DE", "DA", "DO", "DAS", "DOS", "DEL", "DES", "DU",
-        "LA", "LE", "LES", "THE", "OF", "AND", "Y", "E", "EM", "NO", "NA", "NOS", "NAS",
-        "MUSEU", "MUSEUM", "CENTRO", "CENTER", "PARK", "PARQUE", "JARDIM", "GARDENS",
-        "IGREJA", "CATEDRAL", "BASILICA", "BASÍLICA", "PALACIO", "PALÁCIO", "TEATRO",
-        "CASA", "PLAZA", "PRAÇA", "RUA", "AV", "AVENIDA", "STREET", "ST", "RD", "ROAD"
-      ]);
-
-      return normalizeForSearch(value)
-        .replace(/[^A-Z0-9À-Ú\s]/g, " ")
-        .split(/\s+/)
-        .filter(function(word) {
-          return word && word.length >= 4 && !ignored.has(word) && !/^\d+$/.test(word);
-        });
-    }
-
-    function getTitleEvidenceScore(name, details) {
-      const words = getTitleMeaningfulWords(name);
-      if (!words.length) return 0;
-
-      const haystack = normalizeForSearch([
-        details && details.description ? details.description : "",
-        details && details.address ? details.address : "",
-        details && details.site ? details.site : ""
-      ].join(" "));
-
-      return words.reduce(function(score, word) {
-        return score + (haystack.includes(word) ? 1 : 0);
-      }, 0);
-    }
-
-    function isTitleSupportedByDetails(name, details) {
-      const words = getTitleMeaningfulWords(name);
-      if (!name || !words.length) return false;
-      const score = getTitleEvidenceScore(name, details);
-      return score >= Math.min(2, words.length);
-    }
-
-    function chooseAttractionNameForDetails(options) {
-      const currentName = cleanExtractedValue(options.currentName || "");
-      const detailName = cleanExtractedValue(options.detailName || "");
-      const descriptionCandidate = cleanExtractedValue(options.descriptionCandidate || "");
-      const orderedName = cleanExtractedValue(options.orderedName || "");
-      const details = options.details || {};
-      const usedNames = options.usedNames || [];
-      const index = options.index || 0;
-
-      const currentValid = currentName && !isInvalidAttractionNameCandidate(currentName);
-      const orderedValid = orderedName && !isInvalidAttractionNameCandidate(orderedName);
-      const currentSupported = currentValid && isTitleSupportedByDetails(currentName, details);
-      const orderedSupported = orderedValid && isTitleSupportedByDetails(orderedName, details);
-      const detailSupported = detailName && !isInvalidAttractionNameCandidate(detailName) && isTitleSupportedByDetails(detailName, details);
-      const descriptionSupported = descriptionCandidate && !isInvalidAttractionNameCandidate(descriptionCandidate) && isTitleSupportedByDetails(descriptionCandidate, details);
-
-      if (currentSupported && !usedNames.includes(currentName)) {
-        return { name: currentName, removeFromDescription: "" };
-      }
-
-      if (descriptionSupported && !usedNames.includes(descriptionCandidate)) {
-        return { name: descriptionCandidate, removeFromDescription: descriptionCandidate };
-      }
-
-      if (detailSupported && !usedNames.includes(detailName)) {
-        return { name: detailName, removeFromDescription: "" };
-      }
-
-      if (orderedSupported && !usedNames.includes(orderedName)) {
-        return { name: orderedName, removeFromDescription: "" };
-      }
-
-      if (orderedValid && !usedNames.includes(orderedName)) {
-        /*
-          Fallback estrutural:
-          quando o cabeçalho imediatamente acima do bloco não é confiável, usamos
-          o título visual extraído na mesma posição da lista completa de títulos do PDF.
-          Isso evita exibir "Indicação X" em PDFs nos quais o título ficou separado
-          do bloco Descrição/Endereço/Site/Entrada, sem reutilizar o título anterior.
-        */
-        return { name: orderedName, removeFromDescription: "" };
-      }
-
-      if (currentValid && !usedNames.includes(currentName)) {
-        /*
-          Última tentativa com cabeçalho visual local. Ele só chega aqui se não houve
-          candidato ordenado para este índice, evitando reaproveitamento do título
-          anterior quando o bloco pertence claramente a outra atração.
-        */
-        return { name: currentName, removeFromDescription: "" };
-      }
-
-      return { name: `Indicação ${index + 1}`, removeFromDescription: "" };
-    }
-
-    function parseAttractionItemsFromText(text, city) {
-      const cleaned = cleanAttractionsExtractionText(text)
-        .replace(/https:\s*\/\//gi, "https://")
-        .replace(/http:\s*\/\//gi, "http://");
-
-      const lines = cleaned
-        .split("\n")
-        .map(cleanExtractedValue)
-        .filter(Boolean);
-
-      const descriptionIndexes = [];
-      lines.forEach(function(line, index) {
-        if (/\bDescri[cç][aã]o\s*:/i.test(line)) {
-          descriptionIndexes.push(index);
-        }
-      });
-
-      const fallbackNames = extractCandidateNamesInTextOrder(cleaned);
-
-      /*
-        CORREÇÃO PONTUAL — somente para a ordenação dos nomes das atrações.
-
-        Em New York, a extração textual pode omitir o primeiro título
-        (Empire State Building). Quando isso acontece, fallbackNames desloca
-        todos os nomes seguintes uma posição para cima.
-
-        Como o próprio parser já possui a lista oficial de nomes da cidade,
-        usamos essa lista somente quando ela cobre todos os blocos de
-        descrição. Descrição, endereço, site, entrada e restante do parser
-        permanecem inalterados.
-      */
-      const configuredCityNames = getKnownAttractionNamesForCity(city);
-
-      const orderedFallbackNames =
-        configuredCityNames.length >= descriptionIndexes.length
-          ? configuredCityNames.slice(0, descriptionIndexes.length)
-          : (
-              fallbackNames.length >= descriptionIndexes.length
-                ? fallbackNames.slice(0, descriptionIndexes.length)
-                : []
-            );
-
-      const correctionNames = getGlobalAttractionNameCorrections();
-      const removalNames = fallbackNames.concat(correctionNames).filter(function(name, index, array) {
-        return name && array.indexOf(name) === index;
-      });
-      const usedNames = [];
-
-      const items = descriptionIndexes.map(function(descriptionIndex, index) {
-        const nextDescriptionIndex = descriptionIndexes[index + 1] || lines.length;
-        const segmentLines = removeNextBlockTitleFromSegmentLines(lines.slice(descriptionIndex, nextDescriptionIndex));
-        const segment = segmentLines.join("\n");
-        const details = parseAttractionDetailsFromSegment(segment, removalNames);
-        const visualName = getAttractionNameBeforeDescription(lines, descriptionIndex, usedNames);
-        const descriptionCandidate = getTitleRepairCandidateFromDescription(details.description);
-        const detailInferredName = inferAttractionNameFromDetails(details, city);
-
-        const selectedTitle = chooseAttractionNameForDetails({
-          currentName: repairAttractionName(visualName, city, [], fallbackNames),
-          detailName: detailInferredName,
-          descriptionCandidate: descriptionCandidate,
-          orderedName: repairAttractionName(orderedFallbackNames[index] || "", city, [], fallbackNames),
-          details: details,
-          usedNames: usedNames,
-          index: index
-        });
-
-        let name = selectedTitle.name;
-        if (selectedTitle.removeFromDescription) {
-          details.description = removeTitleRepairCandidateFromDescription(details.description, selectedTitle.removeFromDescription);
-        }
-
-        const repairedTitle = repairSplitAttractionNameFromDescription(
-          name,
-          details.description,
-          city,
-          fallbackNames
-        );
-
-        name = repairedTitle.name || name;
-        details.description = repairedTitle.description || details.description;
-
-        if (isInvalidAttractionNameCandidate(name)) {
-          name = `Indicação ${index + 1}`;
-        }
-
-        usedNames.push(name);
-
-        return {
-          name: cleanExtractedValue(name),
-          description: cleanBusinessDescriptionText(details.description, removalNames),
-          address: removeTrailingAttractionNamesFromField(details.address, removalNames),
-          site: normalizeSiteValue(removeTrailingAttractionNamesFromField(details.site, removalNames)),
-          price: cleanExtractedValue(details.price)
-        };
-      });
-
-      return items
-        .filter(function(item) {
-          return item.name &&
-            item.description &&
-            item.description.length > 35 &&
-            !/^elite\s*travel$/i.test(item.name) &&
-            !/^travel$/i.test(item.name);
-        })
-        .slice(0, 24);
-    }
-
-    function applyConfiguredCityNameOrder(items, city) {
-      /*
-        Não sobrescreve mais os nomes por posição fixa de uma lista.
-        O parser agora monta cada card a partir do bloco real:
-        Descrição → Endereço → Site → Entrada.
-        Isso evita deslocar títulos entre atrações quando o PDF do Canva muda a
-        ordem visual de nomes e descrições.
-      */
-      return items || [];
-    }
-
-    function parseAttractionsBusinessContent(text, city) {
-      const panorama = extractPanoramaFromText(text, city);
-      const items = applyConfiguredCityNameOrder(parseAttractionItemsFromText(text, city), city);
-
-      return {
-        panorama,
-        items
-      };
+      return String(material && (material.id || `${material.category}-${escapeHtml(material.city_label)}-${material.pdf_url}`));
     }
 
     function normalizeYearValue(value) {
@@ -3285,190 +2222,87 @@
     }
 
 
-    function getPublicationDraftPrefix(material) {
-      if (!material) return "";
-      return [
-        "cet_partner_draft_v2",
-        normalizeCategoryName(material.category),
-        String(material.city_label || "").trim(),
-        normalizeYearValue(material.year)
-      ].join("::") + "::";
-    }
 
-    function getPublicationDraft(material) {
-      const prefix = getPublicationDraftPrefix(material);
-      if (!prefix) return null;
 
-      try {
-        for (let index = 0; index < localStorage.length; index += 1) {
-          const key = localStorage.key(index);
-          if (!key || !key.startsWith(prefix)) continue;
-
-          const raw = localStorage.getItem(key);
-          if (!raw) continue;
-
-          const draft = JSON.parse(raw);
-          if (draft && draft.material) return draft;
-          if (draft && Array.isArray(draft.items)) return draft;
-        }
-      } catch (error) {
-        console.warn("Não foi possível ler a publicação salva pelo Partner-publicação.", error);
-      }
-
-      return null;
-    }
-
-    function getPublicationDraftItem(material, index) {
-      const draft = getPublicationDraft(material);
-      if (!draft || !Array.isArray(draft.items)) return null;
-      return draft.items[index] || null;
-    }
 
     function getPublishedPhoto(material, index) {
-      const item = getPublicationDraftItem(material, index);
-      return item && item.photoDataUrl ? item.photoDataUrl : "";
+      return businessContentCache[getBusinessContentCacheKey(material)]?.items[index]?.photoDataUrl || "";
     }
 
-    function getPublishedPanorama(material) {
-      const draft = getPublicationDraft(material);
-      return draft && draft.panorama ? String(draft.panorama) : "";
-    }
 
     function buildStructuredBusinessContentFromRows(rows, material) {
-      const orderedRows = (rows || [])
-        .slice()
-        .sort(function(a, b) {
-          return Number(a.item_order || 0) - Number(b.item_order || 0);
-        });
-
-      const items = orderedRows
-        .filter(function(row) {
-          return row && row.item_name && row.description;
-        })
-        .map(function(row) {
-          return {
-            name: cleanExtractedValue(row.item_name),
-            description: cleanBusinessDescriptionText(row.description, []),
-            address: cleanExtractedValue(row.address || ""),
-            site: normalizeSiteValue(row.site || ""),
-            price: cleanExtractedValue(row.entry_price || "")
-          };
-        });
-
-      const panoramaRow = orderedRows.find(function(row) {
-        return row && row.panorama && String(row.panorama).trim();
-      });
-
-      const fallback = getBusinessContentTemplate(material);
-
+      const ordered = rows.slice().sort((a, b) => Number(a.item_order) - Number(b.item_order));
+      if (!ordered.length || ordered.some(row => !row.item_name || !row.description)) {
+        throw new Error("A versão aprovada não possui indicações completas disponíveis.");
+      }
       return {
-        panorama: panoramaRow ? cleanExtractedValue(panoramaRow.panorama) : fallback.panorama,
-        items: items
+        panorama: String(material.panorama || ordered[0].panorama || ""),
+        items: ordered.map(row => ({
+          id: row.id, item_order: row.item_order,
+          name: String(row.item_name), description: String(row.description),
+          address: String(row.address || ""), site: String(row.site || ""),
+          price: String(row.entry_price || ""),
+          photoDataUrl: safeImageDataUrl(row.photo_data_url),
+          photoSource: String(row.photo_source || "")
+        }))
       };
     }
 
-    function fetchStructuredBusinessContent(material) {
-      if (!material) return null;
-
-      const draft = getPublicationDraft(material);
-      if (!draft || !Array.isArray(draft.items)) return null;
-
-      const items = draft.items
-        .slice()
-        .sort(function(a, b) {
-          return Number(a.item_order || 0) - Number(b.item_order || 0);
-        })
-        .map(function(item) {
-          return {
-            name: cleanExtractedValue(item.name || item.item_name || ""),
-            description: cleanBusinessDescriptionText(item.description || "", []),
-            address: cleanExtractedValue(item.address || ""),
-            site: normalizeSiteValue(item.site || ""),
-            price: cleanExtractedValue(item.entry_price || item.price || ""),
-            photoDataUrl: item.photoDataUrl || "",
-            photoSource: item.photoSource || ""
-          };
-        })
-        .filter(function(item) {
-          return item.name && item.description;
-        });
-
-      return {
-        panorama: draft.panorama ? String(draft.panorama) : "",
-        items: items
-      };
+    async function fetchStructuredBusinessContent(material) {
+      const { data: version, error: versionError } = await supabaseClient.from("b2b_material_versions")
+        .select("id, panorama, status, is_ready, is_active")
+        .eq("id", material.id).eq("status", "published")
+        .eq("is_ready", true).eq("is_active", true).maybeSingle();
+      if (versionError) throw versionError;
+      if (!version) throw new Error("Esta versão não está mais disponível. Atualize o acervo.");
+      const rows = [];
+      for (let offset = 0; ; offset += 100) {
+        const { data, error } = await supabaseClient.from("b2b_material_items")
+          .select("id, version_id, item_order, item_name, description, address, site, entry_price, panorama, photo_data_url, photo_source, is_active")
+          .eq("version_id", material.id).eq("is_active", true)
+          .order("item_order", { ascending: true }).range(offset, offset + 99);
+        if (error) throw error;
+        rows.push(...(data || []));
+        if (!data || data.length < 100) break;
+      }
+      return buildStructuredBusinessContentFromRows(rows.filter(row => row.version_id === material.id && row.is_active === true), {...material, panorama: version.panorama});
     }
 
-    async function ensureBusinessContentLoaded(material) {
-      if (!material) return getBusinessContentTemplate(material);
-
-      const cacheKey = getBusinessContentCacheKey(material);
-
-      if (businessContentCache[cacheKey]) {
-        return businessContentCache[cacheKey];
-      }
-
-      if (businessContentLoading[cacheKey]) {
-        return businessContentLoading[cacheKey];
-      }
-
-      businessContentLoading[cacheKey] = Promise.resolve().then(function() {
-        const structured = fetchStructuredBusinessContent(material);
-
-        if (structured && structured.items && structured.items.length) {
-          businessContentCache[cacheKey] = structured;
-          return structured;
-        }
-
-        const fallback = getBusinessContentTemplate(material);
-        businessContentCache[cacheKey] = fallback;
-        return fallback;
-      });
-
-      return businessContentLoading[cacheKey];
+    async function ensureBusinessContentLoaded(material, force = false) {
+      if (!material) throw new Error("Selecione um material aprovado.");
+      const key = getBusinessContentCacheKey(material);
+      if (!force && businessContentCache[key]) return businessContentCache[key];
+      if (!force && businessContentLoading[key]) return businessContentLoading[key];
+      const pending = fetchStructuredBusinessContent(material).then(content => {
+        businessContentCache[key] = content;
+        return content;
+      }).catch(error => { delete businessContentCache[key]; throw error; });
+      businessContentLoading[key] = pending;
+      try { return await pending; }
+      finally { if (businessContentLoading[key] === pending) delete businessContentLoading[key]; }
     }
 
     function selectMaterial(material) {
       selectedMaterial = material;
-
       const category = normalizeCategoryName(material.category);
-      const docTitle = document.getElementById("docTitle");
-      const docSubtitle = document.getElementById("docSubtitle");
-
-      if (docTitle) {
-        docTitle.innerText = category.toUpperCase();
-      }
-
-      if (docSubtitle) {
-        docSubtitle.innerText = `${material.city_label} • Versão Business Partner${material.year ? " • " + material.year : ""}`;
-      }
-
-      const businessPreviewTitle = document.getElementById("businessPreviewTitle");
-      const businessPreviewText = document.getElementById("businessPreviewText");
-
-      if (businessPreviewTitle) {
-        businessPreviewTitle.innerText = `${category} • ${material.city_label}`;
-      }
-
-      if (businessPreviewText) {
-        businessPreviewText.innerText = isWhiteLabelMode()
-          ? `Material pronto para ser apresentado exclusivamente com a identidade da marca escolhida, sem assinatura da Curadoria Elite Travel.`
-          : `Material identificado no acervo da Curadoria Elite Travel e pronto para ser apresentado em uma versão business clean, com identidade da marca apresentada ao cliente e assinatura discreta da Curadoria.`;
-      }
-
-      renderBusinessContentPreview(material);
+      document.getElementById("docTitle").textContent = category.toUpperCase();
+      document.getElementById("docSubtitle").textContent = material.city_label + " • " + (material.year || "");
+      document.getElementById("businessPreviewTitle").textContent = category + " • " + material.city_label;
+      document.getElementById("businessPreviewText").textContent = "Conteúdo aprovado pela Curadoria Elite Travel. A identidade e as fotos escolhidas serão aplicadas ao documento final.";
+      businessPreviewPageIndex = 0;
+      document.querySelectorAll(".list-item").forEach(row => row.classList.toggle("active", row.dataset.materialKey === getMaterialKey(material)));
       loadAndRenderBusinessContent(material);
     }
 
-    function buildBusinessDocumentHtml(autoPrint) {
-      const category = normalizeCategoryName(selectedMaterial.category);
-      const city = selectedMaterial.city_label || "Destino selecionado";
-      const year = selectedMaterial.year || "";
+    function buildBusinessDocumentHtml(autoPrint, material = selectedMaterial) {
+      const category = normalizeCategoryName(material.category);
+      const city = material.city_label || "Destino selecionado";
+      const year = material.year || "";
       const brandName = escapeHtml(getClientBrandName());
       const partnerName = escapeHtml(getPartnerCompanyName());
       const whiteLabel = isWhiteLabelMode();
       const logoHtml = getBrandLogoHtml("print");
-      const businessContent = getBusinessContentTemplate(selectedMaterial);
+      const businessContent = getBusinessContentTemplate(material);
 
       const personalizedCoverHtml = hasClientPersonalization()
         ? `<div class="panel personalized-cover-panel">
@@ -3477,7 +2311,7 @@
             <p>${getClientMessageText()}</p>
           </div>
           <div class="panel personalized-cover-panel">
-            <h2>${category} • ${city}</h2>
+            <h2>${escapeHtml(category)} • ${escapeHtml(city)}</h2>
             <p>${whiteLabel
               ? `Material preparado para ${brandName}, para facilitar a consulta e a tomada de decisão durante a viagem.`
               : `Material preparado em versão business clean por ${brandName}, com apoio da Curadoria Elite Travel, para facilitar a consulta e a tomada de decisão durante a viagem.`}</p>
@@ -3488,7 +2322,7 @@
               <ul>
                 <li>Material preparado para apresentação exclusiva da marca escolhida.</li>
                 <li>Identidade da marca aplicada ao documento.</li>
-                <li>Fotos das indicações escolhidas pela empresa parceira.</li>
+                <li>Fotos aprovadas ou personalizadas pela empresa parceira.</li>
               </ul>
             </div>`
           : `<div class="panel">
@@ -3508,16 +2342,14 @@
             return `
               <section class="paper-page">
                 <div class="page-kicker">Página ${pageNumber} • Indicações selecionadas</div>
-                <h2>${city}</h2>
+                <h2>${escapeHtml(city)}</h2>
                 <div class="items-grid">
                   ${itemsChunk.map(function(item, itemIndex) {
                     const index = firstItemIndex + itemIndex;
-                    const approvedPhoto = item.photoDataUrl || getPublishedPhoto(selectedMaterial, index) || "";
-                    const photo = whiteLabel
-                      ? getWhiteLabelPhoto(selectedMaterial, index)
-                      : approvedPhoto;
+                    const approvedPhoto = item.photoDataUrl || getPublishedPhoto(material, index) || "";
+                    const photo = getWhiteLabelPhoto(material, index) || approvedPhoto;
                     const photoHtml = photo
-                      ? `<img src="${photo}" alt="Foto de ${escapeHtml(item.name || "indicação")}">`
+                      ? `<img src="${escapeHtml(photo)}" alt="Foto de ${escapeHtml(item.name || "indicação")}">`
                       : `<span>Foto não disponível</span>`;
 
                     return `
@@ -3525,11 +2357,11 @@
                         <div class="printed-item-photo">${photoHtml}</div>
                         <div class="printed-item-copy">
                           <div class="printed-item-number">${formatBusinessNumber(index)}</div>
-                          <h3>${item.name}</h3>
-                          <p>${item.description}</p>
-                          ${item.address ? `<div class="detail"><strong>Endereço:</strong> ${item.address}</div>` : ""}
-                          ${item.site ? `<div class="detail"><strong>Site:</strong> ${item.site}</div>` : ""}
-                          ${item.price ? `<div class="detail"><strong>Entrada:</strong> ${item.price}</div>` : ""}
+                          <h3>${escapeHtml(item.name)}</h3>
+                          <p>${escapeHtml(item.description)}</p>
+                          ${item.address ? `<div class="detail"><strong>Endereço:</strong> ${escapeHtml(item.address)}</div>` : ""}
+                          ${item.site ? `<div class="detail"><strong>Site:</strong> ${escapeHtml(item.site)}</div>` : ""}
+                          ${item.price ? `<div class="detail"><strong>Entrada:</strong> ${escapeHtml(item.price)}</div>` : ""}
                         </div>
                       </article>
                     `;
@@ -3590,7 +2422,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>${category} • ${city} | ${whiteLabel ? brandName : "Partner"}</title>
+  <title>${escapeHtml(category)} • ${escapeHtml(city)} | ${whiteLabel ? brandName : "Partner"}</title>
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body {
@@ -3601,7 +2433,7 @@
     }
     .paper-page {
       width: min(820px, 100%);
-      min-height: 1080px;
+      min-height: 1080px; padding-bottom: 100px;
       margin: 0 auto 28px;
       background: #f8f6f1;
       border: 1px solid #d8c691;
@@ -3660,7 +2492,7 @@
     .printed-item-copy { min-width: 0; }
     .printed-item-number { width: 46px; height: 46px; border-radius: 50%; border: 1px solid rgba(214,173,50,.55); color: #9b7a19; background: rgba(214,173,50,.08); display: flex; align-items: center; justify-content: center; font-weight: 950; font-size: 15px; margin-bottom: 10px; }
     .printed-item-card h3 { font-size: 21px; line-height: 1.2; text-transform: uppercase; letter-spacing: .4px; margin-bottom: 10px; }
-    .printed-item-card p { color: #333; font-size: 15px; line-height: 1.62; margin-bottom: 12px; }
+    .printed-item-card p { white-space: pre-line; color: #333; font-size: 15px; line-height: 1.62; margin-bottom: 12px; }
     .detail { color: #333; font-size: 14px; line-height: 1.45; margin-top: 6px; }
     .detail strong { color: #111; }
     ul { padding-left: 20px; }
@@ -3683,9 +2515,9 @@
     @page { size: A4; margin: 0; }
     @media print {
       html, body { background: #fff; padding: 0; margin: 0; }
-      .paper-page { box-shadow: none; border-radius: 0; width: 100%; min-height: 100vh; margin: 0; break-after: page; page-break-after: always; }
+      .paper-page { box-shadow: none; border-radius: 0; width: 210mm; min-height: 297mm; padding: 15mm 15mm 25mm; margin: 0; break-after: page; page-break-after: always; }
       .paper-page:last-of-type { break-after: auto; page-break-after: auto; }
-      .actions { display: none; }
+      .actions { display: none; } .printed-item-card { break-inside: avoid; } .page-footer { position: static; margin-top: 24px; }
     }
   </style>
 </head>
@@ -3699,12 +2531,12 @@
     </div>
 
     <div class="eyebrow">${whiteLabel ? "Material exclusivo" : "Versão Business Partner"}</div>
-    <h1>${category.toUpperCase()}</h1>
-    <div class="subtitle">${city} • ${whiteLabel ? "Material business" : "Material business"}${year ? " • " + year : ""}</div>
+    <h1>${escapeHtml(category.toUpperCase())}</h1>
+    <div class="subtitle">${escapeHtml(city)} • ${whiteLabel ? "Material business" : "Material business"}${year ? " • " + year : ""}</div>
 
     <div class="meta">
-      <div><small>Categoria</small><strong>${category}</strong></div>
-      <div><small>Destino</small><strong>${city}</strong></div>
+      <div><small>Categoria</small><strong>${escapeHtml(category)}</strong></div>
+      <div><small>Destino</small><strong>${escapeHtml(city)}</strong></div>
       <div><small>Formato</small><strong>${whiteLabel ? "White Label" : "Business clean"}</strong></div>
     </div>
 
@@ -3717,8 +2549,8 @@
 
   <section class="paper-page">
     <div class="page-kicker">Panorama da cidade</div>
-    <h2>${city}</h2>
-    <p class="lead">${businessContent.panorama}</p>
+    <h2>${escapeHtml(city)}</h2>
+    <p class="lead">${escapeHtml(businessContent.panorama)}</p>
     <div class="page-footer">${whiteLabel
       ? `<span class="footer-brand">${brandName}</span><span class="footer-tagline">Material exclusivo</span><span class="footer-page">Página 02</span>`
       : `<span class="footer-brand">Curadoria Elite Travel</span><span class="footer-tagline">O seu mundo, bem indicado.</span><span class="footer-page">Página 02</span>`}</div>
@@ -3737,164 +2569,305 @@
 
 
     async function sendBusinessMaterialByEmail() {
-      if (!selectedMaterial) {
-        alert("Selecione um material disponível antes de enviar.");
-        return;
-      }
-
-      const emailInput = document.getElementById("clientEmailInput");
-      const clientEmail = emailInput ? emailInput.value.trim() : "";
-
-      if (!isValidEmail(clientEmail)) {
-        alert("Informe um e-mail válido do cliente.");
-        return;
-      }
-
-      applyClientPersonalization();
-      await ensureBusinessContentLoaded(selectedMaterial);
-
-      if (!registerPartnerEmailSend()) {
-        return;
-      }
-
-      alert(`Envio registrado para ${clientEmail}. Nesta versão de teste, o disparo é simulado; em produção, este botão chamará a função de e-mail para enviar a versão business sem baixar.`);
+      alert("O envio automático por e-mail ainda não está configurado. Salve o documento como PDF e encaminhe pelo seu e-mail.");
     }
 
     async function openBusinessMaterial(autoPrint) {
-      if (!selectedMaterial) {
-        alert("Selecione um material disponível.");
-        return;
-      }
-
+      const material = selectedMaterial;
+      if (!material || exportBusy) return;
       const businessWindow = window.open("", "_blank");
-
-      if (!businessWindow) {
-        alert("Permita pop-ups para visualizar a versão business.");
-        return;
-      }
-
+      if (!businessWindow) { alert("Permita pop-ups para abrir o material."); return; }
+      businessWindow.opener = null;
+      businessWindow.document.write('<!DOCTYPE html><html lang="pt-BR"><meta charset="UTF-8"><title>Preparando material</title><p style="font-family:Arial;padding:32px">Preparando o material aprovado...</p></html>');
+      exportBusy = true;
+      setMaterialActions(false);
       try {
-        await ensureBusinessContentLoaded(selectedMaterial);
-        const documentHtml = buildBusinessDocumentHtml(autoPrint);
+        await ensureBusinessContentLoaded(material, true);
+        const documentHtml = buildBusinessDocumentHtml(autoPrint, material);
         businessWindow.document.open();
         businessWindow.document.write(documentHtml);
         businessWindow.document.close();
+        if (autoPrint && !businessWindow.closed) {
+          await Promise.race([
+            Promise.all(Array.from(businessWindow.document.images).map(img => img.decode ? img.decode().catch(() => {}) : Promise.resolve())),
+            new Promise(resolve => setTimeout(resolve, 5000))
+          ]);
+          if (!businessWindow.closed) { businessWindow.focus(); businessWindow.print(); registerPartnerDownload(); }
+        }
       } catch (error) {
-        console.error("Erro ao gerar material business:", error);
-        businessWindow.document.open();
-        businessWindow.document.write(`<!DOCTYPE html><html lang="pt-BR"><head><meta charset="UTF-8"><title>Erro ao gerar material</title></head><body style="font-family:Arial,sans-serif;padding:40px;color:#111;"><h1>Não foi possível gerar este material.</h1><p>Verifique se a categoria e o destino estão selecionados corretamente.</p><pre style="white-space:pre-wrap;background:#f4f4f4;padding:16px;border-radius:12px;">${String(error && error.message ? error.message : error)}</pre></body></html>`);
-        businessWindow.document.close();
+        if (!businessWindow.closed) {
+          businessWindow.document.open();
+          businessWindow.document.write('<!DOCTYPE html><html lang="pt-BR"><meta charset="UTF-8"><title>Material indisponível</title><body style="font-family:Arial;padding:32px"><h1>Não foi possível abrir o material</h1><p>' + escapeHtml(error.message || error) + '</p></body></html>');
+          businessWindow.document.close();
+        }
+      } finally {
+        exportBusy = false;
+        setMaterialActions(!!selectedMaterial && !!businessContentCache[getBusinessContentCacheKey(selectedMaterial)]);
       }
     }
 
-    document.getElementById("previewButton").addEventListener("click", async function() {
-      await openBusinessMaterial(false);
-    });
 
-    document.getElementById("downloadButton").addEventListener("click", async function() {
-      if (registerPartnerDownload()) {
-        await openBusinessMaterial(true);
+    const SUPABASE_URL = "https://lnyoqoezezisakghtmim.supabase.co";
+    const SUPABASE_PUBLIC_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxueW9xb2V6ZXppc2FrZ2h0bWltIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjQxNjI4OTMsImV4cCI6MjA3OTczODg5M30.Nn9ZPRXeJlvCGJ2kXQ3XBvT743pQn2VIXEsT9pexqnA";
+    const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_PUBLIC_KEY);
+    let exportBusy = false;
+    let previewRevision = 0;
+    let activePhotoIndex = null;
+
+    function escapeHtml(value) {
+      return String(value ?? "").replace(/&/g, "&amp;").replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
+    }
+    function safeImageDataUrl(value) {
+      const url = String(value || "");
+      return /^data:image\/(jpeg|png|webp);base64,[A-Za-z0-9+/=]+$/.test(url) ? url : "";
+    }
+    function chunkItems(items, size) {
+      const chunks = [];
+      for (let i = 0; i < items.length; i += size) chunks.push(items.slice(i, i + size));
+      return chunks;
+    }
+    function formatBusinessNumber(index) { return String(index + 1).padStart(2, "0"); }
+    function isWhiteLabelMode() { return document.getElementById("presentationModeInput").value === "whitelabel"; }
+    function getPartnerCompanyName() { return partnerCompanyName.trim() || "Sua empresa"; }
+    function getClientBrandName() { return clientBrandName.trim() || getPartnerCompanyName(); }
+    function getBrandLogoHtml() {
+      return partnerLogoDataUrl ? '<img src="' + escapeHtml(partnerLogoDataUrl) + '" alt="Logo da marca">'
+        : '<div class="logo-placeholder">' + escapeHtml(getClientBrandName()) + '</div>';
+    }
+    function getBusinessContentTemplate(material) {
+      const content = businessContentCache[getBusinessContentCacheKey(material)];
+      if (!content) throw new Error("O conteúdo aprovado ainda não foi carregado.");
+      return content;
+    }
+    function getWhiteLabelPhoto(material, index) {
+      const item = businessContentCache[getBusinessContentCacheKey(material)]?.items[index];
+      return item ? whiteLabelPhotoData[material.id + ":" + item.id] || item.photoDataUrl : "";
+    }
+    function hasClientPersonalization() { return clientPersonalization.enabled && !!clientPersonalization.name; }
+    function getClientGreetingLine() {
+      const greeting = {neutral:"Prezado(a)", male:"Prezado Sr.", female:"Prezada Sra."}[clientPersonalization.greetingType] || "Prezado(a)";
+      return escapeHtml(greeting + " " + clientPersonalization.name);
+    }
+    function getClientMessageText() {
+      return escapeHtml(clientPersonalization.message || "Preparamos esta seleção para apoiar sua experiência durante a viagem.");
+    }
+    function renderClientPreviewText() {
+      const name = document.getElementById("clientNameInput").value.trim();
+      const greeting = {neutral:"Prezado(a)", male:"Prezado Sr.", female:"Prezada Sra."}[document.getElementById("clientGreetingType").value];
+      const message = document.getElementById("clientMessageInput").value.trim();
+      document.getElementById("clientGreetingPreview").innerHTML = name
+        ? '<strong>Prévia:</strong><br>' + escapeHtml(greeting + " " + name) + '<br>' + escapeHtml(message)
+        : "Preencha o nome e clique em Aplicar para personalizar a capa.";
+    }
+    function applyClientPersonalization() {
+      clientPersonalization = {
+        enabled: !!document.getElementById("clientNameInput").value.trim(),
+        name: document.getElementById("clientNameInput").value.trim(),
+        greetingType: document.getElementById("clientGreetingType").value,
+        message: document.getElementById("clientMessageInput").value.trim()
+      };
+      renderClientPreviewText();
+      if (selectedMaterial) renderBusinessContentPreview(selectedMaterial);
+    }
+    function clearClientPersonalization() {
+      document.getElementById("clientNameInput").value = "";
+      document.getElementById("clientMessageInput").value = "";
+      document.getElementById("clientGreetingType").value = "neutral";
+      applyClientPersonalization();
+    }
+    function syncPartnerBrandData() {
+      partnerCompanyName = document.getElementById("partnerCompanyInput").value;
+      clientBrandName = document.getElementById("clientBrandInput").value;
+      document.getElementById("docLogoText").innerHTML = getBrandLogoHtml();
+      document.querySelector(".doc-brand").innerHTML = isWhiteLabelMode()
+        ? "Material apresentado por<br><strong>" + escapeHtml(getClientBrandName()) + "</strong>"
+        : "Curadoria desenvolvida em parceria com<br><strong>Curadoria Elite Travel</strong>";
+      if (selectedMaterial) renderBusinessContentPreview(selectedMaterial);
+    }
+    function setMaterialActions(ready) {
+      document.getElementById("previewButton").disabled = !ready || exportBusy;
+      document.getElementById("downloadButton").disabled = !ready || exportBusy;
+    }
+    function clearMaterialSelection() {
+      selectedMaterial = null; previewRevision += 1;
+      businessPreviewPages = []; businessPreviewPageIndex = 0;
+      setMaterialActions(false);
+      document.getElementById("businessPreviewControls").style.display = "none";
+      document.getElementById("whiteLabelPhotosPanel").style.display = "none";
+      document.getElementById("personalizedCoverPreviewBlock").innerHTML = "";
+      document.getElementById("businessContentPreview").innerHTML = '<div class="business-city-text">Selecione um material aprovado.</div>';
+      document.getElementById("docTitle").textContent = "MATERIAL";
+      document.getElementById("docSubtitle").textContent = "Selecione uma categoria e destino";
+    }
+    async function loadAndRenderBusinessContent(material) {
+      const revision = ++previewRevision;
+      setMaterialActions(false);
+      document.getElementById("whiteLabelPhotosPanel").style.display = "none";
+      document.getElementById("businessPreviewControls").style.display = "none";
+      document.getElementById("businessContentPreview").innerHTML = '<div class="business-city-text">Carregando textos e fotos aprovados...</div>';
+      try {
+        await ensureBusinessContentLoaded(material);
+        if (revision !== previewRevision || selectedMaterial !== material) return;
+        renderBusinessContentPreview(material);
+        renderPhotoChoices(material);
+        setMaterialActions(true);
+      } catch (error) {
+        if (revision !== previewRevision) return;
+        document.getElementById("businessContentPreview").innerHTML = '<div class="business-city-text">' + escapeHtml(error.message || error) + '</div>';
+        setMaterialActions(false);
       }
+    }
+    function renderBusinessContentPreview(material) {
+      const content = businessContentCache[getBusinessContentCacheKey(material)];
+      if (!content || selectedMaterial !== material) return;
+      const brand = escapeHtml(getClientBrandName());
+      const signature = isWhiteLabelMode() ? brand : "Curadoria Elite Travel · " + brand;
+      const wrap = (title, body) => '<section class="business-a4-page"><div class="business-page-kicker">' + signature + '</div><h5 class="business-page-title">' + escapeHtml(title) + '</h5>' + body + '<div class="business-page-footer">' + signature + '</div></section>';
+      const personalization = hasClientPersonalization()
+        ? '<div class="business-city-text"><strong>' + getClientGreetingLine() + '</strong><p>' + getClientMessageText() + '</p></div>' : "";
+      businessPreviewPages = [wrap(normalizeCategoryName(material.category), getBrandLogoHtml() + '<div class="business-city-text">' + escapeHtml(material.city_label) + ' · ' + escapeHtml(material.year) + '</div>' + personalization),
+        wrap("Panorama da cidade", '<div class="business-city-text">' + escapeHtml(content.panorama) + '</div>')];
+      chunkItems(content.items, 3).forEach((chunk, pageIndex) => {
+        const cards = chunk.map((item, index) => {
+          const itemIndex = pageIndex * 3 + index;
+          const photo = getWhiteLabelPhoto(material, itemIndex);
+          const detail = (label, value) => value ? '<div class="business-item-detail"><strong>' + label + ':</strong> ' + escapeHtml(value) + '</div>' : "";
+          return '<article class="business-item-card"><div class="business-item-photo">' + (photo ? '<img src="' + escapeHtml(photo) + '" alt="' + escapeHtml(item.name) + '">' : "Foto não disponível") + '</div><div class="business-item-copy"><div class="business-item-number">' + formatBusinessNumber(itemIndex) + '</div><h6>' + escapeHtml(item.name) + '</h6><p>' + escapeHtml(item.description) + '</p>' + detail("Endereço", item.address) + detail("Site", item.site) + detail("Entrada / valor", item.price) + '</div></article>';
+        }).join("");
+        businessPreviewPages.push(wrap(material.city_label, '<div class="business-items-grid">' + cards + '</div>'));
+      });
+      businessPreviewPages.push(wrap("Tenha uma excelente experiência", '<div class="business-city-text">Material disponibilizado por ' + brand + ' para seus clientes.</div>'));
+      showBusinessPreviewPage();
+    }
+    function showBusinessPreviewPage() {
+      businessPreviewPageIndex = Math.max(0, Math.min(businessPreviewPageIndex, businessPreviewPages.length - 1));
+      document.getElementById("businessContentPreview").innerHTML = businessPreviewPages[businessPreviewPageIndex] || "";
+      document.getElementById("businessPreviewControls").style.display = businessPreviewPages.length > 1 ? "flex" : "none";
+      document.getElementById("businessPreviewPageLabel").textContent = "Página " + (businessPreviewPageIndex + 1) + " de " + businessPreviewPages.length;
+      document.getElementById("businessPreviewPrev").disabled = businessPreviewPageIndex === 0;
+      document.getElementById("businessPreviewNext").disabled = businessPreviewPageIndex >= businessPreviewPages.length - 1;
+    }
+    function changeBusinessPreviewPage(direction) { businessPreviewPageIndex += direction; showBusinessPreviewPage(); }
+    function renderPhotoChoices(material) {
+      const content = businessContentCache[getBusinessContentCacheKey(material)];
+      const panel = document.getElementById("whiteLabelPhotosPanel");
+      if (!content || !isPhotoSelectableMaterial(material)) { panel.style.display = "none"; return; }
+      panel.style.display = "block";
+      document.getElementById("whiteLabelPhotosList").innerHTML = content.items.map((item, index) => {
+        const key = material.id + ":" + item.id;
+        const photo = getWhiteLabelPhoto(material, index);
+        return '<div class="white-label-photo-row"><div class="white-label-photo-label">' + formatBusinessNumber(index) + ' · ' + escapeHtml(item.name) + '</div><div class="white-label-photo-preview">' + (photo ? '<img src="' + escapeHtml(photo) + '" alt="' + escapeHtml(item.name) + '">' : "Sem foto") + '</div><div class="white-label-photo-source">' + (whiteLabelPhotoData[key] ? "Foto personalizada nesta sessão" : "Foto aprovada da CET") + '</div><button class="btn photo-paste-target" type="button" data-photo-index="' + index + '">Clique aqui e use Ctrl+V</button><input class="white-label-photo-input" type="file" accept="image/png,image/jpeg,image/webp" data-photo-index="' + index + '">' + (whiteLabelPhotoData[key] ? '<button class="btn" type="button" data-reset-photo="' + index + '">Usar foto aprovada</button>' : '') + '</div>';
+      }).join("");
+    }
+    async function prepareImage(file) {
+      if (!file || !/^image\/(jpeg|png|webp)$/.test(file.type)) throw new Error("Use uma imagem JPG, PNG ou WebP.");
+      if (file.size > 15000000) throw new Error("Escolha uma imagem de até 15 MB.");
+      const dataUrl = await new Promise((resolve, reject) => {
+        const reader = new FileReader(); reader.onload = () => resolve(reader.result); reader.onerror = reject; reader.readAsDataURL(file);
+      });
+      const image = await new Promise((resolve, reject) => {
+        const img = new Image(); img.onload = () => resolve(img); img.onerror = () => reject(new Error("Não foi possível abrir a imagem.")); img.src = dataUrl;
+      });
+      const ratio = Math.min(1, 1000 / Math.max(image.naturalWidth, image.naturalHeight));
+      const canvas = document.createElement("canvas");
+      canvas.width = Math.max(1, Math.round(image.naturalWidth * ratio)); canvas.height = Math.max(1, Math.round(image.naturalHeight * ratio));
+      canvas.getContext("2d").drawImage(image, 0, 0, canvas.width, canvas.height);
+      return canvas.toDataURL("image/jpeg", 0.78);
+    }
+    async function replacePartnerPhoto(index, file) {
+      const material = selectedMaterial;
+      const item = material && businessContentCache[getBusinessContentCacheKey(material)]?.items[index];
+      if (!item) return;
+      try {
+        const image = await prepareImage(file);
+        if (selectedMaterial !== material) return;
+        whiteLabelPhotoData[material.id + ":" + item.id] = image;
+        renderPhotoChoices(material); renderBusinessContentPreview(material);
+      } catch (error) { alert(error.message || "Não foi possível preparar a foto."); }
+    }
+    function updatePresentationModeInfo() {
+      document.getElementById("presentationModeInfo").innerHTML = isWhiteLabelMode()
+        ? '<strong>White Label</strong><span>Apresentação exclusiva da marca escolhida, sem assinatura visual da Curadoria Elite Travel.</span>'
+        : '<strong>Com assinatura Curadoria Elite Travel</strong><span>Identidade da marca apresentada ao cliente e assinatura discreta da Curadoria Elite Travel.</span>';
+      syncPartnerBrandData();
+    }
+    function showLogin(show) {
+      document.getElementById("partnerLogin").hidden = !show;
+      document.querySelector("main > .grid").hidden = show;
+      document.getElementById("partnerSessionStatus").textContent = show ? "Entre para consultar os materiais aprovados" : "Sessão autenticada";
+    }
+    async function initializePartner() {
+      clearMaterialSelection();
+      try {
+        const { data, error } = await supabaseClient.auth.getUser();
+        if (error || !data?.user) { showLogin(true); return; }
+        showLogin(false);
+        await loadMaterialsFromPublication();
+      } catch (error) {
+        showLogin(true); document.getElementById("loginStatus").textContent = "Não foi possível verificar a sessão. Tente entrar novamente.";
+      }
+    }
+    document.getElementById("partnerLoginForm").addEventListener("submit", async event => {
+      event.preventDefault();
+      const button = document.getElementById("partnerLoginButton"); button.disabled = true;
+      document.getElementById("loginStatus").textContent = "Entrando...";
+      try {
+        const { error } = await supabaseClient.auth.signInWithPassword({email:document.getElementById("partnerEmail").value.trim(), password:document.getElementById("partnerPassword").value});
+        if (error) throw error;
+        document.getElementById("partnerPassword").value = "";
+        await initializePartner();
+      } catch (error) { document.getElementById("loginStatus").textContent = "Não foi possível entrar: " + (error.message || error); }
+      finally { button.disabled = false; }
     });
+    document.getElementById("partnerSignOut").addEventListener("click", async () => {
+      const { error } = await supabaseClient.auth.signOut();
+      if (error) { alert("Não foi possível sair. Tente novamente."); return; }
+      window.location.reload();
+    });
+    document.getElementById("refreshMaterialsButton").addEventListener("click", initializePartner);
+    document.getElementById("previewButton").addEventListener("click", () => openBusinessMaterial(false));
+    document.getElementById("downloadButton").addEventListener("click", () => openBusinessMaterial(true));
     document.getElementById("destinationSearchInput").addEventListener("input", filterDestinations);
-    document.getElementById("prevPageButton").addEventListener("click", function() { changePage(-1); });
-    document.getElementById("nextPageButton").addEventListener("click", function() { changePage(1); });
-    document.getElementById("businessPreviewPrev").addEventListener("click", function() { changeBusinessPreviewPage(-1); });
-    document.getElementById("businessPreviewNext").addEventListener("click", function() { changeBusinessPreviewPage(1); });
-
-    document.getElementById("toggleClientPersonalization").addEventListener("click", function() {
-      document.getElementById("clientPersonalizationPanel").classList.toggle("active");
-    });
-
-    document.getElementById("clientGreetingType").addEventListener("change", renderClientPreviewText);
-    document.getElementById("clientNameInput").addEventListener("input", renderClientPreviewText);
-    document.getElementById("clientMessageInput").addEventListener("input", renderClientPreviewText);
+    document.getElementById("prevPageButton").addEventListener("click", () => changePage(-1));
+    document.getElementById("nextPageButton").addEventListener("click", () => changePage(1));
+    document.getElementById("businessPreviewPrev").addEventListener("click", () => changeBusinessPreviewPage(-1));
+    document.getElementById("businessPreviewNext").addEventListener("click", () => changeBusinessPreviewPage(1));
+    document.getElementById("toggleClientPersonalization").addEventListener("click", () => document.getElementById("clientPersonalizationPanel").classList.toggle("active"));
+    ["clientGreetingType", "clientNameInput", "clientMessageInput"].forEach(id => document.getElementById(id).addEventListener("input", renderClientPreviewText));
     document.getElementById("applyClientPersonalization").addEventListener("click", applyClientPersonalization);
     document.getElementById("clearClientPersonalization").addEventListener("click", clearClientPersonalization);
-    document.getElementById("sendClientEmailButton").addEventListener("click", async function() { await sendBusinessMaterialByEmail(); });
-
-    updatePartnerUsageDashboard();
-
-    const partnerCompanyInput = document.getElementById("partnerCompanyInput");
-    const clientBrandInput = document.getElementById("clientBrandInput");
-
-    const presentationModeInput = document.getElementById("presentationModeInput");
-    const presentationModeInfo = document.getElementById("presentationModeInfo");
-
-    function updatePresentationModeInfo() {
-      if (!presentationModeInput || !presentationModeInfo) return;
-
-      if (presentationModeInput.value === "whitelabel") {
-        presentationModeInfo.innerHTML = `
-          <strong>White Label</strong>
-          <span>
-            O material será preparado para apresentação exclusiva da marca escolhida,
-            sem a assinatura visual da Curadoria Elite Travel.
-          </span>
-        `;
-      } else {
-        presentationModeInfo.innerHTML = `
-          <strong>Com assinatura Curadoria Elite Travel</strong>
-          <span>
-            O material mantém a identidade da marca apresentada ao cliente
-            e a assinatura discreta da Curadoria Elite Travel.
-          </span>
-        `;
-      }
-
-      if (selectedMaterial) {
-        const businessPreviewText = document.getElementById("businessPreviewText");
-        if (businessPreviewText) {
-          businessPreviewText.innerText = presentationModeInput.value === "whitelabel"
-            ? `Material pronto para ser apresentado exclusivamente com a identidade da marca escolhida, sem assinatura da Curadoria Elite Travel.`
-            : `Material identificado no acervo da Curadoria Elite Travel e pronto para ser apresentado em uma versão business clean, com identidade da marca apresentada ao cliente e assinatura discreta da Curadoria.`;
-        }
-        renderBusinessContentPreview(selectedMaterial);
-      }
-    }
-
-    if (presentationModeInput) {
-      presentationModeInput.addEventListener("change", updatePresentationModeInfo);
-      updatePresentationModeInfo();
-    }
-
-    if (partnerCompanyInput) {
-      partnerCompanyInput.addEventListener("input", syncPartnerBrandData);
-    }
-
-    if (clientBrandInput) {
-      clientBrandInput.addEventListener("input", syncPartnerBrandData);
-    }
-
-    syncPartnerBrandData();
-
-    document.getElementById("logoInput").addEventListener("change", function(event) {
-      const file = event.target.files[0];
-
-      if (!file) {
-        return;
-      }
-
-      const reader = new FileReader();
-
-      reader.onload = function(e) {
-        partnerLogoDataUrl = e.target.result;
-
-        document.getElementById("logoPreview").innerHTML =
-          '<img src="' + e.target.result + '" alt="Logo da marca apresentada">';
-
-        document.getElementById("docLogoText").innerHTML =
-          '<img src="' + e.target.result + '" alt="Logo da marca apresentada">';
-
-        if (selectedMaterial) {
-          renderBusinessContentPreview(selectedMaterial);
-        }
-      };
-
-      reader.readAsDataURL(file);
+    ["partnerCompanyInput", "clientBrandInput"].forEach(id => document.getElementById(id).addEventListener("input", syncPartnerBrandData));
+    document.getElementById("presentationModeInput").addEventListener("change", updatePresentationModeInfo);
+    document.getElementById("logoInput").addEventListener("change", async event => {
+      if (!event.target.files[0]) return;
+      try { partnerLogoDataUrl = await prepareImage(event.target.files[0]); document.getElementById("logoPreview").innerHTML = getBrandLogoHtml(); syncPartnerBrandData(); }
+      catch (error) { alert(error.message || "Não foi possível preparar o logo."); }
     });
+    document.getElementById("whiteLabelPhotosList").addEventListener("focusin", event => {
+      activePhotoIndex = event.target.matches(".photo-paste-target") ? Number(event.target.dataset.photoIndex) : null;
+    });
+    document.getElementById("whiteLabelPhotosList").addEventListener("change", event => {
+      if (event.target.matches('input[type="file"]')) replacePartnerPhoto(Number(event.target.dataset.photoIndex), event.target.files[0]);
+    });
+    document.getElementById("whiteLabelPhotosList").addEventListener("click", event => {
+      if (!event.target.hasAttribute("data-reset-photo") || !selectedMaterial) return;
+      const index = Number(event.target.dataset.resetPhoto);
+      const item = getBusinessContentTemplate(selectedMaterial).items[index];
+      delete whiteLabelPhotoData[selectedMaterial.id + ":" + item.id];
+      renderPhotoChoices(selectedMaterial); renderBusinessContentPreview(selectedMaterial);
+    });
+    document.addEventListener("paste", event => {
+      if (activePhotoIndex === null || !document.activeElement?.matches(".photo-paste-target")) return;
+      const image = Array.from(event.clipboardData?.items || []).find(item => item.type.startsWith("image/"));
+      if (!image) return;
+      event.preventDefault(); const index = activePhotoIndex; activePhotoIndex = null; replacePartnerPhoto(index, image.getAsFile());
+    });
+    updatePartnerUsageDashboard();
+    renderClientPreviewText();
+    updatePresentationModeInfo();
+    initializePartner();
 
-    loadMaterialsFromPublication();
   </script>
 </body>
 </html>
