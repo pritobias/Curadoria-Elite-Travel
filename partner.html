@@ -917,7 +917,9 @@
 
     .business-item-photo {
       width: 170px;
-      height: 128px;
+      height: 100%;
+      min-height: 180px;
+      align-self: stretch;
       border: 1px solid rgba(214,173,50,.22);
       border-radius: 12px;
       background: #eee9dc;
@@ -1476,8 +1478,8 @@
     .business-city-text,.business-item-copy p{white-space:pre-line;overflow-wrap:anywhere}
     .business-a4-page .logo-placeholder{color:#111;font-weight:800;margin-bottom:20px}
     .business-a4-page > img{max-width:180px;max-height:100px;object-fit:contain;margin-bottom:20px}
-    .business-item-photo img{object-fit:contain}
-    @media(max-width:680px){header{height:auto;padding:16px;flex-wrap:wrap;gap:12px}.business-item-card{grid-template-columns:1fr}.business-item-photo{width:100%;height:180px}.business-a4-page{padding:18px}.doc-title{overflow-wrap:anywhere}}
+    .business-item-photo img{object-fit:cover}
+    @media(max-width:680px){header{height:auto;padding:16px;flex-wrap:wrap;gap:12px}.business-item-card{grid-template-columns:1fr}.business-item-photo{width:100%;height:220px;min-height:0}.business-a4-page{padding:18px}.doc-title{overflow-wrap:anywhere}}
 </style>
 </head>
 
@@ -1544,7 +1546,7 @@
             <label for="presentationModeInput">Apresentação do material</label>
             <select class="partner-select" id="presentationModeInput">
               <option value="curadoria">Com assinatura Curadoria Elite Travel</option>
-              <option value="whitelabel">White Label</option>
+              <option value="whitelabel">Exclusivo</option>
             </select>
             <small class="presentation-mode-help">
               Escolha como o material será apresentado ao cliente final.
@@ -2305,34 +2307,8 @@
       const businessContent = getBusinessContentTemplate(material);
 
       const personalizedCoverHtml = hasClientPersonalization()
-        ? `<div class="panel personalized-cover-panel">
-            <div class="page-kicker">Atendimento personalizado</div>
-            <h2>${getClientGreetingLine()}</h2>
-            <p>${getClientMessageText()}</p>
-          </div>
-          <div class="panel personalized-cover-panel">
-            <h2>${escapeHtml(category)} • ${escapeHtml(city)}</h2>
-            <p>${whiteLabel
-              ? `Material preparado para ${brandName}, para facilitar a consulta e a tomada de decisão durante a viagem.`
-              : `Material preparado em versão business clean por ${brandName}, com apoio da Curadoria Elite Travel, para facilitar a consulta e a tomada de decisão durante a viagem.`}</p>
-          </div>`
-        : whiteLabel
-          ? `<div class="panel">
-              <h2>Uso profissional</h2>
-              <ul>
-                <li>Material preparado para apresentação exclusiva da marca escolhida.</li>
-                <li>Identidade da marca aplicada ao documento.</li>
-                <li>Fotos aprovadas ou personalizadas pela empresa parceira.</li>
-              </ul>
-            </div>`
-          : `<div class="panel">
-              <h2>Uso profissional</h2>
-              <ul>
-                <li>Versão adaptada para envio ao cliente da empresa parceira.</li>
-                <li>Identidade da empresa aplicada ao documento.</li>
-                <li>Assinatura discreta da Curadoria Elite Travel como parceira de curadoria.</li>
-              </ul>
-            </div>`;
+        ? `<div class="panel personalized-cover-panel"><h2>${getClientGreetingLine()}</h2><p>${getClientMessageText()}</p></div>`
+        : "";
 
       const indicationPages = businessContent.items.length
         ? chunkItems(businessContent.items, 3).map(function(itemsChunk, chunkIndex) {
@@ -2487,7 +2463,7 @@
     .personalized-cover-panel p { font-size: 18px; line-height: 1.7; }
     .items-grid { display: grid; gap: 18px; position: relative; z-index: 1; }
     .printed-item-card { border: 1px solid #dfcfaa; border-radius: 20px; padding: 22px; background: rgba(255,255,255,.58); display: grid; grid-template-columns: 210px 1fr; gap: 20px; align-items: start; }
-    .printed-item-photo { width: 210px; height: 158px; border: 1px solid #dfcfaa; border-radius: 14px; background: #eee9dc; overflow: hidden; display: flex; align-items: center; justify-content: center; color: #8b8069; font-size: 11px; text-align: center; line-height: 1.35; }
+    .printed-item-photo { width: 210px; height: 100%; min-height: 210px; align-self: stretch; border: 1px solid #dfcfaa; border-radius: 14px; background: #eee9dc; overflow: hidden; display: flex; align-items: center; justify-content: center; color: #8b8069; font-size: 11px; text-align: center; line-height: 1.35; }
     .printed-item-photo img { width: 100%; height: 100%; object-fit: cover; }
     .printed-item-copy { min-width: 0; }
     .printed-item-number { width: 46px; height: 46px; border-radius: 50%; border: 1px solid rgba(214,173,50,.55); color: #9b7a19; background: rgba(214,173,50,.08); display: flex; align-items: center; justify-content: center; font-weight: 950; font-size: 15px; margin-bottom: 10px; }
@@ -2511,13 +2487,47 @@
     .closing-exclusive strong { color: #222; }
     .actions { text-align:center; margin:24px auto 0; max-width:820px; }
     .print-btn { border: none; border-radius: 14px; background: linear-gradient(135deg, #e3bd43, #b88712); color: #090909; padding: 14px 24px; font-weight: 900; cursor: pointer; }
-    @media (max-width: 700px) { .printed-item-card { grid-template-columns: 1fr; } .printed-item-photo { width: 100%; height: 170px; } }
+    @media (max-width: 700px) { .printed-item-card { grid-template-columns: 1fr; } .printed-item-photo { width: 100%; height: 240px; min-height: 0; } }
     @page { size: A4; margin: 0; }
     @media print {
       html, body { background: #fff; padding: 0; margin: 0; }
       .paper-page { box-shadow: none; border-radius: 0; width: 210mm; min-height: 297mm; padding: 15mm 15mm 25mm; margin: 0; break-after: page; page-break-after: always; }
       .paper-page:last-of-type { break-after: auto; page-break-after: auto; }
       .actions { display: none; } .printed-item-card { break-inside: avoid; } .page-footer { position: static; margin-top: 24px; }
+    }
+
+    /* The screen document and the printed document share the same A4 geometry. */
+    .paper-page { width: 210mm; height: 297mm; min-height: 297mm; max-width: none; padding: 14mm 14mm 24mm; border: 0; border-radius: 0; overflow: visible; }
+    .paper-page::before { inset: 6mm; border-radius: 4mm; }
+    .top { margin-bottom: 28px; padding-bottom: 18px; gap: 20px; }
+    h1 { font-size: 48px; line-height: 1.05; overflow-wrap: anywhere; }
+    h2 { font-size: 28px; margin-bottom: 18px; }
+    .subtitle { font-size: 19px; margin-bottom: 26px; }
+    .meta { margin: 24px 0; }
+    .meta div { padding: 14px; }
+    .lead { white-space: pre-line; font-size: 17px; line-height: 1.7; }
+    .page-kicker { font-size: 11px; margin-bottom: 12px; letter-spacing: 2px; }
+    .items-grid { display: block; }
+    .printed-item-card { display: grid; grid-template-columns: 190px minmax(0,1fr); gap: 18px; padding: 16px; margin: 0 0 16px; border-radius: 14px; break-inside: avoid; page-break-inside: avoid; }
+    .printed-item-card:last-child { margin-bottom: 0; }
+    .printed-item-photo { width: 190px; height: 190px; min-height: 0; align-self: start; }
+    .printed-item-photo img { object-fit: cover; }
+    .printed-item-number { width: 32px; height: 32px; font-size: 12px; margin-bottom: 8px; }
+    .printed-item-card h3 { font-size: 18px; line-height: 1.2; margin-bottom: 8px; overflow-wrap: anywhere; }
+    .printed-item-card p { font-size: 13px; line-height: 1.55; margin-bottom: 8px; overflow-wrap: anywhere; }
+    .detail { font-size: 12px; line-height: 1.4; margin-top: 4px; overflow-wrap: anywhere; }
+    .page-footer { position: absolute; left: 14mm; right: 14mm; bottom: 12mm; margin: 0; padding-top: 10px; font-size: 10px; }
+    .closing-text { font-size: 21px; }
+    .closing-brand { font-size: 30px; }
+    .closing-logo { min-height: 0; }
+    @media print {
+      html, body { width: 210mm; margin: 0; padding: 0; background: white; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+      .paper-page { width: 210mm; height: 297mm; min-height: 297mm; padding: 14mm 14mm 24mm; margin: 0; box-shadow: none; border: 0; overflow: visible; break-after: page; page-break-after: always; }
+      .paper-page:last-of-type { break-after: auto; page-break-after: auto; }
+      .printed-item-card { grid-template-columns: 190px minmax(0,1fr); }
+      .printed-item-photo { width: 190px; height: 190px; }
+      .page-footer { position: absolute; margin: 0; }
+      .actions { display: none; }
     }
   </style>
 </head>
@@ -2532,12 +2542,12 @@
 
     <div class="eyebrow">${whiteLabel ? "Material exclusivo" : "Versão Business Partner"}</div>
     <h1>${escapeHtml(category.toUpperCase())}</h1>
-    <div class="subtitle">${escapeHtml(city)} • ${whiteLabel ? "Material business" : "Material business"}${year ? " • " + year : ""}</div>
+    <div class="subtitle">${escapeHtml(city)} • ${whiteLabel ? "Seleção exclusiva" : "Seleção de indicações"}${year ? " • " + year : ""}</div>
 
     <div class="meta">
       <div><small>Categoria</small><strong>${escapeHtml(category)}</strong></div>
       <div><small>Destino</small><strong>${escapeHtml(city)}</strong></div>
-      <div><small>Formato</small><strong>${whiteLabel ? "White Label" : "Business clean"}</strong></div>
+      <div><small>Formato</small><strong>${whiteLabel ? "Exclusivo" : "Com assinatura CET"}</strong></div>
     </div>
 
     ${personalizedCoverHtml}
@@ -2561,7 +2571,7 @@
   ${closingPageHtml}
 
   <div class="actions">
-    <button class="print-btn" onclick="window.print()">Salvar ou imprimir versão ${whiteLabel ? "White Label" : "business"}</button>
+    <button class="print-btn" onclick="window.print()">Salvar ou imprimir versão ${whiteLabel ? "Exclusivo" : "business"}</button>
   </div>
 </body>
 </html>`;
@@ -2570,6 +2580,53 @@
 
     async function sendBusinessMaterialByEmail() {
       alert("O envio automático por e-mail ainda não está configurado. Salve o documento como PDF e encaminhe pelo seu e-mail.");
+    }
+
+    async function preparePrintedDocument(targetWindow) {
+      const doc = targetWindow.document;
+      await Promise.race([
+        Promise.all([doc.fonts?.ready || Promise.resolve(), ...Array.from(doc.images).map(img => img.decode ? img.decode().catch(() => {}) : Promise.resolve())]),
+        new Promise(resolve => setTimeout(resolve, 5000))
+      ]);
+      if (targetWindow.closed) return;
+      // Measure the actual rendered cards instead of assuming three will fit.
+      const templates = Array.from(doc.querySelectorAll(".paper-page")).filter(page => page.querySelector(".items-grid"));
+      const cards = templates.flatMap(page => Array.from(page.querySelectorAll(".printed-item-card")));
+      if (!templates.length) return;
+      let page, grid, used = 0, budget = 0;
+      function newPage() {
+        page = templates[0].cloneNode(true);
+        grid = page.querySelector(".items-grid"); grid.innerHTML = "";
+        templates[0].parentNode.insertBefore(page, templates[0]);
+        const footer = page.querySelector(".page-footer");
+        budget = footer.getBoundingClientRect().top - grid.getBoundingClientRect().top - 18;
+        used = 0;
+        if (budget <= 0) throw new Error("Não foi possível calcular a página A4. Abra a prévia em uma nova janela.");
+      }
+      newPage();
+      cards.forEach(card => {
+        grid.appendChild(card);
+        const height = card.getBoundingClientRect().height;
+        const gap = 16;
+        if (used > 0 && used + gap + height > budget) {
+          card.remove(); newPage(); grid.appendChild(card);
+        }
+        if (height > budget) throw new Error("Uma indicação contém texto maior que uma página. Revise esse cartão antes de imprimir.");
+        used += (used > 0 ? gap : 0) + height;
+      });
+      templates.forEach(template => template.remove());
+      const pages = Array.from(doc.querySelectorAll(".paper-page"));
+      pages.forEach((page, index) => {
+        const footerNumber = page.querySelector(".footer-page");
+        if (footerNumber) footerNumber.textContent = "Página " + (index + 1) + " de " + pages.length;
+        if (page.querySelector(".items-grid")) {
+          page.querySelector(".page-kicker").textContent = "Indicações selecionadas";
+        }
+        const footer = page.querySelector(".page-footer");
+        const content = Array.from(page.children).filter(child => child !== footer);
+        const bottom = Math.max(...content.map(child => child.getBoundingClientRect().bottom));
+        if (footer && bottom > footer.getBoundingClientRect().top - 10) throw new Error("O conteúdo excede o espaço da página. Reduza a mensagem ou revise o texto antes de imprimir.");
+      });
     }
 
     async function openBusinessMaterial(autoPrint) {
@@ -2587,12 +2644,9 @@
         businessWindow.document.open();
         businessWindow.document.write(documentHtml);
         businessWindow.document.close();
+        await preparePrintedDocument(businessWindow);
         if (autoPrint && !businessWindow.closed) {
-          await Promise.race([
-            Promise.all(Array.from(businessWindow.document.images).map(img => img.decode ? img.decode().catch(() => {}) : Promise.resolve())),
-            new Promise(resolve => setTimeout(resolve, 5000))
-          ]);
-          if (!businessWindow.closed) { businessWindow.focus(); businessWindow.print(); registerPartnerDownload(); }
+          businessWindow.focus(); businessWindow.print(); registerPartnerDownload();
         }
       } catch (error) {
         if (!businessWindow.closed) {
@@ -2788,7 +2842,7 @@
     }
     function updatePresentationModeInfo() {
       document.getElementById("presentationModeInfo").innerHTML = isWhiteLabelMode()
-        ? '<strong>White Label</strong><span>Apresentação exclusiva da marca escolhida, sem assinatura visual da Curadoria Elite Travel.</span>'
+        ? '<strong>Exclusivo</strong><span>Apresentação exclusiva da marca escolhida, sem assinatura visual da Curadoria Elite Travel.</span>'
         : '<strong>Com assinatura Curadoria Elite Travel</strong><span>Identidade da marca apresentada ao cliente e assinatura discreta da Curadoria Elite Travel.</span>';
       syncPartnerBrandData();
     }
