@@ -199,6 +199,7 @@
     .panorama-editor{width:100%;min-height:260px;border:1px solid rgba(255,255,255,.12);background:#050b14;color:#fff;border-radius:16px;padding:16px;font-family:Arial,Helvetica,sans-serif;font-size:15px;line-height:1.62;resize:vertical;box-sizing:border-box}
     .panorama-editor:focus{border-color:rgba(212,175,55,.55);box-shadow:0 0 0 3px rgba(212,175,55,.10);outline:none}
     .mini-actions{display:flex;gap:10px;flex-wrap:wrap;margin:12px 0 0}
+    .mini-btn:disabled{opacity:.42;cursor:not-allowed}
     .mini-btn{border:1px solid rgba(212,175,55,.35);background:rgba(0,0,0,.15);color:#d4af37;border-radius:12px;padding:10px 12px;font-weight:800;cursor:pointer}
     .mini-btn.danger{border-color:rgba(255,155,155,.40);color:#ffb3b3}
     .item-editor-field input:focus,.item-editor-field textarea:focus{border-color:rgba(212,175,55,.55);box-shadow:0 0 0 3px rgba(212,175,55,.10);outline:none}
@@ -277,7 +278,7 @@
       <h1>Publicação Partner</h1>
       <p class="lead">
         Central interna para transformar materiais B2C publicados em <strong>curadoria_materials</strong>
-        em dados estruturados para <strong>b2b_material_items</strong>. A empresa parceira não acessa esta tela.
+        em materiais revisados para as empresas parceiras. Salve a revisão e aprove quando estiver completa. A empresa parceira não acessa esta tela.
       </p>
     </section>
 
@@ -317,7 +318,7 @@
       <section class="panel">
         <h2>Publicação estruturada</h2>
         <p>
-          Processe o PDF uma única vez, valide a extração e publique os itens para a Área Partner consumir dados prontos.
+          Processe o PDF, confira os textos e as fotos e salve sua revisão. A aprovação é uma ação separada.
         </p>
 
         <div class="summary-grid">
@@ -352,9 +353,11 @@
 
         <div class="actions">
           <button class="btn btn-primary" id="processBtn" disabled>Processar PDF</button>
+          <button class="btn" id="saveReviewBtn" disabled>Salvar revisão</button>
+          <button class="btn" id="importLocalBtn" disabled>Recuperar rascunho deste navegador</button>
           <button class="btn" id="toggleRawBtn" disabled>Mostrar/Ocultar texto bruto</button>
-          <button class="btn btn-primary" id="publishBtn" disabled>Publicar em b2b_material_items</button>
-          <button class="btn btn-danger" id="replaceBtn" disabled>Substituir publicação existente</button>
+          <button class="btn btn-primary" id="publishBtn" disabled>Aprovar e publicar no B2B</button>
+          <button class="btn btn-danger" id="replaceBtn" disabled>Aprovar nova versão</button>
         </div>
 
         <div class="raw-box" id="rawBox">
@@ -409,6 +412,134 @@
     let selectedMaterial = null;
     let currentExtraction = null;
     let existingStructuredMap = new Map();
+    const ADMIN_USER_ID = "762bb07c-669f-4bc2-8057-36d1ac7d6041";
+    let cloudState = null;
+    let cloudLoaded = false;
+    let cloudFingerprint = "";
+    let networkBusy = false;
+    let selectionRevision = 0;
+
+    function setNetworkBusy(busy) {
+      networkBusy = busy;
+      document.querySelector("main .grid").inert = busy;
+      el("signOutBtn").disabled = busy;
+      refreshPublishAvailability();
+    }
+
+    function reviewPayload() {
+      return {
+        version: 3,
+        material: {
+          id: selectedMaterial.id,
+          category: normalizeCategoryName(selectedMaterial.category),
+          city_label: selectedMaterial.city_label,
+          year: normalizeYear(selectedMaterial.year),
+          pdf_url: selectedMaterial.pdf_url
+        },
+        panorama: currentExtraction.panorama || "",
+        panoramaSaved: currentExtraction.panoramaSaved === true,
+        items: (currentExtraction.items || []).map((item, index) => ({
+          item_order: index + 1,
+          name: item.name || "", description: item.description || "",
+          address: item.address || "", site: item.site || "",
+          entry_price: item.entry_price || "", saved: item.saved === true,
+          photoDataUrl: item.photoDataUrl || "",
+          photoSource: item.photoSource || ""
+        }))
+      };
+    }
+
+    function hasUnsavedChanges() {
+      return !!(selectedMaterial && currentExtraction &&
+        JSON.stringify(reviewPayload()) !== cloudFingerprint);
+    }
+
+    async function fetchCloudReview(material) {
+      const { data, error } = await supabaseClient
+        .from("b2b_material_versions")
+        .select("id, updated_at, status, is_ready, draft_payload, panorama")
+        .eq("source_material_id", material.id)
+        .eq("pdf_url", material.pdf_url)
+        .eq("is_active", true)
+        .in("status", ["draft", "published"])
+        .order("id", { ascending: false });
+      if (error) throw error;
+      return (data || []).find(row => row.status === "draft") ||
+        (data || []).find(row => row.status === "published" && row.is_ready) || null;
+    }
+
+    async function restoreCloudReview(material, revision) {
+      setNetworkBusy(true);
+      try {
+        const row = await fetchCloudReview(material);
+        if (revision !== selectionRevision) return;
+        cloudState = row;
+        cloudLoaded = true;
+        if (row && row.draft_payload && Array.isArray(row.draft_payload.items)) {
+          currentExtraction = {
+            ...row.draft_payload,
+            rawText: "",
+            panorama: row.draft_payload.panorama || row.panorama || "",
+            items: row.draft_payload.items.map(item => ({...item}))
+          };
+          cloudFingerprint = JSON.stringify(reviewPayload());
+          renderExtraction(currentExtraction);
+          setStep("stepExtract", "done");
+          setStatus(row.status === "published"
+            ? "Versão aprovada recuperada. Alterações serão salvas em um novo rascunho; a publicação atual continua disponível até a nova aprovação."
+            : "Revisão recuperada do Supabase. Você pode continuar sem processar o PDF novamente.", "ok");
+        } else {
+          setStatus("Material selecionado. Processe o PDF ou recupere um rascunho deste navegador, se houver.", "ok");
+        }
+      } catch (error) {
+        cloudLoaded = false;
+        setStatus("Não foi possível recuperar a revisão: <strong>" + escapeHtml(error.message || error) + "</strong>. Selecione o material novamente para tentar.", "error");
+      } finally {
+        if (revision === selectionRevision) {
+          setNetworkBusy(false);
+          el("processBtn").disabled = !cloudLoaded || normalizeCategoryName(material.category) === "City Guide";
+          el("importLocalBtn").disabled = !cloudLoaded || !readDraft(material) || normalizeCategoryName(material.category) === "City Guide";
+        }
+      }
+    }
+
+    async function persistReview(publish = false, replace = false) {
+      if (!cloudLoaded) throw new Error("Recarregue o material antes de salvar.");
+      const payload = reviewPayload();
+      if (new Blob([JSON.stringify(payload)]).size > 20000000) {
+        throw new Error("A revisão está muito grande. Reduza as fotos.");
+      }
+      const { data, error } = await supabaseClient.rpc("cet_save_b2b_review", {
+        p_source_material_id: selectedMaterial.id,
+        p_payload: payload,
+        p_expected_updated_at: cloudState && cloudState.status === "draft" ? cloudState.updated_at : null,
+        p_publish: publish,
+        p_replace: replace
+      });
+      if (error) throw error;
+      if (!data || !data.version_id || !data.updated_at) {
+        cloudLoaded = false;
+        throw new Error("Resposta de salvamento incompleta. Recarregue para conferir o banco.");
+      }
+      cloudState = { id: data.version_id, updated_at: data.updated_at, status: data.status, draft_payload: payload };
+      cloudFingerprint = JSON.stringify(payload);
+      return data;
+    }
+
+    function importLocalDraft() {
+      if (networkBusy || !cloudLoaded || !selectedMaterial) return;
+      const draft = readDraft();
+      if (!draft || !Array.isArray(draft.items)) return;
+      if (!confirm("Recuperar o rascunho deste navegador para a prévia?\n\nEle só será guardado no Supabase quando você clicar em Salvar revisão. Nada será aprovado agora.")) return;
+      currentExtraction = {
+        ...draft,
+        rawText: "",
+        items: draft.items.map(item => ({...item}))
+      };
+      renderExtraction(currentExtraction);
+      setStatus("Rascunho local recuperado para a prévia. Confira e clique em Salvar revisão para guardar no Supabase.", "ok");
+    }
+
 
     const el = (id) => document.getElementById(id);
 
@@ -496,88 +627,85 @@
     }
 
     async function requireSession() {
-      const { data } = await supabaseClient.auth.getSession();
-      if (!data || !data.session) {
-        window.location.href = "login.html";
+      const { data, error } = await supabaseClient.auth.getUser();
+      if (error || !data || !data.user) {
+        window.location.href = "admin.html";
+        return false;
+      }
+      if (data.user.id !== ADMIN_USER_ID) {
+        document.querySelector("main .grid").inert = true;
+        setStatus("Esta página é exclusiva da administradora da Curadoria Elite Travel.", "error");
+        el("signOutBtn").addEventListener("click", signOut);
         return false;
       }
       return true;
     }
 
     async function signOut() {
+      if (networkBusy) return;
+      if (hasUnsavedChanges() && !confirm("Sair e descartar as alterações ainda não guardadas?")) return;
       await supabaseClient.auth.signOut();
       window.location.href = "login.html";
     }
 
     async function loadMaterials() {
+      if (networkBusy) return;
+      if (hasUnsavedChanges() && !confirm("Recarregar o acervo e descartar as alterações ainda não guardadas?")) return;
+      if (networkBusy) return;
+      if (hasUnsavedChanges() && !confirm("Recarregar o acervo e descartar as alterações ainda não guardadas?")) return;
+      setNetworkBusy(true);
+      resetSelectedMaterialUI();
+      setStatus("Carregando o acervo...", "busy");
+      resetSteps();
+      setStep("stepLoad", "active");
       try {
-        setStatus("Carregando materiais da tabela <strong>curadoria_materials</strong>...", "busy");
-        resetSteps();
-        setStep("stepLoad", "active");
-        resetSelectedMaterialUI();
-
         const { data, error } = await supabaseClient
           .from("curadoria_materials")
           .select("id, category, city_label, pdf_url, year")
           .order("category", { ascending: true })
           .order("city_label", { ascending: true });
-
-        if (error) {
-          setStatus("Erro ao carregar curadoria_materials: <strong>" + error.message + "</strong>", "error");
-          setStep("stepLoad", "error");
-          return;
-        }
-
+        if (error) throw error;
         allMaterials = (data || []).filter(row => row.category && row.city_label && row.pdf_url);
-
-        // Primeiro mostra e seleciona o material imediatamente.
-        // A leitura de b2b_material_items é secundária e não pode travar a seleção.
         existingStructuredMap = new Map();
-        filterMaterials();
+        let statusError = null;
+        try { await loadExistingStructuredItems(); }
+        catch (error) { statusError = error; }
+        setNetworkBusy(false);
         setStep("stepLoad", "done");
-
-        if (filteredMaterials.length === 1 && selectedMaterial) {
-          setStatus("Material encontrado e selecionado automaticamente. Clique em <strong>Processar PDF</strong>.", "ok");
-        } else if (filteredMaterials.length > 1) {
-          setStatus("Materiais carregados. Selecione um destino para processar.", "ok");
-        } else {
-          setStatus("Nenhum material encontrado para os filtros atuais.", "error");
+        filterMaterials();
+        if (!networkBusy) {
+          setStatus(statusError
+            ? "Acervo carregado, mas não foi possível conferir as aprovações: " + escapeHtml(statusError.message || statusError)
+            : filteredMaterials.length ? "Acervo carregado. Selecione um material para revisar." : "Nenhum material encontrado para os filtros atuais.", statusError ? "error" : "ok");
         }
-
-        // Carrega o status estruturado depois, sem impedir o uso da tela.
-        loadExistingStructuredItems()
-          .then(() => renderMaterialsList())
-          .catch(error => console.warn("Status b2b_material_items ignorado", error));
       } catch (error) {
-        console.error(error);
-        setStatus("Erro inesperado ao carregar materiais: <strong>" + (error.message || error) + "</strong>", "error");
+        setNetworkBusy(false);
+        setStatus("Erro ao carregar o acervo: <strong>" + escapeHtml(error.message || error) + "</strong>", "error");
         setStep("stepLoad", "error");
       }
     }
 
     async function loadExistingStructuredItems() {
-      existingStructuredMap = new Map();
       const { data, error } = await supabaseClient
-        .from("b2b_material_items")
-        .select("category, city_label, year, item_order, is_active");
-
-      if (error) {
-        console.warn("Não foi possível ler b2b_material_items", error);
-        return;
-      }
-
+        .from("b2b_material_versions")
+        .select("id, source_material_id, pdf_url, status, is_active, is_ready")
+        .eq("is_active", true);
+      if (error) throw error;
+      const map = new Map();
       (data || []).forEach(row => {
-        const key = materialKey(row.category, row.city_label, row.year);
-        const current = existingStructuredMap.get(key) || { total: 0, active: 0 };
-        current.total += 1;
-        if (row.is_active) current.active += 1;
-        existingStructuredMap.set(key, current);
+        const key = String(row.source_material_id) + "||" + row.pdf_url;
+        const state = map.get(key) || { published: false, draft: false };
+        if (row.status === "published" && row.is_ready === true) state.published = true;
+        if (row.status === "draft") state.draft = true;
+        map.set(key, state);
       });
+      existingStructuredMap = map;
     }
 
     function getMaterialIdentity(material) {
       if (!material) return "";
       return [
+        String(material.id),
         normalizeCategoryName(material.category),
         String(material.city_label || "").trim(),
         normalizeYear(material.year),
@@ -588,6 +716,11 @@
     function resetSelectedMaterialUI() {
       selectedMaterial = null;
       currentExtraction = null;
+      cloudState = null;
+      cloudLoaded = false;
+      cloudFingerprint = "";
+      activePhotoPasteIndex = null;
+      selectionRevision += 1;
       resetPreview();
       el("selectedBox").innerHTML = `<h3>Nenhum material selecionado</h3><p>Selecione um destino na lista à esquerda para iniciar o processamento.</p>`;
       el("metricSelected").textContent = "--";
@@ -596,7 +729,8 @@
       el("toggleRawBtn").disabled = true;
       el("publishBtn").disabled = true;
       el("replaceBtn").disabled = true;
-      renderProgress();
+      refreshPublishAvailability();
+      el("importLocalBtn").disabled = true;
     }
 
     function filterMaterials() {
@@ -614,6 +748,16 @@
       const selectedStillVisible = selectedMaterial && filteredMaterials.some(material => getMaterialIdentity(material) === getMaterialIdentity(selectedMaterial));
 
       if (!selectedStillVisible) {
+        if (hasUnsavedChanges() && !confirm("Mudar os filtros e descartar as alterações ainda não guardadas?")) {
+          el("categorySelect").value = normalizeCategoryName(selectedMaterial.category);
+          el("yearSelect").value = normalizeYear(selectedMaterial.year);
+          el("searchInput").value = "";
+          filteredMaterials = allMaterials.filter(material =>
+            normalizeCategoryName(material.category) === normalizeCategoryName(selectedMaterial.category) &&
+            normalizeYear(material.year) === normalizeYear(selectedMaterial.year));
+          renderMaterialsList();
+          return;
+        }
         resetSelectedMaterialUI();
       }
 
@@ -637,18 +781,20 @@
       }
 
       filteredMaterials.forEach(material => {
-        const key = materialKey(material.category, material.city_label, material.year);
+        const key = String(material.id) + "||" + material.pdf_url;
         const existing = existingStructuredMap.get(key);
         const isSelected = selectedMaterial && getMaterialIdentity(material) === getMaterialIdentity(selectedMaterial);
-        const statusBadge = existing && existing.active
-          ? `<span class="badge ok">Publicado · ${existing.active} itens</span>`
-          : `<span class="badge warn">Pendente</span>`;
+        const statusBadge = existing && existing.published
+          ? `<span class="badge ok">Aprovado</span>${existing.draft ? '<span class="badge warn">Nova revisão</span>' : ''}`
+          : existing && existing.draft
+            ? `<span class="badge warn">Em revisão</span>`
+            : `<span class="badge warn">Pendente de revisão</span>`;
 
         const row = document.createElement("div");
         row.className = "material-row" + (isSelected ? " active" : "");
         row.innerHTML = `
-          <p class="material-title">${material.city_label}</p>
-          <div class="material-meta">${normalizeCategoryName(material.category)} · ${normalizeYear(material.year)}</div>
+          <p class="material-title">${escapeHtml(material.city_label)}</p>
+          <div class="material-meta">${escapeHtml(normalizeCategoryName(material.category))} · ${normalizeYear(material.year)}</div>
           <div class="badges">${statusBadge}<span class="badge">PDF disponível</span></div>
           <div class="row-actions">
             <button type="button" class="mini-select">${isSelected ? "Selecionado" : "Selecionar"}</button>
@@ -669,37 +815,38 @@
     function applySelectedMaterial(material) {
       selectedMaterial = material;
       currentExtraction = null;
+      cloudState = null;
+      cloudLoaded = false;
+      cloudFingerprint = "";
+      activePhotoPasteIndex = null;
       resetPreview();
-      const savedDraft = readDraft(material);
-
       el("selectedBox").innerHTML = `
-
-        <h3>${material.city_label}</h3>
-        <p>${normalizeCategoryName(material.category)} · ${normalizeYear(material.year)} · Fonte: curadoria_materials</p>
-        ${savedDraft ? `<div class="draft-note" style="margin-top:14px">Rascunho encontrado neste navegador. Depois de processar o PDF, o sistema poderá continuar de onde você parou.</div>` : ""}
-      `;
-
+        <h3>${escapeHtml(material.city_label)}</h3>
+        <p>${escapeHtml(normalizeCategoryName(material.category))} · ${normalizeYear(material.year)}</p>
+        <p style="margin-top:12px">A revisão salva fica disponível em outros computadores. Salvar não aprova o material.</p>`;
       el("metricSelected").textContent = material.city_label.split(" - ")[0] || material.city_label;
       el("metricItems").textContent = "--";
-      el("processBtn").disabled = false;
+      el("processBtn").disabled = true;
       el("toggleRawBtn").disabled = true;
       el("publishBtn").disabled = true;
       el("replaceBtn").disabled = true;
       resetSteps();
       setStep("stepLoad", "done");
-
+      const revision = ++selectionRevision;
       if (normalizeCategoryName(material.category) === "City Guide") {
-        setStatus("City Guide foi deixado para a próxima fase, porque exige um modelo diferente e maior.", "ok");
-        el("processBtn").disabled = true;
-      } else {
-        setStatus("Material selecionado. Clique em <strong>Processar PDF</strong> para gerar a prévia estruturada.", "ok");
+        setStatus("City Guide exige um modelo próprio e continua reservado para a próxima etapa.", "ok");
+        refreshPublishAvailability();
+        return;
       }
+      setStatus("Recuperando a revisão salva...", "busy");
+      restoreCloudReview(material, revision);
     }
 
     function selectMaterial(material, options = {}) {
+      if (networkBusy) return;
+      if (hasUnsavedChanges() && !confirm("Existem alterações que ainda não foram guardadas no Supabase. Trocar de material e descartá-las?")) return;
       applySelectedMaterial(material);
       renderMaterialsList();
-
       if (!options.silentScroll && window.innerWidth < 900) {
         el("selectedBox").scrollIntoView({ behavior: "smooth", block: "start" });
       }
@@ -790,7 +937,7 @@
       return result.rawText;
     }
 
-    function compressImageDataUrl(dataUrl, maxSide = 1000, quality = 0.78) {
+    function compressImageDataUrl(dataUrl, maxSide = 800, quality = 0.72) {
       return new Promise((resolve, reject) => {
         const image = new Image();
         image.onload = () => {
@@ -1036,73 +1183,27 @@
       }
     }
 
-    function writeDraft(draft, material = selectedMaterial) {
-      const key = getDraftKey(material);
-      if (!key) return false;
+
+    async function saveDraftState() {
+      if (networkBusy || !selectedMaterial || !currentExtraction) return false;
+      collectExtractionFromScreen();
+      setNetworkBusy(true);
+      setStatus("Guardando a revisão e as fotos...", "busy");
       try {
-        localStorage.setItem(key, JSON.stringify({
-          version: 2,
-          saved_at: new Date().toISOString(),
-          material: {
-            category: normalizeCategoryName(material.category),
-            city_label: material.city_label,
-            year: normalizeYear(material.year),
-            pdf_url: material.pdf_url
-          },
-          panorama: draft.panorama || "",
-          panoramaSaved: !!draft.panoramaSaved,
-          items: Array.isArray(draft.items) ? draft.items : []
-        }));
+        await persistReview(false, false);
+        setStatus("Revisão e fotos guardadas no Supabase. Você pode continuar em outro computador. Esta revisão ainda depende de aprovação.", "ok");
+        try { await loadExistingStructuredItems(); renderMaterialsList(); }
+        catch (error) { console.warn("Revisão salva; lista de status não atualizada", error); }
         return true;
       } catch (error) {
-        console.error(error);
-        setStatus("Não foi possível salvar o rascunho local. O navegador pode estar sem espaço.", "error");
+        setStatus("Não foi possível confirmar o salvamento: <strong>" + escapeHtml(error.message || error) + "</strong>. Mantenha esta página aberta; as alterações permanecem na prévia.", "error");
         return false;
+      } finally {
+        setNetworkBusy(false);
+        renderProgress();
       }
     }
 
-    function saveDraftState() {
-      if (!selectedMaterial || !currentExtraction) return false;
-      return writeDraft({
-        panorama: currentExtraction.panorama || "",
-        panoramaSaved: !!currentExtraction.panoramaSaved,
-        items: currentExtraction.items || []
-      });
-    }
-
-    function applySavedDraft(extraction) {
-      const draft = readDraft();
-      if (!draft) return extraction;
-
-      const savedItems = Array.isArray(draft.items) ? draft.items : [];
-      const items = (extraction.items || []).map((item, index) => {
-        const saved = savedItems[index];
-        if (!saved) return item;
-        const merged = {
-          ...item,
-          ...saved,
-          item_order: index + 1
-        };
-
-        // O rascunho antigo pode ter sido salvo antes de o sistema encontrar
-        // automaticamente as fotos. Nunca deixe uma foto extraída agora ser
-        // apagada por um photoDataUrl vazio do rascunho.
-        if (item.photoDataUrl && !saved.photoDataUrl) {
-          merged.photoDataUrl = item.photoDataUrl;
-          merged.photoSource = item.photoSource || "PDF · captura automática";
-        }
-
-        return merged;
-      });
-
-      return {
-        ...extraction,
-        panorama: draft.panoramaSaved ? (draft.panorama || extraction.panorama || "") : extraction.panorama,
-        panoramaSaved: !!draft.panoramaSaved,
-        items,
-        draftSavedAt: draft.saved_at || null
-      };
-    }
 
     function getProgressState() {
       const items = currentExtraction && Array.isArray(currentExtraction.items) ? currentExtraction.items : [];
@@ -1138,6 +1239,7 @@
         `<span class="progress-pill ${state.photos === state.total && state.total ? "ok" : "warn"}">Fotos ${state.photos}/${state.total}</span>`,
         `<span class="progress-pill ${state.ready ? "ok" : "warn"}">${state.ready ? "Pronto para revisão final" : "Em revisão"}</span>`
       ];
+      pills.push(`<span class="progress-pill ${hasUnsavedChanges() ? "warn" : "ok"}">${hasUnsavedChanges() ? "Alterações não guardadas" : "Revisão guardada no Supabase"}</span>`);
       details.innerHTML = pills.join("");
     }
 
@@ -1202,15 +1304,27 @@
     }
 
     function refreshPublishAvailability() {
+      const allowed = !networkBusy && cloudLoaded && !!currentExtraction;
+      el("saveReviewBtn").disabled = !allowed;
       if (!currentExtraction) {
+        el("publishBtn").disabled = true;
+        el("replaceBtn").disabled = true;
         renderProgress();
         return;
       }
       const quality = validateExtraction(currentExtraction);
-      const blocked = quality.critical.length > 0;
+      const blocked = !allowed || quality.critical.length > 0;
       el("publishBtn").disabled = blocked;
       el("replaceBtn").disabled = blocked;
       el("metricItems").textContent = String((currentExtraction.items || []).length);
+      document.querySelectorAll('[data-item-card="true"]').forEach((card, index) => {
+        const state = card.querySelector(".save-state");
+        if (state) state.textContent = currentExtraction.items[index]?.saved
+          ? "✓ Indicação revisada" : "○ Indicação ainda não confirmada";
+      });
+      const panoramaState = document.querySelector('[onclick="savePanorama()"]')?.parentElement.querySelector(".save-state");
+      if (panoramaState) panoramaState.textContent = currentExtraction.panoramaSaved
+        ? "✓ Panorama revisado" : "○ Panorama ainda não confirmado";
       renderQualityList(quality);
       renderProgress();
     }
@@ -1255,54 +1369,50 @@
       return item;
     }
 
-    function savePanorama() {
-      if (!currentExtraction) return;
-      const panorama = String(el("panoramaPreview")?.value || "").trim();
-      if (!panorama) {
-        alert("O panorama ainda está vazio. Digite ou revise o texto antes de salvar.");
-        return;
-      }
-
+    async function savePanorama() {
+      if (networkBusy || !currentExtraction) return;
+      const panorama = String(el("panoramaPreview").value || "").trim();
+      if (!panorama) { alert("Revise o panorama antes de salvar."); return; }
       currentExtraction.panorama = panorama;
+      const previous = currentExtraction.panoramaSaved;
       currentExtraction.panoramaSaved = true;
-      saveDraftState();
+      const saved = await saveDraftState();
+      if (!saved) currentExtraction.panoramaSaved = previous;
       renderExtraction(currentExtraction);
-      setStatus("Panorama salvo. Você pode sair e continuar depois sem perder esta etapa.", "ok");
     }
 
-    function saveCurrentItem(index) {
-      if (!currentExtraction || !currentExtraction.items || !currentExtraction.items[index]) return;
+    async function saveCurrentItem(index) {
+      if (networkBusy || !currentExtraction || !currentExtraction.items[index]) return;
       const item = collectItemFromCard(index);
       const problems = getItemProblems(item);
-
-      if (problems.length) {
-        alert("Esta indicação ainda precisa de revisão:\\n\\n" + problems.join("\\n"));
-        return;
-      }
-
+      if (problems.length) { alert("Revise esta indicação:\n\n" + problems.join("\n")); return; }
+      const previous = item.saved;
       item.saved = true;
-      currentExtraction.items[index] = item;
-      saveDraftState();
+      const saved = await saveDraftState();
+      if (!saved) currentExtraction.items[index].saved = previous;
       renderExtraction(currentExtraction);
-      setStatus("Indicação " + String(index + 1).padStart(2, "0") + " salva. Progresso preservado.", "ok");
     }
 
     async function handlePhotoFile(index, file) {
+      if (networkBusy || !currentExtraction || !currentExtraction.items[index]) return;
+      const extractionAtStart = currentExtraction;
+      const itemAtStart = currentExtraction.items[index];
       if (!file || !file.type || !file.type.startsWith("image/")) {
         alert("Selecione uma imagem válida.");
         return;
       }
       try {
         const dataUrl = await fileToCompressedDataUrl(file);
+        if (currentExtraction !== extractionAtStart || currentExtraction.items[index] !== itemAtStart) return;
+        if (dataUrl.length > 600000) throw new Error("Foto muito grande. Tente uma imagem menor.");
         currentExtraction.items[index].photoDataUrl = dataUrl;
         currentExtraction.items[index].photoSource = "Imagem inserida manualmente";
         currentExtraction.items[index].saved = false;
-        saveDraftState();
         renderExtraction(currentExtraction);
         setStatus("Foto substituída. Salve a indicação para confirmar esta alteração.", "ok");
       } catch (error) {
         console.error(error);
-        alert("Não foi possível preparar essa imagem.");
+        alert(error.message || "Não foi possível preparar essa imagem.");
       }
     }
 
@@ -1396,7 +1506,7 @@
         const cardClass = problems.length ? "problem" : (item.saved ? "ok" : "");
         const statusText = problems.length ? (item.saved ? "Salvo · revisar" : "Revisar") : (item.saved ? "Salvo ✓" : "Não salvo");
         const photo = item.photoDataUrl
-          ? `<img src="${item.photoDataUrl}" alt="Foto de ${escapeHtml(item.name || "indicação")}">`
+          ? `<img src="${escapeHtml(item.photoDataUrl)}" alt="Foto de ${escapeHtml(item.name || "indicação")}">`
           : `<div class="photo-empty">Nenhuma foto disponível.<br>Use o campo abaixo para colar uma imagem ou escolher um arquivo.</div>`;
 
         return `
@@ -1413,7 +1523,7 @@
             <div class="photo-editor">
               <div class="photo-preview">${photo}</div>
               <div class="photo-source">${escapeHtml(item.photoSource || (item.photoDataUrl ? "Foto disponível" : "Foto pendente"))}</div>
-              <div class="photo-paste" tabindex="0" onclick="focusPhotoPaste(${index}, this)">
+              <div class="photo-paste" tabindex="0" onfocus="focusPhotoPaste(${index}, this)" onclick="this.focus()">
                 Clique aqui para ativar e depois use <strong>Ctrl+V</strong> para colar a foto copiada.
               </div>
               <div class="photo-actions">
@@ -1456,8 +1566,7 @@
         `;
       }).join("");
 
-      renderQualityList(quality);
-      renderProgress();
+      refreshPublishAvailability();
     }
 
     function removePhoto(index) {
@@ -1465,7 +1574,6 @@
       currentExtraction.items[index].photoDataUrl = "";
       currentExtraction.items[index].photoSource = "";
       currentExtraction.items[index].saved = false;
-      saveDraftState();
       renderExtraction(currentExtraction);
       setStatus("Foto removida. Insira a foto correta e salve novamente a indicação.", "ok");
     }
@@ -1481,48 +1589,35 @@
     }
 
     async function processSelectedPdf() {
-      if (!selectedMaterial) return;
+      if (networkBusy || !selectedMaterial || !cloudLoaded) return;
+      if (currentExtraction && !confirm("Processar o PDF novamente para uma nova prévia?\n\nA prévia atual será substituída. A revisão guardada e a publicação aprovada permanecem no banco.")) return;
+      const material = selectedMaterial;
+      const previous = currentExtraction;
+      setNetworkBusy(true);
+      setStep("stepRead", "active");
+      setStatus("Lendo o PDF e procurando as fotos...", "busy");
       try {
-        currentExtraction = null;
-        resetPreview();
-        setStep("stepRead", "active");
-        setStep("stepExtract", "");
-        setStep("stepPublish", "");
-        setStatus("Lendo PDF de <strong>" + selectedMaterial.city_label + "</strong> e procurando as fotos automaticamente...", "busy");
-        el("processBtn").disabled = true;
-
-        const result = await extractPdfTextAndPhotos(selectedMaterial.pdf_url, 4, 10);
-        setStep("stepRead", "done");
-        setStep("stepExtract", "active");
-
-        let extraction = parseGenericMaterial(result.rawText, selectedMaterial);
-        const autoPhotos = result.photos || [];
-
+        const result = await extractPdfTextAndPhotos(material.pdf_url, 4, 10);
+        const extraction = parseGenericMaterial(result.rawText, material);
         extraction.items.forEach((item, index) => {
-          if (autoPhotos[index]) {
-            item.photoDataUrl = autoPhotos[index].dataUrl;
-            item.photoSource = autoPhotos[index].source + " · pág. " + autoPhotos[index].page;
-          }
+          const photo = (result.photos || [])[index];
+          if (photo) { item.photoDataUrl = photo.dataUrl; item.photoSource = photo.source + " · pág. " + photo.page; }
           item.saved = false;
         });
-
-        currentExtraction = applySavedDraft(extraction);
-
+        extraction.panoramaSaved = false;
+        currentExtraction = extraction;
+        activePhotoPasteIndex = null;
         renderExtraction(currentExtraction);
+        setStep("stepRead", "done");
         setStep("stepExtract", "done");
-
-        const draftState = getProgressState();
-        if (draftState.savedItems || draftState.panoramaSaved) {
-          setStatus("Material processado e rascunho anterior recuperado. Continue a revisão de onde parou.", "ok");
-        } else {
-          setStatus("Prévia estruturada gerada. As fotos foram capturadas automaticamente quando identificadas no PDF. Revise antes de salvar.", "ok");
-        }
+        setStep("stepPublish", "");
+        setStatus("Prévia extraída. Confira todos os textos e recortes; a extração automática pode misturar informações. Clique em Salvar revisão para guardar o trabalho.", "ok");
       } catch (error) {
-        console.error(error);
+        currentExtraction = previous;
         setStep("stepRead", "error");
         setStatus("Erro ao processar PDF: <strong>" + escapeHtml(error.message || error) + "</strong>", "error");
       } finally {
-        el("processBtn").disabled = false;
+        setNetworkBusy(false);
       }
     }
 
@@ -1560,322 +1655,60 @@
     }
 
     async function publishExtraction(replaceExisting) {
-      if (!selectedMaterial || !currentExtraction) return;
-
-      const finalExtraction = collectExtractionFromScreen();
-
-      if (
-        !finalExtraction ||
-        !finalExtraction.items ||
-        !finalExtraction.items.length
-      ) {
-        alert("Não há cards na tela para publicar.");
-        return;
-      }
-
-      const quality = validateExtraction(finalExtraction);
-
-      if (quality.critical && quality.critical.length) {
-        alert(
-          "Este material ainda não pode ser publicado. " +
-          "Corrija os cards sinalizados antes de salvar em b2b_material_items."
-        );
-
-        renderExtraction(currentExtraction);
-        return;
-      }
-
-      const category = normalizeCategoryName(selectedMaterial.category);
-      const city = String(selectedMaterial.city_label || "").trim();
-      const year = normalizeYear(selectedMaterial.year);
-
-      if (!category || !city || !year) {
-        alert(
-          "Não foi possível identificar corretamente categoria, destino ou ano."
-        );
-        return;
-      }
-
-      /*
-       * Primeiro verificamos diretamente no Supabase se já existe uma
-       * publicação ativa para este destino, categoria e ano.
-       *
-       * Isso evita depender somente do estado visual da tela.
-       */
-      const { data: existingRows, error: existingError } = await supabaseClient
-        .from("b2b_material_items")
-        .select(
-          "id, category, city_label, year, item_order, item_name, is_active"
-        )
-        .eq("category", category)
-        .eq("city_label", city)
-        .eq("year", year)
-        .order("item_order", { ascending: true });
-
-      if (existingError) {
-        console.error(existingError);
-
-        alert(
-          "Não foi possível verificar a publicação atual no Supabase.\n\n" +
-          existingError.message
-        );
-
-        return;
-      }
-
-      const existingActiveRows = (existingRows || []).filter(function(row) {
-        return row.is_active === true;
-      });
-
-      if (!replaceExisting && existingActiveRows.length) {
-        alert(
-          "Este destino já possui uma publicação ativa.\n\n" +
-          category +
-          " · " +
-          city +
-          " · " +
-          year +
-          "\n\n" +
-          "Itens ativos encontrados: " +
-          existingActiveRows.length +
-          "\n\n" +
-          "Use “Substituir publicação existente” para substituir a versão atual."
-        );
-
-        updatePublishButtons(false);
-        return;
-      }
-
-      const confirmed = confirm(
-        (replaceExisting ? "Substituir" : "Publicar") +
-          " dados estruturados?\n\n" +
-          category +
-          " · " +
-          city +
-          " · " +
-          year +
-          "\n\n" +
-          finalExtraction.items.length +
-          " itens serão publicados em b2b_material_items."
-      );
-
-      if (!confirmed) return;
-
+      if (networkBusy || !selectedMaterial || !currentExtraction || !cloudLoaded) return;
+      collectExtractionFromScreen();
+      const quality = validateExtraction(currentExtraction);
+      if (quality.critical.length) { alert(quality.critical.join("\n")); return; }
+      const message = replaceExisting
+        ? "Aprovar esta nova versão para o B2B? A versão anterior será arquivada somente se a operação inteira concluir."
+        : "Você conferiu os textos e as fotos? Aprovar este material para o B2B?";
+      if (!confirm(message)) return;
+      setNetworkBusy(true);
+      setStep("stepPublish", "active");
+      setStatus("Aprovando a versão e guardando os itens e as fotos...", "busy");
+      let committed = false;
       try {
-        setStep("stepPublish", "active");
-
-        setStatus(
-          "Publicando <strong>" +
-            escapeHtml(category) +
-            "</strong> · <strong>" +
-            escapeHtml(city) +
-            "</strong> em <strong>b2b_material_items</strong>...",
-          "busy"
-        );
-
-        el("publishBtn").disabled = true;
-        el("replaceBtn").disabled = true;
-
-        /*
-         * Se for substituição, remove SOMENTE os registros deste
-         * destino + categoria + ano.
-         */
-        if (replaceExisting) {
-          const { error: deleteError } = await supabaseClient
-            .from("b2b_material_items")
-            .delete()
-            .eq("category", category)
-            .eq("city_label", city)
-            .eq("year", year);
-
-          if (deleteError) {
-            throw deleteError;
-          }
-        }
-
-        /*
-         * Monta exatamente as linhas que serão publicadas.
-         */
-        const rows = finalExtraction.items.map(function(item, index) {
-          return {
-            category: category,
-            city_label: city,
-            year: year,
-            panorama: finalExtraction.panorama || "",
-            item_order: index + 1,
-            item_name: String(item.name || "").trim(),
-            description: String(item.description || "").trim(),
-            address: String(item.address || "").trim(),
-            site: String(item.site || "").trim(),
-            entry_price: String(item.entry_price || "").trim(),
-            is_active: true
-          };
-        });
-
-        /*
-         * Validação final antes do INSERT.
-         */
-        const invalidRows = rows.filter(function(row) {
-          return !row.item_name || !row.description;
-        });
-
-        if (invalidRows.length) {
-          throw new Error(
-            "Existem itens sem nome ou descrição. A publicação foi interrompida."
-          );
-        }
-
-        /*
-         * PUBLICAÇÃO REAL NO SUPABASE.
-         */
-        const { data: insertedRows, error: insertError } = await supabaseClient
+        const result = await persistReview(true, replaceExisting);
+        committed = true;
+        const { data: version, error: versionError } = await supabaseClient
+          .from("b2b_material_versions")
+          .select("id, status, is_ready, is_active")
+          .eq("id", result.version_id).single();
+        if (versionError) throw versionError;
+        const { data: items, error: itemsError } = await supabaseClient
           .from("b2b_material_items")
-          .insert(rows)
-          .select(
-            "id, category, city_label, year, item_order, item_name, is_active"
-          );
-
-        if (insertError) {
-          throw insertError;
+          .select("id, item_order, photo_data_url")
+          .eq("version_id", result.version_id).eq("is_active", true);
+        if (itemsError) throw itemsError;
+        if (version.status !== "published" || !version.is_ready || !version.is_active ||
+            items.length !== result.item_count || items.some(item => !item.photo_data_url)) {
+          throw new Error("Os dados retornados não passaram na conferência final.");
         }
-
-        /*
-         * VERIFICAÇÃO REAL NO BANCO.
-         *
-         * Não consideramos a publicação concluída apenas porque o INSERT
-         * retornou sucesso. Consultamos novamente o banco.
-         */
-        const { data: verifiedRows, error: verifyError } = await supabaseClient
-          .from("b2b_material_items")
-          .select(
-            "id, category, city_label, year, item_order, item_name, is_active"
-          )
-          .eq("category", category)
-          .eq("city_label", city)
-          .eq("year", year)
-          .order("item_order", { ascending: true });
-
-        if (verifyError) {
-          throw verifyError;
-        }
-
-        const verifiedActiveRows = (verifiedRows || []).filter(function(row) {
-          return row.is_active === true;
-        });
-
-        /*
-         * A publicação só é considerada concluída se a quantidade ativa
-         * encontrada no banco for exatamente a quantidade publicada.
-         */
-        if (verifiedActiveRows.length !== rows.length) {
-          throw new Error(
-            "A publicação não passou na verificação final.\n\n" +
-            "Esperados: " +
-            rows.length +
-            "\n" +
-            "Ativos encontrados: " +
-            verifiedActiveRows.length
-          );
-        }
-
-        /*
-         * Confirma que todos os registros pertencem à identidade correta.
-         */
-        const wrongIdentity = verifiedActiveRows.some(function(row) {
-          return (
-            normalizeCategoryName(row.category) !== category ||
-            String(row.city_label || "").trim() !== city ||
-            normalizeYear(row.year) !== year
-          );
-        });
-
-        if (wrongIdentity) {
-          throw new Error(
-            "A verificação encontrou registros com categoria, destino ou ano incorretos."
-          );
-        }
-
-        /*
-         * O rascunho local continua existindo como apoio à tela administrativa.
-         * A fonte oficial da publicação continua sendo b2b_material_items.
-         */
-        writeDraft(
-          {
-            panorama: finalExtraction.panorama,
-            panoramaSaved: true,
-            items: finalExtraction.items.map(function(item) {
-              return {
-                ...item,
-                saved: true
-              };
-            }),
-            published_at: new Date().toISOString()
-          },
-          selectedMaterial
-        );
-
-        /*
-         * Atualiza o status das publicações existentes.
-         */
-        await loadExistingStructuredItems();
-        renderMaterialsList();
-
         setStep("stepPublish", "done");
-
-        setStatus(
-          "<strong>Publicado com sucesso.</strong><br>" +
-            escapeHtml(category) +
-            " · " +
-            escapeHtml(city) +
-            " · " +
-            year +
-            "<br>" +
-            verifiedActiveRows.length +
-            " itens ativos confirmados em <strong>b2b_material_items</strong>.",
-          "ok"
-        );
-
-        /*
-         * Registro útil no console para diagnóstico administrativo.
-         */
-        console.info("PUBLICAÇÃO PARTNER CONFIRMADA", {
-          category: category,
-          city_label: city,
-          year: year,
-          items: verifiedActiveRows.length,
-          inserted_ids: (insertedRows || []).map(function(row) {
-            return row.id;
-          })
-        });
+        setStatus("<strong>Aprovação confirmada no Supabase.</strong> " + items.length + " indicações com fotos vinculadas à versão " + result.version_id + ".", "ok");
+        try { await loadExistingStructuredItems(); renderMaterialsList(); }
+        catch (error) { console.warn("Aprovação confirmada; lista não atualizada", error); }
       } catch (error) {
-        console.error("Erro na publicação Partner:", error);
-
         setStep("stepPublish", "error");
-
-        setStatus(
-          "Erro ao publicar: <strong>" +
-            escapeHtml(error.message || error) +
-            "</strong>",
-          "error"
-        );
-
-        alert(
-          "A publicação não foi concluída.\n\n" +
-          (error.message || error)
-        );
+        setStatus((committed
+          ? "A operação de aprovação foi concluída, mas a conferência posterior falhou. Recarregue o material antes de repetir. "
+          : "Não foi possível confirmar a aprovação. Se houve perda de conexão, recarregue antes de repetir. ") +
+          "<strong>" + escapeHtml(error.message || error) + "</strong>", "error");
       } finally {
-        el("publishBtn").disabled = false;
-        el("replaceBtn").disabled = false;
-
-        if (currentExtraction) {
-          refreshPublishAvailability();
-        }
+        setNetworkBusy(false);
       }
     }
 
     function clearSelection() {
+      if (networkBusy) return;
+      if (hasUnsavedChanges() && !confirm("Limpar a prévia e descartar as alterações ainda não guardadas?")) return;
       selectedMaterial = null;
       currentExtraction = null;
+      cloudState = null;
+      cloudLoaded = false;
+      cloudFingerprint = "";
+      activePhotoPasteIndex = null;
+      selectionRevision += 1;
       el("searchInput").value = "";
       el("metricSelected").textContent = "--";
       el("metricItems").textContent = "--";
@@ -1886,6 +1719,8 @@
       el("replaceBtn").disabled = true;
       resetPreview();
       resetSteps();
+      refreshPublishAvailability();
+      el("importLocalBtn").disabled = true;
       filterMaterials();
     }
 
@@ -1896,14 +1731,19 @@
 
 
     document.addEventListener("paste", async function(event) {
-      if (activePhotoPasteIndex === null || !currentExtraction) return;
+      if (networkBusy || activePhotoPasteIndex === null || !currentExtraction || !document.activeElement?.classList.contains("photo-paste")) return;
       const items = event.clipboardData && event.clipboardData.items ? Array.from(event.clipboardData.items) : [];
       const imageItem = items.find(item => item.type && item.type.startsWith("image/"));
       if (!imageItem) return;
       event.preventDefault();
       const file = imageItem.getAsFile();
-      await handlePhotoPaste(activePhotoPasteIndex, file);
+      const index = activePhotoPasteIndex;
       activePhotoPasteIndex = null;
+      await handlePhotoPaste(index, file);
+    });
+
+    window.addEventListener("beforeunload", event => {
+      if (networkBusy || hasUnsavedChanges()) { event.preventDefault(); event.returnValue = ""; }
     });
 
     document.addEventListener("DOMContentLoaded", async function() {
@@ -1917,6 +1757,8 @@
       el("yearSelect").addEventListener("input", filterMaterials);
       el("searchInput").addEventListener("input", filterMaterials);
       el("processBtn").addEventListener("click", processSelectedPdf);
+      el("saveReviewBtn").addEventListener("click", saveDraftState);
+      el("importLocalBtn").addEventListener("click", importLocalDraft);
       el("toggleRawBtn").addEventListener("click", toggleRawBox);
       el("publishBtn").addEventListener("click", () => publishExtraction(false));
       el("replaceBtn").addEventListener("click", () => publishExtraction(true));
