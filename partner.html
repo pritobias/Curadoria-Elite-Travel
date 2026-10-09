@@ -2306,9 +2306,20 @@
       const logoHtml = getBrandLogoHtml("print");
       const businessContent = getBusinessContentTemplate(material);
 
-      const personalizedCoverHtml = hasClientPersonalization()
+      const professionalPanelHtml = whiteLabel
+        ? `<div class="panel professional-panel"><h2>Uso profissional</h2><ul>
+            <li>Material preparado para apresentação exclusiva da marca escolhida.</li>
+            <li>Identidade da marca aplicada ao documento.</li>
+            <li>Fotos aprovadas ou personalizadas pela empresa parceira.</li>
+          </ul></div>`
+        : `<div class="panel professional-panel"><h2>Uso profissional</h2><ul>
+            <li>Versão adaptada para envio ao cliente da empresa parceira.</li>
+            <li>Identidade da empresa aplicada ao documento.</li>
+            <li>Assinatura discreta da Curadoria Elite Travel como parceira de curadoria.</li>
+          </ul></div>`;
+      const personalizedCoverHtml = (hasClientPersonalization()
         ? `<div class="panel personalized-cover-panel"><h2>${getClientGreetingLine()}</h2><p>${getClientMessageText()}</p></div>`
-        : "";
+        : "") + professionalPanelHtml;
 
       const indicationPages = businessContent.items.length
         ? chunkItems(businessContent.items, 3).map(function(itemsChunk, chunkIndex) {
@@ -2529,10 +2540,18 @@
       .page-footer { position: absolute; margin: 0; }
       .actions { display: none; }
     }
+    .cover-page .top { margin-bottom: 40px; padding-bottom: 24px; }
+    .cover-page h1 { font-size: 62px; line-height: .98; max-width: 580px; margin-bottom: 20px; }
+    .cover-page .subtitle { font-size: 22px; margin-bottom: 32px; }
+    .cover-page .meta { margin: 28px 0 34px; gap: 14px; }
+    .cover-page .meta div { padding: 18px; border-radius: 16px; }
+    .cover-page .professional-panel { margin-top: 24px; padding: 24px; }
+    .cover-page .professional-panel h2 { font-size: 26px; margin-bottom: 12px; }
+    .cover-page .professional-panel li { font-size: 16px; line-height: 1.65; }
   </style>
 </head>
 <body>
-  <section class="paper-page">
+  <section class="paper-page cover-page">
     <div class="top">
       <div class="partner-logo">${logoHtml}</div>
       ${whiteLabel
@@ -2542,7 +2561,7 @@
 
     <div class="eyebrow">${whiteLabel ? "Material exclusivo" : "Versão Business Partner"}</div>
     <h1>${escapeHtml(category.toUpperCase())}</h1>
-    <div class="subtitle">${escapeHtml(city)} • ${whiteLabel ? "Seleção exclusiva" : "Seleção de indicações"}${year ? " • " + year : ""}</div>
+    <div class="subtitle">${escapeHtml(city)} • ${whiteLabel ? "Material business" : "Material business"}${year ? " • " + year : ""}</div>
 
     <div class="meta">
       <div><small>Categoria</small><strong>${escapeHtml(category)}</strong></div>
