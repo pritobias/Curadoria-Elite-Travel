@@ -206,9 +206,10 @@
     }
 
     .widget-shell{
-      width:100%;
-      max-width:1180px;
-      margin:0 auto;
+      width:calc(100% + 48px);
+      max-width:none;
+      margin-left:-24px;
+      margin-right:-24px;
       padding:16px;
       border-radius:18px;
       border:1px solid rgba(255,255,255,0.08);
@@ -360,6 +361,8 @@
       .widget-shell{
         width:100%;
         max-width:100%;
+        margin-left:0;
+        margin-right:0;
         padding:10px;
         border-radius:15px;
       }
