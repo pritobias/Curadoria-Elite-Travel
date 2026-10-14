@@ -207,12 +207,28 @@
 
     .widget-shell{
       width:100%;
-      min-height:150px;
-      padding:22px;
+      min-height:220px;
+      padding:14px;
       border-radius:18px;
       border:1px solid rgba(255,255,255,0.08);
       background:rgba(255,255,255,0.96);
       overflow:visible;
+    }
+
+    .widget-shell .eg-widget{
+      width:100% !important;
+      max-width:none !important;
+      min-height:190px;
+      margin:0 !important;
+    }
+
+    .widget-shell iframe{
+      width:100% !important;
+      max-width:none !important;
+      min-height:190px;
+      display:block;
+      margin:0 auto;
+      border:0;
     }
 
     .partner-context{
@@ -343,8 +359,14 @@
       }
 
       .widget-shell{
-        padding:14px;
+        min-height:220px;
+        padding:10px;
         border-radius:15px;
+      }
+
+      .widget-shell .eg-widget,
+      .widget-shell iframe{
+        min-height:200px;
       }
 
       .about-tool{
