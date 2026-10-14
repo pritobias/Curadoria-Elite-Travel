@@ -177,7 +177,8 @@
     }
 
     .tool-card{
-      padding:34px;
+      min-height:620px;
+      padding:42px 34px 46px;
       border-radius:24px;
       background:linear-gradient(180deg, rgba(8,8,8,0.94), rgba(4,4,4,0.90));
       border:1px solid rgba(212,175,55,0.22);
@@ -206,21 +207,25 @@
     }
 
     .widget-shell{
-      width:calc(100% + 48px);
+      width:calc(100% + 56px);
       max-width:none;
-      margin-left:-24px;
-      margin-right:-24px;
-      padding:16px;
+      min-height:390px;
+      margin-left:-28px;
+      margin-right:-28px;
+      padding:22px 18px;
       border-radius:18px;
       border:1px solid rgba(255,255,255,0.08);
       background:rgba(255,255,255,0.96);
       overflow:visible;
+      display:flex;
+      align-items:center;
     }
 
     .widget-shell .eg-widget{
       width:100% !important;
       max-width:none !important;
       margin:0 !important;
+      flex:1 1 auto;
     }
 
     .widget-shell iframe{
@@ -358,13 +363,19 @@
         font-size:14.5px;
       }
 
+      .tool-card{
+        min-height:0;
+      }
+
       .widget-shell{
         width:100%;
         max-width:100%;
+        min-height:0;
         margin-left:0;
         margin-right:0;
         padding:10px;
         border-radius:15px;
+        display:block;
       }
 
       .widget-shell .eg-widget,
