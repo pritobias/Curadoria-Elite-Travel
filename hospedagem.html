@@ -31,26 +31,27 @@
     }
 
     header{
-      min-height:80px;
       padding:16px 40px;
       display:flex;
       justify-content:space-between;
       align-items:center;
       position:sticky;
+      width:100%;
       top:0;
       z-index:1000;
       background:rgba(0,0,0,0.82);
       backdrop-filter:blur(10px);
       border-bottom:1px solid rgba(255,255,255,0.08);
-      gap:20px;
+      gap:16px;
     }
 
     .brand{
       display:flex;
       align-items:center;
       gap:12px;
-      text-decoration:none;
       min-width:240px;
+      cursor:pointer;
+      text-decoration:none;
     }
 
     .brand img{
@@ -74,28 +75,63 @@
       margin-top:2px;
     }
 
-    .header-actions{
+    nav{
       display:flex;
       align-items:center;
-      gap:14px;
+      gap:16px;
+      flex-wrap:wrap;
+      justify-content:flex-end;
+      position:relative;
     }
 
-    .back-link{
-      display:inline-flex;
-      align-items:center;
-      justify-content:center;
-      padding:11px 18px;
-      border-radius:10px;
-      border:1px solid rgba(212,175,55,0.38);
+    nav a{
       color:#d4af37;
       text-decoration:none;
-      font-weight:650;
-      transition:background 0.2s ease, transform 0.2s ease;
+      font-weight:500;
+      cursor:pointer;
+      white-space:nowrap;
+      transition:opacity 0.25s ease, color 0.25s ease;
     }
 
-    .back-link:hover{
-      background:rgba(212,175,55,0.08);
-      transform:translateY(-1px);
+    nav a:hover{
+      opacity:0.88;
+    }
+
+    .nav-sep{
+      width:1px;
+      height:16px;
+      background:rgba(255,255,255,0.12);
+      display:inline-block;
+      margin:0 2px;
+    }
+
+    .nav-toggle{
+      display:none;
+      background:transparent;
+      border:1px solid rgba(212,175,55,0.35);
+      color:#d4af37;
+      padding:10px 12px;
+      border-radius:10px;
+      font-weight:700;
+      margin-top:0;
+      line-height:1;
+    }
+
+    .nav-toggle span{
+      display:block;
+      width:18px;
+      height:2px;
+      background:#d4af37;
+      margin:4px 0;
+      border-radius:99px;
+    }
+
+    .nav-menu{
+      display:flex;
+      align-items:center;
+      gap:16px;
+      flex-wrap:wrap;
+      justify-content:flex-end;
     }
 
     main{
@@ -340,20 +376,38 @@
       }
 
       .brand{
-        min-width:0;
+        min-width:auto;
       }
 
-      .brand-name{
-        font-size:15px;
+      .nav-toggle{
+        display:inline-flex;
+        align-items:center;
+        justify-content:center;
       }
 
-      .brand-tagline{
-        font-size:11px;
+      .nav-menu{
+        display:none;
+        position:absolute;
+        top:56px;
+        right:0;
+        min-width:220px;
+        padding:14px;
+        border:1px solid rgba(255,255,255,0.10);
+        border-radius:14px;
+        background:rgba(0,0,0,0.92);
+        backdrop-filter:blur(10px);
+        flex-direction:column;
+        align-items:flex-start;
+        gap:12px;
+        z-index:2000;
       }
 
-      .back-link{
-        padding:9px 12px;
-        font-size:13px;
+      header.nav-open .nav-menu{
+        display:flex;
+      }
+
+      .nav-sep{
+        display:none;
       }
 
       main{
@@ -437,28 +491,13 @@
     }
 
     @media (max-width:520px){
-      .brand img{
-        display:none;
-      }
-
-      .brand-tagline{
-        display:none;
-      }
-
-      .header-actions{
-        flex:0 0 auto;
-      }
-
-      .back-link{
-        white-space:nowrap;
-      }
     }
   </style>
 </head>
 
 <body>
-  <header>
-    <a class="brand" href="/index.html" aria-label="Curadoria Elite Travel">
+  <header id="siteHeader">
+    <a class="brand" href="/index.html#inicio" aria-label="Curadoria Elite Travel">
       <img src="images/rosa-dos-ventos.png" alt="Rosa dos Ventos">
       <div>
         <div class="brand-name">Curadoria Elite Travel</div>
@@ -466,9 +505,28 @@
       </div>
     </a>
 
-    <div class="header-actions">
-      <a class="back-link" href="/index.html#buscador">← Voltar ao site</a>
-    </div>
+    <nav>
+      <button class="nav-toggle" id="navToggle" aria-label="Menu" title="Menu" onclick="toggleMobileNav()">
+        <span></span><span></span><span></span>
+      </button>
+
+      <div class="nav-menu" id="navMenu">
+        <a href="/index.html#inicio">Início</a>
+        <a href="/index.html#quem">Quem Somos</a>
+        <a href="/index.html#curadoria">Curadoria</a>
+        <a href="/index.html#buscador">Buscador</a>
+
+        <span class="nav-sep"></span>
+
+        <a id="navCart" href="/index.html">Carrinho (0)</a>
+
+        <span class="nav-sep"></span>
+
+        <a id="navLogin" href="/login.html?return_to=hospedagem.html">Entrar</a>
+        <a id="navAccount" href="/account.html" style="display:none;">Minha conta</a>
+        <a id="navLogout" href="#" style="display:none;" onclick="doLogout(event)">Sair</a>
+      </div>
+    </nav>
   </header>
 
   <main>
@@ -564,6 +622,93 @@
       </a>
     </div>
   </footer>
+
+  <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+
+  <script>
+    const CART_STORAGE_KEY = "cet_cart_v2";
+    const SUPABASE_URL = "https://lnyoqoezezisakghtmim.supabase.co";
+    const SUPABASE_ANON_KEY = "sb_publishable_7NB9Y784asZcGohMBz1ePA_ZDYhwEqf";
+
+    let supabaseClient = null;
+
+    function toggleMobileNav(){
+      const header = document.getElementById("siteHeader");
+      if (!header) return;
+      header.classList.toggle("nav-open");
+    }
+
+    function closeMobileNav(){
+      const header = document.getElementById("siteHeader");
+      if (!header) return;
+      header.classList.remove("nav-open");
+    }
+
+    function getCart(){
+      try{
+        const raw = localStorage.getItem(CART_STORAGE_KEY);
+        const parsed = raw ? JSON.parse(raw) : [];
+        return Array.isArray(parsed) ? parsed : [];
+      }catch(e){
+        return [];
+      }
+    }
+
+    function updateCartBadge(){
+      const el = document.getElementById("navCart");
+      if (!el) return;
+      el.innerText = "Carrinho (" + getCart().length + ")";
+    }
+
+    function ensureSupabase(){
+      if (supabaseClient) return supabaseClient;
+      if (!window.supabase) return null;
+      supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+      return supabaseClient;
+    }
+
+    async function getSession(){
+      const sb = ensureSupabase();
+      if (!sb) return null;
+      const { data } = await sb.auth.getSession();
+      return (data && data.session) ? data.session : null;
+    }
+
+    async function refreshNavAuth(){
+      const session = await getSession();
+      const navLogin = document.getElementById("navLogin");
+      const navLogout = document.getElementById("navLogout");
+      const navAccount = document.getElementById("navAccount");
+
+      if (!navLogin || !navLogout || !navAccount) return;
+
+      if (session && session.user){
+        navLogin.style.display = "none";
+        navAccount.style.display = "inline";
+        navLogout.style.display = "inline";
+      }else{
+        navLogin.style.display = "inline";
+        navAccount.style.display = "none";
+        navLogout.style.display = "none";
+      }
+    }
+
+    async function doLogout(event){
+      if (event) event.preventDefault();
+      try{
+        const sb = ensureSupabase();
+        if (sb) await sb.auth.signOut();
+      }catch(e){}
+      await refreshNavAuth();
+      closeMobileNav();
+    }
+
+    document.addEventListener("DOMContentLoaded", async () => {
+      updateCartBadge();
+      ensureSupabase();
+      await refreshNavAuth();
+    });
+  </script>
 
   <script
     class="eg-widgets-script"
