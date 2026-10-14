@@ -207,9 +207,9 @@
 
     .widget-shell{
       width:100%;
-      max-width:715px;
+      max-width:1180px;
       margin:0 auto;
-      padding:28px 40px;
+      padding:16px;
       border-radius:18px;
       border:1px solid rgba(255,255,255,0.08);
       background:rgba(255,255,255,0.96);
@@ -217,9 +217,17 @@
     }
 
     .widget-shell .eg-widget{
-      width:100%;
-      max-width:575px;
+      width:100% !important;
+      max-width:none !important;
+      margin:0 !important;
+    }
+
+    .widget-shell iframe{
+      width:100% !important;
+      max-width:none !important;
+      display:block;
       margin:0 auto;
+      border:0;
     }
 
     .partner-context{
@@ -356,10 +364,10 @@
         border-radius:15px;
       }
 
-      .widget-shell .eg-widget{
-        width:100%;
-        max-width:575px;
-        margin:0 auto;
+      .widget-shell .eg-widget,
+      .widget-shell iframe{
+        width:100% !important;
+        max-width:none !important;
       }
 
       .about-tool{
