@@ -1,0 +1,935 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>Ingressos | Curadoria Elite Travel</title>
+
+  <meta
+    name="description"
+    content="Encontre ingressos para atrações, museus, parques e outros lugares da sua viagem por meio do parceiro indicado pela Curadoria Elite Travel."
+  />
+
+  <style>
+    *{
+      box-sizing:border-box;
+    }
+
+    html{
+      scroll-behavior:smooth;
+    }
+
+    body{
+      margin:0;
+      font-family:"Segoe UI",sans-serif;
+      background:#070707;
+      color:#fff;
+      min-height:100vh;
+    }
+
+    a{
+      color:inherit;
+    }
+
+    header{
+      padding:16px 40px;
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      position:sticky;
+      width:100%;
+      top:0;
+      z-index:1000;
+      background:rgba(0,0,0,0.82);
+      backdrop-filter:blur(10px);
+      border-bottom:1px solid rgba(255,255,255,0.08);
+      gap:16px;
+    }
+
+    .brand{
+      display:flex;
+      align-items:center;
+      gap:12px;
+      min-width:240px;
+      cursor:pointer;
+      text-decoration:none;
+    }
+
+    .brand img{
+      height:34px;
+      width:34px;
+    }
+
+    .brand-name{
+      font-family:"Cinzel","Georgia",serif;
+      font-size:18px;
+      color:#d4af37;
+      letter-spacing:0.8px;
+      text-transform:uppercase;
+      line-height:1.1;
+    }
+
+    .brand-tagline{
+      font-size:12px;
+      color:rgba(255,255,255,0.7);
+      line-height:1.2;
+      margin-top:2px;
+    }
+
+    nav{
+      display:flex;
+      align-items:center;
+      gap:16px;
+      flex-wrap:wrap;
+      justify-content:flex-end;
+      position:relative;
+    }
+
+    nav a{
+      color:#d4af37;
+      text-decoration:none;
+      font-weight:500;
+      cursor:pointer;
+      white-space:nowrap;
+      transition:opacity 0.25s ease,color 0.25s ease;
+    }
+
+    nav a:hover{
+      opacity:0.88;
+    }
+
+    .nav-sep{
+      width:1px;
+      height:16px;
+      background:rgba(255,255,255,0.12);
+      display:inline-block;
+      margin:0 2px;
+    }
+
+    .nav-toggle{
+      display:none;
+      background:transparent;
+      border:1px solid rgba(212,175,55,0.35);
+      color:#d4af37;
+      padding:10px 12px;
+      border-radius:10px;
+      font-weight:700;
+      margin-top:0;
+      line-height:1;
+    }
+
+    .nav-toggle span{
+      display:block;
+      width:18px;
+      height:2px;
+      background:#d4af37;
+      margin:4px 0;
+      border-radius:99px;
+    }
+
+    .nav-menu{
+      display:flex;
+      align-items:center;
+      gap:16px;
+      flex-wrap:wrap;
+      justify-content:flex-end;
+    }
+
+    main{
+      position:relative;
+      min-height:calc(100vh - 80px);
+      padding:68px 24px 80px;
+      overflow:hidden;
+    }
+
+    main::before{
+      content:"";
+      position:absolute;
+      inset:0;
+      background:
+        linear-gradient(180deg,rgba(0,0,0,0.55),rgba(0,0,0,0.84)),
+        url("https://images.unsplash.com/photo-1548013146-72479768bada?auto=format&fit=crop&w=2000&q=80")
+        center/cover no-repeat;
+      opacity:0.72;
+      z-index:0;
+    }
+
+    main::after{
+      content:"";
+      position:absolute;
+      inset:0;
+      background:
+        radial-gradient(circle at top center,rgba(212,175,55,0.12),transparent 34%),
+        linear-gradient(180deg,rgba(255,255,255,0.02),transparent 28%);
+      z-index:0;
+      pointer-events:none;
+    }
+
+    .page-shell{
+      position:relative;
+      z-index:1;
+      width:96%;
+      max-width:1440px;
+      margin:0 auto;
+    }
+
+    .page-heading{
+      text-align:center;
+      margin-bottom:30px;
+    }
+
+    .eyebrow{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      margin-bottom:16px;
+      color:rgba(255,255,255,0.72);
+      font-size:12px;
+      letter-spacing:1.4px;
+      text-transform:uppercase;
+    }
+
+    .eyebrow::before{
+      content:"";
+      width:7px;
+      height:7px;
+      border-radius:50%;
+      background:#d4af37;
+      box-shadow:0 0 12px rgba(212,175,55,0.65);
+    }
+
+    h1{
+      margin:0;
+      color:#d4af37;
+      font-size:clamp(36px,5vw,58px);
+      line-height:1.08;
+      letter-spacing:-0.4px;
+      text-shadow:0 8px 32px rgba(0,0,0,0.4);
+    }
+
+    .divider{
+      width:110px;
+      height:1px;
+      margin:22px auto 0;
+      background:linear-gradient(
+        90deg,
+        transparent,
+        rgba(212,175,55,0.95),
+        transparent
+      );
+    }
+
+    .tool-card{
+      width:100%;
+      padding:48px 34px 50px;
+      border-radius:24px;
+      background:linear-gradient(
+        180deg,
+        rgba(8,8,8,0.94),
+        rgba(4,4,4,0.90)
+      );
+      border:1px solid rgba(212,175,55,0.22);
+      box-shadow:0 24px 64px rgba(0,0,0,0.38);
+      backdrop-filter:blur(4px);
+    }
+
+    .tool-intro{
+      text-align:center;
+      max-width:860px;
+      margin:0 auto 34px;
+    }
+
+    .tool-intro h2{
+      margin:0 0 12px;
+      color:#d4af37;
+      font-size:30px;
+      letter-spacing:0.2px;
+    }
+
+    .tool-intro p{
+      margin:0;
+      color:rgba(255,255,255,0.82);
+      font-size:16px;
+      line-height:1.8;
+    }
+
+    .partner-box{
+      width:100%;
+      max-width:1000px;
+      margin:0 auto;
+      padding:48px 40px;
+      border-radius:22px;
+      background:rgba(255,255,255,0.97);
+      color:#171717;
+      text-align:center;
+      box-shadow:0 20px 55px rgba(0,0,0,0.32);
+    }
+
+    .partner-badge{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      padding:8px 16px;
+      border-radius:999px;
+      border:1px solid rgba(212,175,55,0.45);
+      background:rgba(212,175,55,0.08);
+      color:#806515;
+      font-size:12px;
+      font-weight:700;
+      letter-spacing:1.2px;
+      text-transform:uppercase;
+      margin-bottom:20px;
+    }
+
+    .partner-badge::before{
+      content:"";
+      width:7px;
+      height:7px;
+      border-radius:50%;
+      background:#d4af37;
+    }
+
+    .partner-box h3{
+      margin:0 0 14px;
+      font-size:34px;
+      line-height:1.15;
+      color:#171717;
+    }
+
+    .partner-box p{
+      max-width:780px;
+      margin:0 auto;
+      color:#5c5c5c;
+      font-size:16px;
+      line-height:1.75;
+    }
+
+    .partner-button{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      min-width:280px;
+      min-height:54px;
+      margin-top:28px;
+      padding:14px 30px;
+      border-radius:999px;
+      background:#d4af37;
+      color:#111;
+      font-size:16px;
+      font-weight:700;
+      text-decoration:none;
+      transition:
+        transform 0.2s ease,
+        filter 0.2s ease,
+        box-shadow 0.2s ease;
+      box-shadow:0 10px 24px rgba(212,175,55,0.22);
+    }
+
+    .partner-button:hover{
+      transform:translateY(-2px);
+      filter:brightness(1.05);
+      box-shadow:0 14px 30px rgba(212,175,55,0.28);
+    }
+
+    .partner-note{
+      margin-top:20px !important;
+      font-size:13px !important;
+      color:#777 !important;
+    }
+
+    .about-tool{
+      margin-top:24px;
+      padding:28px 30px;
+      border-radius:20px;
+      background:linear-gradient(
+        180deg,
+        rgba(8,8,8,0.94),
+        rgba(4,4,4,0.90)
+      );
+      border:1px solid rgba(212,175,55,0.18);
+      box-shadow:0 20px 48px rgba(0,0,0,0.30);
+    }
+
+    .about-tool h2{
+      margin:0 0 14px;
+      color:#d4af37;
+      font-size:24px;
+    }
+
+    .about-tool p{
+      margin:0;
+      color:rgba(255,255,255,0.78);
+      line-height:1.8;
+      font-size:14.5px;
+    }
+
+    .about-tool .commission-note{
+      margin-top:16px;
+      color:rgba(255,255,255,0.66);
+      font-size:13.5px;
+      font-style:italic;
+    }
+
+    footer{
+      position:relative;
+      z-index:1;
+      border-top:1px solid rgba(255,255,255,0.08);
+      padding:34px 24px 38px;
+      text-align:center;
+      color:rgba(255,255,255,0.68);
+      background:#070707;
+      font-size:14px;
+      line-height:1.7;
+    }
+
+    footer a{
+      color:#1a0dab;
+      text-decoration:underline;
+    }
+
+    .footer-social{
+      display:flex;
+      justify-content:center;
+      align-items:center;
+      gap:12px;
+      margin-top:16px;
+    }
+
+    .footer-social a{
+      width:38px;
+      height:38px;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      border-radius:50%;
+      border:1px solid rgba(212,175,55,0.30);
+      color:#d4af37;
+      background:rgba(255,255,255,0.02);
+      text-decoration:none;
+      transition:
+        transform 0.25s ease,
+        border-color 0.25s ease,
+        background 0.25s ease;
+    }
+
+    .footer-social a:hover{
+      transform:translateY(-2px);
+      border-color:rgba(212,175,55,0.65);
+      background:rgba(212,175,55,0.08);
+    }
+
+    .footer-social svg{
+      width:18px;
+      height:18px;
+      fill:currentColor;
+    }
+
+    @media (max-width:760px){
+
+      header{
+        padding:14px 16px;
+      }
+
+      .brand{
+        min-width:auto;
+      }
+
+      .nav-toggle{
+        display:inline-flex;
+        align-items:center;
+        justify-content:center;
+      }
+
+      .nav-menu{
+        display:none;
+        position:absolute;
+        top:56px;
+        right:0;
+        min-width:220px;
+        padding:14px;
+        border:1px solid rgba(255,255,255,0.10);
+        border-radius:14px;
+        background:rgba(0,0,0,0.92);
+        backdrop-filter:blur(10px);
+        flex-direction:column;
+        align-items:flex-start;
+        gap:12px;
+        z-index:2000;
+      }
+
+      header.nav-open .nav-menu{
+        display:flex;
+      }
+
+      .nav-sep{
+        display:none;
+      }
+
+      main{
+        padding:46px 16px 60px;
+      }
+
+      .tool-card{
+        padding:28px 16px;
+        border-radius:20px;
+      }
+
+      .tool-intro h2{
+        font-size:25px;
+      }
+
+      .tool-intro p{
+        font-size:14.5px;
+      }
+
+      .partner-box{
+        padding:34px 22px;
+        border-radius:18px;
+      }
+
+      .partner-box h3{
+        font-size:28px;
+      }
+
+      .partner-box p{
+        font-size:14.5px;
+      }
+
+      .partner-button{
+        width:100%;
+        min-width:0;
+      }
+
+      .about-tool{
+        padding:24px 20px;
+        border-radius:18px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <header id="siteHeader">
+
+    <a
+      class="brand"
+      href="/index.html#inicio"
+      aria-label="Curadoria Elite Travel"
+    >
+      <img
+        src="images/rosa-dos-ventos.png"
+        alt="Rosa dos Ventos"
+      />
+
+      <div>
+        <div class="brand-name">
+          Curadoria Elite Travel
+        </div>
+
+        <div class="brand-tagline">
+          O seu mundo, bem indicado.
+        </div>
+      </div>
+    </a>
+
+    <nav>
+
+      <button
+        class="nav-toggle"
+        id="navToggle"
+        aria-label="Menu"
+        title="Menu"
+        onclick="toggleMobileNav()"
+      >
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+
+      <div class="nav-menu" id="navMenu">
+
+        <a href="/index.html#inicio">
+          Início
+        </a>
+
+        <a href="/index.html#quem">
+          Quem Somos
+        </a>
+
+        <a href="/index.html#curadoria">
+          Curadoria
+        </a>
+
+        <a href="/index.html#buscador">
+          Buscador
+        </a>
+
+        <span class="nav-sep"></span>
+
+        <a id="navCart" href="/index.html">
+          Carrinho (0)
+        </a>
+
+        <span class="nav-sep"></span>
+
+        <a
+          id="navLogin"
+          href="/login.html?return_to=ingressos.html"
+        >
+          Entrar
+        </a>
+
+        <a
+          id="navAccount"
+          href="/account.html"
+          style="display:none;"
+        >
+          Minha conta
+        </a>
+
+        <a
+          id="navLogout"
+          href="#"
+          style="display:none;"
+          onclick="doLogout(event)"
+        >
+          Sair
+        </a>
+
+      </div>
+
+    </nav>
+
+  </header>
+
+  <main>
+
+    <div class="page-shell">
+
+      <div class="page-heading">
+
+        <div class="eyebrow">
+          Ferramenta de viagem
+        </div>
+
+        <h1>
+          Ingressos
+        </h1>
+
+        <div class="divider"></div>
+
+      </div>
+
+      <section
+        class="tool-card"
+        aria-labelledby="tickets-search-title"
+      >
+
+        <div class="tool-intro">
+
+          <h2 id="tickets-search-title">
+            Encontre seus ingressos
+          </h2>
+
+          <p>
+            Pesquise ingressos para atrações, museus, parques e outros lugares que você deseja visitar durante a sua viagem.
+          </p>
+
+        </div>
+
+        <div class="partner-box">
+
+          <div class="partner-badge">
+            Parceiro indicado
+          </div>
+
+          <h3>
+            Civitatis
+          </h3>
+
+          <p>
+            Consulte opções de ingressos para atrações e lugares em diferentes destinos. Escolha o que deseja visitar e faça sua reserva diretamente na plataforma do parceiro.
+          </p>
+
+          <a
+            class="partner-button"
+            href="https://www.civitatis.com/pt?aid=114979"
+            target="_blank"
+            rel="noopener noreferrer sponsored"
+          >
+            Pesquisar ingressos
+          </a>
+
+          <p class="partner-note">
+            Você será direcionado ao site da Civitatis para realizar sua pesquisa, escolher o ingresso e concluir a reserva.
+          </p>
+
+        </div>
+
+      </section>
+
+      <section
+        class="about-tool"
+        aria-labelledby="about-tool-title"
+      >
+
+        <h2 id="about-tool-title">
+          Sobre esta ferramenta
+        </h2>
+
+        <p>
+          A Curadoria Elite Travel atua exclusivamente como plataforma de indicação. Os parceiros disponibilizados nesta página são opções externas para que você possa pesquisar e contratar ingressos para atrações e lugares durante a sua viagem. A pesquisa, disponibilidade, preços, contratação, pagamento, alteração ou cancelamento da reserva são realizados diretamente com o parceiro escolhido.
+        </p>
+
+        <p class="commission-note">
+          A Curadoria Elite Travel pode receber uma comissão pelas reservas realizadas por meio de nossa indicação, sem custo adicional para você.
+        </p>
+
+      </section>
+
+    </div>
+
+  </main>
+
+  <footer>
+
+    Curadoria Elite Travel · O seu mundo, bem indicado.<br>
+
+    São Paulo - SP ·
+    <a href="/contact.html">
+      curadoriaelitetravel@gmail.com
+    </a>
+
+    <div
+      class="footer-social"
+      aria-label="Redes sociais da Curadoria Elite Travel"
+    >
+
+      <a
+        href="https://www.instagram.com/curadoriaelitetravel/"
+        target="_blank"
+        rel="noopener noreferrer"
+        aria-label="Instagram da Curadoria Elite Travel"
+        title="Instagram"
+      >
+
+        <svg
+          viewBox="0 0 24 24"
+          aria-hidden="true"
+        >
+          <path d="M7 2h10a5 5 0 0 1 5 5v10a5 5 0 0 1-5 5H7a5 5 0 0 1-5-5V7a5 5 0 0 1 5-5Zm0 2a3 3 0 0 0-3 3v10a3 3 0 0 0 3 3h10a3 3 0 0 0 3-3V7a3 3 0 0 0-3-3H7Zm5 3.5A4.5 4.5 0 1 1 7.5 12 4.5 4.5 0 0 1 12 7.5Zm0 2A2.5 2.5 0 1 0 14.5 12 2.5 2.5 0 0 0 12 9.5Zm5.25-3.1a1.05 1.05 0 1 1-1.05 1.05 1.05 0 0 1 1.05 1.05Z"/>
+        </svg>
+
+      </a>
+
+      <a
+        href="https://www.linkedin.com/company/curadoria-elite-travel"
+        target="_blank"
+        rel="noopener noreferrer"
+        aria-label="LinkedIn da Curadoria Elite Travel"
+        title="LinkedIn"
+      >
+
+        <svg
+          viewBox="0 0 24 24"
+          aria-hidden="true"
+        >
+          <path d="M6.5 8.25H3.25V21H6.5V8.25ZM4.88 3A1.88 1.88 0 1 0 4.9 6.75 1.88 1.88 0 0 0 4.88 3ZM21 13.7c0-3.85-2.05-5.64-4.79-5.64a4.14 4.14 0 0 0-3.74 2.05V8.25H9.22V21h3.25v-6.31c0-1.66.32-3.27 2.38-3.27 2.03 0 2.05 1.9 2.05 3.38V21H21v-7.3Z"/>
+        </svg>
+
+      </a>
+
+    </div>
+
+  </footer>
+
+  <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+
+  <script>
+
+    const CART_STORAGE_KEY = "cet_cart_v2";
+
+    const SUPABASE_URL =
+      "https://lnyoqoezezisakghtmim.supabase.co";
+
+    const SUPABASE_ANON_KEY =
+      "sb_publishable_7NB9Y784asZcGohMBz1ePA_ZDYhwEqf";
+
+    let supabaseClient = null;
+
+    function toggleMobileNav(){
+
+      const header =
+        document.getElementById("siteHeader");
+
+      if (!header) return;
+
+      header.classList.toggle("nav-open");
+    }
+
+    function closeMobileNav(){
+
+      const header =
+        document.getElementById("siteHeader");
+
+      if (!header) return;
+
+      header.classList.remove("nav-open");
+    }
+
+    function getCart(){
+
+      try{
+
+        const raw =
+          localStorage.getItem(CART_STORAGE_KEY);
+
+        const parsed =
+          raw ? JSON.parse(raw) : [];
+
+        return Array.isArray(parsed)
+          ? parsed
+          : [];
+
+      }catch(e){
+
+        return [];
+
+      }
+    }
+
+    function updateCartBadge(){
+
+      const el =
+        document.getElementById("navCart");
+
+      if (!el) return;
+
+      el.innerText =
+        "Carrinho (" + getCart().length + ")";
+    }
+
+    function ensureSupabase(){
+
+      if (supabaseClient)
+        return supabaseClient;
+
+      if (!window.supabase)
+        return null;
+
+      supabaseClient =
+        window.supabase.createClient(
+          SUPABASE_URL,
+          SUPABASE_ANON_KEY
+        );
+
+      return supabaseClient;
+    }
+
+    async function getSession(){
+
+      const sb =
+        ensureSupabase();
+
+      if (!sb)
+        return null;
+
+      const { data } =
+        await sb.auth.getSession();
+
+      return (
+        data &&
+        data.session
+      )
+        ? data.session
+        : null;
+    }
+
+    async function refreshNavAuth(){
+
+      const session =
+        await getSession();
+
+      const navLogin =
+        document.getElementById("navLogin");
+
+      const navLogout =
+        document.getElementById("navLogout");
+
+      const navAccount =
+        document.getElementById("navAccount");
+
+      if (
+        !navLogin ||
+        !navLogout ||
+        !navAccount
+      ){
+        return;
+      }
+
+      if (
+        session &&
+        session.user
+      ){
+
+        navLogin.style.display =
+          "none";
+
+        navAccount.style.display =
+          "inline";
+
+        navLogout.style.display =
+          "inline";
+
+      }else{
+
+        navLogin.style.display =
+          "inline";
+
+        navAccount.style.display =
+          "none";
+
+        navLogout.style.display =
+          "none";
+      }
+    }
+
+    async function doLogout(event){
+
+      if (event)
+        event.preventDefault();
+
+      try{
+
+        const sb =
+          ensureSupabase();
+
+        if (sb)
+          await sb.auth.signOut();
+
+      }catch(e){}
+
+      await refreshNavAuth();
+
+      closeMobileNav();
+    }
+
+    document.addEventListener(
+      "DOMContentLoaded",
+      async () => {
+
+        updateCartBadge();
+
+        ensureSupabase();
+
+        await refreshNavAuth();
+
+      }
+    );
+
+  </script>
+
+</body>
+</html>
