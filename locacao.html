@@ -318,6 +318,31 @@
     .coupon-code-row{display:flex;align-items:center;justify-content:center;gap:10px;flex-wrap:wrap;}
     .coupon-code{display:inline-flex;align-items:center;justify-content:center;min-width:190px;padding:11px 18px;border:1px dashed rgba(212,175,55,0.60);border-radius:10px;background:rgba(0,0,0,0.24);color:#d4af37;font-size:17px;font-weight:800;letter-spacing:1.2px;}
     .coupon-copy{border:1px solid rgba(212,175,55,0.42);border-radius:10px;background:transparent;color:#d4af37;padding:11px 16px;font:inherit;font-size:13px;font-weight:700;cursor:pointer;}
+    .coupon-link{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      width:100%;
+      max-width:360px;
+      min-height:50px;
+      margin-top:16px;
+      padding:13px 22px;
+      border-radius:999px;
+      background:#d4af37;
+      color:#111;
+      font-size:14px;
+      font-weight:800;
+      text-decoration:none;
+      transition:filter 0.2s ease, transform 0.2s ease;
+    }
+
+    .coupon-link:hover{
+      filter:brightness(1.05);
+    }
+
+    .coupon-link:active{
+      transform:scale(.98);
+    }
     .coupon-note{margin:13px 0 0 !important;color:rgba(255,255,255,0.56) !important;font-size:12px !important;}
     .coupon-terms{margin:18px auto 0;max-width:860px;text-align:left;}
     .coupon-terms summary{cursor:pointer;color:rgba(255,255,255,0.76);font-size:13px;font-weight:600;}
@@ -543,6 +568,7 @@
       .coupon-card h3{font-size:19px;}
       .coupon-code-row{flex-direction:column;}
       .coupon-code,.coupon-copy{width:100%;max-width:300px;}
+      .coupon-link{max-width:300px;}
 
       .about-tool{
         padding:24px 20px;
@@ -765,7 +791,19 @@
             <span class="coupon-code">ELITETRAVEL</span>
             <button type="button" class="coupon-copy" onclick="copyCoupon(this)">Copiar cupom</button>
           </div>
-          <p class="coupon-note">Válido para reservas de 1 a 27 diárias, exclusivamente para pagamento on-line sobre o valor pré-pago.</p>
+
+          <a
+            class="coupon-link"
+            href="https://www.rentcars.com/pt-br/?requestorid=11271&utm_source=www.curadoriaelitetravel.com&utm_medium=afiliado-link"
+            target="_blank"
+            rel="noopener noreferrer sponsored"
+          >
+            Pesquisar veículos com desconto
+          </a>
+          <p class="coupon-note">
+            Válido para reservas de 1 a 27 diárias, exclusivamente para pagamento on-line sobre o valor pré-pago.
+            O cupom só funciona quando a reserva é iniciada pelo link da Curadoria Elite Travel.
+          </p>
           <details class="coupon-terms">
             <summary>Ver condições completas</summary>
             <ul>
