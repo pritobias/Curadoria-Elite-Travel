@@ -18,7 +18,6 @@
   <meta charset="UTF-8" />
   <title>Curadoria Elite Travel</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="mitgo-verification" content="8bad2953-15e0-44fc-b708-5f533ed29301" />
 
   <style>
     body{
@@ -781,9 +780,232 @@
     }
 
     .buscador-shell{
-      max-width:980px;
+      max-width:1120px;
       margin:0 auto;
       position:relative;
+    }
+
+    .buscador-intro{
+      max-width:860px;
+      margin:0 auto 28px;
+      text-align:center;
+      color:rgba(255,255,255,0.78);
+      font-size:15px;
+      line-height:1.75;
+    }
+
+    .tool-tabs{
+      display:grid;
+      grid-template-columns:repeat(4,minmax(0,1fr));
+      gap:8px;
+      margin:0 auto 24px;
+      padding:6px;
+      max-width:1080px;
+      border:1px solid rgba(212,175,55,0.16);
+      border-radius:18px;
+      background:rgba(5,5,5,0.72);
+      box-shadow:0 14px 34px rgba(0,0,0,0.20);
+    }
+
+    .tool-tab{
+      margin:0;
+      padding:12px 10px;
+      min-height:46px;
+      border-radius:12px;
+      border:1px solid transparent;
+      background:transparent;
+      color:rgba(255,255,255,0.68);
+      font-size:13px;
+      font-weight:700;
+      line-height:1.25;
+      box-shadow:none;
+      transition:all 0.25s ease;
+    }
+
+    .tool-tab:hover{
+      transform:none;
+      color:#fff;
+      background:rgba(255,255,255,0.04);
+    }
+
+    .tool-tab.active{
+      color:#000;
+      background:#d4af37;
+      border-color:rgba(212,175,55,0.72);
+      box-shadow:0 8px 20px rgba(212,175,55,0.14);
+    }
+
+    .tool-group{
+      display:none;
+      animation:toolGroupIn 0.28s ease;
+    }
+
+    .tool-group.active{
+      display:block;
+    }
+
+    @keyframes toolGroupIn{
+      from{ opacity:0; transform:translateY(5px); }
+      to{ opacity:1; transform:translateY(0); }
+    }
+
+    .tool-group-heading{
+      display:flex;
+      align-items:flex-end;
+      justify-content:space-between;
+      gap:18px;
+      margin:0 2px 14px;
+    }
+
+    .tool-group-heading h3{
+      margin:0;
+      color:#d4af37;
+      font-size:20px;
+      letter-spacing:0.1px;
+    }
+
+    .tool-group-heading p{
+      margin:0;
+      color:rgba(255,255,255,0.58);
+      font-size:12.5px;
+      line-height:1.5;
+      text-align:right;
+    }
+
+    .tool-grid{
+      display:grid;
+      grid-template-columns:repeat(3,minmax(0,1fr));
+      gap:14px;
+    }
+
+    .tool-access-card{
+      position:relative;
+      z-index:2;
+      margin:0;
+      min-height:190px;
+      padding:22px 20px 20px;
+      border-radius:18px;
+      background:linear-gradient(180deg, rgba(8,8,8,0.94), rgba(4,4,4,0.90));
+      border:1px solid rgba(212,175,55,0.18);
+      box-shadow:0 16px 36px rgba(0,0,0,0.24);
+      text-align:left;
+      box-sizing:border-box;
+      display:flex;
+      flex-direction:column;
+      align-items:flex-start;
+      transition:transform 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
+    }
+
+    .tool-access-card.available{
+      cursor:pointer;
+    }
+
+    .tool-access-card.available:hover{
+      transform:translateY(-3px);
+      border-color:rgba(212,175,55,0.40);
+      box-shadow:0 18px 38px rgba(0,0,0,0.30);
+    }
+
+    .tool-access-card.future{
+      border-color:rgba(255,255,255,0.08);
+      background:linear-gradient(180deg, rgba(8,8,8,0.82), rgba(5,5,5,0.78));
+      box-shadow:0 12px 28px rgba(0,0,0,0.18);
+    }
+
+    .tool-access-card.future h3{
+      color:rgba(212,175,55,0.72);
+    }
+
+    .tool-access-card.future p{
+      color:rgba(255,255,255,0.55);
+    }
+
+    .tool-access-card h3{
+      margin:0 0 9px;
+      color:#d4af37;
+      font-size:19px;
+      line-height:1.25;
+      letter-spacing:0.1px;
+    }
+
+    .tool-access-card p{
+      margin:0;
+      color:rgba(255,255,255,0.76);
+      max-width:none;
+      line-height:1.55;
+      font-size:13.5px;
+    }
+
+    .tool-status{
+      margin-top:auto;
+      padding-top:16px;
+      display:inline-flex;
+      align-items:center;
+      gap:7px;
+      color:#d4af37;
+      font-size:12.5px;
+      font-weight:750;
+      letter-spacing:0.15px;
+    }
+
+    .tool-status::after{
+      content:"→";
+      font-size:15px;
+      line-height:1;
+      transition:transform 0.2s ease;
+    }
+
+    .tool-access-card.available:hover .tool-status::after{
+      transform:translateX(3px);
+    }
+
+    .tool-status.future-status{
+      color:rgba(255,255,255,0.40);
+      font-weight:600;
+    }
+
+    .tool-status.future-status::after{
+      content:"";
+    }
+
+    .tool-business-card{
+      margin-top:22px;
+      padding:22px 24px;
+      border-radius:18px;
+      border:1px solid rgba(212,175,55,0.18);
+      background:linear-gradient(135deg, rgba(16,16,16,0.94), rgba(7,7,7,0.90));
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:22px;
+    }
+
+    .tool-business-card h3{
+      margin:0 0 5px;
+      color:#d4af37;
+      font-size:18px;
+    }
+
+    .tool-business-card p{
+      margin:0;
+      color:rgba(255,255,255,0.70);
+      font-size:13px;
+      line-height:1.55;
+    }
+
+    .tool-business-card a{
+      flex:0 0 auto;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      padding:11px 18px;
+      border-radius:10px;
+      background:transparent;
+      border:1px solid rgba(212,175,55,0.42);
+      color:#d4af37;
+      font-size:13px;
+      font-weight:800;
+      text-decoration:none;
     }
 
     .buscador-divider{
@@ -799,12 +1021,9 @@
       margin:0 auto;
       padding:46px 34px;
       border-radius:24px;
-      background:
-        linear-gradient(180deg, rgba(8,8,8,0.90), rgba(4,4,4,0.84));
+      background:linear-gradient(180deg, rgba(8,8,8,0.90), rgba(4,4,4,0.84));
       border:1px solid rgba(212,175,55,0.18);
-      box-shadow:
-        0 20px 48px rgba(0,0,0,0.28),
-        inset 0 1px 0 rgba(255,255,255,0.03);
+      box-shadow:0 20px 48px rgba(0,0,0,0.28), inset 0 1px 0 rgba(255,255,255,0.03);
       overflow:hidden;
     }
 
@@ -812,10 +1031,9 @@
       content:"";
       position:absolute;
       inset:0;
-      background:
-        linear-gradient(135deg, rgba(212,175,55,0.08), transparent 28%),
-        radial-gradient(circle at top right, rgba(212,175,55,0.08), transparent 24%),
-        radial-gradient(circle at center, rgba(212,175,55,0.08), transparent 42%);
+      background:linear-gradient(135deg, rgba(212,175,55,0.08), transparent 28%),
+                 radial-gradient(circle at top right, rgba(212,175,55,0.08), transparent 24%),
+                 radial-gradient(circle at center, rgba(212,175,55,0.08), transparent 42%);
       pointer-events:none;
     }
 
@@ -838,9 +1056,8 @@
       align-items:center;
       padding:18px 22px;
       border-radius:20px;
-      background:
-        linear-gradient(180deg, rgba(0,0,0,0.18), rgba(0,0,0,0.05)),
-        radial-gradient(circle at center, rgba(212,175,55,0.05), transparent 58%);
+      background:linear-gradient(180deg, rgba(0,0,0,0.18), rgba(0,0,0,0.05)),
+                 radial-gradient(circle at center, rgba(212,175,55,0.05), transparent 58%);
       border:1px solid rgba(255,255,255,0.04);
       box-shadow:inset 0 1px 0 rgba(255,255,255,0.02);
     }
@@ -879,8 +1096,7 @@
       top:50%;
       left:50%;
       transform:translate(-50%, -58%);
-      background:
-        radial-gradient(circle, rgba(212,175,55,0.26) 0%, rgba(212,175,55,0.12) 26%, rgba(212,175,55,0.04) 48%, transparent 72%);
+      background:radial-gradient(circle, rgba(212,175,55,0.26) 0%, rgba(212,175,55,0.12) 26%, rgba(212,175,55,0.04) 48%, transparent 72%);
       filter:blur(18px);
       opacity:0.95;
       pointer-events:none;
@@ -895,54 +1111,6 @@
       position:relative;
       z-index:2;
       text-shadow:0 6px 24px rgba(0,0,0,0.34);
-    }
-
-    .tool-access-card{
-      position:relative;
-      z-index:2;
-      max-width:980px;
-      margin:24px auto 0;
-      padding:30px 30px;
-      border-radius:24px;
-      background:linear-gradient(180deg, rgba(8,8,8,0.92), rgba(4,4,4,0.88));
-      border:1px solid rgba(212,175,55,0.22);
-      box-shadow:0 20px 48px rgba(0,0,0,0.28);
-      text-align:center;
-    }
-
-    .tool-access-card h3{
-      margin:0 0 10px;
-      color:#d4af37;
-      font-size:26px;
-      letter-spacing:0.2px;
-    }
-
-    .tool-access-card p{
-      margin:0 auto 18px;
-      color:rgba(255,255,255,0.82);
-      max-width:760px;
-      line-height:1.75;
-      font-size:15px;
-    }
-
-    .tool-access-card .tool-note{
-      margin-top:14px;
-      color:rgba(255,255,255,0.64);
-      font-size:13px;
-      line-height:1.55;
-    }
-
-    .tool-access-card a{
-      display:inline-flex;
-      align-items:center;
-      justify-content:center;
-      padding:13px 24px;
-      border-radius:12px;
-      background:#d4af37;
-      color:#000;
-      font-weight:800;
-      text-decoration:none;
-      box-shadow:0 12px 28px rgba(212,175,55,0.16);
     }
 
     .popup-bg{
@@ -1294,6 +1462,12 @@
       }
     }
 
+    @media (max-width:1180px){
+      .tool-grid{
+        grid-template-columns:repeat(2,minmax(0,1fr));
+      }
+    }
+
     @media (max-width:980px){
       header{ padding:14px 16px; }
       section{ padding:110px 16px 70px; }
@@ -1350,6 +1524,45 @@
 
       .grid{
         grid-template-columns:1fr;
+      }
+
+      .tool-tabs{
+        grid-template-columns:repeat(2,minmax(0,1fr));
+        gap:6px;
+      }
+
+      .tool-tab{
+        min-height:48px;
+        padding:10px 8px;
+        font-size:12px;
+      }
+
+      .tool-group-heading{
+        align-items:flex-start;
+        flex-direction:column;
+        gap:4px;
+      }
+
+      .tool-group-heading p{
+        text-align:left;
+      }
+
+      .tool-grid{
+        grid-template-columns:1fr;
+      }
+
+      .tool-access-card{
+        min-height:0;
+      }
+
+      .tool-business-card{
+        flex-direction:column;
+        align-items:flex-start;
+      }
+
+      .tool-business-card a{
+        width:100%;
+        box-sizing:border-box;
       }
 
       .cinema-section-inner{
@@ -1714,65 +1927,135 @@
     <div class="buscador-divider"></div>
 
     <div class="buscador-shell">
-      <div class="tool-access-card" style="margin-top:0;">
-        <h3>Documentação e informações de saúde para viagem</h3>
-        <p>
-          Consulte por país ou cidade e veja informações práticas sobre entrada no destino, documentos,
-          apoio diplomático e saúde para viagem.
-        </p>
-        <a href="/documentos.html">Acessar ferramenta</a>
+      <p class="buscador-intro">
+        Ferramentas próprias e parceiros indicados para ajudar você a organizar, pesquisar e escolher diferentes etapas da sua viagem — em um só lugar.
+      </p>
+
+      <div class="tool-tabs" role="tablist" aria-label="Categorias do Buscador">
+        <button class="tool-tab active" type="button" role="tab" aria-selected="true" aria-controls="tool-planejamento" onclick="showToolGroup('tool-planejamento', this)">Planejamento</button>
+        <button class="tool-tab" type="button" role="tab" aria-selected="false" aria-controls="tool-servicos" onclick="showToolGroup('tool-servicos', this)">Serviços para a viagem</button>
+        <button class="tool-tab" type="button" role="tab" aria-selected="false" aria-controls="tool-experiencias" onclick="showToolGroup('tool-experiencias', this)">Experiências</button>
       </div>
 
-      <div class="tool-access-card">
-        <h3>Malha de Transportes</h3>
-        <p>
-          Entenda como se deslocar no destino com informações organizadas sobre redes de transporte,
-          formas de pagamento e canais oficiais para consultar durante a viagem.
-        </p>
-        <a href="/transportes.html">Acessar ferramenta</a>
-      </div>
+      <div id="tool-planejamento" class="tool-group active" role="tabpanel">
+        <div class="tool-group-heading">
+          <h3>Planejamento</h3>
+          <p>Informações e ferramentas para preparar melhor a viagem.</p>
+        </div>
 
-      <div class="tool-access-card">
-        <h3>Hospedagem</h3>
-        <p>
-          Encontre opções de hospedagem para o seu destino por meio de um parceiro selecionado pela Curadoria Elite Travel.
-          A pesquisa e a reserva são realizadas diretamente na plataforma parceira.
-        </p>
-        <a href="/hospedagem.html">Acessar ferramenta</a>
-      </div>
-
-      <!-- NOVO CARD -->
-      <div class="tool-access-card">
-        <h3>Atividades</h3>
-        <p>
-          Pesquise passeios, visitas guiadas, excursões e outras atividades para diferentes destinos por meio de um parceiro indicado pela Curadoria Elite Travel.
-          A pesquisa e a reserva são realizadas diretamente na plataforma parceira.
-        </p>
-        <a href="/experiencias.html">Acessar ferramenta</a>
-      </div>
-
-      <div class="tool-access-card">
-        <h3>Transfer</h3>
-        <p>
-          Encontre opções de transfer para diferentes destinos por meio de um parceiro indicado pela Curadoria Elite Travel.
-          A pesquisa, a escolha e a reserva são realizadas diretamente na plataforma parceira.
-        </p>
-        <a href="/transfer.html">Acessar ferramenta</a>
-      </div>
-
-      <div class="buscador-placeholder" style="margin-top:24px;">
-        <div class="buscador-inner">
-          <div class="buscador-glow"></div>
-
-          <div class="buscador-status">
-            <span class="buscador-status-dot"></span>
-            Novas ferramentas em desenvolvimento
+        <div class="tool-grid">
+          <div class="tool-access-card available" onclick="window.location.href='/documentos.html'">
+            <h3>Documentos</h3>
+            <p>Consulte informações práticas sobre entrada no destino, documentos, apoio diplomático e saúde para viagem.</p>
+            <span class="tool-status">Disponível</span>
           </div>
 
-          <p class="subtitle" style="margin-bottom:0;">
-            Em breve, uma central inteligente de ferramentas para orientar cada etapa da sua viagem.
-          </p>
+          <div class="tool-access-card available" onclick="window.location.href='/transportes.html'">
+            <h3>Malha de Transportes</h3>
+            <p>Entenda como se deslocar no destino com redes de transporte, formas de pagamento e canais oficiais.</p>
+            <span class="tool-status">Disponível</span>
+          </div>
+
+
+
+
         </div>
+      </div>
+
+      <div id="tool-servicos" class="tool-group" role="tabpanel" hidden>
+        <div class="tool-group-heading">
+          <h3>Serviços para a viagem</h3>
+          <p>Opções indicadas para pesquisar e contratar diretamente com parceiros.</p>
+        </div>
+
+        <div class="tool-grid">
+          <div class="tool-access-card available" onclick="window.location.href='/hospedagem.html'">
+            <h3>Hospedagem</h3>
+            <p>Encontre opções de hospedagem para o seu destino por meio de parceiro indicado pela Curadoria.</p>
+            <span class="tool-status">Disponível</span>
+          </div>
+
+          <div class="tool-access-card available" onclick="window.location.href='/transfer.html'">
+            <h3>Transfer</h3>
+            <p>Encontre opções de transfer para diferentes destinos por meio de parceiro indicado pela Curadoria.</p>
+            <span class="tool-status">Disponível</span>
+          </div>
+
+          <div class="tool-access-card available" onclick="window.location.href='/seguro-viagem.html'">
+            <h3>Seguro Viagem</h3>
+            <p>Compare opções de seguro viagem, coberturas e preços por meio de parceiro indicado pela Curadoria.</p>
+            <span class="tool-status">Disponível</span>
+          </div>
+
+          <div class="tool-access-card future">
+            <h3>Locação de veículo</h3>
+            <p>Pesquise opções de aluguel de veículos por meio de parceiro indicado pela Curadoria.</p>
+            <span class="tool-status future-status">Em breve</span>
+          </div>
+
+          <div class="tool-access-card future">
+            <h3>Aéreo</h3>
+            <p>Pesquise alternativas de voos e compare opções para o seu deslocamento.</p>
+            <span class="tool-status future-status">Em breve</span>
+          </div>
+
+<div class="tool-access-card future">
+            <h3>Cruzeiro</h3>
+            <p>Explore opções de cruzeiros para diferentes estilos e períodos de viagem.</p>
+            <span class="tool-status future-status">Em breve</span>
+          </div>
+
+<div class="tool-access-card future">
+            <h3>Pacote</h3>
+            <p>Encontre alternativas que reúnem diferentes serviços de viagem em uma única escolha.</p>
+            <span class="tool-status future-status">Em breve</span>
+          </div>
+        </div>
+      </div>
+
+      <div id="tool-experiencias" class="tool-group" role="tabpanel" hidden>
+        <div class="tool-group-heading">
+          <h3>Experiências</h3>
+          <p>O que fazer e como aproveitar melhor o destino.</p>
+        </div>
+
+        <div class="tool-grid">
+          <div class="tool-access-card available" onclick="window.location.href='/experiencias.html'">
+            <h3>Atividades e Experiências</h3>
+            <p>Pesquise passeios, visitas guiadas, excursões e outras experiências por meio de parceiro indicado pela Curadoria.</p>
+            <span class="tool-status">Disponível</span>
+          </div>
+
+          <div class="tool-access-card available" onclick="window.location.href='/ingressos.html'">
+            <h3>Ingressos</h3>
+            <p>Encontre ingressos para atrações, museus, parques e outros lugares para visitar durante a viagem.</p>
+            <span class="tool-status">Disponível</span>
+          </div>
+
+          <div class="tool-access-card future">
+            <h3>Agenda Cultural</h3>
+            <p>Descubra eventos e programação cultural para o período da sua viagem.</p>
+            <span class="tool-status future-status">Em breve</span>
+          </div>
+
+          <div class="tool-access-card future">
+            <h3>Cultura de Destino</h3>
+            <p>Conheça costumes, referências e particularidades que ajudam a compreender melhor cada destino.</p>
+            <span class="tool-status future-status">Em breve</span>
+          </div>
+
+          
+
+          
+        </div>
+      </div>
+
+      <div class="tool-business-card">
+        <div>
+          <h3>Para empresas</h3>
+          <p>Conheça o espaço de parceiros da Curadoria Elite Travel e as possibilidades de publicação e curadoria para empresas.</p>
+        </div>
+        <a href="/partner.html">Conhecer Partners</a>
       </div>
     </div>
   </div>
@@ -3216,6 +3499,20 @@
       onProsseguir: async () => {
         await startSingleCheckoutAfterPolicy(category, city);
       }
+    });
+  }
+
+  function showToolGroup(groupId, button){
+    document.querySelectorAll('.tool-group').forEach(group => {
+      const active = group.id === groupId;
+      group.classList.toggle('active', active);
+      group.hidden = !active;
+    });
+
+    document.querySelectorAll('.tool-tab').forEach(tab => {
+      const active = tab === button;
+      tab.classList.toggle('active', active);
+      tab.setAttribute('aria-selected', active ? 'true' : 'false');
     });
   }
 
