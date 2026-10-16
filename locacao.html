@@ -310,6 +310,20 @@
       line-height:1.6;
     }
 
+
+    .coupon-card{max-width:860px;margin:26px auto 0;padding:24px 26px;border-radius:18px;border:1px solid rgba(212,175,55,0.28);background:linear-gradient(135deg,rgba(212,175,55,0.10),rgba(255,255,255,0.035));text-align:center;}
+    .coupon-label{margin:0 0 7px;color:#d4af37;font-size:12px;font-weight:700;letter-spacing:1.2px;text-transform:uppercase;}
+    .coupon-card h3{margin:0 0 8px;color:#fff;font-size:21px;line-height:1.25;}
+    .coupon-card p{margin:0 auto 16px;max-width:690px;color:rgba(255,255,255,0.76);font-size:14px;line-height:1.65;}
+    .coupon-code-row{display:flex;align-items:center;justify-content:center;gap:10px;flex-wrap:wrap;}
+    .coupon-code{display:inline-flex;align-items:center;justify-content:center;min-width:190px;padding:11px 18px;border:1px dashed rgba(212,175,55,0.60);border-radius:10px;background:rgba(0,0,0,0.24);color:#d4af37;font-size:17px;font-weight:800;letter-spacing:1.2px;}
+    .coupon-copy{border:1px solid rgba(212,175,55,0.42);border-radius:10px;background:transparent;color:#d4af37;padding:11px 16px;font:inherit;font-size:13px;font-weight:700;cursor:pointer;}
+    .coupon-note{margin:13px 0 0 !important;color:rgba(255,255,255,0.56) !important;font-size:12px !important;}
+    .coupon-terms{margin:18px auto 0;max-width:860px;text-align:left;}
+    .coupon-terms summary{cursor:pointer;color:rgba(255,255,255,0.76);font-size:13px;font-weight:600;}
+    .coupon-terms ul{margin:12px 0 0;padding-left:20px;color:rgba(255,255,255,0.60);font-size:12.5px;line-height:1.7;}
+    .coupon-terms li+li{margin-top:6px;}
+
     .mobile-affiliate{
       display:none;
     }
@@ -524,6 +538,12 @@
         margin-top:18px;
       }
 
+
+      .coupon-card{padding:22px 18px;}
+      .coupon-card h3{font-size:19px;}
+      .coupon-code-row{flex-direction:column;}
+      .coupon-code,.coupon-copy{width:100%;max-width:300px;}
+
       .about-tool{
         padding:24px 20px;
         border-radius:18px;
@@ -737,6 +757,26 @@
           A contratação é realizada diretamente na plataforma do parceiro.
         </p>
 
+        <section class="coupon-card" aria-labelledby="coupon-title">
+          <p class="coupon-label">Condição exclusiva da Curadoria</p>
+          <h3 id="coupon-title">5% de desconto com o cupom ELITETRAVEL</h3>
+          <p>Use o cupom <strong>ELITETRAVEL</strong> na sua reserva Rentcars e aproveite a condição exclusiva disponibilizada pela parceria.</p>
+          <div class="coupon-code-row">
+            <span class="coupon-code">ELITETRAVEL</span>
+            <button type="button" class="coupon-copy" onclick="copyCoupon(this)">Copiar cupom</button>
+          </div>
+          <p class="coupon-note">Válido para reservas de 1 a 27 diárias, exclusivamente para pagamento on-line sobre o valor pré-pago.</p>
+          <details class="coupon-terms">
+            <summary>Ver condições completas</summary>
+            <ul>
+              <li>Válido para reservas de 1 a 27 diárias.</li>
+              <li>Aplicável exclusivamente para pagamento on-line, sobre o valor pré-pago.</li>
+              <li>Não válido para residentes nos EUA e Canadá quando o destino for doméstico nos EUA ou Canadá.</li>
+              <li>O desconto não é aplicável às seguintes locadoras: 5S Car Rental, Aco, Alquicoche, Ausocar, Automania, Autos Menorca, Brid, Cizgi, East Coast, EasyGo, EPI, Explore Vacations, EZU, GoByCar, Hello Car, Mode Rentals, Orlando, Owners Cars, Pandora, Rent a Star e UMove.</li>
+            </ul>
+          </details>
+        </section>
+
       </section>
 
       <section
@@ -904,6 +944,18 @@
 
       return supabaseClient;
 
+    }
+
+
+    async function copyCoupon(button){
+      try{
+        await navigator.clipboard.writeText("ELITETRAVEL");
+        if(button){
+          const original = button.innerText;
+          button.innerText = "Copiado!";
+          setTimeout(() => button.innerText = original, 1800);
+        }
+      }catch(e){}
     }
 
     async function getSession(){
