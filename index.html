@@ -351,6 +351,79 @@
       box-shadow:0 14px 30px rgba(212,175,55,0.14);
     }
 
+    .hero-actions{
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      gap:12px;
+      flex-wrap:wrap;
+      margin-top:28px;
+    }
+
+    .hero-actions .hero-cta{
+      margin-top:0;
+    }
+
+    .hero-cta.secondary{
+      background:rgba(0,0,0,0.10);
+      border-color:rgba(212,175,55,0.28);
+      color:rgba(255,255,255,0.86);
+      box-shadow:none;
+    }
+
+    .hero-cta.secondary:hover{
+      color:#d4af37;
+      border-color:rgba(212,175,55,0.50);
+      box-shadow:0 12px 28px rgba(0,0,0,0.18);
+    }
+
+    .section-bridge{
+      max-width:900px;
+      margin:42px auto 0;
+      padding:24px 28px;
+      border-radius:18px;
+      border:1px solid rgba(212,175,55,0.16);
+      background:linear-gradient(135deg, rgba(12,12,12,0.90), rgba(6,6,6,0.82));
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:22px;
+      box-sizing:border-box;
+    }
+
+    .section-bridge-copy{
+      min-width:0;
+    }
+
+    .section-bridge h3{
+      margin:0 0 6px;
+      color:#d4af37;
+      font-size:18px;
+      letter-spacing:0.1px;
+    }
+
+    .section-bridge p{
+      margin:0;
+      color:rgba(255,255,255,0.70);
+      font-size:13.5px;
+      line-height:1.6;
+    }
+
+    .section-bridge button{
+      flex:0 0 auto;
+      margin:0;
+      background:transparent;
+      border:1px solid rgba(212,175,55,0.38);
+      color:#d4af37;
+      box-shadow:none;
+      padding:11px 18px;
+    }
+
+    .section-bridge button:hover{
+      border-color:rgba(212,175,55,0.60);
+      box-shadow:0 10px 24px rgba(212,175,55,0.08);
+    }
+
     #quem{
       max-width:none;
       padding-left:0;
@@ -1565,6 +1638,31 @@
         box-sizing:border-box;
       }
 
+      .hero-actions{
+        flex-direction:column;
+        width:100%;
+        max-width:320px;
+        margin-left:auto;
+        margin-right:auto;
+      }
+
+      .hero-actions .hero-cta{
+        width:100%;
+        box-sizing:border-box;
+      }
+
+      .section-bridge{
+        flex-direction:column;
+        align-items:flex-start;
+        gap:14px;
+        padding:22px 20px;
+      }
+
+      .section-bridge button{
+        width:100%;
+        box-sizing:border-box;
+      }
+
       .cinema-section-inner{
         padding:40px 18px 30px;
       }
@@ -1676,7 +1774,10 @@
         <h1>Uma plataforma de curadoria para viajar melhor.</h1>
         <p>Recomendações selecionadas e organizadas para que você encontre o que precisa com mais critério e segurança.</p>
         <p>Tudo estruturado para otimizar seu tempo e permitir escolhas mais objetivas durante a viagem.</p>
-        <button class="hero-cta" onclick="showSection('curadoria')">Explorar a Curadoria</button>
+        <div class="hero-actions">
+          <button class="hero-cta" onclick="showSection('curadoria')">Explorar a Curadoria</button>
+          <button class="hero-cta secondary" onclick="showSection('buscador')">Explorar o Buscador</button>
+        </div>
       </div>
     </div>
   </div>
@@ -1914,6 +2015,12 @@
           </div>
         </div>
       </div>
+    <div class="section-bridge">
+      <div class="section-bridge-copy">
+        <h3>Preparando sua viagem?</h3>
+        <p>Consulte também nossas ferramentas para documentos, transporte, hospedagem e outros serviços.</p>
+      </div>
+      <button type="button" onclick="showSection('buscador')">Explorar o Buscador</button>
     </div>
   </div>
 </section>
@@ -1987,10 +2094,10 @@
             <span class="tool-status">Disponível</span>
           </div>
 
-          <div class="tool-access-card available" onclick="window.location.href='locacao.html'">
+          <div class="tool-access-card future">
             <h3>Locação de veículo</h3>
-            <p>Pesquise e compare opções de locação de veículos por meio do parceiro indicado pela Curadoria.</p>
-            <span class="tool-status">Disponível</span>
+            <p>Pesquise opções de aluguel de veículos por meio de parceiro indicado pela Curadoria.</p>
+            <span class="tool-status future-status">Em breve</span>
           </div>
 
           <div class="tool-access-card future">
@@ -2056,6 +2163,14 @@
           <p>Conheça o espaço de parceiros da Curadoria Elite Travel e as possibilidades de publicação e curadoria para empresas.</p>
         </div>
         <span class="tool-status future-status">Em breve</span>
+      </div>
+
+      <div class="section-bridge">
+        <div class="section-bridge-copy">
+          <h3>Quer conhecer nossas curadorias?</h3>
+          <p>Encontre materiais organizados por destino para escolher com mais critério durante a viagem.</p>
+        </div>
+        <button type="button" onclick="showSection('curadoria')">Explorar a Curadoria</button>
       </div>
     </div>
   </div>
