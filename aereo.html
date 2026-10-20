@@ -1,0 +1,626 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>Passagens Aéreas | Curadoria Elite Travel</title>
+
+    <meta
+        name="description"
+        content="Pesquise passagens aéreas nacionais e internacionais por meio de um parceiro indicado pela Curadoria Elite Travel."
+    />
+
+    <meta name="robots" content="index, follow" />
+
+    <link rel="canonical" href="https://www.curadoriaelitetravel.com/aereo.html" />
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: Georgia, "Times New Roman", serif;
+            color: #f5f5f5;
+            background:
+                linear-gradient(rgba(0, 0, 0, 0.78), rgba(0, 0, 0, 0.88)),
+                url("images/seguro-viagem-bg.jpg") center center / cover fixed;
+            min-height: 100vh;
+        }
+
+        a {
+            color: inherit;
+            text-decoration: none;
+        }
+
+        .site-header {
+            width: 100%;
+            background: #030303;
+            border-bottom: 1px solid rgba(212, 175, 55, 0.16);
+            position: relative;
+            z-index: 10;
+        }
+
+        .header-inner {
+            min-height: 70px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 28px;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .brand-symbol {
+            width: 34px;
+            height: 34px;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #d4af37;
+            font-size: 27px;
+            line-height: 1;
+        }
+
+        .brand-symbol::before {
+            content: "✦";
+            position: absolute;
+            color: #d4af37;
+        }
+
+        .brand-copy {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+
+        .brand-name {
+            color: #d4af37;
+            font-size: 21px;
+            font-weight: 600;
+            letter-spacing: 0.3px;
+            line-height: 1;
+        }
+
+        .brand-tagline {
+            color: #cfcfcf;
+            font-size: 13px;
+            line-height: 1.1;
+        }
+
+        .main-nav {
+            display: flex;
+            align-items: center;
+            gap: 25px;
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+        .main-nav a {
+            color: #d4af37;
+            font-size: 16px;
+            font-weight: 600;
+            transition: opacity 0.2s ease;
+        }
+
+        .main-nav a:hover {
+            opacity: 0.72;
+        }
+
+        .nav-divider {
+            width: 1px;
+            height: 20px;
+            background: rgba(212, 175, 55, 0.25);
+        }
+
+        .hero {
+            min-height: 255px;
+            display: flex;
+            align-items: flex-start;
+            justify-content: center;
+            text-align: center;
+            padding: 0 20px;
+            position: relative;
+        }
+
+        .hero-content {
+            padding-top: 42px;
+        }
+
+        .hero h1 {
+            color: #d4af37;
+            font-family: Arial, Helvetica, sans-serif;
+            font-size: clamp(44px, 5vw, 66px);
+            font-weight: 700;
+            letter-spacing: -1.5px;
+        }
+
+        .hero-line {
+            width: 105px;
+            height: 2px;
+            margin: 18px auto 0;
+            background: #d4af37;
+            opacity: 0.85;
+        }
+
+        .main-wrapper {
+            width: min(1580px, calc(100% - 70px));
+            margin: -10px auto 80px;
+        }
+
+        .tool-section {
+            background: rgba(3, 3, 3, 0.90);
+            border: 1px solid rgba(212, 175, 55, 0.32);
+            border-radius: 28px;
+            padding: 55px 35px 60px;
+            box-shadow: 0 25px 60px rgba(0, 0, 0, 0.30);
+        }
+
+        .section-heading {
+            text-align: center;
+            margin-bottom: 42px;
+        }
+
+        .section-heading h2 {
+            color: #d4af37;
+            font-family: Arial, Helvetica, sans-serif;
+            font-size: clamp(28px, 3vw, 37px);
+            font-weight: 700;
+            margin-bottom: 16px;
+        }
+
+        .section-heading p {
+            max-width: 950px;
+            margin: 0 auto;
+            color: #eeeeee;
+            font-size: 18px;
+            line-height: 1.65;
+        }
+
+        .partner-card {
+            width: min(1120px, 100%);
+            margin: 0 auto;
+            background: #f7f7f7;
+            color: #222;
+            border-radius: 28px;
+            padding: 48px 60px 43px;
+            text-align: center;
+            box-shadow: 0 18px 45px rgba(0, 0, 0, 0.25);
+        }
+
+        .partner-label {
+            display: inline-flex;
+            align-items: center;
+            gap: 9px;
+            border: 1px solid rgba(212, 175, 55, 0.55);
+            border-radius: 30px;
+            padding: 9px 18px;
+            color: #8b6d16;
+            background: #faf8ef;
+            font-family: Arial, Helvetica, sans-serif;
+            font-size: 13px;
+            font-weight: 700;
+            letter-spacing: 1.1px;
+            text-transform: uppercase;
+        }
+
+        .partner-label span {
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            background: #d4af37;
+        }
+
+        .partner-card h3 {
+            margin-top: 26px;
+            color: #111;
+            font-family: Arial, Helvetica, sans-serif;
+            font-size: 39px;
+            font-weight: 700;
+        }
+
+        .partner-description {
+            max-width: 880px;
+            margin: 18px auto 0;
+            color: #646464;
+            font-family: Arial, Helvetica, sans-serif;
+            font-size: 17px;
+            line-height: 1.65;
+        }
+
+        .partner-features {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 16px;
+            max-width: 920px;
+            margin: 32px auto 28px;
+        }
+
+        .feature {
+            padding: 18px 12px;
+            border-top: 1px solid #e1e1e1;
+            border-bottom: 1px solid #e1e1e1;
+        }
+
+        .feature strong {
+            display: block;
+            color: #222;
+            font-family: Arial, Helvetica, sans-serif;
+            font-size: 15px;
+            margin-bottom: 6px;
+        }
+
+        .feature span {
+            color: #777;
+            font-family: Arial, Helvetica, sans-serif;
+            font-size: 13px;
+            line-height: 1.45;
+        }
+
+        .partner-button {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 320px;
+            padding: 18px 34px;
+            border-radius: 35px;
+            background: #d4af37;
+            color: #111;
+            font-family: Arial, Helvetica, sans-serif;
+            font-size: 17px;
+            font-weight: 700;
+            border: none;
+            cursor: pointer;
+            transition:
+                transform 0.2s ease,
+                box-shadow 0.2s ease,
+                background 0.2s ease;
+        }
+
+        .partner-button:hover {
+            transform: translateY(-2px);
+            background: #dfbb4d;
+            box-shadow: 0 10px 25px rgba(212, 175, 55, 0.25);
+        }
+
+        .partner-note {
+            margin-top: 20px;
+            color: #7b7b7b;
+            font-family: Arial, Helvetica, sans-serif;
+            font-size: 13px;
+            line-height: 1.5;
+        }
+
+        .information-section {
+            margin-top: 28px;
+            background: rgba(3, 3, 3, 0.91);
+            border: 1px solid rgba(212, 175, 55, 0.28);
+            border-radius: 24px;
+            padding: 35px 34px 38px;
+        }
+
+        .information-section h2 {
+            color: #d4af37;
+            font-family: Arial, Helvetica, sans-serif;
+            font-size: 26px;
+            margin-bottom: 18px;
+        }
+
+        .information-section p {
+            color: #f0f0f0;
+            font-size: 16px;
+            line-height: 1.75;
+            margin-bottom: 16px;
+        }
+
+        .information-section p:last-child {
+            margin-bottom: 0;
+        }
+
+        .information-section .commission-note {
+            margin-top: 23px;
+            color: #d7d7d7;
+            font-style: italic;
+        }
+
+        .footer {
+            background: #030303;
+            border-top: 1px solid rgba(212, 175, 55, 0.18);
+            padding: 34px 25px;
+            text-align: center;
+        }
+
+        .footer-brand {
+            color: #d4af37;
+            font-family: Arial, Helvetica, sans-serif;
+            font-size: 16px;
+            font-weight: 700;
+            margin-bottom: 7px;
+        }
+
+        .footer-text {
+            color: #999;
+            font-family: Arial, Helvetica, sans-serif;
+            font-size: 13px;
+        }
+
+        @media (max-width: 900px) {
+            .header-inner {
+                padding: 0 18px;
+            }
+
+            .main-nav {
+                gap: 13px;
+            }
+
+            .main-nav a {
+                font-size: 13px;
+            }
+
+            .brand-name {
+                font-size: 17px;
+            }
+
+            .brand-tagline {
+                font-size: 11px;
+            }
+
+            .main-wrapper {
+                width: calc(100% - 30px);
+            }
+
+            .tool-section {
+                padding: 42px 18px 45px;
+            }
+
+            .partner-card {
+                padding: 38px 24px 34px;
+            }
+
+            .partner-features {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 650px) {
+            .header-inner {
+                min-height: auto;
+                padding: 16px;
+                align-items: flex-start;
+            }
+
+            .main-nav {
+                display: none;
+            }
+
+            .hero {
+                min-height: 205px;
+            }
+
+            .hero-content {
+                padding-top: 32px;
+            }
+
+            .hero h1 {
+                font-size: 44px;
+            }
+
+            .tool-section {
+                border-radius: 20px;
+                padding: 34px 14px 35px;
+            }
+
+            .section-heading {
+                margin-bottom: 30px;
+            }
+
+            .section-heading h2 {
+                font-size: 28px;
+            }
+
+            .section-heading p {
+                font-size: 15px;
+            }
+
+            .partner-card {
+                border-radius: 20px;
+                padding: 32px 17px;
+            }
+
+            .partner-card h3 {
+                font-size: 31px;
+            }
+
+            .partner-description {
+                font-size: 15px;
+            }
+
+            .partner-button {
+                width: 100%;
+                min-width: 0;
+                font-size: 16px;
+            }
+
+            .information-section {
+                padding: 28px 21px 30px;
+                border-radius: 18px;
+            }
+
+            .information-section h2 {
+                font-size: 23px;
+            }
+
+            .information-section p {
+                font-size: 15px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<header class="site-header">
+    <div class="header-inner">
+
+        <a href="index.html" class="brand" aria-label="Curadoria Elite Travel - início">
+            <div class="brand-symbol" aria-hidden="true"></div>
+
+            <div class="brand-copy">
+                <div class="brand-name">CURADORIA ELITE TRAVEL</div>
+                <div class="brand-tagline">O seu mundo, bem indicado.</div>
+            </div>
+        </a>
+
+        <nav class="main-nav" aria-label="Navegação principal">
+            <a href="index.html">Início</a>
+            <a href="quem-somos.html">Quem Somos</a>
+            <a href="categoria.html">Curadoria</a>
+            <a href="index.html#buscador">Buscador</a>
+
+            <span class="nav-divider"></span>
+
+            <a href="carrinho.html">Carrinho (0)</a>
+
+            <span class="nav-divider"></span>
+
+            <a href="account.html">Minha conta</a>
+            <a href="logout.html">Sair</a>
+        </nav>
+
+    </div>
+</header>
+
+<main>
+
+    <section class="hero">
+        <div class="hero-content">
+            <h1>Passagens Aéreas</h1>
+            <div class="hero-line"></div>
+        </div>
+    </section>
+
+    <div class="main-wrapper">
+
+        <section class="tool-section">
+
+            <div class="section-heading">
+                <h2>Encontre sua passagem aérea</h2>
+
+                <p>
+                    Pesquise opções de voos por meio de um parceiro indicado
+                    pela Curadoria Elite Travel e encontre alternativas para
+                    a sua próxima viagem.
+                </p>
+            </div>
+
+            <div class="partner-card">
+
+                <div class="partner-label">
+                    <span></span>
+                    Parceiro indicado
+                </div>
+
+                <h3>Vai de Promo</h3>
+
+                <p class="partner-description">
+                    Pesquise passagens aéreas nacionais e internacionais,
+                    consulte as opções disponíveis e escolha a alternativa
+                    que melhor atende à sua viagem.
+                </p>
+
+                <div class="partner-features">
+
+                    <div class="feature">
+                        <strong>Pesquise voos</strong>
+                        <span>
+                            Informe origem, destino e datas no ambiente do parceiro.
+                        </span>
+                    </div>
+
+                    <div class="feature">
+                        <strong>Compare opções</strong>
+                        <span>
+                            Consulte as alternativas disponíveis para a sua viagem.
+                        </span>
+                    </div>
+
+                    <div class="feature">
+                        <strong>Escolha diretamente</strong>
+                        <span>
+                            A compra é realizada diretamente com o parceiro.
+                        </span>
+                    </div>
+
+                </div>
+
+                <a
+                    class="partner-button"
+                    href="https://www.vaidepromo.com.br/passagens-aereas/?utm_medium=afiliado&pcrid=15515&utm_source=site-blog"
+                    target="_blank"
+                    rel="noopener noreferrer sponsored"
+                >
+                    Pesquisar passagens aéreas
+                </a>
+
+                <p class="partner-note">
+                    Você será direcionado ao site do parceiro para realizar a
+                    pesquisa, escolher sua opção e concluir a compra.
+                </p>
+
+            </div>
+
+        </section>
+
+        <section class="information-section">
+
+            <h2>Sobre esta ferramenta</h2>
+
+            <p>
+                A Curadoria Elite Travel atua exclusivamente como plataforma de
+                indicação. O parceiro disponibilizado nesta página é uma opção
+                externa para que você possa pesquisar e adquirir passagens
+                relacionadas à sua viagem.
+            </p>
+
+            <p>
+                A pesquisa, disponibilidade, tarifas, emissão, pagamento,
+                alteração ou cancelamento das passagens são realizados
+                diretamente com o parceiro.
+            </p>
+
+            <p class="commission-note">
+                A Curadoria Elite Travel pode receber uma comissão pelas compras
+                realizadas por meio de nossa indicação, sem custo adicional para você.
+            </p>
+
+        </section>
+
+    </div>
+
+</main>
+
+<footer class="footer">
+
+    <div class="footer-brand">
+        CURADORIA ELITE TRAVEL
+    </div>
+
+    <div class="footer-text">
+        O seu mundo, bem indicado.
+    </div>
+
+</footer>
+
+</body>
+</html>
