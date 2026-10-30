@@ -644,11 +644,23 @@ function buildDestinationHtml(destino) {
     }
 
 
+    .hero-seo-description{
+      width:min(820px,100%);
+      margin:20px auto 0;
+      color:
+        rgba(255,255,255,.88);
+      font-size:14px;
+      line-height:1.7;
+      text-shadow:
+        0 3px 16px
+        rgba(0,0,0,.95);
+    }
+
+
     /* =====================================================
        ESTRUTURA DAS SEÇÕES
     ===================================================== */
-
-    .content-section{
+        .content-section{
       position:relative;
       padding:
         90px 40px;
@@ -1298,7 +1310,7 @@ function buildDestinationHtml(destino) {
       flex:1;
       width:100%;
       padding:12px 14px;
-      outline:none;
+            outline:none;
       color:#fff;
       background:
         rgba(10,10,10,.96);
@@ -1669,7 +1681,6 @@ function buildDestinationHtml(destino) {
       </div>
 
     </div>
-
   </a>
 
 
@@ -1770,6 +1781,10 @@ function buildDestinationHtml(destino) {
 
       <p class="hero-description">
         ${texto}
+      </p>
+
+      <p class="hero-seo-description">
+        Vai viajar para ${cidade}, ${pais}? Encontre em um só lugar dicas e informações para decidir o que fazer, onde comer, onde ficar e como se locomover, além de documentos para a viagem. Explore também atrações e pontos turísticos, vida noturna, compras, sugestões de presentes, atividades e experiências selecionadas para conhecer melhor ${cidade}.
       </p>
 
     </div>
@@ -1947,7 +1962,6 @@ function buildDestinationHtml(destino) {
 
 
 <script>
-
   /* =====================================================
      CONFIGURAÇÃO
   ===================================================== */
@@ -2597,8 +2611,7 @@ function buildDestinationHtml(destino) {
 
       }
     );
-
-  }
+      }
 
 
   /* =====================================================
@@ -2697,6 +2710,7 @@ function buildDestinationHtml(destino) {
   /* =====================================================
      CARRINHO
   ===================================================== */
+
   function getCart(){
 
     try{
@@ -3247,8 +3261,7 @@ function buildDestinationHtml(destino) {
             'A Curadoria Elite Travel oferece exclusivamente materiais digitais de caráter informativo e orientativo, baseados em indicações, referências e conteúdos selecionados.<br><br>' +
 
             'Não realizamos reservas, vendas de passagens, hospedagens, experiências ou qualquer tipo de intermediação direta com fornecedores ou prestadores de serviço.<br><br>' +
-
-            'As decisões de compra, contratação e utilização de serviços indicados nos materiais são de <strong>responsabilidade exclusiva do usuário</strong>.<br><br>' +
+                        'As decisões de compra, contratação e utilização de serviços indicados nos materiais são de <strong>responsabilidade exclusiva do usuário</strong>.<br><br>' +
 
             'Por se tratar de conteúdo digital disponibilizado de forma imediata após a confirmação da compra, <strong>não é possível realizar cancelamentos, trocas ou reembolsos</strong>.<br><br>' +
 
@@ -3595,6 +3608,7 @@ function buildDestinationHtml(destino) {
             '<div id="couponMsg" class="coupon-msg"></div>' +
 
             '<div class="coupon-help">Se o cupom estiver ativo e dentro do período, ele será aplicado no pagamento.</div>' +
+
           '</div>' +
 
           '<div class="cart-list" id="cartList"></div>' +
@@ -3897,9 +3911,7 @@ function buildDestinationHtml(destino) {
       document.getElementById(
         "cartProceedBtn"
       );
-
-
-    const items =
+          const items =
       getCart();
 
 
@@ -4548,7 +4560,7 @@ function buildDestinationHtml(destino) {
     return (
       CATEGORY_ICONS[
         normalizeCategoryName(
-          category
+                  category
         )
       ] ||
       "◇"
@@ -5197,9 +5209,7 @@ function main(){
   console.log(
     "---------------------------------------------"
   );
-
-
-  const destinos =
+     const destinos =
     loadDestinationData();
 
 
