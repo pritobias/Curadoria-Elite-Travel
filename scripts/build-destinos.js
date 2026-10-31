@@ -644,16 +644,66 @@ function buildDestinationHtml(destino) {
     }
 
 
-    .hero-seo-description{
-      width:min(820px,100%);
-      margin:20px auto 0;
+    /* =====================================================
+       BLOCO DE DESCOBERTA
+    ===================================================== */
+
+    .discovery-section{
+      background:
+        linear-gradient(
+          180deg,
+          rgba(7,7,7,.82),
+          rgba(12,12,11,.86)
+        );
+      border-top:
+        1px solid
+        rgba(255,255,255,.08);
+      border-bottom:
+        1px solid
+        rgba(255,255,255,.08);
+      backdrop-filter:
+        blur(4px);
+      -webkit-backdrop-filter:
+        blur(4px);
+    }
+
+
+    .discovery-section::before{
+      content:"";
+      position:absolute;
+      inset:0;
+      z-index:0;
+      pointer-events:none;
+      background:
+        radial-gradient(
+          circle at 50% 0%,
+          rgba(212,175,55,.07),
+          transparent 48%
+        );
+    }
+
+
+    .discovery-copy{
+      width:min(860px,100%);
+      margin:0 auto;
+      text-align:center;
+    }
+
+
+    .discovery-copy p{
+      margin:0;
       color:
         rgba(255,255,255,.88);
-      font-size:14px;
-      line-height:1.7;
+      font-size:15px;
+      line-height:1.85;
       text-shadow:
-        0 3px 16px
-        rgba(0,0,0,.95);
+        0 2px 12px
+        rgba(0,0,0,.85);
+    }
+
+
+    .discovery-copy p + p{
+      margin-top:18px;
     }
 
 
@@ -1783,9 +1833,34 @@ function buildDestinationHtml(destino) {
         ${texto}
       </p>
 
-      <p class="hero-seo-description">
-        Vai viajar para ${cidade}, ${pais}? Encontre em um só lugar dicas e informações para decidir o que fazer, onde comer, onde ficar e como se locomover, além de documentos para a viagem. Explore também atrações e pontos turísticos, vida noturna, compras, sugestões de presentes, atividades e experiências selecionadas para conhecer melhor ${cidade}.
-      </p>
+    </div>
+
+  </section>
+
+
+  <!-- =====================================================
+       BLOCO DE DESCOBERTA
+  ====================================================== -->
+
+  <section class="content-section discovery-section">
+
+    <div class="content-shell">
+
+      <h2 class="section-title">
+        Planejando uma viagem para ${cidade}, ${pais}?
+      </h2>
+
+      <div class="discovery-copy">
+
+        <p>
+          Planejar uma viagem para ${cidade} envolve escolhas que podem transformar a experiência no destino. Onde ficar, onde comer, o que fazer e como se locomover dependem do tempo disponível, dos seus interesses e da maneira como você prefere conhecer cada lugar.
+        </p>
+
+        <p>
+          Ter essas informações organizadas facilita essas decisões e ajuda a encontrar opções que façam sentido para a sua viagem. Na Curadoria Elite Travel, você encontra conteúdos, ferramentas e indicações para apoiar diferentes momentos do planejamento e da experiência em ${cidade}.
+        </p>
+
+      </div>
 
     </div>
 
