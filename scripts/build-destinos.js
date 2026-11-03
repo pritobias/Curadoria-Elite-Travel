@@ -405,6 +405,10 @@ function buildDestinationHtml(
   >
 
 
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600&display=swap" rel="stylesheet">
+
   <script
     src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"
   ></script>
@@ -621,7 +625,10 @@ function buildDestinationHtml(
       z-index:0;
       overflow:hidden;
       pointer-events:none;
-      background:#050505;
+      background-color:#050505;
+      background-image:url('${ponto1}');
+      background-size:cover;
+      background-position:center;
     }
 
     .page-photo-slide{
@@ -1941,10 +1948,6 @@ function buildDestinationHtml(
     style="background-image:url('${ponto2}')"
   ></div>
 
-  <div
-    class="page-photo-slide"
-    style="background-image:url('${bandeira}')"
-  ></div>
 
 </div>
 
