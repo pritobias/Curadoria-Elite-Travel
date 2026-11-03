@@ -434,16 +434,12 @@
     }
 
 
-    /* =====================================================
-       BLOCO DE DESCOBERTA
-    ===================================================== */
-
     .discovery-section{
       background:
         linear-gradient(
           180deg,
           rgba(7,7,7,.82),
-          rgba(12,12,11,.86)
+          rgba(12,11,10,.88)
         );
       border-top:
         1px solid
@@ -451,56 +447,39 @@
       border-bottom:
         1px solid
         rgba(255,255,255,.08);
-      backdrop-filter:
-        blur(4px);
-      -webkit-backdrop-filter:
-        blur(4px);
-    }
-
-
-    .discovery-section::before{
-      content:"";
-      position:absolute;
-      inset:0;
-      z-index:0;
-      pointer-events:none;
-      background:
-        radial-gradient(
-          circle at 50% 0%,
-          rgba(212,175,55,.07),
-          transparent 48%
-        );
     }
 
 
     .discovery-copy{
-      width:min(860px,100%);
+      width:min(
+        860px,
+        100%
+      );
       margin:0 auto;
+      color:
+        rgba(255,255,255,.84);
       text-align:center;
+      font-size:15px;
+      line-height:1.8;
     }
 
 
     .discovery-copy p{
-      margin:0;
-      color:
-        rgba(255,255,255,.88);
-      font-size:15px;
-      line-height:1.85;
-      text-shadow:
-        0 2px 12px
-        rgba(0,0,0,.85);
+      margin:
+        0 0 18px;
     }
 
 
-    .discovery-copy p + p{
-      margin-top:18px;
+    .discovery-copy p:last-child{
+      margin-bottom:0;
     }
 
 
     /* =====================================================
        ESTRUTURA DAS SEÇÕES
     ===================================================== */
-        .content-section{
+
+    .content-section{
       position:relative;
       padding:
         90px 40px;
@@ -539,38 +518,33 @@
         serif;
       font-size:
         clamp(
-          30px,
+          32px,
           4vw,
-          44px
+          48px
         );
-      margin:0 0 14px;
-      font-weight:600;
-      text-shadow:
-        0 3px 18px
-        rgba(0,0,0,.75);
+      margin:
+        0 0 18px;
+      line-height:1.1;
     }
 
 
     .section-subtitle{
       width:min(
-        780px,
+        760px,
         100%
       );
       margin:
-        0 auto 42px;
+        0 auto 44px;
       color:
-        rgba(255,255,255,.88);
+        rgba(255,255,255,.82);
       text-align:center;
       font-size:15px;
-      line-height:1.8;
-      text-shadow:
-        0 2px 12px
-        rgba(0,0,0,.85);
+      line-height:1.75;
     }
 
 
     /* =====================================================
-       MATERIAIS — FOTO AO FUNDO
+       MATERIAIS
     ===================================================== */
 
     .materials-section{
@@ -578,7 +552,7 @@
         linear-gradient(
           180deg,
           rgba(7,7,7,.78),
-          rgba(9,9,9,.84)
+          rgba(12,11,10,.84)
         );
       border-top:
         1px solid
@@ -586,10 +560,6 @@
       border-bottom:
         1px solid
         rgba(255,255,255,.08);
-      backdrop-filter:
-        blur(3px);
-      -webkit-backdrop-filter:
-        blur(3px);
     }
 
 
@@ -597,11 +567,9 @@
       content:"";
       position:absolute;
       inset:0;
-      z-index:0;
       background:
         radial-gradient(
-          circle at
-          50% 10%,
+          circle at 50% 0%,
           rgba(212,175,55,.08),
           transparent 42%
         );
@@ -616,36 +584,48 @@
           3,
           minmax(0,1fr)
         );
-      gap:18px;
+      gap:20px;
     }
 
 
     .material-card{
-      min-height:260px;
-      padding:26px 22px;
-      border-radius:18px;
-      display:flex;
-      flex-direction:column;
+      position:relative;
+      min-height:340px;
+      padding:30px 28px;
+      border-radius:20px;
+      border:
+        1px solid
+        rgba(212,175,55,.24);
       background:
         linear-gradient(
           180deg,
-          rgba(19,19,18,.90),
-          rgba(7,7,7,.91)
+          rgba(17,16,14,.94),
+          rgba(7,7,7,.95)
         );
-      border:
-        1px solid
-        rgba(212,175,55,.22);
       box-shadow:
-        0 16px 45px
-        rgba(0,0,0,.35);
-      backdrop-filter:
-        blur(10px);
-      -webkit-backdrop-filter:
-        blur(10px);
+        0 20px 55px
+        rgba(0,0,0,.28);
+      display:flex;
+      flex-direction:column;
+      overflow:hidden;
       transition:
-        transform .25s ease,
-        border-color .25s ease,
-        background .25s ease;
+        transform .22s ease,
+        border-color .22s ease,
+        box-shadow .22s ease;
+    }
+
+
+    .material-card::before{
+      content:"";
+      position:absolute;
+      inset:0;
+      pointer-events:none;
+      background:
+        linear-gradient(
+          135deg,
+          rgba(212,175,55,.06),
+          transparent 36%
+        );
     }
 
 
@@ -654,116 +634,163 @@
         translateY(-4px);
       border-color:
         rgba(212,175,55,.52);
+      box-shadow:
+        0 26px 70px
+        rgba(0,0,0,.38);
+    }
+
+
+    .material-card.owned{
+      border-color:
+        rgba(88,190,120,.38);
       background:
         linear-gradient(
           180deg,
-          rgba(24,23,20,.93),
-          rgba(8,8,8,.94)
+          rgba(12,22,15,.95),
+          rgba(7,11,8,.96)
         );
+    }
+
+
+    .material-card > *{
+      position:relative;
+      z-index:2;
     }
 
 
     .material-icon{
       width:46px;
       height:46px;
-      margin-bottom:20px;
-      border-radius:50%;
-      border:
-        1px solid
-        rgba(212,175,55,.34);
+      border-radius:14px;
       display:flex;
       align-items:center;
       justify-content:center;
-      color:var(--gold);
-      font-size:19px;
-      background:
-        rgba(0,0,0,.22);
+      margin-bottom:22px;
+      color:#111;
+      background:var(--gold);
+      font-size:22px;
+      font-weight:800;
+      box-shadow:
+        0 8px 24px
+        rgba(212,175,55,.18);
     }
 
 
     .material-card h3{
+      margin:
+        0 0 12px;
       color:var(--gold);
-      margin:0 0 10px;
-      font-size:19px;
-      line-height:1.35;
+      font-family:
+        "Cinzel",
+        "Georgia",
+        serif;
+      font-size:23px;
+      line-height:1.25;
     }
 
 
-    .material-description{
-      margin:0 0 18px;
-      flex:1;
+    .material-card p{
+      margin:
+        0 0 24px;
       color:
-        rgba(255,255,255,.83);
-      font-size:13.5px;
-      line-height:1.65;
+        rgba(255,255,255,.76);
+      font-size:14px;
+      line-height:1.7;
+      flex:1;
     }
 
 
     .material-price{
       color:#fff;
-      font-size:17px;
-      font-weight:700;
-      margin-bottom:14px;
-    }
-
-
-    .material-button{
-      width:100%;
-      border:0;
-      border-radius:10px;
-      padding:12px 16px;
-      background:var(--gold);
-      color:#000;
+      font-size:22px;
       font-weight:800;
+      margin-bottom:16px;
+    }
+
+
+    .material-actions{
+      display:flex;
+      flex-direction:column;
+      gap:10px;
+    }
+
+
+    .material-actions button,
+    .material-actions a{
+      width:100%;
+      min-height:46px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      padding:12px 16px;
+      border-radius:10px;
+      border:0;
+      text-decoration:none;
       cursor:pointer;
-      transition:
-        transform .20s ease,
-        filter .20s ease;
+      font-weight:800;
+      font-size:14px;
     }
 
 
-    .material-button:hover{
-      transform:
-        translateY(-1px);
-      filter:
-        brightness(1.04);
+    .btn-primary{
+      background:var(--gold);
+      color:#090909;
     }
 
 
-    .loading-state,
-    .empty-state,
-    .error-state{
-      grid-column:1/-1;
-      padding:30px 20px;
-      text-align:center;
-      color:
-        rgba(255,255,255,.82);
-      border:
-        1px dashed
-        rgba(255,255,255,.18);
-      border-radius:16px;
+    .btn-secondary{
       background:
-        rgba(10,10,10,.72);
-      backdrop-filter:
-        blur(8px);
+        rgba(255,255,255,.08);
+      color:#fff;
+      border:
+        1px solid
+        rgba(255,255,255,.12)
+        !important;
+    }
+
+
+    .btn-owned{
+      background:
+        rgba(88,190,120,.16);
+      color:
+        #bff0cb;
+      border:
+        1px solid
+        rgba(88,190,120,.28)
+        !important;
+    }
+
+
+    .materials-loading,
+    .materials-empty{
+      grid-column:
+        1 / -1;
+      padding:
+        34px 20px;
+      border-radius:16px;
+      border:
+        1px solid
+        rgba(255,255,255,.10);
+      background:
+        rgba(0,0,0,.34);
+      color:
+        rgba(255,255,255,.72);
+      text-align:center;
+      line-height:1.7;
     }
 
 
     /* =====================================================
-           PREPARANDO SUA VIAGEM
+       FERRAMENTAS
     ===================================================== */
 
     .tools-section{
       background:
         linear-gradient(
           180deg,
-          rgba(18,18,17,.72),
-          rgba(10,10,10,.84)
+          rgba(8,8,8,.74),
+          rgba(13,11,9,.86)
         );
-      backdrop-filter:
-        blur(5px);
-      -webkit-backdrop-filter:
-        blur(5px);
     }
 
 
@@ -771,16 +798,38 @@
       content:"";
       position:absolute;
       inset:0;
-      z-index:0;
-      pointer-events:none;
       background:
-        linear-gradient(
-          90deg,
-          rgba(212,175,55,.025),
-          transparent 25%,
-          transparent 75%,
-          rgba(212,175,55,.025)
+        radial-gradient(
+          circle at 50% 20%,
+          rgba(212,175,55,.08),
+          transparent 46%
         );
+      pointer-events:none;
+    }
+
+
+    .tools-group{
+      width:min(
+        1120px,
+        100%
+      );
+      margin:0 auto;
+    }
+
+
+    .tools-group + .tools-group{
+      margin-top:54px;
+    }
+
+
+    .tools-group-title{
+      margin:0 0 22px;
+      color:rgba(255,255,255,.72);
+      text-align:center;
+      text-transform:uppercase;
+      letter-spacing:2px;
+      font-size:12px;
+      font-weight:700;
     }
 
 
@@ -800,42 +849,58 @@
     }
 
 
+    .tools-grid.services-grid{
+      grid-template-columns:
+        repeat(
+          3,
+          minmax(0,1fr)
+        );
+      width:min(
+        1120px,
+        100%
+      );
+    }
+
+
     .tool-card{
-      padding:32px 28px;
-      border-radius:20px;
-      text-align:center;
+      padding:
+        34px 30px;
+      border-radius:18px;
+      border:
+        1px solid
+        rgba(212,175,55,.30);
       background:
         linear-gradient(
           180deg,
-          rgba(20,20,19,.88),
-          rgba(8,8,8,.90)
+          rgba(15,15,15,.95),
+          rgba(7,7,7,.96)
         );
-      border:
-        1px solid
-        rgba(212,175,55,.24);
       box-shadow:
-        0 18px 46px
-        rgba(0,0,0,.35);
-      backdrop-filter:
-        blur(10px);
-      -webkit-backdrop-filter:
-        blur(10px);
+        0 18px 45px
+        rgba(0,0,0,.24);
+      text-align:center;
+      display:flex;
+      flex-direction:column;
+      align-items:center;
     }
 
 
     .tool-card h3{
+      margin:
+        0 0 14px;
       color:var(--gold);
-      margin:0 0 12px;
-      font-size:21px;
+      font-size:22px;
     }
 
 
     .tool-card p{
+      margin:
+        0 0 24px;
       color:
-        rgba(255,255,255,.82);
-      line-height:1.7;
+        rgba(255,255,255,.80);
       font-size:14px;
-      margin:0 0 20px;
+      line-height:1.7;
+      flex:1;
     }
 
 
@@ -843,30 +908,85 @@
       display:inline-flex;
       align-items:center;
       justify-content:center;
-      min-height:44px;
-      padding:11px 20px;
+      min-height:46px;
+      padding:
+        12px 20px;
       border-radius:10px;
       background:var(--gold);
-      color:#000;
+      color:#090909;
       text-decoration:none;
       font-weight:800;
     }
 
 
     /* =====================================================
-       POPUPS E CARRINHO
+       RODAPÉ
+    ===================================================== */
+
+    footer{
+      padding:
+        42px 20px;
+      background:
+        rgba(3,3,3,.92);
+      border-top:
+        1px solid
+        rgba(255,255,255,.08);
+      text-align:center;
+      color:
+        rgba(255,255,255,.68);
+      font-size:13px;
+      line-height:1.7;
+    }
+
+
+    .footer-socials{
+      display:flex;
+      justify-content:center;
+      gap:12px;
+      margin-top:18px;
+    }
+
+
+    .footer-socials a{
+      width:42px;
+      height:42px;
+      border-radius:50%;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      border:
+        1px solid
+        rgba(212,175,55,.42);
+      color:var(--gold);
+      text-decoration:none;
+    }
+
+
+    .footer-socials svg{
+      width:18px;
+      height:18px;
+      fill:currentColor;
+    }
+
+
+    /* =====================================================
+       POPUPS
     ===================================================== */
 
     .popup-bg{
+      display:none;
       position:fixed;
       inset:0;
-      display:none;
+      z-index:9999;
+      background:
+        rgba(0,0,0,.78);
+      backdrop-filter:
+        blur(5px);
+      -webkit-backdrop-filter:
+        blur(5px);
+      padding:24px;
       align-items:center;
       justify-content:center;
-      padding:18px;
-      background:
-        rgba(0,0,0,.86);
-      z-index:5000;
     }
 
 
@@ -877,223 +997,190 @@
 
     .popup-content{
       width:min(
-        720px,
+        560px,
         100%
       );
       max-height:
-        calc(
-          100vh - 36px
-        );
-      padding:24px;
-      display:flex;
-      flex-direction:column;
-      overflow:hidden;
-      text-align:center;
-      background:
-        rgba(17,17,17,.98);
+        calc(100vh - 48px);
+      overflow-y:auto;
+      border-radius:18px;
       border:
         1px solid
-        #272727;
-      border-radius:14px;
+        rgba(212,175,55,.34);
+      background:#101010;
+      padding:28px;
       box-shadow:
-        0 25px 70px
+        0 28px 80px
         rgba(0,0,0,.55);
     }
 
 
     .popup-content h3{
-      margin:0 0 10px;
+      margin:
+        0 0 12px;
       color:var(--gold);
+      font-family:
+        "Cinzel",
+        "Georgia",
+        serif;
+      font-size:25px;
     }
 
 
     .popup-content p{
-      margin:0 0 14px;
       color:
-        rgba(255,255,255,.82);
-      line-height:1.6;
+        rgba(255,255,255,.78);
+      line-height:1.65;
       font-size:14px;
+    }
+
+
+    .popup-rules{
+      margin-top:18px;
+      padding:18px;
+      border-radius:12px;
+      background:
+        rgba(255,255,255,.05);
+      color:
+        rgba(255,255,255,.76);
+      font-size:13px;
+      line-height:1.65;
     }
 
 
     .popup-actions{
       display:flex;
-      justify-content:center;
+      gap:10px;
+      justify-content:flex-end;
       flex-wrap:wrap;
-      gap:12px;
-      margin-top:14px;
+      margin-top:22px;
     }
 
 
     .popup-actions button{
-      cursor:pointer;
-      padding:11px 18px;
-      border-radius:10px;
       border:0;
+      border-radius:9px;
+      padding:11px 16px;
+      cursor:pointer;
+      font-weight:800;
       background:var(--gold);
-      color:#000;
-      font-weight:700;
+      color:#090909;
     }
 
 
     .popup-actions .btn-ghost{
-      background:transparent;
+      background:
+        rgba(255,255,255,.08);
+      color:#fff;
       border:
         1px solid
-        rgba(212,175,55,.40);
-      color:var(--gold);
+        rgba(255,255,255,.12);
     }
 
 
     .popup-actions button:disabled{
-      opacity:.55;
+      opacity:.5;
       cursor:not-allowed;
     }
 
 
-    .popup-rules{
-      display:none;
-      flex:1 1 auto;
-      min-height:0;
-      overflow:auto;
-      margin-top:14px;
-      padding:16px;
-      text-align:left;
-      color:
-        rgba(255,255,255,.80);
-      background:#0f0f0f;
-      border:
-        1px solid #242424;
-      border-radius:12px;
-      font-size:13.5px;
-      line-height:1.6;
-    }
-
-
-    .popup-rules strong{
-      color:var(--gold);
-    }
-
-
     .consent-wrap{
+      margin-top:18px;
       display:flex;
       gap:10px;
       align-items:flex-start;
-      margin-top:12px;
-      padding:12px;
-      text-align:left;
       color:
-        rgba(255,255,255,.84);
-      background:#0f0f0f;
-      border:
-        1px solid #242424;
-      border-radius:12px;
-      font-size:13.2px;
+        rgba(255,255,255,.76);
+      font-size:13px;
       line-height:1.55;
     }
 
 
     .consent-wrap input{
       margin-top:3px;
-      accent-color:var(--gold);
     }
 
 
+    /* =====================================================
+       CARRINHO
+    ===================================================== */
+
     .cart-list{
-      flex:1 1 auto;
-      min-height:0;
-      overflow:auto;
-      margin-top:14px;
-      padding:12px;
-      text-align:left;
-      background:#0f0f0f;
-      border:
-        1px solid #242424;
-      border-radius:12px;
+      display:flex;
+      flex-direction:column;
+      gap:10px;
+      margin-top:18px;
     }
 
 
     .cart-item{
       display:flex;
       justify-content:space-between;
-      gap:12px;
-      padding:12px 10px;
-      border-bottom:
+      gap:14px;
+      padding:14px;
+      border-radius:12px;
+      background:
+        rgba(255,255,255,.05);
+      border:
         1px solid
-        rgba(255,255,255,.09);
+        rgba(255,255,255,.08);
     }
 
 
-    .cart-item:last-child{
-      border-bottom:0;
+    .cart-item-left{
+      min-width:0;
     }
 
 
     .cart-item-title{
       color:#fff;
-      font-weight:650;
-      margin:0 0 4px;
+      font-weight:800;
       font-size:14px;
     }
 
 
     .cart-item-meta{
+      margin-top:4px;
       color:
-        rgba(255,255,255,.72);
-      font-size:12.5px;
-      line-height:1.4;
+        rgba(255,255,255,.64);
+      font-size:12px;
+      line-height:1.5;
     }
 
 
     .cart-item-right{
       display:flex;
-      flex-direction:column;
-      align-items:flex-end;
-      gap:10px;
-      white-space:nowrap;
+      align-items:center;
     }
 
 
     .cart-item-right button{
-      cursor:pointer;
-      padding:9px 13px;
-      border-radius:9px;
+      border:0;
       background:transparent;
-      border:
-        1px solid
-        rgba(212,175,55,.40);
-      color:var(--gold);
-      font-weight:650;
+      color:#ff8c8c;
+      cursor:pointer;
+      font-weight:700;
     }
 
 
     .cart-total{
+      margin-top:16px;
+      padding-top:16px;
+      border-top:
+        1px solid
+        rgba(255,255,255,.10);
       display:flex;
       justify-content:space-between;
       gap:12px;
-      align-items:center;
-      margin-top:12px;
-      padding:12px;
-      text-align:left;
-      background:#0f0f0f;
-      border:
-        1px solid
-        rgba(255,255,255,.11);
-      border-radius:12px;
-    }
-
-
-    .cart-total strong{
-      color:var(--gold);
+      color:#fff;
     }
 
 
     .total-strike{
       color:
-        rgba(255,255,255,.55);
+        rgba(255,255,255,.48);
       text-decoration:line-through;
       margin-right:10px;
-      font-weight:650;
     }
 
 
@@ -1103,181 +1190,138 @@
     }
 
 
-    .discount-line{
-      display:none;
-      margin-top:8px;
-      text-align:left;
-      color:
-        rgba(255,255,255,.72);
-      font-size:12.8px;
-    }
-
-
-    .discount-line strong{
-      color:var(--gold);
-    }
-
-
     .coupon-wrap{
-      margin-top:10px;
-      padding:12px;
-      text-align:left;
-      background:#0f0f0f;
+      margin-top:18px;
+      padding:16px;
+      border-radius:12px;
+      background:
+        rgba(255,255,255,.04);
       border:
         1px solid
-        rgba(255,255,255,.11);
-      border-radius:12px;
+        rgba(255,255,255,.08);
     }
 
 
     .coupon-label{
       display:block;
       margin-bottom:8px;
-      color:
-        rgba(255,255,255,.77);
-      font-size:12.5px;
+      color:#fff;
+      font-weight:700;
+      font-size:13px;
     }
 
 
     .coupon-row{
       display:flex;
-      gap:10px;
-      align-items:center;
+      gap:8px;
     }
 
 
     .coupon-input{
       flex:1;
-      width:100%;
-      padding:12px 14px;
-            outline:none;
-      color:#fff;
-      background:
-        rgba(10,10,10,.96);
+      min-width:0;
+      border-radius:9px;
       border:
         1px solid
-        rgba(255,255,255,.11);
-      border-radius:12px;
-      font-size:14px;
+        rgba(255,255,255,.14);
+      background:#080808;
+      color:#fff;
+      padding:11px 12px;
+      outline:none;
     }
 
 
     .coupon-apply{
-      min-width:120px;
-      cursor:pointer;
-      padding:11px 18px;
       border:0;
-      border-radius:10px;
+      border-radius:9px;
+      padding:
+        11px 15px;
       background:var(--gold);
-      color:#000;
-      font-weight:700;
+      color:#090909;
+      cursor:pointer;
+      font-weight:800;
     }
 
 
     .coupon-msg{
       min-height:18px;
       margin-top:8px;
-      font-size:12.5px;
-      line-height:1.45;
+      font-size:12px;
     }
 
 
     .coupon-msg.ok{
-      color:var(--gold);
+      color:#9be2ae;
     }
 
 
     .coupon-msg.err{
-      color:
-        rgba(255,255,255,.74);
+      color:#ff9b9b;
     }
 
 
     .coupon-help{
-      margin-top:8px;
+      margin-top:5px;
       color:
-        rgba(255,255,255,.65);
-      font-size:12.5px;
+        rgba(255,255,255,.50);
+      font-size:11px;
       line-height:1.45;
     }
 
 
-    /* =====================================================
-       FOOTER
-    ===================================================== */
-
-    footer{
-      padding:
-        40px 24px 42px;
-      text-align:center;
-      color:
-        rgba(255,255,255,.70);
-      border-top:
-        1px solid
-        rgba(255,255,255,.09);
-      font-size:14px;
-      line-height:1.7;
-      background:
-        rgba(0,0,0,.94);
-      backdrop-filter:
-        blur(10px);
-      -webkit-backdrop-filter:
-        blur(10px);
-    }
-
-
-    footer > a{
-      color:#826bf5;
-      text-decoration:underline;
-    }
-
-
-    .footer-social{
-      display:flex;
-      justify-content:center;
-      gap:12px;
-      margin-top:16px;
-    }
-
-
-    .footer-social a{
-      width:38px;
-      height:38px;
-      display:inline-flex;
-      align-items:center;
-      justify-content:center;
-      border-radius:50%;
-      border:
-        1px solid
-        rgba(212,175,55,.32);
-      color:var(--gold);
-      text-decoration:none;
-      background:
-        rgba(255,255,255,.02);
-    }
-
-
-    .footer-social svg{
-      width:18px;
-      height:18px;
-      fill:currentColor;
+    .discount-line{
+      display:none;
+      margin-top:10px;
+      color:#9be2ae;
+      font-size:13px;
     }
 
 
     /* =====================================================
-       RESPONSIVO
+       RESPONSIVIDADE
     ===================================================== */
 
-    @media (max-width:980px){
+    @media(
+      max-width:980px
+    ){
+
+      .materials-grid{
+        grid-template-columns:
+          repeat(
+            2,
+            minmax(0,1fr)
+          );
+      }
+
+
+      .tools-grid,
+      .tools-grid.services-grid{
+        grid-template-columns:1fr;
+      }
+
+    }
+        @media(
+      max-width:760px
+    ){
 
       header{
         padding:
-          14px 16px;
+          12px 18px;
       }
 
 
       .brand{
-        min-width:auto;
+        min-width:0;
+      }
+
+
+      .brand-name{
+        font-size:15px;
+      }
+
+
+      .brand-tagline{
+        font-size:10px;
       }
 
 
@@ -1289,23 +1333,30 @@
       .nav-menu{
         display:none;
         position:absolute;
-        top:52px;
+        top:50px;
         right:0;
-        min-width:220px;
-        padding:14px;
-        flex-direction:column;
-        align-items:flex-start;
-        gap:12px;
+        width:min(
+          280px,
+          calc(100vw - 36px)
+        );
+        padding:16px;
+        border-radius:14px;
         background:
-          rgba(0,0,0,.96);
+          rgba(8,8,8,.98);
         border:
           1px solid
-          rgba(255,255,255,.11);
-        border-radius:14px;
+          rgba(212,175,55,.26);
+        box-shadow:
+          0 20px 55px
+          rgba(0,0,0,.42);
+        flex-direction:column;
+        align-items:stretch;
+        gap:12px;
       }
 
 
-      header.nav-open .nav-menu{
+      header.nav-open
+      .nav-menu{
         display:flex;
       }
 
@@ -1316,99 +1367,38 @@
 
 
       .destination-hero{
-        min-height:680px;
+        min-height:690px;
         height:88vh;
       }
 
 
       .hero-content{
-        transform:
-          translateY(15px);
+        width:
+          min(
+            92%,
+            680px
+          );
       }
 
 
       .hero-content h1{
         font-size:
           clamp(
-            66px,
-            15vw,
-            110px
+            52px,
+            16vw,
+            92px
           );
-      }
-
-
-      .content-section{
-        padding:
-          70px 18px;
-      }
-
-
-      .materials-grid{
-        grid-template-columns:
-          repeat(
-            2,
-            minmax(0,1fr)
-          );
-      }
-
-
-      .tools-grid{
-        grid-template-columns:1fr;
-      }
-
-    }
-
-
-    @media (max-width:640px){
-
-      .brand-name{
-        font-size:14px;
-      }
-
-
-      .brand-tagline{
-        font-size:10px;
-      }
-
-
-      .brand img{
-        width:30px;
-        height:30px;
-      }
-
-
-      .destination-hero{
-        min-height:620px;
-        height:82vh;
-      }
-
-
-      .hero-content{
-        width:88%;
-        transform:
-          translateY(24px);
-      }
-
-
-      .hero-content h1{
-        font-size:
-          clamp(
-            56px,
-            19vw,
-            84px
-          );
-      }
-
-
-      .hero-country{
-        font-size:12px;
-        letter-spacing:3px;
       }
 
 
       .hero-description{
         font-size:14px;
-        line-height:1.7;
+      }
+
+
+      .content-section{
+        padding:
+          72px 20px;
       }
 
 
@@ -1422,13 +1412,13 @@
       }
 
 
-      .cart-item{
-        flex-direction:column;
+      .popup-bg{
+        padding:14px;
       }
 
 
-      .cart-item-right{
-        align-items:flex-start;
+      .popup-content{
+        padding:22px 18px;
       }
 
 
@@ -1437,21 +1427,73 @@
       }
 
 
-      .coupon-apply{
+      .popup-actions{
+        flex-direction:column;
+      }
+
+
+      .popup-actions button{
         width:100%;
       }
 
     }
 
 
-    @media (
-      prefers-reduced-motion:
-      reduce
+    @media(
+      max-width:480px
     ){
 
-      .page-photo-slide{
-        transition:none;
-        transform:none;
+      .brand img{
+        width:30px;
+        height:30px;
+      }
+
+
+      .brand-name{
+        font-size:13px;
+      }
+
+
+      .destination-hero{
+        min-height:650px;
+      }
+
+
+      .hero-country{
+        font-size:11px;
+        letter-spacing:3px;
+      }
+
+
+      .hero-content h1{
+        font-size:
+          clamp(
+            46px,
+            17vw,
+            74px
+          );
+      }
+
+
+      .section-title{
+        font-size:30px;
+      }
+
+
+      .material-card,
+      .tool-card{
+        padding:
+          26px 22px;
+      }
+
+
+      .cart-item{
+        flex-direction:column;
+      }
+
+
+      .cart-item-right{
+        justify-content:flex-start;
       }
 
     }
@@ -1463,377 +1505,523 @@
 
 <body>
 
-
-<!-- =====================================================
-     FUNDO CONTÍNUO DA PÁGINA
-====================================================== -->
-
-<div
-  class="page-photo-carousel"
-  aria-hidden="true"
->
+  <!-- =====================================================
+       FUNDO FOTOGRÁFICO GLOBAL
+  ====================================================== -->
 
   <div
-    class="page-photo-slide active"
-  ></div>
-
-  <div
-    class="page-photo-slide"
-  ></div>
-
-  <div
-    class="page-photo-slide"
-  ></div>
-
-</div>
-
-
-<div
-  class="page-photo-global-overlay"
-></div>
-
-
-<!-- =====================================================
-     CABEÇALHO
-====================================================== -->
-
-<header id="siteHeader">
-
-  <a
-    class="brand"
-    href="/"
-    aria-label="Curadoria Elite Travel"
+    class="page-photo-carousel"
+    aria-hidden="true"
   >
 
-    <img
-      src="/images/rosa-dos-ventos.png"
-      alt="Rosa dos Ventos"
+    <div
+      class="page-photo-slide active"
+    ></div>
+
+    <div
+      class="page-photo-slide"
+    ></div>
+
+    <div
+      class="page-photo-slide"
+    ></div>
+
+  </div>
+
+
+  <div
+    class="page-photo-global-overlay"
+    aria-hidden="true"
+  ></div>
+
+
+  <!-- =====================================================
+       CABEÇALHO
+  ====================================================== -->
+
+  <header id="siteHeader">
+
+    <a
+      href="/"
+      class="brand"
+      aria-label="Curadoria Elite Travel"
     >
 
-    <div>
-
-      <div class="brand-name">
-        Curadoria Elite Travel
-      </div>
-
-      <div class="brand-tagline">
-        O seu mundo, bem indicado.
-      </div>
-
-    </div>
-  </a>
-
-
-  <nav>
-
-    <button
-      class="nav-toggle"
-      type="button"
-      aria-label="Menu"
-      onclick="toggleMobileNav()"
-    >
-      <span></span>
-      <span></span>
-      <span></span>
-    </button>
-
-
-    <div class="nav-menu">
-
-      <a href="/">
-        Início
-      </a>
-
-      <a href="/?secao=quem">
-        Quem Somos
-      </a>
-
-      <a href="/?secao=curadoria">
-        Curadoria
-      </a>
-
-      <a href="/?secao=buscador">
-        Buscador
-      </a>
-
-      <span class="nav-sep"></span>
-
-      <a
-        href="#"
-        id="navCart"
-        onclick="openCart(); return false;"
-      >
-        Carrinho (0)
-      </a>
-
-      <span class="nav-sep"></span>
-
-      <a
-        href="/login.html"
-        id="navLogin"
-      >
-        Entrar
-      </a>
-
-      <a
-        href="/account.html"
-        id="navAccount"
-        style="display:none;"
-      >
-        Minha conta
-      </a>
-
-      <a
-        href="#"
-        id="navLogout"
-        style="display:none;"
-      >
-        Sair
-      </a>
-
-    </div>
-
-  </nav>
-
-</header>
-
-
-<main>
-
-
-  <!-- =====================================================
-       HERO
-  ====================================================== -->
-
-  <section class="destination-hero">
-
-    <div class="hero-content">
-
-      <div class="hero-country">
-        Estados Unidos
-      </div>
-
-      <h1>
-        New York
-      </h1>
-
-      <div class="hero-divider"></div>
-
-      <p class="hero-description">
-        New York reúne ritmos, culturas e referências que atravessam o mundo. Entre grandes ícones, bairros distintos e uma vida urbana intensa, a cidade se transforma a cada esquina sem perder sua identidade.
-      </p>
-
-    </div>
-
-  </section>
-
-
-  <!-- =====================================================
-       BLOCO DE DESCOBERTA
-  ====================================================== -->
-
-  <section class="content-section discovery-section">
-
-    <div class="content-shell">
-
-      <h2 class="section-title">
-        Planejando uma viagem para New York, Estados Unidos?
-      </h2>
-
-      <div class="discovery-copy">
-
-        <p>
-          Planejar uma viagem para New York envolve escolhas que podem transformar a experiência no destino. Onde ficar, onde comer, o que fazer e como se locomover dependem do tempo disponível, dos seus interesses e da maneira como você prefere conhecer cada lugar.
-        </p>
-
-        <p>
-          Ter essas informações organizadas facilita essas decisões e ajuda a encontrar opções que façam sentido para a sua viagem. Na Curadoria Elite Travel, você encontra conteúdos, ferramentas e indicações para apoiar diferentes momentos do planejamento e da experiência em New York.
-        </p>
-
-      </div>
-
-    </div>
-
-  </section>
-
-
-  <!-- =====================================================
-       MATERIAIS
-  ====================================================== -->
-
-  <section
-    class="content-section materials-section"
-    id="materiais"
-  >
-
-    <div class="content-shell">
-
-      <div class="section-eyebrow">
-        Curadoria Elite Travel
-      </div>
-
-      <h2 class="section-title">
-        Materiais disponíveis para New York
-      </h2>
-
-      <p class="section-subtitle">
-        Escolha apenas os materiais que fazem sentido para a sua viagem.
-        As categorias exibidas abaixo correspondem aos conteúdos atualmente disponíveis para este destino.
-      </p>
-
-      <div
-        class="materials-grid"
-        id="materialsGrid"
+      <img
+        src="/assets/logo.png"
+        alt="Curadoria Elite Travel"
       >
 
-        <div class="loading-state">
-          Carregando materiais disponíveis...
+      <div>
+
+        <div class="brand-name">
+          Curadoria Elite Travel
+        </div>
+
+        <div class="brand-tagline">
+          O seu mundo, bem indicado.
         </div>
 
       </div>
 
-    </div>
+    </a>
 
-  </section>
+
+    <nav>
+
+      <button
+        class="nav-toggle"
+        type="button"
+        aria-label="Abrir menu"
+        onclick="toggleMobileNav()"
+      >
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+
+
+      <div class="nav-menu">
+
+        <a href="/">
+          Início
+        </a>
+
+        <a href="/quem-somos.html">
+          Quem Somos
+        </a>
+
+        <a href="/curadoria.html">
+          Curadoria
+        </a>
+
+        <a href="/buscador.html">
+          Buscador
+        </a>
+
+        <span class="nav-sep"></span>
+
+        <a
+          href="javascript:void(0)"
+          id="navCart"
+          onclick="openCart()"
+        >
+          Carrinho (0)
+        </a>
+
+        <span class="nav-sep"></span>
+
+        <a
+          href="/login.html"
+          id="navLogin"
+        >
+          Entrar
+        </a>
+
+        <a
+          href="/account.html"
+          id="navAccount"
+          style="display:none;"
+        >
+          Minha conta
+        </a>
+
+        <a
+          href="#"
+          id="navLogout"
+          style="display:none;"
+          onclick="doLogout(event)"
+        >
+          Sair
+        </a>
+
+      </div>
+
+    </nav>
+
+  </header>
+
+
+  <main>
+
+    <!-- =====================================================
+         HERO
+    ====================================================== -->
+
+    <section class="destination-hero">
+
+      <div class="hero-content">
+
+        <div class="hero-country">
+          Estados Unidos
+        </div>
+
+        <h1>
+          New York
+        </h1>
+
+        <div class="hero-divider"></div>
+
+        <p class="hero-description">
+          New York reúne ritmos, culturas e referências que atravessam o mundo. Entre grandes ícones, bairros distintos e uma vida urbana intensa, a cidade se transforma a cada esquina sem perder sua identidade.
+        </p>
+
+
+      </div>
+
+    </section>
+
+
+    <!-- =====================================================
+         DESCOBERTA
+    ====================================================== -->
+
+    <section class="content-section discovery-section">
+
+      <div class="content-shell">
+
+        <div class="section-eyebrow">
+          Informações para sua viagem
+        </div>
+
+        <h2 class="section-title">
+          Planejando uma viagem para New York, Estados Unidos?
+        </h2>
+
+        <div class="discovery-copy">
+
+          <p>
+            Planejar uma viagem para New York envolve escolhas que podem transformar a experiência no destino. Onde ficar, onde comer, o que fazer e como se locomover dependem do tempo disponível, dos seus interesses e da maneira como você prefere conhecer cada lugar.
+          </p>
+
+          <p>
+            Ter essas informações organizadas facilita essas decisões e ajuda a encontrar opções que façam sentido para a sua viagem. Na Curadoria Elite Travel, você encontra conteúdos, ferramentas e indicações para apoiar diferentes momentos do planejamento e da experiência em New York.
+          </p>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- =====================================================
+         MATERIAIS
+    ====================================================== -->
+
+    <section
+      class="content-section materials-section"
+      id="materiais"
+    >
+
+      <div class="content-shell">
+
+        <div class="section-eyebrow">
+          Curadoria por categoria
+        </div>
+
+        <h2 class="section-title">
+          Materiais disponíveis para New York
+        </h2>
+
+        <p class="section-subtitle">
+          Explore as categorias disponíveis para o destino e escolha os materiais que fazem sentido para a sua viagem.
+        </p>
+
+
+        <div
+          class="materials-grid"
+          id="materialsGrid"
+        >
+
+          <div class="materials-loading">
+            Carregando materiais disponíveis...
+          </div>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- =====================================================
+         FERRAMENTAS E SERVIÇOS
+    ====================================================== -->
+
+    <section
+      class="content-section tools-section"
+      id="ferramentas"
+    >
+
+      <div class="content-shell">
+
+        <div class="section-eyebrow">
+          Antes e durante a viagem
+        </div>
+
+        <h2 class="section-title">
+          Preparando sua viagem
+        </h2>
+
+        <p class="section-subtitle">
+          Consulte ferramentas da Curadoria e serviços de parceiros indicados para organizar diferentes etapas da sua viagem.
+        </p>
+
+
+        <div class="tools-group">
+
+          <h3 class="tools-group-title">
+            Ferramentas da Curadoria
+          </h3>
+
+          <div class="tools-grid">
+
+            <article class="tool-card">
+
+              <h3>
+                Documentos, vistos e saúde
+              </h3>
+
+              <p>
+                Consulte informações sobre entrada no destino,
+                documentação, apoio diplomático e saúde para viagem.
+              </p>
+
+              <a href="/documentos.html">
+                Acessar ferramenta
+              </a>
+
+            </article>
+
+
+            <article class="tool-card">
+
+              <h3>
+                Transportes em New York
+              </h3>
+
+              <p>
+                Consulte informações organizadas sobre redes de transporte,
+                formas de pagamento e canais oficiais para utilizar durante a viagem.
+              </p>
+
+              <a href="/transportes.html">
+                Acessar ferramenta
+              </a>
+
+            </article>
+
+          </div>
+
+        </div>
+
+
+        <div class="tools-group">
+
+          <h3 class="tools-group-title">
+            Serviços e experiências
+          </h3>
+
+          <div class="tools-grid services-grid">
+
+            <article class="tool-card">
+
+              <h3>
+                Hospedagem
+              </h3>
+
+              <p>
+                Encontre opções de hospedagem para o seu destino por meio de parceiro indicado pela Curadoria.
+              </p>
+
+              <a href="/hospedagem.html">
+                Pesquisar hospedagem
+              </a>
+
+            </article>
+
+
+            <article class="tool-card">
+
+              <h3>
+                Transfer
+              </h3>
+
+              <p>
+                Encontre opções de transfer para diferentes destinos por meio de parceiro indicado pela Curadoria.
+              </p>
+
+              <a href="/transfer.html">
+                Pesquisar transfer
+              </a>
+
+            </article>
+
+
+            <article class="tool-card">
+
+              <h3>
+                Seguro Viagem
+              </h3>
+
+              <p>
+                Compare opções de seguro viagem, coberturas e preços por meio de parceiro indicado pela Curadoria.
+              </p>
+
+              <a href="/seguro-viagem.html">
+                Pesquisar seguro
+              </a>
+
+            </article>
+
+
+            <article class="tool-card">
+
+              <h3>
+                Locação de veículo
+              </h3>
+
+              <p>
+                Pesquise opções de aluguel de veículos por meio de parceiro indicado pela Curadoria.
+              </p>
+
+              <a href="/locacao.html">
+                Pesquisar veículos
+              </a>
+
+            </article>
+
+
+            <article class="tool-card">
+
+              <h3>
+                Aéreo
+              </h3>
+
+              <p>
+                Pesquise alternativas de voos e compare opções para o seu deslocamento.
+              </p>
+
+              <a href="/aereo.html">
+                Pesquisar voos
+              </a>
+
+            </article>
+
+
+            <article class="tool-card">
+
+              <h3>
+                Atividades e Experiências
+              </h3>
+
+              <p>
+                Pesquise passeios, visitas guiadas, excursões e outras experiências por meio de parceiro indicado pela Curadoria.
+              </p>
+
+              <a href="/experiencias.html">
+                Explorar experiências
+              </a>
+
+            </article>
+
+
+            <article class="tool-card">
+
+              <h3>
+                Ingressos
+              </h3>
+
+              <p>
+                Encontre ingressos para atrações, museus, parques e outros lugares para visitar durante a viagem.
+              </p>
+
+              <a href="/ingressos.html">
+                Pesquisar ingressos
+              </a>
+
+            </article>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </section>
+
+  </main>
 
 
   <!-- =====================================================
-       PREPARANDO SUA VIAGEM
+       RODAPÉ
   ====================================================== -->
 
-  <section
-    class="content-section tools-section"
-  >
+  <footer>
 
-    <div class="content-shell">
+    <div>
+      Curadoria Elite Travel · O seu mundo, bem indicado.
+    </div>
 
-      <div class="section-eyebrow">
-        Antes e durante a viagem
-      </div>
-
-      <h2 class="section-title">
-        Preparando sua viagem
-      </h2>
-
-      <p class="section-subtitle">
-        Acesse ferramentas da Curadoria para consultar informações práticas relacionadas ao destino.
-      </p>
+    <div>
+      São Paulo - SP ·
+      <a href="mailto:curadoriaelitetravel@gmail.com">
+        curadoriaelitetravel@gmail.com
+      </a>
+    </div>
 
 
-      <div class="tools-grid">
+    <div class="footer-socials">
 
-        <article class="tool-card">
+      <a
+        href="https://www.instagram.com/curadoriaelitetravel/"
+        target="_blank"
+        rel="noopener noreferrer"
+        aria-label="Instagram"
+      >
 
-          <h3>
-            Documentos, vistos e saúde
-          </h3>
+        <svg
+          viewBox="0 0 24 24"
+          aria-hidden="true"
+        >
+          <path d="M7 2C4.2 2 2 4.2 2 7v10c0 2.8 2.2 5 5 5h10c2.8 0 5-2.2 5-5V7c0-2.8-2.2-5-5-5H7zm0 2h10c1.7 0 3 1.3 3 3v10c0 1.7-1.3 3-3 3H7c-1.7 0-3-1.3-3-3V7c0-1.7 1.3-3 3-3zm11 1.5a1.25 1.25 0 100 2.5 1.25 1.25 0 000-2.5zM12 7a5 5 0 100 10 5 5 0 000-10zm0 2a3 3 0 110 6 3 3 0 010-6z"/>
+        </svg>
 
-          <p>
-            Consulte informações sobre entrada no destino,
-            documentação, apoio diplomático e saúde para viagem.
-          </p>
-
-          <a href="/documentos.html">
-            Acessar ferramenta
-          </a>
-
-        </article>
+      </a>
 
 
-        <article class="tool-card">
+      <a
+        href="https://www.linkedin.com/company/curadoria-elite-travel"
+        target="_blank"
+        rel="noopener noreferrer"
+        aria-label="LinkedIn"
+      >
 
-          <h3>
-            Transportes em New York
-          </h3>
+        <svg
+          viewBox="0 0 24 24"
+          aria-hidden="true"
+        >
+          <path d="M6.5 8.5H3.5V20h3V8.5zM5 3.8a1.75 1.75 0 100 3.5 1.75 1.75 0 000-3.5zM20.5 13.3c0-3.5-1.9-5.1-4.4-5.1-2 0-2.9 1.1-3.4 1.9V8.5h-3V20h3v-5.7c0-1.5.3-3 2.2-3 1.9 0 1.9 1.8 1.9 3.1V20h3.1l.1-6.7z"/>
+        </svg>
 
-          <p>
-            Consulte informações organizadas sobre redes de transporte,
-            formas de pagamento e canais oficiais para utilizar durante a viagem.
-          </p>
-
-          <a href="/transportes.html">
-            Acessar ferramenta
-          </a>
-
-        </article>
-
-      </div>
+      </a>
 
     </div>
 
-  </section>
+  </footer>
 
 
-</main>
+  <!-- =====================================================
+       SUPABASE
+  ====================================================== -->
+
+  <script
+    src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"
+  ></script>
 
 
-<footer>
-
-  Curadoria Elite Travel ·
-  O seu mundo, bem indicado.
-
-  <br>
-
-  São Paulo - SP ·
-
-  <a href="/contact.html">
-    curadoriaelitetravel@gmail.com
-  </a>
-
-
-  <div class="footer-social">
-
-    <a
-      href="https://www.instagram.com/curadoriaelitetravel/"
-      target="_blank"
-      rel="noopener noreferrer"
-      aria-label="Instagram"
-    >
-
-      <svg
-        viewBox="0 0 24 24"
-        aria-hidden="true"
-      >
-        <path d="M7 2h10a5 5 0 0 1 5 5v10a5 5 0 0 1-5 5H7a5 5 0 0 1-5-5V7a5 5 0 0 1 5-5Zm0 2a3 3 0 0 0-3 3v10a3 3 0 0 0 3 3h10a3 3 0 0 0 3-3V7a3 3 0 0 0-3-3H7Zm5 3.5A4.5 4.5 0 1 1 7.5 12 4.5 4.5 0 0 1 12 7.5Zm0 2A2.5 2.5 0 1 0 14.5 12 2.5 2.5 0 0 0 12 9.5Zm5.25-3.1a1.05 1.05 0 1 1-1.05 1.05 1.05 1.05 0 0 1 1.05-1.05Z"/>
-      </svg>
-
-    </a>
-
-
-    <a
-      href="https://www.linkedin.com/company/curadoria-elite-travel"
-      target="_blank"
-      rel="noopener noreferrer"
-      aria-label="LinkedIn"
-    >
-
-      <svg
-        viewBox="0 0 24 24"
-        aria-hidden="true"
-      >
-        <path d="M6.5 8.25H3.25V21H6.5V8.25ZM4.88 3A1.88 1.88 0 1 0 4.9 6.75 1.88 1.88 0 0 0 4.88 3ZM21 13.7c0-3.85-2.05-5.64-4.79-5.64a4.14 4.14 0 0 0-3.74 2.05V8.25H9.22V21h3.25v-6.31c0-1.66.32-3.27 2.38-3.27 2.03 0 2.05 1.9 2.05 3.38V21H21v-7.3Z"/>
-      </svg>
-
-    </a>
-
-  </div>
-
-</footer>
-
-
-<script
-  src="https://unpkg.com/@supabase/supabase-js@2"
-></script>
-
-
-<script>
-  /* =====================================================
-     CONFIGURAÇÃO
-  ===================================================== */
-
-  const DESTINATION =
-    {"cidade":"New York","pais":"Estados Unidos","cityLabel":"New York - USA","url":"/destinos/usa/new-york/"};
-
+  <script>
 
   const SUPABASE_URL =
     "https://lnyoqoezezisakghtmim.supabase.co";
@@ -1843,24 +2031,28 @@
     "sb_publishable_7NB9Y784asZcGohMBz1ePA_ZDYhwEqf";
 
 
+  const DESTINATION =
+    {"cidade":"New York","pais":"Estados Unidos","cityLabel":"New York - USA","url":"/destinos/usa/new-york/"};
+
+
   const CART_STORAGE_KEY =
-    "cet_cart_v2";
-
-
-  const CHECKOUT_CONTEXT_KEY =
-    "cet_checkout_context_v2";
-
-
-  const CART_CHECKOUT_ITEMS_KEY =
-    "cet_cart_checkout_items_v2";
-
-
-  const CART_LAST_CHECKOUT_STARTED_KEY =
-    "cet_cart_last_checkout_started_v2";
+    "cet_cart";
 
 
   const CART_COUPON_CODE_KEY =
-    "cet_cart_coupon_code_v1";
+    "cet_cart_coupon_code";
+
+
+  const CHECKOUT_CONTEXT_KEY =
+    "cet_checkout_context";
+
+
+  const CART_CHECKOUT_ITEMS_KEY =
+    "cet_cart_checkout_items";
+
+
+  const CART_LAST_CHECKOUT_STARTED_KEY =
+    "cet_cart_last_checkout_started";
 
 
   let supabaseClient =
@@ -2476,7 +2668,8 @@
 
       }
     );
-      }
+
+  }
 
 
   /* =====================================================
@@ -2597,8 +2790,7 @@
       )
         ? parsed
         : [];
-
-    }catch(error){
+            }catch(error){
 
       return [];
 
@@ -3126,7 +3318,8 @@
             'A Curadoria Elite Travel oferece exclusivamente materiais digitais de caráter informativo e orientativo, baseados em indicações, referências e conteúdos selecionados.<br><br>' +
 
             'Não realizamos reservas, vendas de passagens, hospedagens, experiências ou qualquer tipo de intermediação direta com fornecedores ou prestadores de serviço.<br><br>' +
-                        'As decisões de compra, contratação e utilização de serviços indicados nos materiais são de <strong>responsabilidade exclusiva do usuário</strong>.<br><br>' +
+
+            'As decisões de compra, contratação e utilização de serviços indicados nos materiais são de <strong>responsabilidade exclusiva do usuário</strong>.<br><br>' +
 
             'Por se tratar de conteúdo digital disponibilizado de forma imediata após a confirmação da compra, <strong>não é possível realizar cancelamentos, trocas ou reembolsos</strong>.<br><br>' +
 
@@ -3345,6 +3538,7 @@
 
       consentWrap.id =
         "consent-checkbox-wrap";
+                "consent-checkbox-wrap";
 
 
       consentWrap.className =
@@ -3776,7 +3970,9 @@
       document.getElementById(
         "cartProceedBtn"
       );
-          const items =
+
+
+    const items =
       getCart();
 
 
@@ -4134,8 +4330,10 @@
     ){
 
       setCheckoutContext({
+
         type:
           "cart"
+
       });
 
 
@@ -4273,41 +4471,6 @@
         }
 
 
-        trackEvent(
-          "begin_checkout",
-          {
-
-            currency:
-              "BRL",
-
-            value:
-              calcCartTotal(
-                finalItems
-              ),
-
-            items:
-              finalItems.map(
-                (item) => ({
-
-                  item_name:
-                    item.city,
-
-                  item_category:
-                    item.category,
-
-                  price:
-                    item.price,
-
-                  quantity:
-                    item.qty
-
-                })
-              )
-
-          }
-        );
-
-
         goInvoiceCart(
           finalItems,
           couponNow
@@ -4319,7 +4482,118 @@
   }
 
 
-  async function resumeAfterLoginIfNeeded(){
+  /* =====================================================
+     COMPRA DIRETA
+  ===================================================== */
+
+  async function startSingleCheckoutFlow(
+    category,
+    city
+  ){
+
+    const session =
+      await getSession();
+
+
+    if (
+      !session ||
+      !session.user
+    ){
+
+      setCheckoutContext({
+
+        type:
+          "single",
+
+        category:
+          category,
+
+        city:
+          city
+
+      });
+
+
+      goLoginWithReturn();
+
+
+      return;
+
+    }
+
+
+    await loadOwnedPurchases();
+
+
+    if (
+      userOwns(
+        category,
+        city
+      )
+    ){
+
+      openPopup({
+
+        title:
+          "Material já disponível",
+
+        text:
+          "Este material já está disponível na sua conta.",
+
+        secondaryText:
+          "Ir para Minha conta",
+
+        onSecondary:
+          () => {
+
+            window.location.href =
+              "/account.html";
+
+          }
+
+      });
+
+
+      return;
+
+    }
+
+
+    await showPolicyThenProceed(
+      async () => {
+
+        const payload = [
+          {
+
+            category:
+              category,
+
+            city:
+              city,
+
+            qty:
+              1
+
+          }
+        ];
+
+
+        goInvoiceCart(
+          payload,
+          ""
+        );
+
+      }
+    );
+
+  }
+
+
+  /* =====================================================
+     RETORNO APÓS LOGIN
+  ===================================================== */
+
+  async function handleAfterLogin(){
 
     const params =
       new URLSearchParams(
@@ -4333,46 +4607,8 @@
       ) !==
       "1"
     ){
-
       return;
-
     }
-
-
-    try{
-
-      const url =
-        new URL(
-          window.location.href
-        );
-
-
-      url.searchParams.delete(
-        "after_login"
-      );
-
-
-      window.history.replaceState(
-        {},
-        "",
-        url.pathname
-      );
-
-    }catch(error){}
-
-
-    const context =
-      getCheckoutContext();
-
-
-    if (
-      !context ||
-      context.type !==
-      "cart"
-    ){
-
-      return;
-          }
 
 
     const session =
@@ -4383,6 +4619,40 @@
       !session ||
       !session.user
     ){
+      return;
+    }
+
+
+    const context =
+      getCheckoutContext();
+
+
+    if (!context){
+
+      params.delete(
+        "after_login"
+      );
+
+
+      const cleanQuery =
+        params.toString();
+
+
+      const cleanUrl =
+        window.location.pathname +
+        (
+          cleanQuery
+            ? "?" + cleanQuery
+            : ""
+        );
+
+
+      window.history.replaceState(
+        {},
+        "",
+        cleanUrl
+      );
+
 
       return;
 
@@ -4392,27 +4662,204 @@
     clearCheckoutContext();
 
 
-    await startCartCheckoutFlow();
+    params.delete(
+      "after_login"
+    );
+
+
+    const cleanQuery =
+      params.toString();
+
+
+    const cleanUrl =
+      window.location.pathname +
+      (
+        cleanQuery
+          ? "?" + cleanQuery
+          : ""
+      );
+
+
+    window.history.replaceState(
+      {},
+      "",
+      cleanUrl
+    );
+
+
+    if (
+      context.type ===
+      "cart"
+    ){
+
+      await loadOwnedPurchases();
+
+
+      const currentItems =
+        getCart();
+
+
+      const filtered =
+        currentItems.filter(
+          (item) =>
+
+            item &&
+
+            !userOwns(
+              item.category,
+              item.city
+            )
+        );
+
+
+      if (
+        filtered.length !==
+        currentItems.length
+      ){
+
+        saveCart(
+          filtered
+        );
+
+      }
+
+
+      if (!filtered.length){
+
+        openPopup({
+
+          title:
+            "Carrinho",
+
+          text:
+            "Os materiais selecionados já estão disponíveis na sua conta.",
+
+          secondaryText:
+            "Ir para Minha conta",
+
+          onSecondary:
+            () => {
+
+              window.location.href =
+                "/account.html";
+
+            }
+
+        });
+
+
+        return;
+
+      }
+
+
+      await showPolicyThenProceed(
+        async () => {
+
+          goInvoiceCart(
+            filtered,
+            getCartCouponCode()
+          );
+
+        }
+      );
+
+
+      return;
+
+    }
+
+
+    if (
+      context.type ===
+      "single" &&
+      context.category &&
+      context.city
+    ){
+
+      await loadOwnedPurchases();
+
+
+      if (
+        userOwns(
+          context.category,
+          context.city
+        )
+      ){
+
+        openPopup({
+
+          title:
+            "Material já disponível",
+
+          text:
+            "Este material já está disponível na sua conta.",
+
+          secondaryText:
+            "Ir para Minha conta",
+
+          onSecondary:
+            () => {
+
+              window.location.href =
+                "/account.html";
+
+            }
+
+        });
+
+
+        return;
+
+      }
+
+
+      await showPolicyThenProceed(
+        async () => {
+
+          goInvoiceCart(
+            [
+              {
+
+                category:
+                  context.category,
+
+                city:
+                  context.city,
+
+                qty:
+                  1
+
+              }
+            ],
+            ""
+          );
+
+        }
+      );
+
+    }
 
   }
-
-
-  /* =====================================================
-     MATERIAIS
+    /* =====================================================
+     MATERIAIS DO DESTINO
   ===================================================== */
 
   function getCategoryDescription(
     category
   ){
 
+    const normalized =
+      normalizeCategoryName(
+        category
+      );
+
+
     return (
       CATEGORY_DESCRIPTIONS[
-        normalizeCategoryName(
-          category
-        )
+        normalized
       ] ||
-
-      "Material digital com indicações e referências selecionadas para apoiar suas escolhas durante a viagem."
+      "Material digital selecionado e organizado pela Curadoria Elite Travel para apoiar suas escolhas no destino."
     );
 
   }
@@ -4422,14 +4869,254 @@
     category
   ){
 
+    const normalized =
+      normalizeCategoryName(
+        category
+      );
+
+
     return (
       CATEGORY_ICONS[
-        normalizeCategoryName(
-                  category
-        )
+        normalized
       ] ||
       "◇"
     );
+
+  }
+
+
+  function createMaterialCard(
+    material
+  ){
+
+    const article =
+      document.createElement(
+        "article"
+      );
+
+
+    const category =
+      String(
+        material.category ||
+        ""
+      ).trim();
+
+
+    const city =
+      String(
+        material.city ||
+        DESTINATION.cityLabel ||
+        ""
+      ).trim();
+
+
+    const owned =
+      userOwns(
+        category,
+        city
+      );
+
+
+    article.className =
+      owned
+        ? "material-card owned"
+        : "material-card";
+
+
+    const icon =
+      document.createElement(
+        "div"
+      );
+
+
+    icon.className =
+      "material-icon";
+
+
+    icon.textContent =
+      getCategoryIcon(
+        category
+      );
+
+
+    const title =
+      document.createElement(
+        "h3"
+      );
+
+
+    title.textContent =
+      category;
+
+
+    const description =
+      document.createElement(
+        "p"
+      );
+
+
+    description.textContent =
+      getCategoryDescription(
+        category
+      );
+
+
+    const price =
+      document.createElement(
+        "div"
+      );
+
+
+    price.className =
+      "material-price";
+
+
+    price.textContent =
+      formatBRL(
+        getPriceForCategory(
+          category
+        )
+      );
+
+
+    const actions =
+      document.createElement(
+        "div"
+      );
+
+
+    actions.className =
+      "material-actions";
+
+
+    article.appendChild(
+      icon
+    );
+
+
+    article.appendChild(
+      title
+    );
+
+
+    article.appendChild(
+      description
+    );
+
+
+    if (owned){
+
+      const ownedButton =
+        document.createElement(
+          "a"
+        );
+
+
+      ownedButton.className =
+        "btn-owned";
+
+
+      ownedButton.href =
+        "/account.html";
+
+
+      ownedButton.textContent =
+        "Disponível na sua conta";
+
+
+      actions.appendChild(
+        ownedButton
+      );
+
+    }else{
+
+      article.appendChild(
+        price
+      );
+
+
+      const buyButton =
+        document.createElement(
+          "button"
+        );
+
+
+      buyButton.type =
+        "button";
+
+
+      buyButton.className =
+        "btn-primary";
+
+
+      buyButton.textContent =
+        "Comprar agora";
+
+
+      buyButton.addEventListener(
+        "click",
+
+        () => {
+
+          startSingleCheckoutFlow(
+            category,
+            city
+          );
+
+        }
+      );
+
+
+      const cartButton =
+        document.createElement(
+          "button"
+        );
+
+
+      cartButton.type =
+        "button";
+
+
+      cartButton.className =
+        "btn-secondary";
+
+
+      cartButton.textContent =
+        "Adicionar ao carrinho";
+
+
+      cartButton.addEventListener(
+        "click",
+
+        () => {
+
+          addToCartAndOpenCart(
+            category,
+            city
+          );
+
+        }
+      );
+
+
+      actions.appendChild(
+        buyButton
+      );
+
+
+      actions.appendChild(
+        cartButton
+      );
+
+    }
+
+
+    article.appendChild(
+      actions
+    );
+
+
+    return article;
 
   }
 
@@ -4454,7 +5141,7 @@
     if (!sb){
 
       grid.innerHTML =
-        '<div class="error-state">Não foi possível carregar os materiais disponíveis neste momento.</div>';
+        '<div class="materials-empty">Não foi possível carregar os materiais neste momento.</div>';
 
 
       return;
@@ -4462,96 +5149,131 @@
     }
 
 
-    const {
-      data,
-      error
-    } =
-      await sb
-        .from(
-          "curadoria_materials"
+    const destinationCandidates =
+      Array.from(
+        new Set(
+          [
+
+            DESTINATION.cityLabel,
+
+            DESTINATION.city,
+
+            DESTINATION.city +
+            " - " +
+            DESTINATION.country,
+
+            DESTINATION.city +
+            ", " +
+            DESTINATION.country
+
+          ]
+            .filter(Boolean)
+            .map(
+              (value) =>
+                String(
+                  value
+                ).trim()
+            )
         )
-        .select(
-          "category, city_label"
-        )
-        .eq(
-          "is_active",
-          true
-        )
-        .order(
-          "category",
-          {
-            ascending:
-              true
-          }
+      );
+
+
+    let materials =
+      [];
+
+
+    for (
+      const candidate
+      of destinationCandidates
+    ){
+
+      const {
+        data,
+        error
+      } =
+        await sb
+          .from(
+            "curadoria_materials"
+          )
+          .select(
+            "*"
+          )
+          .eq(
+            "city",
+            candidate
+          );
+
+
+      if (error){
+
+        console.error(
+          "Erro ao carregar materiais:",
+          error
         );
 
 
-    if (error){
+        continue;
 
-      grid.innerHTML =
-        '<div class="error-state">Não foi possível carregar os materiais disponíveis neste momento.</div>';
+      }
 
 
-      return;
+      if (
+        Array.isArray(data) &&
+        data.length
+      ){
+
+        materials =
+          data;
+
+
+        break;
+
+      }
 
     }
-
-
-    const destinationKey =
-      normalizeCityLabel(
-        DESTINATION.cityLabel
-      );
-
-
-    const materials =
-      (
-        Array.isArray(
-          data
-        )
-          ? data
-          : []
-      )
-      .filter(
-        (row) =>
-
-          normalizeCityLabel(
-            row.city_label ||
-            ""
-          ) ===
-          destinationKey
-      );
 
 
     if (!materials.length){
 
-      grid.innerHTML =
-        '<div class="empty-state">Nenhum material está disponível para este destino no momento.</div>';
+      const {
+        data,
+        error
+      } =
+        await sb
+          .from(
+            "curadoria_materials"
+          )
+          .select(
+            "*"
+          );
 
 
-      return;
+      if (!error){
 
-    }
-
-
-    renderMaterials(
-      materials
-    );
-
-  }
+        const wanted =
+          new Set(
+            destinationCandidates.map(
+              normalizeCityLabel
+            )
+          );
 
 
-  function renderMaterials(
-    materials
-  ){
+        materials =
+          (
+            data ||
+            []
+          ).filter(
+            (item) =>
 
-    const grid =
-      document.getElementById(
-        "materialsGrid"
-      );
+              wanted.has(
+                normalizeCityLabel(
+                  item.city
+                )
+              )
+          );
 
+      }
 
-    if (!grid){
-      return;
     }
 
 
@@ -4559,241 +5281,162 @@
       "";
 
 
-    materials.forEach(
-      (material) => {
+    if (!materials.length){
 
-        const category =
-          String(
-            material.category ||
-            ""
-          ).trim();
+      grid.innerHTML =
+        '<div class="materials-empty">Ainda não há materiais disponíveis para este destino.</div>';
 
 
-        const cityLabel =
-          String(
-            material.city_label ||
-            ""
-          ).trim();
+      return;
+
+    }
 
 
-        if (
-          !category ||
-          !cityLabel
-        ){
-          return;
-        }
+    materials
+      .sort(
+        (
+          a,
+          b
+        ) => {
+
+          const order = [
+
+            "city guide",
+
+            "gastronomia",
+
+            "atrações turísticas",
+
+            "vida noturna",
+
+            "endereços para compras",
+
+            "sugestão de presentes"
+
+          ];
 
 
-        const article =
-          document.createElement(
-            "article"
-          );
+          const aIndex =
+            order.indexOf(
+              normalizeCategoryName(
+                a.category
+              )
+            );
 
 
-        article.className =
-          "material-card";
+          const bIndex =
+            order.indexOf(
+              normalizeCategoryName(
+                b.category
+              )
+            );
 
 
-        const icon =
-          document.createElement(
-            "div"
-          );
+          if (
+            aIndex === -1 &&
+            bIndex === -1
+          ){
 
-
-        icon.className =
-          "material-icon";
-
-
-        icon.textContent =
-          getCategoryIcon(
-            category
-          );
-
-
-        const title =
-          document.createElement(
-            "h3"
-          );
-
-
-        title.textContent =
-          category;
-
-
-        const description =
-          document.createElement(
-            "p"
-          );
-
-
-        description.className =
-          "material-description";
-
-
-        description.textContent =
-          getCategoryDescription(
-            category
-          );
-
-
-        const price =
-          document.createElement(
-            "div"
-          );
-
-
-        price.className =
-          "material-price";
-
-
-        price.textContent =
-          formatBRL(
-            getPriceForCategory(
-              category
-            )
-          );
-
-
-        const button =
-          document.createElement(
-            "button"
-          );
-
-
-        button.type =
-          "button";
-
-
-        button.className =
-          "material-button";
-
-
-        button.textContent =
-          "Comprar agora";
-
-
-        button.addEventListener(
-          "click",
-
-          () => {
-
-            addToCartAndOpenCart(
-              category,
-              cityLabel
+            return String(
+              a.category ||
+              ""
+            ).localeCompare(
+              String(
+                b.category ||
+                ""
+              ),
+              "pt-BR"
             );
 
           }
-        );
 
 
-        article.appendChild(
-          icon
-        );
+          if (
+            aIndex === -1
+          ){
+            return 1;
+          }
 
 
-        article.appendChild(
-          title
-        );
+          if (
+            bIndex === -1
+          ){
+            return -1;
+          }
 
 
-        article.appendChild(
-          description
-        );
+          return (
+            aIndex -
+            bIndex
+          );
 
+        }
+      )
+      .forEach(
+        (material) => {
 
-        article.appendChild(
-          price
-        );
+          grid.appendChild(
+            createMaterialCard(
+              material
+            )
+          );
 
-
-        article.appendChild(
-          button
-        );
-
-
-        grid.appendChild(
-          article
-        );
-
-      }
-    );
+        }
+      );
 
   }
 
 
   /* =====================================================
-     INICIALIZAÇÃO
+     INICIALIZAÇÃO DA PÁGINA
   ===================================================== */
+
+  async function initializePage(){
+
+    startPagePhotoCarousel();
+
+
+    updateCartBadge();
+
+
+    await refreshNavAuth();
+
+
+    await Promise.all(
+      [
+
+        loadCategoryPrices(),
+
+        loadOwnedPurchases()
+
+      ]
+    );
+
+
+    await loadDestinationMaterials();
+
+
+    await handleAfterLogin();
+
+  }
+
 
   document.addEventListener(
     "DOMContentLoaded",
-
-    async () => {
-
-      ensureSupabase();
-
-
-      startPagePhotoCarousel();
-
-
-      updateCartBadge();
-
-
-      const logout =
-        document.getElementById(
-          "navLogout"
-        );
-
-
-      if (logout){
-
-        logout.addEventListener(
-          "click",
-          doLogout
-        );
-
-      }
-
-
-      await refreshNavAuth();
-
-
-      await loadCategoryPrices();
-
-
-      await loadOwnedPurchases();
-
-
-      await loadDestinationMaterials();
-
-
-      await resumeAfterLoginIfNeeded();
-
-    }
+    initializePage
   );
 
-</script>
+  </script>
 
 
-<script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "TouristDestination",
-  "name": "New York",
-  "description": "New York reúne ritmos, culturas e referências que atravessam o mundo. Entre grandes ícones, bairros distintos e uma vida urbana intensa, a cidade se transforma a cada esquina sem perder sua identidade.",
-  "url": "https://www.curadoriaelitetravel.com/destinos/usa/new-york/",
-  "containedInPlace": {
-    "@type": "Country",
-    "name": "Estados Unidos"
-  },
-  "publisher": {
-    "@type": "Organization",
-    "name": "Curadoria Elite Travel",
-    "url": "https://www.curadoriaelitetravel.com"
-  }
-}
-</script>
+  <!-- =====================================================
+       DADOS ESTRUTURADOS
+  ====================================================== -->
 
+  <script type="application/ld+json">
+  {"@context":"https://schema.org","@type":"TouristDestination","name":"New York","description":"Descubra New York, Estados Unidos, com informações selecionadas, materiais digitais e ferramentas da Curadoria Elite Travel para preparar sua viagem de forma...","url":"https://www.curadoriaelitetravel.com/destinos/usa/new-york/","containedInPlace":{"@type":"Country","name":"Estados Unidos"},"publisher":{"@type":"Organization","name":"Curadoria Elite Travel","url":"https://www.curadoriaelitetravel.com"}}
+  </script>
 
 </body>
+
 </html>
