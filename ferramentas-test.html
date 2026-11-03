@@ -240,7 +240,7 @@
       function renderGroup(key){list.replaceChildren();(groups[key]||[]).forEach(([label,url])=>{const a=document.createElement('a');a.className='item';a.href=url;const span=document.createElement('span');span.textContent=label;const arrow=document.createElement('span');arrow.className='arrow';arrow.textContent='›';a.append(span,arrow);list.append(a)});document.querySelectorAll('[data-group]').forEach(b=>b.setAttribute('aria-selected',String(b.dataset.group===key)))}
       document.querySelectorAll('[data-group]').forEach(el=>el.addEventListener('click',()=>renderGroup(el.dataset.group)));
       renderGroup('planejamento');
-      const initialPage=location.hash.slice(1);if(['buscadores','ajustes'].includes(initialPage))show(initialPage);
+      const initialPage=location.hash.slice(1);if(['curadoria','buscadores','ajustes'].includes(initialPage))show(initialPage);
     })();
   </script>
 </body>
