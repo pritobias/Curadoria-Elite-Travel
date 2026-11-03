@@ -195,15 +195,16 @@
       document.getElementById('quick-theme').addEventListener('click',()=>setTheme(theme==='dark'?'light':'dark'));
       document.getElementById('theme-dark').addEventListener('click',()=>setTheme('dark'));
       document.getElementById('theme-light').addEventListener('click',()=>setTheme('light'));
-      function show(page){document.querySelectorAll('.panel').forEach(el=>{el.hidden=el.id!=='panel-'+page});document.querySelectorAll('.nav').forEach(el=>{if(el.dataset.page===page){el.setAttribute('aria-current','page')}else{el.removeAttribute('aria-current')}});window.scrollTo(0,0)}
+      function show(page){history.replaceState(null,'',page==='inicio'?location.pathname:'#'+page);document.querySelectorAll('.panel').forEach(el=>{el.hidden=el.id!=='panel-'+page});document.querySelectorAll('.nav').forEach(el=>{if(el.dataset.page===page){el.setAttribute('aria-current','page')}else{el.removeAttribute('aria-current')}});window.scrollTo(0,0)}
       document.querySelectorAll('.nav').forEach(el=>el.addEventListener('click',()=>show(el.dataset.page)));
       document.getElementById('open-curadoria').addEventListener('click',()=>show('curadoria'));
       document.getElementById('open-buscadores').addEventListener('click',()=>show('buscadores'));
-      const groups={planejamento:[['Documentos e vistos','/documentos.html'],['Malha de transportes','/transportes.html']],servicos:[['Hospedagem','/hospedagem.html'],['Seguro viagem','/seguro-viagem.html'],['Transfer','/transfer.html']],experiencias:[['Atividades e experiências','/experiencias.html'],['Ingressos','/ingressos.html']]};
+      const groups={planejamento:[['Documentos e vistos','/documentos-app.html'],['Malha de transportes','/transportes.html']],servicos:[['Hospedagem','/hospedagem.html'],['Seguro viagem','/seguro-viagem.html'],['Transfer','/transfer.html']],experiencias:[['Atividades e experiências','/experiencias.html'],['Ingressos','/ingressos.html']]};
       const list=document.getElementById('service-links');
       function renderGroup(key){list.replaceChildren();(groups[key]||[]).forEach(([label,url])=>{const a=document.createElement('a');a.className='item';a.href=url;const span=document.createElement('span');span.textContent=label;const arrow=document.createElement('span');arrow.className='arrow';arrow.textContent='›';a.append(span,arrow);list.append(a)});document.querySelectorAll('[data-group]').forEach(b=>b.setAttribute('aria-selected',String(b.dataset.group===key)))}
       document.querySelectorAll('[data-group]').forEach(el=>el.addEventListener('click',()=>renderGroup(el.dataset.group)));
       renderGroup('planejamento');
+      const initialPage=location.hash.slice(1);if(['buscadores','ajustes'].includes(initialPage))show(initialPage);
     })();
   </script>
 </body>
