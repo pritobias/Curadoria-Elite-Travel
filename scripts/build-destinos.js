@@ -40,43 +40,73 @@ const SUPABASE_ANON_KEY =
 ========================================================= */
 
 function escapeHtml(value) {
+
   return String(value ?? "")
     .replace(/&/g, "&amp;")
     .replace(/</g, "&lt;")
     .replace(/>/g, "&gt;")
     .replace(/"/g, "&quot;")
     .replace(/'/g, "&#039;");
+
 }
 
+
 function escapeJsonForScript(value) {
+
   return JSON.stringify(value)
     .replace(/</g, "\\u003c")
     .replace(/>/g, "\\u003e")
     .replace(/&/g, "\\u0026");
+
 }
+
 
 function normalizeUrlPath(value) {
-  let url = String(value || "").trim();
+
+  let url =
+    String(value || "").trim();
+
 
   if (!url.startsWith("/")) {
-    url = "/" + url;
+
+    url =
+      "/" + url;
+
   }
+
 
   if (!url.endsWith("/")) {
+
     url += "/";
+
   }
 
+
   return url;
+
 }
+
 
 function ensureDirectory(directory) {
-  fs.mkdirSync(directory, {
-    recursive: true
-  });
+
+  fs.mkdirSync(
+    directory,
+    {
+      recursive:
+        true
+    }
+  );
+
 }
 
-function validateDestination(destino, index) {
+
+function validateDestination(
+  destino,
+  index
+) {
+
   const requiredFields = [
+
     "cidade",
     "pais",
     "cityLabel",
@@ -84,78 +114,135 @@ function validateDestination(destino, index) {
     "slugCidade",
     "url",
     "texto"
+
   ];
 
-  requiredFields.forEach((field) => {
-    if (
-      destino[field] === undefined ||
-      destino[field] === null ||
-      String(destino[field]).trim() === ""
-    ) {
-      throw new Error(
-        `Destino ${index + 1}: campo obrigatório ausente ou vazio: ${field}`
-      );
+
+  requiredFields.forEach(
+    (field) => {
+
+      if (
+        destino[field] === undefined ||
+        destino[field] === null ||
+        String(
+          destino[field]
+        ).trim() === ""
+      ) {
+
+        throw new Error(
+          `Destino ${index + 1}: campo obrigatório ausente ou vazio: ${field}`
+        );
+
+      }
+
     }
-  });
+  );
+
 
   if (
-    !Array.isArray(destino.imagens) ||
+    !Array.isArray(
+      destino.imagens
+    ) ||
     destino.imagens.length < 3
   ) {
+
     throw new Error(
       `Destino ${index + 1} (${destino.cidade}): são necessárias pelo menos 3 imagens.`
     );
+
   }
 
-  destino.imagens.forEach((imagem, imageIndex) => {
-    if (
-      !imagem ||
-      !imagem.tipo ||
-      !imagem.arquivo
-    ) {
-      throw new Error(
-        `Destino ${index + 1} (${destino.cidade}): imagem ${imageIndex + 1} está incompleta.`
-      );
+
+  destino.imagens.forEach(
+    (
+      imagem,
+      imageIndex
+    ) => {
+
+      if (
+        !imagem ||
+        !imagem.tipo ||
+        !imagem.arquivo
+      ) {
+
+        throw new Error(
+          `Destino ${index + 1} (${destino.cidade}): imagem ${imageIndex + 1} está incompleta.`
+        );
+
+      }
+
     }
-  });
+  );
+
 }
 
-function getDestinationImages(destino) {
+
+function getDestinationImages(
+  destino
+) {
+
   const bandeira =
     destino.imagens.find(
       (imagem) =>
-        imagem.tipo === "bandeira"
-    ) || destino.imagens[0];
+        imagem.tipo ===
+        "bandeira"
+    ) ||
+    destino.imagens[0];
+
 
   const pontosTuristicos =
     destino.imagens.filter(
       (imagem) =>
-        imagem.tipo === "ponto-turistico"
+        imagem.tipo ===
+        "ponto-turistico"
     );
+
 
   const ponto1 =
     pontosTuristicos[0] ||
     destino.imagens[1];
 
+
   const ponto2 =
     pontosTuristicos[1] ||
     destino.imagens[2];
 
+
   return {
-    bandeira: bandeira.arquivo,
-    ponto1: ponto1.arquivo,
-    ponto2: ponto2.arquivo
+
+    bandeira:
+      bandeira.arquivo,
+
+    ponto1:
+      ponto1.arquivo,
+
+    ponto2:
+      ponto2.arquivo
+
   };
+
 }
 
-function getMetaDescription(destino) {
+
+function getMetaDescription(
+  destino
+) {
+
   const base =
     `Descubra ${destino.cidade}, ${destino.pais}, com informações selecionadas, ` +
     `materiais digitais e ferramentas da Curadoria Elite Travel para preparar sua viagem de forma autônoma.`;
 
+
   return base.length <= 160
     ? base
-    : base.slice(0, 157).trim() + "...";
+    : base
+        .slice(
+          0,
+          157
+        )
+        .trim() +
+      "...";
+
 }
 
 
@@ -163,96 +250,98 @@ function getMetaDescription(destino) {
    TEMPLATE DA PÁGINA
 ========================================================= */
 
-function buildDestinationHtml(destino) {
+function buildDestinationHtml(
+  destino
+) {
+
   const cidade =
-    escapeHtml(destino.cidade);
+    escapeHtml(
+      destino.cidade
+    );
+
 
   const pais =
-    escapeHtml(destino.pais);
+    escapeHtml(
+      destino.pais
+    );
+
 
   const texto =
-    escapeHtml(destino.texto);
+    escapeHtml(
+      destino.texto
+    );
+
 
   const destinationUrl =
-    normalizeUrlPath(destino.url);
+    normalizeUrlPath(
+      destino.url
+    );
+
 
   const canonicalUrl =
-    SITE_URL + destinationUrl;
+    SITE_URL +
+    destinationUrl;
+
 
   const metaDescription =
     escapeHtml(
-      getMetaDescription(destino)
+      getMetaDescription(
+        destino
+      )
     );
+
 
   const pageTitle =
     `${cidade}, ${pais} | Materiais e ferramentas para viajar melhor | Curadoria Elite Travel`;
 
+
   const images =
-    getDestinationImages(destino);
+    getDestinationImages(
+      destino
+    );
+
 
   const bandeira =
-    escapeHtml(images.bandeira);
+    escapeHtml(
+      images.bandeira
+    );
+
 
   const ponto1 =
-    escapeHtml(images.ponto1);
+    escapeHtml(
+      images.ponto1
+    );
+
 
   const ponto2 =
-    escapeHtml(images.ponto2);
+    escapeHtml(
+      images.ponto2
+    );
+
 
   const destinationData =
     escapeJsonForScript({
-      cidade: destino.cidade,
-      pais: destino.pais,
-      cityLabel: destino.cityLabel,
-      url: destinationUrl
+
+      cidade:
+        destino.cidade,
+
+      pais:
+        destino.pais,
+
+      cityLabel:
+        destino.cityLabel,
+
+      url:
+        destinationUrl
+
     });
 
 
   return `<!DOCTYPE html>
+
 <html lang="pt-BR">
 
 <head>
-
-  <!-- Google Analytics -->
-  <script
-    async
-    src="https://www.googletagmanager.com/gtag/js?id=G-S07L3R13WJ"
-  ></script>
-
-  <script>
-    window.dataLayer =
-      window.dataLayer || [];
-
-    function gtag(){
-      dataLayer.push(arguments);
-    }
-
-    function trackEvent(
-      name,
-      params = {}
-    ){
-      if (
-        typeof gtag === "function"
-      ){
-        gtag(
-          "event",
-          name,
-          params
-        );
-      }
-    }
-
-    gtag(
-      "js",
-      new Date()
-    );
-
-    gtag(
-      "config",
-      "G-S07L3R13WJ"
-    );
-  </script>
-
 
   <meta charset="UTF-8">
 
@@ -261,7 +350,9 @@ function buildDestinationHtml(destino) {
     content="width=device-width, initial-scale=1.0"
   >
 
-  <title>${pageTitle}</title>
+  <title>
+    ${pageTitle}
+  </title>
 
   <meta
     name="description"
@@ -298,15 +389,43 @@ function buildDestinationHtml(destino) {
     content="Curadoria Elite Travel"
   >
 
+  <meta
+    name="twitter:card"
+    content="summary_large_image"
+  >
+
+  <meta
+    name="twitter:title"
+    content="${pageTitle}"
+  >
+
+  <meta
+    name="twitter:description"
+    content="${metaDescription}"
+  >
+
+
+  <script
+    src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"
+  ></script>
+
 
   <style>
 
     :root{
       --gold:#d4af37;
-      --background:#070707;
-      --panel:#11100e;
-      --text:#ffffff;
-      --muted:rgba(255,255,255,.76);
+      --gold-soft:#ead37a;
+      --black:#050505;
+      --black-2:#0d0d0d;
+      --panel:#121211;
+      --panel-soft:#191816;
+      --text:#f5f5f5;
+      --muted:#cfcfcf;
+      --muted-2:#a9a9a9;
+      --line:rgba(212,175,55,.22);
+      --danger:#ffb4b4;
+      --success:#8ee7a5;
+      --header-height:82px;
     }
 
 
@@ -317,17 +436,55 @@ function buildDestinationHtml(destino) {
 
     html{
       scroll-behavior:smooth;
-      background:#070707;
     }
 
 
     body{
       margin:0;
-      color:var(--text);
-      font-family:"Segoe UI",sans-serif;
+      background:
+        var(--black);
+      color:
+        var(--text);
+      font-family:
+        Arial,
+        Helvetica,
+        sans-serif;
+      -webkit-font-smoothing:
+        antialiased;
       overflow-x:hidden;
-      background:#070707;
-      position:relative;
+    }
+
+
+    body::before{
+      content:"";
+      position:fixed;
+      inset:0;
+      pointer-events:none;
+      z-index:-10;
+      background:
+        radial-gradient(
+          circle at 20% 20%,
+          rgba(212,175,55,.04),
+          transparent 28%
+        ),
+        radial-gradient(
+          circle at 80% 70%,
+          rgba(212,175,55,.025),
+          transparent 30%
+        ),
+        #050505;
+    }
+
+
+    button,
+    input{
+      font:
+        inherit;
+    }
+
+
+    button{
+      cursor:pointer;
     }
 
 
@@ -336,200 +493,139 @@ function buildDestinationHtml(destino) {
     }
 
 
-    button{
-      font:inherit;
+    img{
+      max-width:100%;
     }
 
 
     /* =====================================================
-       FUNDO FOTOGRÁFICO CONTÍNUO
-    ===================================================== */
-
-    .page-photo-carousel{
-      position:fixed;
-      inset:0;
-      z-index:0;
-      overflow:hidden;
-      pointer-events:none;
-      background:#070707;
-    }
-
-
-    .page-photo-slide{
-      position:absolute;
-      inset:-3%;
-      opacity:0;
-      background-size:cover;
-      background-repeat:no-repeat;
-      background-position:center;
-      transform:scale(1.055);
-      transition:
-        opacity 1.9s ease-in-out,
-        transform 9s ease-out;
-      will-change:
-        opacity,
-        transform;
-    }
-
-
-    .page-photo-slide.active{
-      opacity:1;
-      transform:scale(1);
-    }
-
-
-    .page-photo-slide:nth-child(1){
-      background-image:url("${ponto1}");
-    }
-
-
-    .page-photo-slide:nth-child(2){
-      background-image:url("${ponto2}");
-    }
-
-
-    .page-photo-slide:nth-child(3){
-      background-image:url("${bandeira}");
-    }
-
-
-    .page-photo-global-overlay{
-      position:fixed;
-      inset:0;
-      z-index:1;
-      pointer-events:none;
-      background:
-        linear-gradient(
-          180deg,
-          rgba(0,0,0,.18) 0%,
-          rgba(0,0,0,.22) 38%,
-          rgba(0,0,0,.34) 70%,
-          rgba(0,0,0,.44) 100%
-        );
-    }
-
-
-    header,
-    main,
-    footer{
-      position:relative;
-      z-index:10;
-    }
-
-
-    /* =====================================================
-       CABEÇALHO
+       HEADER
     ===================================================== */
 
     header{
-      position:fixed;
+      height:
+        var(--header-height);
+      position:
+        sticky;
       top:0;
-      left:0;
-      width:100%;
-      min-height:70px;
-      padding:14px 32px;
+      z-index:1000;
       display:flex;
       align-items:center;
-      justify-content:space-between;
-      gap:20px;
+      justify-content:
+        space-between;
+      gap:28px;
+      padding:
+        0 34px;
       background:
-        rgba(5,5,5,.74);
-      backdrop-filter:
-        blur(13px);
-      -webkit-backdrop-filter:
-        blur(13px);
+        rgba(7,7,7,.94);
       border-bottom:
         1px solid
-        rgba(255,255,255,.10);
-      z-index:3000;
+        rgba(212,175,55,.13);
+      backdrop-filter:
+        blur(16px);
+      -webkit-backdrop-filter:
+        blur(16px);
     }
 
 
     .brand{
       display:flex;
       align-items:center;
-      gap:12px;
+      gap:13px;
+      min-width:0;
       text-decoration:none;
-      min-width:260px;
     }
 
 
     .brand img{
-      width:34px;
-      height:34px;
+      width:40px;
+      height:40px;
       object-fit:contain;
+      flex:0 0 auto;
     }
 
 
-    .brand-name{
-      color:var(--gold);
-      font-family:"Cinzel","Georgia",serif;
-      font-size:18px;
-      text-transform:uppercase;
-      letter-spacing:.7px;
-      line-height:1.1;
+    .brand-copy{
+      min-width:0;
     }
 
 
-    .brand-tagline{
-      margin-top:2px;
+    .brand-title{
       color:
-        rgba(255,255,255,.74);
-      font-size:11px;
-    }
-
-
-    nav{
-      position:relative;
-      display:flex;
-      align-items:center;
-    }
-
-
-    .nav-menu{
-      display:flex;
-      align-items:center;
-      justify-content:flex-end;
-      gap:16px;
-      flex-wrap:wrap;
-    }
-
-
-    .nav-menu a{
-      color:var(--gold);
-      text-decoration:none;
-      font-weight:600;
-      font-size:14px;
+        var(--gold);
+      font-family:
+        Georgia,
+        "Times New Roman",
+        serif;
+      font-size:19px;
+      line-height:1.1;
+      letter-spacing:.04em;
       white-space:nowrap;
     }
 
 
-    .nav-sep{
-      width:1px;
-      height:16px;
+    .brand-subtitle{
+      margin-top:4px;
+      color:
+        rgba(255,255,255,.76);
+      font-size:11px;
+      line-height:1.2;
+      white-space:nowrap;
+    }
+
+
+    nav{
+      display:flex;
+      align-items:center;
+      justify-content:flex-end;
+      gap:4px;
+      flex-wrap:wrap;
+    }
+
+
+    nav a,
+    nav button{
+      min-height:38px;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      padding:8px 11px;
+      border:0;
+      border-radius:8px;
       background:
-        rgba(255,255,255,.14);
+        transparent;
+      color:
+        var(--gold);
+      font-size:13px;
+      font-weight:800;
+      text-decoration:none;
+      transition:
+        background .2s ease,
+        color .2s ease,
+        transform .2s ease;
     }
 
 
-    .nav-toggle{
-      display:none;
-      background:transparent;
-      border:
-        1px solid
-        rgba(212,175,55,.40);
-      border-radius:9px;
-      padding:8px 10px;
-      cursor:pointer;
+    nav a:hover,
+    nav button:hover{
+      background:
+        rgba(212,175,55,.10);
+      color:
+        var(--gold-soft);
     }
 
 
-    .nav-toggle span{
-      width:18px;
-      height:2px;
-      display:block;
-      background:var(--gold);
-      margin:4px 0;
+    .nav-divider{
+      width:1px;
+      height:24px;
+      margin:0 4px;
+      background:
+        rgba(255,255,255,.13);
+    }
+
+
+    .nav-hidden{
+      display:none !important;
     }
 
 
@@ -539,19 +635,32 @@ function buildDestinationHtml(destino) {
 
     .destination-hero{
       position:relative;
-      min-height:760px;
-      height:92vh;
+      min-height:
+        calc(
+          100vh -
+          var(--header-height)
+        );
       display:flex;
       align-items:center;
       justify-content:center;
       overflow:hidden;
+      isolation:isolate;
+      border-bottom:
+        1px solid
+        rgba(212,175,55,.12);
+    }
+
+
+    .destination-hero::before{
+      content:"";
+      position:absolute;
+      inset:0;
+      z-index:-4;
       background:
         linear-gradient(
           180deg,
-          rgba(0,0,0,.16) 0%,
-          rgba(0,0,0,.18) 45%,
-          rgba(0,0,0,.46) 78%,
-          rgba(0,0,0,.70) 100%
+          rgba(0,0,0,.16),
+          rgba(0,0,0,.46)
         );
     }
 
@@ -560,60 +669,88 @@ function buildDestinationHtml(destino) {
       content:"";
       position:absolute;
       inset:0;
-      pointer-events:none;
+      z-index:-2;
       background:
-        linear-gradient(
-          90deg,
-          rgba(0,0,0,.22),
-          rgba(0,0,0,.04) 32%,
-          rgba(0,0,0,.04) 68%,
-          rgba(0,0,0,.22)
+        radial-gradient(
+          circle at center,
+          rgba(0,0,0,.06),
+          rgba(0,0,0,.68) 72%,
+          rgba(0,0,0,.90)
         );
+      pointer-events:none;
+    }
+
+
+    .hero-photo-layer{
+      position:absolute;
+      inset:0;
+      z-index:-5;
+      background-size:cover;
+      background-position:center;
+      opacity:0;
+      transform:
+        scale(1.03);
+      transition:
+        opacity 1.1s ease,
+        transform 8s ease;
+    }
+
+
+    .hero-photo-layer.active{
+      opacity:1;
+      transform:
+        scale(1.08);
     }
 
 
     .hero-content{
-      position:relative;
-      z-index:5;
-      width:min(920px,90%);
+      width:min(
+        980px,
+        calc(
+          100% -
+          40px
+        )
+      );
       margin:0 auto;
+      padding:
+        70px 0;
       text-align:center;
-      transform:
-        translateY(30px);
     }
 
 
     .hero-country{
-      color:var(--gold);
-      font-size:14px;
-      letter-spacing:4px;
+      margin-bottom:14px;
+      color:
+        rgba(255,255,255,.74);
+      font-size:13px;
+      font-weight:800;
+      letter-spacing:.24em;
       text-transform:uppercase;
-      font-weight:700;
       text-shadow:
-        0 3px 20px
-        rgba(0,0,0,.90);
+        0 3px 16px
+        rgba(0,0,0,.95);
     }
 
 
     .hero-content h1{
-      margin:10px 0 0;
-      color:#fff;
+      margin:0;
+      color:
+        var(--gold);
       font-family:
-        "Cinzel",
-        "Georgia",
+        Georgia,
+        "Times New Roman",
         serif;
       font-size:
         clamp(
-          72px,
-          10vw,
-          142px
+          58px,
+          9vw,
+          118px
         );
-      line-height:.92;
-      letter-spacing:2px;
-      text-transform:uppercase;
+      line-height:.95;
+      font-weight:700;
       text-shadow:
-        0 8px 42px
-        rgba(0,0,0,.86);
+        0 7px 28px
+        rgba(0,0,0,.90);
     }
 
 
@@ -645,38 +782,29 @@ function buildDestinationHtml(destino) {
 
 
     .discovery-section{
+      padding-top:72px;
+      padding-bottom:72px;
       background:
         linear-gradient(
           180deg,
-          rgba(7,7,7,.82),
-          rgba(12,11,10,.88)
+          rgba(13,13,12,.96),
+          rgba(8,8,8,.98)
         );
-      border-top:
-        1px solid
-        rgba(255,255,255,.08);
-      border-bottom:
-        1px solid
-        rgba(255,255,255,.08);
     }
 
 
     .discovery-copy{
-      width:min(
-        860px,
-        100%
-      );
+      width:min(900px,100%);
       margin:0 auto;
-      color:
-        rgba(255,255,255,.84);
-      text-align:center;
-      font-size:15px;
+      color:rgba(255,255,255,.84);
+      font-size:16px;
       line-height:1.8;
+      text-align:left;
     }
 
 
     .discovery-copy p{
-      margin:
-        0 0 18px;
+      margin:0 0 18px;
     }
 
 
@@ -709,32 +837,34 @@ function buildDestinationHtml(destino) {
 
 
     .section-eyebrow{
-      color:
-        rgba(255,255,255,.68);
+      margin-bottom:12px;
       text-align:center;
-      text-transform:uppercase;
-      letter-spacing:2.3px;
+      color:
+        rgba(255,255,255,.72);
       font-size:12px;
-      margin-bottom:10px;
+      font-weight:800;
+      letter-spacing:.22em;
+      text-transform:uppercase;
     }
 
 
     .section-title{
-      color:var(--gold);
+      margin:
+        0 auto 18px;
       text-align:center;
+      color:
+        var(--gold);
       font-family:
-        "Cinzel",
-        "Georgia",
+        Georgia,
+        "Times New Roman",
         serif;
       font-size:
         clamp(
-          32px,
-          4vw,
-          48px
+          34px,
+          5vw,
+          58px
         );
-      margin:
-        0 0 18px;
-      line-height:1.1;
+      line-height:1.08;
     }
 
 
@@ -744,10 +874,10 @@ function buildDestinationHtml(destino) {
         100%
       );
       margin:
-        0 auto 44px;
-      color:
-        rgba(255,255,255,.82);
+        0 auto 46px;
       text-align:center;
+      color:
+        rgba(255,255,255,.80);
       font-size:15px;
       line-height:1.75;
     }
@@ -761,15 +891,9 @@ function buildDestinationHtml(destino) {
       background:
         linear-gradient(
           180deg,
-          rgba(7,7,7,.78),
-          rgba(12,11,10,.84)
+          rgba(14,14,13,.96),
+          rgba(8,8,8,.98)
         );
-      border-top:
-        1px solid
-        rgba(255,255,255,.08);
-      border-bottom:
-        1px solid
-        rgba(255,255,255,.08);
     }
 
 
@@ -777,13 +901,19 @@ function buildDestinationHtml(destino) {
       content:"";
       position:absolute;
       inset:0;
+      z-index:0;
+      pointer-events:none;
       background:
         radial-gradient(
-          circle at 50% 0%,
-          rgba(212,175,55,.08),
-          transparent 42%
+          circle at 20% 30%,
+          rgba(212,175,55,.055),
+          transparent 28%
+        ),
+        radial-gradient(
+          circle at 80% 75%,
+          rgba(212,175,55,.035),
+          transparent 30%
         );
-      pointer-events:none;
     }
 
 
@@ -800,23 +930,23 @@ function buildDestinationHtml(destino) {
 
     .material-card{
       position:relative;
-      min-height:340px;
-      padding:30px 28px;
+      display:flex;
+      flex-direction:column;
+      min-height:320px;
+      padding:28px;
       border-radius:20px;
-      border:
-        1px solid
-        rgba(212,175,55,.24);
       background:
         linear-gradient(
           180deg,
-          rgba(17,16,14,.94),
-          rgba(7,7,7,.95)
+          rgba(24,23,21,.95),
+          rgba(10,10,10,.96)
         );
+      border:
+        1px solid
+        rgba(212,175,55,.20);
       box-shadow:
-        0 20px 55px
-        rgba(0,0,0,.28);
-      display:flex;
-      flex-direction:column;
+        0 18px 46px
+        rgba(0,0,0,.34);
       overflow:hidden;
       transition:
         transform .22s ease,
@@ -833,8 +963,8 @@ function buildDestinationHtml(destino) {
       background:
         linear-gradient(
           135deg,
-          rgba(212,175,55,.06),
-          transparent 36%
+          rgba(212,175,55,.05),
+          transparent 38%
         );
     }
 
@@ -843,150 +973,152 @@ function buildDestinationHtml(destino) {
       transform:
         translateY(-4px);
       border-color:
-        rgba(212,175,55,.52);
+        rgba(212,175,55,.42);
       box-shadow:
-        0 26px 70px
-        rgba(0,0,0,.38);
-    }
-
-
-    .material-card.owned{
-      border-color:
-        rgba(88,190,120,.38);
-      background:
-        linear-gradient(
-          180deg,
-          rgba(12,22,15,.95),
-          rgba(7,11,8,.96)
-        );
-    }
-
-
-    .material-card > *{
-      position:relative;
-      z-index:2;
+        0 22px 54px
+        rgba(0,0,0,.46);
     }
 
 
     .material-icon{
+      position:relative;
+      z-index:2;
       width:46px;
       height:46px;
-      border-radius:14px;
       display:flex;
       align-items:center;
       justify-content:center;
-      margin-bottom:22px;
-      color:#111;
-      background:var(--gold);
-      font-size:22px;
-      font-weight:800;
-      box-shadow:
-        0 8px 24px
+      margin-bottom:20px;
+      border-radius:14px;
+      background:
+        rgba(212,175,55,.10);
+      border:
+        1px solid
         rgba(212,175,55,.18);
+      color:
+        var(--gold);
+      font-size:22px;
     }
 
 
     .material-card h3{
+      position:relative;
+      z-index:2;
       margin:
         0 0 12px;
-      color:var(--gold);
-      font-family:
-        "Cinzel",
-        "Georgia",
-        serif;
-      font-size:23px;
+      color:
+        var(--gold);
+      font-size:21px;
       line-height:1.25;
     }
 
 
     .material-card p{
+      position:relative;
+      z-index:2;
+      flex:1;
       margin:
         0 0 24px;
       color:
-        rgba(255,255,255,.76);
+        rgba(255,255,255,.79);
       font-size:14px;
-      line-height:1.7;
-      flex:1;
+      line-height:1.72;
     }
 
 
     .material-price{
-      color:#fff;
-      font-size:22px;
-      font-weight:800;
+      position:relative;
+      z-index:2;
       margin-bottom:16px;
+      color:
+        #fff;
+      font-size:18px;
+      font-weight:800;
     }
 
 
     .material-actions{
+      position:relative;
+      z-index:2;
       display:flex;
       flex-direction:column;
-      gap:10px;
+      gap:9px;
     }
 
 
-    .material-actions button,
-    .material-actions a{
+    .material-actions button{
       width:100%;
-      min-height:46px;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      padding:12px 16px;
+      min-height:44px;
+      padding:11px 16px;
       border-radius:10px;
-      border:0;
-      text-decoration:none;
-      cursor:pointer;
       font-weight:800;
-      font-size:14px;
+      transition:
+        transform .2s ease,
+        opacity .2s ease,
+        background .2s ease;
     }
 
 
-    .btn-primary{
-      background:var(--gold);
-      color:#090909;
+    .material-actions button:hover{
+      transform:
+        translateY(-1px);
     }
 
 
-    .btn-secondary{
-      background:
-        rgba(255,255,255,.08);
-      color:#fff;
+    .btn-buy{
       border:
         1px solid
-        rgba(255,255,255,.12)
-        !important;
+        var(--gold);
+      background:
+        var(--gold);
+      color:#000;
+    }
+
+
+    .btn-cart{
+      border:
+        1px solid
+        rgba(212,175,55,.55);
+      background:
+        rgba(212,175,55,.06);
+      color:
+        var(--gold);
     }
 
 
     .btn-owned{
-      background:
-        rgba(88,190,120,.16);
-      color:
-        #bff0cb;
       border:
         1px solid
-        rgba(88,190,120,.28)
-        !important;
+        rgba(142,231,165,.35);
+      background:
+        rgba(142,231,165,.08);
+      color:
+        var(--success);
+      cursor:default;
     }
 
 
-    .materials-loading,
-    .materials-empty{
+    .loading-state,
+    .empty-state,
+    .error-state{
       grid-column:
         1 / -1;
-      padding:
-        34px 20px;
-      border-radius:16px;
+      padding:34px;
+      border-radius:18px;
+      text-align:center;
+      color:
+        rgba(255,255,255,.76);
+      background:
+        rgba(255,255,255,.035);
       border:
         1px solid
-        rgba(255,255,255,.10);
-      background:
-        rgba(0,0,0,.34);
+        rgba(255,255,255,.08);
+    }
+
+
+    .error-state{
       color:
-        rgba(255,255,255,.72);
-      text-align:center;
-      line-height:1.7;
+        var(--danger);
     }
 
 
@@ -998,9 +1130,13 @@ function buildDestinationHtml(destino) {
       background:
         linear-gradient(
           180deg,
-          rgba(8,8,8,.74),
-          rgba(13,11,9,.86)
+          rgba(18,18,17,.72),
+          rgba(10,10,10,.84)
         );
+      backdrop-filter:
+        blur(5px);
+      -webkit-backdrop-filter:
+        blur(5px);
     }
 
 
@@ -1008,38 +1144,16 @@ function buildDestinationHtml(destino) {
       content:"";
       position:absolute;
       inset:0;
-      background:
-        radial-gradient(
-          circle at 50% 20%,
-          rgba(212,175,55,.08),
-          transparent 46%
-        );
+      z-index:0;
       pointer-events:none;
-    }
-
-
-    .tools-group{
-      width:min(
-        1120px,
-        100%
-      );
-      margin:0 auto;
-    }
-
-
-    .tools-group + .tools-group{
-      margin-top:54px;
-    }
-
-
-    .tools-group-title{
-      margin:0 0 22px;
-      color:rgba(255,255,255,.72);
-      text-align:center;
-      text-transform:uppercase;
-      letter-spacing:2px;
-      font-size:12px;
-      font-weight:700;
+      background:
+        linear-gradient(
+          90deg,
+          rgba(212,175,55,.025),
+          transparent 25%,
+          transparent 75%,
+          rgba(212,175,55,.025)
+        );
     }
 
 
@@ -1059,58 +1173,42 @@ function buildDestinationHtml(destino) {
     }
 
 
-    .tools-grid.services-grid{
-      grid-template-columns:
-        repeat(
-          3,
-          minmax(0,1fr)
-        );
-      width:min(
-        1120px,
-        100%
-      );
-    }
-
-
     .tool-card{
-      padding:
-        34px 30px;
-      border-radius:18px;
-      border:
-        1px solid
-        rgba(212,175,55,.30);
+      padding:32px 28px;
+      border-radius:20px;
+      text-align:center;
       background:
         linear-gradient(
           180deg,
-          rgba(15,15,15,.95),
-          rgba(7,7,7,.96)
+          rgba(20,20,19,.88),
+          rgba(8,8,8,.90)
         );
+      border:
+        1px solid
+        rgba(212,175,55,.24);
       box-shadow:
-        0 18px 45px
-        rgba(0,0,0,.24);
-      text-align:center;
-      display:flex;
-      flex-direction:column;
-      align-items:center;
+        0 18px 46px
+        rgba(0,0,0,.35);
+      backdrop-filter:
+        blur(10px);
+      -webkit-backdrop-filter:
+        blur(10px);
     }
 
 
     .tool-card h3{
-      margin:
-        0 0 14px;
       color:var(--gold);
-      font-size:22px;
+      margin:0 0 12px;
+      font-size:21px;
     }
 
 
     .tool-card p{
-      margin:
-        0 0 24px;
       color:
-        rgba(255,255,255,.80);
-      font-size:14px;
+        rgba(255,255,255,.82);
       line-height:1.7;
-      flex:1;
+      font-size:14px;
+      margin:0 0 20px;
     }
 
 
@@ -1118,85 +1216,85 @@ function buildDestinationHtml(destino) {
       display:inline-flex;
       align-items:center;
       justify-content:center;
-      min-height:46px;
-      padding:
-        12px 20px;
+      min-height:44px;
+      padding:11px 20px;
       border-radius:10px;
       background:var(--gold);
-      color:#090909;
+      color:#000;
       text-decoration:none;
       font-weight:800;
     }
 
 
-    /* =====================================================
-       RODAPÉ
-    ===================================================== */
-
-    footer{
-      padding:
-        42px 20px;
-      background:
-        rgba(3,3,3,.92);
-      border-top:
-        1px solid
-        rgba(255,255,255,.08);
-      text-align:center;
-      color:
-        rgba(255,255,255,.68);
-      font-size:13px;
-      line-height:1.7;
+    .travel-tabs{
+      display:grid;
+      grid-template-columns:repeat(3,minmax(0,1fr));
+      gap:8px;
+      width:min(920px,100%);
+      margin:0 auto 34px;
+      padding:7px;
+      border-radius:18px;
+      background:rgba(20,20,19,.86);
+      border:1px solid rgba(212,175,55,.22);
     }
 
 
-    .footer-socials{
-      display:flex;
-      justify-content:center;
-      gap:12px;
-      margin-top:18px;
+    .travel-tab{
+      min-height:52px;
+      padding:12px 16px;
+      border:0;
+      border-radius:13px;
+      background:transparent;
+      color:rgba(255,255,255,.82);
+      font-weight:800;
+      cursor:pointer;
     }
 
 
-    .footer-socials a{
-      width:42px;
-      height:42px;
-      border-radius:50%;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      border:
-        1px solid
-        rgba(212,175,55,.42);
+    .travel-tab.active{
+      background:var(--gold);
+      color:#000;
+    }
+
+
+    .travel-panel{
+      display:none;
+    }
+
+
+    .travel-panel.active{
+      display:block;
+    }
+
+
+    .travel-panel-title{
+      width:min(920px,100%);
+      margin:0 auto 20px;
       color:var(--gold);
-      text-decoration:none;
+      font-size:22px;
     }
 
 
-    .footer-socials svg{
-      width:18px;
-      height:18px;
-      fill:currentColor;
+    .tools-grid.services-grid{
+      grid-template-columns:repeat(3,minmax(0,1fr));
+      width:min(1040px,100%);
     }
 
 
     /* =====================================================
-       POPUPS
+       POPUPS E CARRINHO
     ===================================================== */
 
     .popup-bg{
-      display:none;
       position:fixed;
       inset:0;
-      z-index:9999;
-      background:
-        rgba(0,0,0,.78);
-      backdrop-filter:
-        blur(5px);
-      -webkit-backdrop-filter:
-        blur(5px);
-      padding:24px;
+      display:none;
       align-items:center;
       justify-content:center;
+      padding:18px;
+      background:
+        rgba(0,0,0,.86);
+      z-index:5000;
     }
 
 
@@ -1205,55 +1303,48 @@ function buildDestinationHtml(destino) {
     }
 
 
-    .popup-content{
+    .popup-card{
       width:min(
         560px,
         100%
       );
       max-height:
-        calc(100vh - 48px);
-      overflow-y:auto;
-      border-radius:18px;
+        calc(
+          100vh -
+          36px
+        );
+      overflow:auto;
+      border-radius:20px;
+      padding:28px;
+      background:
+        linear-gradient(
+          180deg,
+          #171715,
+          #0b0b0b
+        );
       border:
         1px solid
-        rgba(212,175,55,.34);
-      background:#101010;
-      padding:28px;
+        rgba(212,175,55,.28);
       box-shadow:
-        0 28px 80px
-        rgba(0,0,0,.55);
+        0 24px 80px
+        rgba(0,0,0,.72);
     }
 
 
-    .popup-content h3{
+    .popup-card h3{
       margin:
         0 0 12px;
-      color:var(--gold);
-      font-family:
-        "Cinzel",
-        "Georgia",
-        serif;
-      font-size:25px;
+      color:
+        var(--gold);
+      font-size:24px;
     }
 
 
-    .popup-content p{
+    .popup-card p{
+      margin:
+        0 0 14px;
       color:
-        rgba(255,255,255,.78);
-      line-height:1.65;
-      font-size:14px;
-    }
-
-
-    .popup-rules{
-      margin-top:18px;
-      padding:18px;
-      border-radius:12px;
-      background:
-        rgba(255,255,255,.05);
-      color:
-        rgba(255,255,255,.76);
-      font-size:13px;
+        rgba(255,255,255,.80);
       line-height:1.65;
     }
 
@@ -1261,239 +1352,407 @@ function buildDestinationHtml(destino) {
     .popup-actions{
       display:flex;
       gap:10px;
-      justify-content:flex-end;
       flex-wrap:wrap;
-      margin-top:22px;
+      margin-top:20px;
     }
 
 
-    .popup-actions button{
-      border:0;
-      border-radius:9px;
-      padding:11px 16px;
-      cursor:pointer;
+    .popup-actions button,
+    .popup-actions a{
+      min-height:42px;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      padding:10px 16px;
+      border-radius:10px;
+      text-decoration:none;
       font-weight:800;
-      background:var(--gold);
-      color:#090909;
     }
 
 
-    .popup-actions .btn-ghost{
-      background:
-        rgba(255,255,255,.08);
-      color:#fff;
+    .popup-primary{
       border:
         1px solid
-        rgba(255,255,255,.12);
+        var(--gold);
+      background:
+        var(--gold);
+      color:#000;
     }
 
 
-    .popup-actions button:disabled{
-      opacity:.5;
-      cursor:not-allowed;
+    .popup-secondary{
+      border:
+        1px solid
+        rgba(212,175,55,.42);
+      background:
+        transparent;
+      color:
+        var(--gold);
     }
 
 
-    .consent-wrap{
-      margin-top:18px;
-      display:flex;
-      gap:10px;
-      align-items:flex-start;
+    .popup-muted{
+      border:
+        1px solid
+        rgba(255,255,255,.14);
+      background:
+        rgba(255,255,255,.04);
+      color:
+        rgba(255,255,255,.82);
+    }
+
+
+    .popup-rules{
+      margin:
+        18px 0 0;
+      padding:
+        16px 18px;
+      border-radius:14px;
+      background:
+        rgba(255,255,255,.035);
+      border:
+        1px solid
+        rgba(255,255,255,.08);
       color:
         rgba(255,255,255,.76);
       font-size:13px;
-      line-height:1.55;
+      line-height:1.6;
     }
 
 
-    .consent-wrap input{
+    .popup-rules ul{
+      margin:
+        10px 0 0;
+      padding-left:18px;
+    }
+
+
+    .popup-rules li{
+      margin-bottom:7px;
+    }
+
+
+    .consent-row{
+      display:flex;
+      align-items:flex-start;
+      gap:10px;
+      margin-top:18px;
+      padding:14px;
+      border-radius:12px;
+      background:
+        rgba(212,175,55,.055);
+      border:
+        1px solid
+        rgba(212,175,55,.16);
+    }
+
+
+    .consent-row input{
       margin-top:3px;
+      flex:0 0 auto;
     }
 
 
-    /* =====================================================
-       CARRINHO
-    ===================================================== */
+    .consent-row label{
+      color:
+        rgba(255,255,255,.82);
+      font-size:13px;
+      line-height:1.55;
+      cursor:pointer;
+    }
+
+
+    .cart-popup-card{
+      width:min(
+        760px,
+        100%
+      );
+    }
+
 
     .cart-list{
       display:flex;
       flex-direction:column;
-      gap:10px;
+      gap:12px;
       margin-top:18px;
     }
 
 
     .cart-item{
-      display:flex;
-      justify-content:space-between;
-      gap:14px;
-      padding:14px;
-      border-radius:12px;
+      display:grid;
+      grid-template-columns:
+        minmax(0,1fr)
+        auto;
+      gap:18px;
+      align-items:center;
+      padding:16px;
+      border-radius:14px;
       background:
-        rgba(255,255,255,.05);
+        rgba(255,255,255,.035);
       border:
         1px solid
         rgba(255,255,255,.08);
     }
 
 
-    .cart-item-left{
-      min-width:0;
-    }
-
-
     .cart-item-title{
-      color:#fff;
+      color:
+        var(--gold);
       font-weight:800;
-      font-size:14px;
+      margin-bottom:4px;
     }
 
 
     .cart-item-meta{
-      margin-top:4px;
       color:
-        rgba(255,255,255,.64);
+        rgba(255,255,255,.68);
       font-size:12px;
       line-height:1.5;
     }
 
 
-    .cart-item-right{
-      display:flex;
-      align-items:center;
+    .cart-item-price{
+      color:#fff;
+      font-weight:800;
+      white-space:nowrap;
     }
 
 
-    .cart-item-right button{
+    .cart-item-remove{
+      margin-top:8px;
+      padding:0;
       border:0;
-      background:transparent;
-      color:#ff8c8c;
-      cursor:pointer;
-      font-weight:700;
+      background:
+        transparent;
+      color:
+        #e4a3a3;
+      font-size:12px;
+      text-decoration:underline;
     }
 
 
-    .cart-total{
-      margin-top:16px;
-      padding-top:16px;
+    .cart-summary{
+      margin-top:18px;
+      padding-top:18px;
       border-top:
         1px solid
         rgba(255,255,255,.10);
+    }
+
+
+    .cart-summary-row{
       display:flex;
-      justify-content:space-between;
-      gap:12px;
-      color:#fff;
-    }
-
-
-    .total-strike{
+      justify-content:
+        space-between;
+      gap:18px;
+      margin-bottom:8px;
       color:
-        rgba(255,255,255,.48);
-      text-decoration:line-through;
-      margin-right:10px;
+        rgba(255,255,255,.78);
     }
 
 
-    .total-final{
-      color:var(--gold);
+    .cart-summary-row.total{
+      margin-top:12px;
+      padding-top:12px;
+      border-top:
+        1px solid
+        rgba(255,255,255,.08);
+      color:#fff;
+      font-size:18px;
       font-weight:800;
     }
 
 
-    .coupon-wrap{
+    .coupon-box{
       margin-top:18px;
       padding:16px;
-      border-radius:12px;
+      border-radius:14px;
       background:
-        rgba(255,255,255,.04);
+        rgba(212,175,55,.045);
       border:
         1px solid
-        rgba(255,255,255,.08);
+        rgba(212,175,55,.14);
     }
 
 
-    .coupon-label{
+    .coupon-box label{
       display:block;
       margin-bottom:8px;
-      color:#fff;
-      font-weight:700;
+      color:
+        rgba(255,255,255,.78);
       font-size:13px;
+      font-weight:800;
     }
 
 
     .coupon-row{
-      display:flex;
-      gap:8px;
+      display:grid;
+      grid-template-columns:
+        minmax(0,1fr)
+        auto;
+      gap:9px;
     }
 
 
-    .coupon-input{
-      flex:1;
-      min-width:0;
+    .coupon-row input{
+      width:100%;
+      min-height:42px;
+      padding:
+        10px 12px;
       border-radius:9px;
       border:
         1px solid
         rgba(255,255,255,.14);
-      background:#080808;
+      background:
+        rgba(255,255,255,.05);
       color:#fff;
-      padding:11px 12px;
       outline:none;
     }
 
 
-    .coupon-apply{
-      border:0;
-      border-radius:9px;
+    .coupon-row input:focus{
+      border-color:
+        rgba(212,175,55,.52);
+    }
+
+
+    .coupon-row button{
+      min-height:42px;
       padding:
-        11px 15px;
-      background:var(--gold);
-      color:#090909;
-      cursor:pointer;
+        10px 15px;
+      border-radius:9px;
+      border:
+        1px solid
+        var(--gold);
+      background:
+        var(--gold);
+      color:#000;
       font-weight:800;
     }
 
 
-    .coupon-msg{
+    .coupon-message{
       min-height:18px;
       margin-top:8px;
+      color:
+        rgba(255,255,255,.66);
       font-size:12px;
     }
 
 
-    .coupon-msg.ok{
-      color:#9be2ae;
-    }
-
-
-    .coupon-msg.err{
-      color:#ff9b9b;
-    }
-
-
-    .coupon-help{
-      margin-top:5px;
+    .coupon-message.success{
       color:
-        rgba(255,255,255,.50);
-      font-size:11px;
-      line-height:1.45;
+        var(--success);
     }
 
 
-    .discount-line{
-      display:none;
-      margin-top:10px;
-      color:#9be2ae;
-      font-size:13px;
+    .coupon-message.error{
+      color:
+        var(--danger);
     }
 
 
     /* =====================================================
-       RESPONSIVIDADE
+       FOOTER
+    ===================================================== */
+
+    footer{
+      padding:
+        34px 20px 42px;
+      text-align:center;
+      color:
+        rgba(255,255,255,.58);
+      font-size:12px;
+      line-height:1.7;
+      border-top:
+        1px solid
+        rgba(212,175,55,.12);
+      background:#050505;
+    }
+
+
+    footer a{
+      color:
+        rgba(255,255,255,.68);
+      text-decoration:none;
+    }
+
+
+    footer a:hover{
+      color:
+        var(--gold);
+    }
+
+
+    .footer-social{
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      gap:10px;
+      margin-top:18px;
+    }
+
+
+    .footer-social a{
+      width:36px;
+      height:36px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      border-radius:50%;
+      background:
+        rgba(255,255,255,.035);
+      border:
+        1px solid
+        rgba(255,255,255,.09);
+      transition:
+        border-color .2s ease,
+        transform .2s ease,
+        color .2s ease;
+    }
+
+
+    .footer-social a:hover{
+      transform:
+        translateY(-2px);
+      border-color:
+        rgba(212,175,55,.36);
+      color:
+        var(--gold);
+    }
+
+
+    .footer-social svg{
+      width:17px;
+      height:17px;
+      fill:
+        currentColor;
+    }
+
+
+    /* =====================================================
+       RESPONSIVO
     ===================================================== */
 
     @media(
       max-width:980px
     ){
+
+      header{
+        height:auto;
+        min-height:
+          var(--header-height);
+        padding:
+          14px 20px;
+        align-items:
+          flex-start;
+      }
+
+
+      nav{
+        max-width:56%;
+      }
+
 
       .materials-grid{
         grid-template-columns:
@@ -1510,105 +1769,60 @@ function buildDestinationHtml(destino) {
       }
 
     }
-        @media(
+
+
+    @media(
       max-width:760px
     ){
 
+      :root{
+        --header-height:72px;
+      }
+
+
       header{
-        padding:
-          12px 18px;
-      }
-
-
-      .brand{
-        min-width:0;
-      }
-
-
-      .brand-name{
-        font-size:15px;
-      }
-
-
-      .brand-tagline{
-        font-size:10px;
-      }
-
-
-      .nav-toggle{
-        display:block;
-      }
-
-
-      .nav-menu{
-        display:none;
-        position:absolute;
-        top:50px;
-        right:0;
-        width:min(
-          280px,
-          calc(100vw - 36px)
-        );
-        padding:16px;
-        border-radius:14px;
-        background:
-          rgba(8,8,8,.98);
-        border:
-          1px solid
-          rgba(212,175,55,.26);
-        box-shadow:
-          0 20px 55px
-          rgba(0,0,0,.42);
-        flex-direction:column;
-        align-items:stretch;
+        position:
+          relative;
+        flex-direction:
+          column;
+        align-items:
+          stretch;
         gap:12px;
       }
 
 
-      header.nav-open
-      .nav-menu{
-        display:flex;
+      .brand{
+        justify-content:
+          center;
       }
 
 
-      .nav-sep{
+      nav{
+        max-width:none;
+        justify-content:
+          center;
+      }
+
+
+      .nav-divider{
         display:none;
       }
 
 
       .destination-hero{
-        min-height:690px;
-        height:88vh;
+        min-height:76vh;
       }
 
 
       .hero-content{
-        width:
-          min(
-            92%,
-            680px
-          );
-      }
-
-
-      .hero-content h1{
-        font-size:
-          clamp(
-            52px,
-            16vw,
-            92px
-          );
-      }
-
-
-      .hero-description{
-        font-size:14px;
+        padding:
+          58px 0;
       }
 
 
       .content-section{
         padding:
-          72px 20px;
+          70px 20px;
       }
 
 
@@ -1622,28 +1836,30 @@ function buildDestinationHtml(destino) {
       }
 
 
-      .popup-bg{
-        padding:14px;
-      }
-
-
-      .popup-content{
-        padding:22px 18px;
-      }
-
-
-      .coupon-row{
-        flex-direction:column;
+      .travel-tabs{
+        grid-template-columns:1fr;
       }
 
 
       .popup-actions{
-        flex-direction:column;
+        flex-direction:
+          column;
       }
 
 
-      .popup-actions button{
+      .popup-actions button,
+      .popup-actions a{
         width:100%;
+      }
+
+
+      .cart-item{
+        grid-template-columns:1fr;
+      }
+
+
+      .coupon-row{
+        grid-template-columns:1fr;
       }
 
     }
@@ -1653,57 +1869,53 @@ function buildDestinationHtml(destino) {
       max-width:480px
     ){
 
-      .brand img{
-        width:30px;
-        height:30px;
+      .brand-title{
+        font-size:16px;
       }
 
 
-      .brand-name{
-        font-size:13px;
+      .brand-subtitle{
+        font-size:10px;
       }
 
 
-      .destination-hero{
-        min-height:650px;
-      }
-
-
-      .hero-country{
-        font-size:11px;
-        letter-spacing:3px;
+      nav a,
+      nav button{
+        padding:
+          7px 8px;
+        font-size:12px;
       }
 
 
       .hero-content h1{
         font-size:
           clamp(
-            46px,
-            17vw,
-            74px
+            50px,
+            18vw,
+            76px
           );
       }
 
 
+      .hero-description{
+        font-size:14px;
+      }
+
+
       .section-title{
-        font-size:30px;
+        font-size:
+          clamp(
+            31px,
+            10vw,
+            42px
+          );
       }
 
 
       .material-card,
       .tool-card{
         padding:
-          26px 22px;
-      }
-
-
-      .cart-item{
-        flex-direction:column;
-      }
-
-
-      .cart-item-right{
-        justify-content:flex-start;
+          24px 20px;
       }
 
     }
@@ -1711,558 +1923,602 @@ function buildDestinationHtml(destino) {
   </style>
 
 </head>
-
-
 <body>
 
-  <!-- =====================================================
-       FUNDO FOTOGRÁFICO GLOBAL
-  ====================================================== -->
+
+<!-- =====================================================
+     FUNDO CONTÍNUO DA PÁGINA
+====================================================== -->
+
+<div
+  class="page-photo-carousel"
+  aria-hidden="true"
+>
 
   <div
-    class="page-photo-carousel"
-    aria-hidden="true"
-  >
-
-    <div
-      class="page-photo-slide active"
-    ></div>
-
-    <div
-      class="page-photo-slide"
-    ></div>
-
-    <div
-      class="page-photo-slide"
-    ></div>
-
-  </div>
-
-
-  <div
-    class="page-photo-global-overlay"
-    aria-hidden="true"
+    class="page-photo-slide active"
   ></div>
 
+  <div
+    class="page-photo-slide"
+  ></div>
 
-  <!-- =====================================================
-       CABEÇALHO
-  ====================================================== -->
+  <div
+    class="page-photo-slide"
+  ></div>
 
-  <header id="siteHeader">
+</div>
 
-    <a
-      href="/"
-      class="brand"
-      aria-label="Curadoria Elite Travel"
+
+<div
+  class="page-photo-global-overlay"
+></div>
+
+
+<!-- =====================================================
+     CABEÇALHO
+====================================================== -->
+
+<header id="siteHeader">
+
+  <a
+    class="brand"
+    href="/"
+    aria-label="Curadoria Elite Travel"
+  >
+
+    <img
+      src="/images/rosa-dos-ventos.png"
+      alt="Rosa dos Ventos"
     >
 
-      <img
-        src="/assets/logo.png"
-        alt="Curadoria Elite Travel"
+    <div>
+
+      <div class="brand-name">
+        Curadoria Elite Travel
+      </div>
+
+      <div class="brand-tagline">
+        O seu mundo, bem indicado.
+      </div>
+
+    </div>
+  </a>
+
+
+  <nav>
+
+    <button
+      class="nav-toggle"
+      type="button"
+      aria-label="Menu"
+      onclick="toggleMobileNav()"
+    >
+      <span></span>
+      <span></span>
+      <span></span>
+    </button>
+
+
+    <div class="nav-menu">
+
+      <a href="/">
+        Início
+      </a>
+
+      <a href="/?secao=quem">
+        Quem Somos
+      </a>
+
+      <a href="/?secao=curadoria">
+        Curadoria
+      </a>
+
+      <a href="/?secao=buscador">
+        Buscador
+      </a>
+
+      <span class="nav-sep"></span>
+
+      <a
+        href="#"
+        id="navCart"
+        onclick="openCart(); return false;"
+      >
+        Carrinho (0)
+      </a>
+
+      <span class="nav-sep"></span>
+
+      <a
+        href="/login.html"
+        id="navLogin"
+      >
+        Entrar
+      </a>
+
+      <a
+        href="/account.html"
+        id="navAccount"
+        style="display:none;"
+      >
+        Minha conta
+      </a>
+
+      <a
+        href="#"
+        id="navLogout"
+        style="display:none;"
+      >
+        Sair
+      </a>
+
+    </div>
+
+  </nav>
+
+</header>
+
+
+<main>
+
+
+  <!-- =====================================================
+       HERO
+  ====================================================== -->
+
+  <section class="destination-hero">
+
+    <div class="hero-content">
+
+      <div class="hero-country">
+        ${pais}
+      </div>
+
+      <h1>
+        ${cidade}
+      </h1>
+
+      <div class="hero-divider"></div>
+
+      <p class="hero-description">
+        ${texto}
+      </p>
+
+
+    </div>
+
+  </section>
+
+
+  <!-- =====================================================
+       DESCOBERTA
+  ====================================================== -->
+
+  <section class="content-section discovery-section">
+
+    <div class="content-shell">
+
+      <div class="section-eyebrow">
+        Organize suas escolhas
+      </div>
+
+      <h2 class="section-title">
+        Planejando uma viagem para ${cidade}, ${pais}?
+      </h2>
+
+      <div class="discovery-copy">
+
+        <p>
+          Planejar uma viagem para ${cidade} envolve escolhas que podem transformar a experiência no destino. Onde ficar, onde comer, o que fazer e como se locomover dependem do tempo disponível, dos seus interesses e da maneira como você prefere conhecer cada lugar.
+        </p>
+
+        <p>
+          Ter essas informações organizadas facilita essas decisões e ajuda a encontrar opções que façam sentido para a sua viagem. Na Curadoria Elite Travel, você encontra conteúdos, ferramentas e indicações para apoiar diferentes momentos do planejamento e da experiência em ${cidade}.
+        </p>
+
+      </div>
+
+    </div>
+
+  </section>
+
+
+  <!-- =====================================================
+       MATERIAIS
+  ====================================================== -->
+
+  <section
+    class="content-section materials-section"
+    id="materiais"
+  >
+
+    <div class="content-shell">
+
+      <div class="section-eyebrow">
+        Curadoria Elite Travel
+      </div>
+
+      <h2 class="section-title">
+        Materiais disponíveis para ${cidade}
+      </h2>
+
+      <p class="section-subtitle">
+        Escolha apenas os materiais que fazem sentido para a sua viagem.
+        As categorias exibidas abaixo correspondem aos conteúdos atualmente disponíveis para este destino.
+      </p>
+
+      <div
+        class="materials-grid"
+        id="materialsGrid"
       >
 
-      <div>
-
-        <div class="brand-name">
-          Curadoria Elite Travel
-        </div>
-
-        <div class="brand-tagline">
-          O seu mundo, bem indicado.
+        <div class="loading-state">
+          Carregando materiais disponíveis...
         </div>
 
       </div>
+
+    </div>
+
+  </section>
+
+
+  <!-- =====================================================
+       PREPARANDO SUA VIAGEM
+  ====================================================== -->
+
+  <section
+    class="content-section tools-section"
+  >
+
+    <div class="content-shell">
+
+      <div class="section-eyebrow">
+        Antes e durante a viagem
+      </div>
+
+      <h2 class="section-title">
+        Preparando sua viagem
+      </h2>
+
+      <p class="section-subtitle">
+        Informações, ferramentas e serviços para organizar diferentes etapas da sua viagem.
+      </p>
+
+
+      <div
+        class="travel-tabs"
+        role="tablist"
+        aria-label="Preparando sua viagem"
+      >
+
+        <button
+          class="travel-tab active"
+          type="button"
+          data-travel-tab="planejamento"
+        >
+          Planejamento
+        </button>
+
+        <button
+          class="travel-tab"
+          type="button"
+          data-travel-tab="servicos"
+        >
+          Serviços para a viagem
+        </button>
+
+        <button
+          class="travel-tab"
+          type="button"
+          data-travel-tab="experiencias"
+        >
+          Experiências
+        </button>
+
+      </div>
+
+
+      <div
+        class="travel-panel active"
+        data-travel-panel="planejamento"
+      >
+
+        <h3 class="travel-panel-title">
+          Planejamento
+        </h3>
+
+        <div class="tools-grid">
+
+          <article class="tool-card">
+
+            <h3>
+              Documentos
+            </h3>
+
+            <p>
+              Consulte informações práticas sobre entrada no destino, documentos, apoio diplomático e saúde para viagem.
+            </p>
+
+            <a href="/documentos.html">
+              Disponível →
+            </a>
+
+          </article>
+
+
+          <article class="tool-card">
+
+            <h3>
+              Transportes em ${cidade}
+            </h3>
+
+            <p>
+              Entenda como se deslocar no destino com redes de transporte, formas de pagamento e canais oficiais.
+            </p>
+
+            <a href="/transportes.html">
+              Disponível →
+            </a>
+
+          </article>
+
+        </div>
+
+      </div>
+
+
+      <div
+        class="travel-panel"
+        data-travel-panel="servicos"
+      >
+
+        <h3 class="travel-panel-title">
+          Serviços para a viagem
+        </h3>
+
+        <div class="tools-grid services-grid">
+
+          <article class="tool-card">
+
+            <h3>
+              Hospedagem
+            </h3>
+
+            <p>
+              Pesquise opções de hospedagem para o destino por meio do parceiro indicado.
+            </p>
+
+            <a href="/hospedagem.html">
+              Acessar →
+            </a>
+
+          </article>
+
+
+          <article class="tool-card">
+
+            <h3>
+              Transfer
+            </h3>
+
+            <p>
+              Consulte opções de transfer para facilitar chegadas, saídas e deslocamentos no destino.
+            </p>
+
+            <a href="/transfer.html">
+              Acessar →
+            </a>
+
+          </article>
+
+
+          <article class="tool-card">
+
+            <h3>
+              Seguro Viagem
+            </h3>
+
+            <p>
+              Consulte opções de seguro viagem e siga para o parceiro responsável pela contratação e suporte.
+            </p>
+
+            <a href="/seguro-viagem.html">
+              Acessar →
+            </a>
+
+          </article>
+
+
+          <article class="tool-card">
+
+            <h3>
+              Locação de veículo
+            </h3>
+
+            <p>
+              Pesquise opções de veículos para os destinos em que dirigir fizer sentido para a sua viagem.
+            </p>
+
+            <a href="/locacao.html">
+              Acessar →
+            </a>
+
+          </article>
+
+
+          <article class="tool-card">
+
+            <h3>
+              Aéreo
+            </h3>
+
+            <p>
+              Acesse a área dedicada à pesquisa de opções aéreas para organizar sua viagem.
+            </p>
+
+            <a href="/aereo.html">
+              Acessar →
+            </a>
+
+          </article>
+
+        </div>
+
+      </div>
+
+
+      <div
+        class="travel-panel"
+        data-travel-panel="experiencias"
+      >
+
+        <h3 class="travel-panel-title">
+          Experiências
+        </h3>
+
+        <div class="tools-grid">
+
+          <article class="tool-card">
+
+            <h3>
+              Atividades e Experiências
+            </h3>
+
+            <p>
+              Encontre atividades e experiências disponíveis para complementar sua passagem pelo destino.
+            </p>
+
+            <a href="/experiencias.html">
+              Explorar →
+            </a>
+
+          </article>
+
+
+          <article class="tool-card">
+
+            <h3>
+              Ingressos
+            </h3>
+
+            <p>
+              Consulte ingressos para atrações, museus e outros pontos de interesse disponíveis.
+            </p>
+
+            <a href="/ingressos.html">
+              Explorar →
+            </a>
+
+          </article>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </section>
+
+</main>
+
+
+<footer>
+
+  Curadoria Elite Travel ·
+  O seu mundo, bem indicado.
+
+  <br>
+
+  São Paulo - SP ·
+
+  <a href="/contact.html">
+    curadoriaelitetravel@gmail.com
+  </a>
+
+
+  <div class="footer-social">
+
+    <a
+      href="https://www.instagram.com/curadoriaelitetravel/"
+      target="_blank"
+      rel="noopener noreferrer"
+      aria-label="Instagram"
+    >
+
+      <svg
+        viewBox="0 0 24 24"
+        aria-hidden="true"
+      >
+        <path d="M7 2h10a5 5 0 0 1 5 5v10a5 5 0 0 1-5 5H7a5 5 0 0 1-5-5V7a5 5 0 0 1 5-5Zm0 2a3 3 0 0 0-3 3v10a3 3 0 0 0 3 3h10a3 3 0 0 0 3-3V7a3 3 0 0 0-3-3H7Zm5 3.5A4.5 4.5 0 1 1 7.5 12 4.5 4.5 0 0 1 12 7.5Zm0 2A2.5 2.5 0 1 0 14.5 12 2.5 2.5 0 0 0 12 9.5Zm5.25-3.1a1.05 1.05 0 1 1-1.05 1.05 1.05 1.05 0 0 1 1.05-1.05Z"/>
+      </svg>
 
     </a>
 
 
-    <nav>
-
-      <button
-        class="nav-toggle"
-        type="button"
-        aria-label="Abrir menu"
-        onclick="toggleMobileNav()"
-      >
-        <span></span>
-        <span></span>
-        <span></span>
-      </button>
-
-
-      <div class="nav-menu">
-
-        <a href="/">
-          Início
-        </a>
-
-        <a href="/quem-somos.html">
-          Quem Somos
-        </a>
-
-        <a href="/curadoria.html">
-          Curadoria
-        </a>
-
-        <a href="/buscador.html">
-          Buscador
-        </a>
-
-        <span class="nav-sep"></span>
-
-        <a
-          href="javascript:void(0)"
-          id="navCart"
-          onclick="openCart()"
-        >
-          Carrinho (0)
-        </a>
-
-        <span class="nav-sep"></span>
-
-        <a
-          href="/login.html"
-          id="navLogin"
-        >
-          Entrar
-        </a>
-
-        <a
-          href="/account.html"
-          id="navAccount"
-          style="display:none;"
-        >
-          Minha conta
-        </a>
-
-        <a
-          href="#"
-          id="navLogout"
-          style="display:none;"
-          onclick="doLogout(event)"
-        >
-          Sair
-        </a>
-
-      </div>
-
-    </nav>
-
-  </header>
-
-
-  <main>
-
-    <!-- =====================================================
-         HERO
-    ====================================================== -->
-
-    <section class="destination-hero">
-
-      <div class="hero-content">
-
-        <div class="hero-country">
-          ${pais}
-        </div>
-
-        <h1>
-          ${cidade}
-        </h1>
-
-        <div class="hero-divider"></div>
-
-        <p class="hero-description">
-          ${texto}
-        </p>
-
-
-      </div>
-
-    </section>
-
-
-    <!-- =====================================================
-         DESCOBERTA
-    ====================================================== -->
-
-    <section class="content-section discovery-section">
-
-      <div class="content-shell">
-
-        <div class="section-eyebrow">
-          Informações para sua viagem
-        </div>
-
-        <h2 class="section-title">
-          Planejando uma viagem para ${cidade}, ${pais}?
-        </h2>
-
-        <div class="discovery-copy">
-
-          <p>
-            Planejar uma viagem para ${cidade} envolve escolhas que podem transformar a experiência no destino. Onde ficar, onde comer, o que fazer e como se locomover dependem do tempo disponível, dos seus interesses e da maneira como você prefere conhecer cada lugar.
-          </p>
-
-          <p>
-            Ter essas informações organizadas facilita essas decisões e ajuda a encontrar opções que façam sentido para a sua viagem. Na Curadoria Elite Travel, você encontra conteúdos, ferramentas e indicações para apoiar diferentes momentos do planejamento e da experiência em ${cidade}.
-          </p>
-
-        </div>
-
-      </div>
-
-    </section>
-
-
-    <!-- =====================================================
-         MATERIAIS
-    ====================================================== -->
-
-    <section
-      class="content-section materials-section"
-      id="materiais"
+    <a
+      href="https://www.linkedin.com/company/curadoria-elite-travel"
+      target="_blank"
+      rel="noopener noreferrer"
+      aria-label="LinkedIn"
     >
 
-      <div class="content-shell">
-
-        <div class="section-eyebrow">
-          Curadoria por categoria
-        </div>
-
-        <h2 class="section-title">
-          Materiais disponíveis para ${cidade}
-        </h2>
-
-        <p class="section-subtitle">
-          Explore as categorias disponíveis para o destino e escolha os materiais que fazem sentido para a sua viagem.
-        </p>
-
-
-        <div
-          class="materials-grid"
-          id="materialsGrid"
-        >
-
-          <div class="materials-loading">
-            Carregando materiais disponíveis...
-          </div>
-
-        </div>
-
-      </div>
-
-    </section>
-
-
-    <!-- =====================================================
-         FERRAMENTAS E SERVIÇOS
-    ====================================================== -->
-
-    <section
-      class="content-section tools-section"
-      id="ferramentas"
-    >
-
-      <div class="content-shell">
-
-        <div class="section-eyebrow">
-          Antes e durante a viagem
-        </div>
-
-        <h2 class="section-title">
-          Preparando sua viagem
-        </h2>
-
-        <p class="section-subtitle">
-          Consulte ferramentas da Curadoria e serviços de parceiros indicados para organizar diferentes etapas da sua viagem.
-        </p>
-
-
-        <div class="tools-group">
-
-          <h3 class="tools-group-title">
-            Ferramentas da Curadoria
-          </h3>
-
-          <div class="tools-grid">
-
-            <article class="tool-card">
-
-              <h3>
-                Documentos, vistos e saúde
-              </h3>
-
-              <p>
-                Consulte informações sobre entrada no destino,
-                documentação, apoio diplomático e saúde para viagem.
-              </p>
-
-              <a href="/documentos.html">
-                Acessar ferramenta
-              </a>
-
-            </article>
-
-
-            <article class="tool-card">
-
-              <h3>
-                Transportes em ${cidade}
-              </h3>
-
-              <p>
-                Consulte informações organizadas sobre redes de transporte,
-                formas de pagamento e canais oficiais para utilizar durante a viagem.
-              </p>
-
-              <a href="/transportes.html">
-                Acessar ferramenta
-              </a>
-
-            </article>
-
-          </div>
-
-        </div>
-
-
-        <div class="tools-group">
-
-          <h3 class="tools-group-title">
-            Serviços e experiências
-          </h3>
-
-          <div class="tools-grid services-grid">
-
-            <article class="tool-card">
-
-              <h3>
-                Hospedagem
-              </h3>
-
-              <p>
-                Encontre opções de hospedagem para o seu destino por meio de parceiro indicado pela Curadoria.
-              </p>
-
-              <a href="/hospedagem.html">
-                Pesquisar hospedagem
-              </a>
-
-            </article>
-
-
-            <article class="tool-card">
-
-              <h3>
-                Transfer
-              </h3>
-
-              <p>
-                Encontre opções de transfer para diferentes destinos por meio de parceiro indicado pela Curadoria.
-              </p>
-
-              <a href="/transfer.html">
-                Pesquisar transfer
-              </a>
-
-            </article>
-
-
-            <article class="tool-card">
-
-              <h3>
-                Seguro Viagem
-              </h3>
-
-              <p>
-                Compare opções de seguro viagem, coberturas e preços por meio de parceiro indicado pela Curadoria.
-              </p>
-
-              <a href="/seguro-viagem.html">
-                Pesquisar seguro
-              </a>
-
-            </article>
-
-
-            <article class="tool-card">
-
-              <h3>
-                Locação de veículo
-              </h3>
-
-              <p>
-                Pesquise opções de aluguel de veículos por meio de parceiro indicado pela Curadoria.
-              </p>
-
-              <a href="/locacao.html">
-                Pesquisar veículos
-              </a>
-
-            </article>
-
-
-            <article class="tool-card">
-
-              <h3>
-                Aéreo
-              </h3>
-
-              <p>
-                Pesquise alternativas de voos e compare opções para o seu deslocamento.
-              </p>
-
-              <a href="/aereo.html">
-                Pesquisar voos
-              </a>
-
-            </article>
-
-
-            <article class="tool-card">
-
-              <h3>
-                Atividades e Experiências
-              </h3>
-
-              <p>
-                Pesquise passeios, visitas guiadas, excursões e outras experiências por meio de parceiro indicado pela Curadoria.
-              </p>
-
-              <a href="/experiencias.html">
-                Explorar experiências
-              </a>
-
-            </article>
-
-
-            <article class="tool-card">
-
-              <h3>
-                Ingressos
-              </h3>
-
-              <p>
-                Encontre ingressos para atrações, museus, parques e outros lugares para visitar durante a viagem.
-              </p>
-
-              <a href="/ingressos.html">
-                Pesquisar ingressos
-              </a>
-
-            </article>
-
-          </div>
-
-        </div>
-
-      </div>
-
-    </section>
-
-  </main>
-
-
-  <!-- =====================================================
-       RODAPÉ
-  ====================================================== -->
-
-  <footer>
-
-    <div>
-      Curadoria Elite Travel · O seu mundo, bem indicado.
-    </div>
-
-    <div>
-      São Paulo - SP ·
-      <a href="mailto:curadoriaelitetravel@gmail.com">
-        curadoriaelitetravel@gmail.com
-      </a>
-    </div>
-
-
-    <div class="footer-socials">
-
-      <a
-        href="https://www.instagram.com/curadoriaelitetravel/"
-        target="_blank"
-        rel="noopener noreferrer"
-        aria-label="Instagram"
+      <svg
+        viewBox="0 0 24 24"
+        aria-hidden="true"
       >
+        <path d="M6.5 8.25H3.25V21H6.5V8.25ZM4.88 3A1.88 1.88 0 1 0 4.9 6.75 1.88 1.88 0 0 0 4.88 3ZM21 13.7c0-3.85-2.05-5.64-4.79-5.64a4.14 4.14 0 0 0-3.74 2.05V8.25H9.22V21h3.25v-6.31c0-1.66.32-3.27 2.38-3.27 2.03 0 2.05 1.9 2.05 3.38V21H21v-7.3Z"/>
+      </svg>
 
-        <svg
-          viewBox="0 0 24 24"
-          aria-hidden="true"
-        >
-          <path d="M7 2C4.2 2 2 4.2 2 7v10c0 2.8 2.2 5 5 5h10c2.8 0 5-2.2 5-5V7c0-2.8-2.2-5-5-5H7zm0 2h10c1.7 0 3 1.3 3 3v10c0 1.7-1.3 3-3 3H7c-1.7 0-3-1.3-3-3V7c0-1.7 1.3-3 3-3zm11 1.5a1.25 1.25 0 100 2.5 1.25 1.25 0 000-2.5zM12 7a5 5 0 100 10 5 5 0 000-10zm0 2a3 3 0 110 6 3 3 0 010-6z"/>
-        </svg>
+    </a>
 
-      </a>
+  </div>
 
-
-      <a
-        href="https://www.linkedin.com/company/curadoria-elite-travel"
-        target="_blank"
-        rel="noopener noreferrer"
-        aria-label="LinkedIn"
-      >
-
-        <svg
-          viewBox="0 0 24 24"
-          aria-hidden="true"
-        >
-          <path d="M6.5 8.5H3.5V20h3V8.5zM5 3.8a1.75 1.75 0 100 3.5 1.75 1.75 0 000-3.5zM20.5 13.3c0-3.5-1.9-5.1-4.4-5.1-2 0-2.9 1.1-3.4 1.9V8.5h-3V20h3v-5.7c0-1.5.3-3 2.2-3 1.9 0 1.9 1.8 1.9 3.1V20h3.1l.1-6.7z"/>
-        </svg>
-
-      </a>
-
-    </div>
-
-  </footer>
+</footer>
 
 
-  <!-- =====================================================
-       SUPABASE
-  ====================================================== -->
-
-  <script
-    src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"
-  ></script>
+<script
+  src="https://unpkg.com/@supabase/supabase-js@2"
+></script>
 
 
-  <script>
+<script>
 
-  const SUPABASE_URL =
-    "${SUPABASE_URL}";
-
-
-  const SUPABASE_ANON_KEY =
-    "${SUPABASE_ANON_KEY}";
-
+  /* =====================================================
+     CONFIGURAÇÃO
+  ===================================================== */
 
   const DESTINATION =
     ${destinationData};
 
 
+  const SUPABASE_URL =
+    ${JSON.stringify(SUPABASE_URL)};
+
+
+  const SUPABASE_ANON_KEY =
+    ${JSON.stringify(SUPABASE_ANON_KEY)};
+
+
   const CART_STORAGE_KEY =
-    "cet_cart";
-
-
-  const CART_COUPON_CODE_KEY =
-    "cet_cart_coupon_code";
+    "cet_cart_v2";
 
 
   const CHECKOUT_CONTEXT_KEY =
-    "cet_checkout_context";
+    "cet_checkout_context_v2";
 
 
   const CART_CHECKOUT_ITEMS_KEY =
-    "cet_cart_checkout_items";
+    "cet_cart_checkout_items_v2";
 
 
   const CART_LAST_CHECKOUT_STARTED_KEY =
-    "cet_cart_last_checkout_started";
+    "cet_cart_last_checkout_started_v2";
+
+
+  const CART_COUPON_CODE_KEY =
+    "cet_cart_coupon_code_v1";
 
 
   let supabaseClient =
@@ -2761,9 +3017,7 @@ function buildDestinationHtml(destino) {
       return 88.92;
 
     }
-
-
-    return 57.83;
+        return 57.89;
 
   }
 
@@ -2787,8 +3041,7 @@ function buildDestinationHtml(destino) {
       return Number(
         categoryPricesMap.get(
           key
-        ) ||
-        0
+        )
       );
 
     }
@@ -2803,9 +3056,6 @@ function buildDestinationHtml(destino) {
 
   async function loadCategoryPrices(){
 
-    categoryPricesMap.clear();
-
-
     const sb =
       ensureSupabase();
 
@@ -2815,75 +3065,76 @@ function buildDestinationHtml(destino) {
     }
 
 
-    const {
-      data,
-      error
-    } =
-      await sb
-        .from(
-          "category_prices"
-        )
-        .select(
-          "category, price, is_active"
-        )
-        .eq(
-          "is_active",
-          true
-        );
+    try{
 
-
-    if (error){
-
-      console.error(
-        "Erro ao carregar preços:",
+      const {
+        data,
         error
-      );
-
-      return;
-
-    }
-
-
-    (data || []).forEach(
-      (row) => {
-
-        const category =
-          String(
-            row.category || ""
-          ).trim();
-
-
-        const price =
-          Number(
-            row.price || 0
+      } =
+        await sb
+          .from(
+            "category_prices"
+          )
+          .select(
+            "category, price"
           );
 
 
-        if (
-          category &&
-          Number.isFinite(
-            price
-          ) &&
-          price > 0
-        ){
+      if (
+        error ||
+        !Array.isArray(data)
+      ){
+        return;
+      }
 
-          categoryPricesMap.set(
+
+      data.forEach(
+        (row) => {
+
+          if (
+            !row ||
+            !row.category
+          ){
+            return;
+          }
+
+
+          const key =
             normalizeCategoryName(
-              category
-            ),
-            price
-          );
+              row.category
+            );
+
+
+          const price =
+            Number(
+              row.price
+            );
+
+
+          if (
+            key &&
+            Number.isFinite(
+              price
+            )
+          ){
+
+            categoryPricesMap.set(
+              key,
+              price
+            );
+
+          }
 
         }
+      );
 
-      }
-    );
+    }catch(error){}
 
   }
 
 
   /* =====================================================
-     COMPRAS EXISTENTES
+     COMPRAS JÁ REALIZADAS
   ===================================================== */
 
   async function loadOwnedPurchases(){
@@ -2912,50 +3163,77 @@ function buildDestinationHtml(destino) {
     }
 
 
-    const {
-      data,
-      error
-    } =
-      await sb
-        .from(
-          "purchase"
-        )
-        .select(
-          "category, city, pdf_url"
-        )
-        .eq(
-          "user_id",
-          session.user.id
-        )
-        .limit(500);
+    try{
+
+      const {
+        data,
+        error
+      } =
+        await sb
+          .from(
+            "purchases"
+          )
+          .select(
+            "category, city_label, status"
+          )
+          .eq(
+            "user_id",
+            session.user.id
+          );
 
 
-    if (error){
-      return;
-    }
-
-
-    (data || []).forEach(
-      (row) => {
-
-        ownedMap.set(
-          purchaseKey(
-            row.category ||
-            "",
-
-            row.city ||
-            ""
-          ),
-
-          {
-            pdf_url:
-              row.pdf_url ||
-              null
-          }
-        );
-
+      if (
+        error ||
+        !Array.isArray(data)
+      ){
+        return;
       }
-    );
+
+
+      data.forEach(
+        (row) => {
+
+          if (!row){
+            return;
+          }
+
+
+          const status =
+            normalizeKeyPart(
+              row.status ||
+              ""
+            );
+
+
+          if (
+            status &&
+            status !==
+            "approved" &&
+            status !==
+            "paid" &&
+            status !==
+            "completed"
+          ){
+            return;
+          }
+
+
+          const key =
+            purchaseKey(
+              row.category,
+              row.city_label
+            );
+
+
+          ownedMap.set(
+            key,
+            true
+          );
+
+        }
+      );
+
+    }catch(error){}
 
   }
 
@@ -2989,10 +3267,15 @@ function buildDestinationHtml(destino) {
         );
 
 
+      if (!raw){
+        return [];
+      }
+
+
       const parsed =
-        raw
-          ? JSON.parse(raw)
-          : [];
+        JSON.parse(
+          raw
+        );
 
 
       return Array.isArray(
@@ -3000,7 +3283,8 @@ function buildDestinationHtml(destino) {
       )
         ? parsed
         : [];
-            }catch(error){
+
+    }catch(error){
 
       return [];
 
@@ -3014,8 +3298,9 @@ function buildDestinationHtml(destino) {
     localStorage.setItem(
       CART_STORAGE_KEY,
       JSON.stringify(
-        items ||
-        []
+        Array.isArray(items)
+          ? items
+          : []
       )
     );
 
@@ -3032,6 +3317,15 @@ function buildDestinationHtml(destino) {
     );
 
 
+    localStorage.removeItem(
+      CART_COUPON_CODE_KEY
+    );
+
+
+    cartPricingPreview =
+      null;
+
+
     updateCartBadge();
 
   }
@@ -3039,12 +3333,12 @@ function buildDestinationHtml(destino) {
 
   function cartItemKey(
     category,
-    city
+    cityLabel
   ){
 
     return purchaseKey(
       category,
-      city
+      cityLabel
     );
 
   }
@@ -3058,19 +3352,46 @@ function buildDestinationHtml(destino) {
       );
 
 
-    if (navCart){
-
-      navCart.textContent =
-        "Carrinho (" +
-        getCart().length +
-        ")";
-
+    if (!navCart){
+      return;
     }
+
+
+    const cart =
+      getCart();
+
+
+    const quantity =
+      cart.reduce(
+        (
+          total,
+          item
+        ) => {
+
+          return (
+            total +
+            Number(
+              item.qty ||
+              1
+            )
+          );
+
+        },
+        0
+      );
+
+
+    navCart.textContent =
+      "Carrinho (" +
+      quantity +
+      ")";
 
   }
 
 
-  function calcCartTotal(items){
+  function calcCartTotal(
+    items
+  ){
 
     return (
       items ||
@@ -3079,36 +3400,51 @@ function buildDestinationHtml(destino) {
       (
         total,
         item
-      ) =>
+      ) => {
 
-        total +
-        (
+        const qty =
           Number(
             item.qty ||
-            0
-          ) *
+            1
+          );
 
+
+        const price =
           Number(
             item.price ||
             0
-          )
-        ),
+          );
 
+
+        return (
+          total +
+          (
+            qty *
+            price
+          )
+        );
+
+      },
       0
     );
 
   }
 
 
-  function removeFromCart(key){
+  function removeFromCart(
+    key
+  ){
 
-    saveCart(
+    const items =
       getCart().filter(
         (item) =>
-          item &&
           item.key !==
           key
-      )
+      );
+
+
+    saveCart(
+      items
     );
 
 
@@ -3123,8 +3459,42 @@ function buildDestinationHtml(destino) {
 
   function addToCart(
     category,
-    city
+    cityLabel
   ){
+
+    if (
+      userOwns(
+        category,
+        cityLabel
+      )
+    ){
+
+      openPopup({
+
+        title:
+          "Material já disponível",
+
+        text:
+          "Este material já está disponível na sua conta.",
+
+        secondaryText:
+          "Ir para Minha conta",
+
+        onSecondary:
+          () => {
+
+            window.location.href =
+              "/account.html";
+
+          }
+
+      });
+
+
+      return false;
+
+    }
+
 
     const items =
       getCart();
@@ -3133,56 +3503,48 @@ function buildDestinationHtml(destino) {
     const key =
       cartItemKey(
         category,
-        city
+        cityLabel
       );
 
 
-    if (
-      items.some(
+    const existing =
+      items.find(
         (item) =>
-          item &&
           item.key ===
           key
-      )
-    ){
-
-      return false;
-
-    }
-
-
-    const price =
-      getPriceForCategory(
-        category
       );
 
 
-    items.push({
+    if (existing){
 
-      key,
-
-      category:
-        String(
-          category ||
-          ""
-        ).trim(),
-
-      city:
-        String(
-          city ||
-          ""
-        ).trim(),
-
-      qty:
-        1,
-
-      price:
+      existing.qty =
         Number(
-          price ||
-          0
-        )
+          existing.qty ||
+          1
+        );
 
-    });
+    }else{
+
+      items.push({
+
+        key,
+
+        category,
+
+        city:
+          cityLabel,
+
+        qty:
+          1,
+
+        price:
+          getPriceForCategory(
+            category
+          )
+
+      });
+
+    }
 
 
     saveCart(
@@ -3194,29 +3556,6 @@ function buildDestinationHtml(destino) {
       null;
 
 
-    trackEvent(
-      "add_to_cart",
-      {
-
-        item_category:
-          category,
-
-        item_name:
-          city,
-
-        currency:
-          "BRL",
-
-        value:
-          Number(
-            price ||
-            0
-          )
-
-      }
-    );
-
-
     return true;
 
   }
@@ -3224,16 +3563,21 @@ function buildDestinationHtml(destino) {
 
   function addToCartAndOpenCart(
     category,
-    city
+    cityLabel
   ){
 
-    addToCart(
-      category,
-      city
-    );
+    const added =
+      addToCart(
+        category,
+        cityLabel
+      );
 
 
-    openCart();
+    if (added){
+
+      openCart();
+
+    }
 
   }
 
@@ -3242,40 +3586,16 @@ function buildDestinationHtml(destino) {
      CUPOM
   ===================================================== */
 
-  function normalizeCouponCode(code){
+  function normalizeCouponCode(
+    value
+  ){
 
     return String(
-      code ||
+      value ||
       ""
     )
       .trim()
       .toUpperCase();
-
-  }
-
-
-  function setCartCouponCode(code){
-
-    const value =
-      normalizeCouponCode(
-        code
-      );
-
-
-    if (!value){
-
-      localStorage.removeItem(
-        CART_COUPON_CODE_KEY
-      );
-
-    }else{
-
-      localStorage.setItem(
-        CART_COUPON_CODE_KEY,
-        value
-      );
-
-    }
 
   }
 
@@ -3292,9 +3612,37 @@ function buildDestinationHtml(destino) {
   }
 
 
+  function setCartCouponCode(
+    code
+  ){
+
+    const normalized =
+      normalizeCouponCode(
+        code
+      );
+
+
+    if (normalized){
+
+      localStorage.setItem(
+        CART_COUPON_CODE_KEY,
+        normalized
+      );
+
+    }else{
+
+      localStorage.removeItem(
+        CART_COUPON_CODE_KEY
+      );
+
+    }
+
+  }
+
+
   function setCouponMessage(
-    text,
-    kind
+    message,
+    type
   ){
 
     const element =
@@ -3308,27 +3656,69 @@ function buildDestinationHtml(destino) {
     }
 
 
-    element.className =
-      "coupon-msg";
-
-
-    if (kind){
-
-      element.classList.add(
-        kind
-      );
-
-    }
-
-
     element.textContent =
-      text ||
+      message ||
       "";
+
+
+    element.className =
+      "coupon-msg" +
+      (
+        type
+          ? " " + type
+          : ""
+      );
 
   }
 
 
   async function applyCouponInCart(){
+
+    const input =
+      document.getElementById(
+        "couponInput"
+      );
+
+
+    if (!input){
+      return;
+    }
+
+
+    const code =
+      normalizeCouponCode(
+        input.value
+      );
+
+
+    input.value =
+      code;
+
+
+    setCartCouponCode(
+      code
+    );
+
+
+    if (!code){
+
+      cartPricingPreview =
+        null;
+
+
+      setCouponMessage(
+        "",
+        ""
+      );
+
+
+      renderCartTotalsOnly();
+
+
+      return;
+
+    }
+
 
     const items =
       getCart();
@@ -3338,55 +3728,25 @@ function buildDestinationHtml(destino) {
 
       setCouponMessage(
         "Seu carrinho está vazio.",
-        "err"
+        "error"
       );
 
-      return;
-
-    }
-
-
-    const code =
-      getCartCouponCode();
-
-
-    if (!code){
-
-      cartPricingPreview =
-        null;
-
-      renderCartTotalsOnly();
 
       return;
 
     }
 
 
-    const session =
-      await getSession();
-
-
-    if (
-      !session ||
-      !session.user
-    ){
-
-      setCouponMessage(
-        "Faça login para validar o cupom no carrinho.",
-        "err"
-      );
-
-      return;
-
-    }
+    setCouponMessage(
+      "Validando cupom...",
+      ""
+    );
 
 
     const response =
       await apiPOST(
-        "/api/create-checkout-mercadopago",
-
+        "/api/checkout-preview",
         {
-
           items:
             items.map(
               (item) => ({
@@ -3401,27 +3761,20 @@ function buildDestinationHtml(destino) {
                   Number(
                     item.qty ||
                     1
-                  ) ||
-                  1
+                  )
 
               })
             ),
 
           coupon_code:
-            code,
-
-          preview_only:
-            true
-
+            code
         }
       );
 
 
     if (
       !response.ok ||
-      !response.json ||
-      response.json.ok !==
-      true
+      !response.json
     ){
 
       cartPricingPreview =
@@ -3429,58 +3782,51 @@ function buildDestinationHtml(destino) {
 
 
       setCouponMessage(
-        "Este cupom não está válido. Insira um cupom válido.",
-        "err"
+        (
+          response.json &&
+          response.json.error
+        ) ||
+        "Não foi possível validar o cupom.",
+        "error"
       );
 
 
       renderCartTotalsOnly();
+
 
       return;
 
     }
 
 
-    const preview =
+    cartPricingPreview =
       response.json;
 
 
-    const matchCount =
+    const discountTotal =
       Number(
-        preview.applied &&
-        preview.applied.match_count
-          ? preview.applied.match_count
-          : 0
+        (
+          response.json.totals &&
+          response.json.totals.discount_total
+        ) ||
+        0
       );
 
 
     if (
-      matchCount > 0 &&
-      preview.totals &&
-      Number(
-        preview.totals.discount_total ||
-        0
-      ) > 0
+      discountTotal > 0
     ){
-
-      cartPricingPreview =
-        preview;
-
 
       setCouponMessage(
         "Cupom aplicado.",
-        "ok"
+        "success"
       );
 
     }else{
 
-      cartPricingPreview =
-        null;
-
-
       setCouponMessage(
-        "Este cupom não está válido. Insira um cupom válido.",
-        "err"
+        "Cupom válido, mas sem desconto para estes itens.",
+        ""
       );
 
     }
@@ -3492,7 +3838,7 @@ function buildDestinationHtml(destino) {
 
 
   /* =====================================================
-     POPUP GERAL
+     POPUP GENÉRICO
   ===================================================== */
 
   function ensurePopupExists(){
@@ -3520,22 +3866,6 @@ function buildDestinationHtml(destino) {
           '<h3 id="popup-title"></h3>' +
 
           '<p id="popup-text"></p>' +
-
-          '<div class="popup-rules" id="popup-rules">' +
-
-            '<strong>Informações Importantes</strong><br><br>' +
-
-            'A Curadoria Elite Travel oferece exclusivamente materiais digitais de caráter informativo e orientativo, baseados em indicações, referências e conteúdos selecionados.<br><br>' +
-
-            'Não realizamos reservas, vendas de passagens, hospedagens, experiências ou qualquer tipo de intermediação direta com fornecedores ou prestadores de serviço.<br><br>' +
-
-            'As decisões de compra, contratação e utilização de serviços indicados nos materiais são de <strong>responsabilidade exclusiva do usuário</strong>.<br><br>' +
-
-            'Por se tratar de conteúdo digital disponibilizado de forma imediata após a confirmação da compra, <strong>não é possível realizar cancelamentos, trocas ou reembolsos</strong>.<br><br>' +
-
-            'Ao adquirir nossos materiais, o usuário declara estar ciente e de acordo com essas condições.' +
-
-          '</div>' +
 
           '<div class="popup-actions">' +
 
@@ -3566,6 +3896,29 @@ function buildDestinationHtml(destino) {
         closePopup
       );
 
+
+    document
+      .getElementById(
+        "popup"
+      )
+      .addEventListener(
+        "click",
+
+        (event) => {
+
+          if (
+            event.target &&
+            event.target.id ===
+            "popup"
+          ){
+
+            closePopup();
+
+          }
+
+        }
+      );
+
   }
 
 
@@ -3585,100 +3938,36 @@ function buildDestinationHtml(destino) {
 
     }
 
-
-    const consent =
-      document.getElementById(
-        "consent-checkbox-wrap"
-      );
-
-
-    if (consent){
-
-      consent.remove();
-
-    }
-
   }
 
 
   function openPopup({
 
-    title =
-      "",
-
-    text =
-      "",
-
-    showProceed =
-      false,
-
-    proceedText =
-      "Ir para pagamento",
-
-    showRules =
-      false,
-
-    requireConsent =
-      false,
-
-    onProceed =
-      null,
-
-    secondaryText =
-      null,
-
-    onSecondary =
-      null
+    title,
+    text,
+    secondaryText,
+    onSecondary,
+    showProceed,
+    proceedText,
+    onProceed,
+    showRules,
+    requireConsent
 
   }){
 
     ensurePopupExists();
 
 
-    document
-      .getElementById(
-        "popup-title"
-      )
-      .textContent =
-        title;
-
-
-    document
-      .getElementById(
-        "popup-text"
-      )
-      .textContent =
-        text;
-
-
-    document
-      .getElementById(
-        "popup-rules"
-      )
-      .style.display =
-        showRules
-          ? "block"
-          : "none";
-
-
-    const proceed =
+    const titleEl =
       document.getElementById(
-        "popup-proceed"
+        "popup-title"
       );
 
 
-    proceed.style.display =
-      showProceed
-        ? "inline-block"
-        : "none";
-
-
-    proceed.textContent =
-      proceedText;
-
-
-    proceed.disabled =
-      false;
+    const textEl =
+      document.getElementById(
+        "popup-text"
+      );
 
 
     const secondary =
@@ -3687,19 +3976,42 @@ function buildDestinationHtml(destino) {
       );
 
 
+    const proceed =
+      document.getElementById(
+        "popup-proceed"
+      );
+
+
+    titleEl.textContent =
+      title ||
+      "";
+
+
+    textEl.textContent =
+      text ||
+      "";
+
+
+    secondary.style.display =
+      secondaryText
+        ? "inline-flex"
+        : "none";
+
+
+    secondary.textContent =
+      secondaryText ||
+      "";
+
+
+    secondary.onclick =
+      null;
+
+
     if (
       secondaryText &&
       typeof onSecondary ===
       "function"
     ){
-
-      secondary.style.display =
-        "inline-block";
-
-
-      secondary.textContent =
-        secondaryText;
-
 
       secondary.onclick =
         () => {
@@ -3710,14 +4022,29 @@ function buildDestinationHtml(destino) {
 
         };
 
-    }else{
-
-      secondary.style.display =
-        "none";
+    }
 
 
-      secondary.onclick =
-        null;
+    proceed.style.display =
+      showProceed
+        ? "inline-flex"
+        : "none";
+
+
+    proceed.textContent =
+      proceedText ||
+      "Prosseguir";
+
+
+    const oldRules =
+      document.getElementById(
+        "popup-rules"
+      );
+
+
+    if (oldRules){
+
+      oldRules.remove();
 
     }
 
@@ -3735,10 +4062,51 @@ function buildDestinationHtml(destino) {
     }
 
 
-    if (
-      showProceed &&
-      requireConsent
-    ){
+    if (showRules){
+
+      const rules =
+        document.createElement(
+          "div"
+        );
+
+
+      rules.id =
+        "popup-rules";
+
+
+      rules.className =
+        "popup-rules";
+
+
+      rules.innerHTML =
+        '<strong>Antes de continuar:</strong>' +
+
+        '<ul>' +
+
+          '<li>Os materiais são digitais e o acesso é liberado após a confirmação do pagamento.</li>' +
+
+          '<li>Confira se o destino e a categoria selecionados estão corretos.</li>' +
+
+          '<li>O conteúdo da Curadoria não inclui reservas ou atendimento de concierge.</li>' +
+
+        '</ul>';
+
+
+      const actions =
+        document.querySelector(
+          "#popup-content .popup-actions"
+        );
+
+
+      actions.parentNode.insertBefore(
+        rules,
+        actions
+      );
+
+    }
+
+
+    if (requireConsent){
 
       const consentWrap =
         document.createElement(
@@ -3748,10 +4116,7 @@ function buildDestinationHtml(destino) {
 
       consentWrap.id =
         "consent-checkbox-wrap";
-                "consent-checkbox-wrap";
-
-
-      consentWrap.className =
+              consentWrap.className =
         "consent-wrap";
 
 
@@ -5095,242 +5460,6 @@ function buildDestinationHtml(destino) {
   }
 
 
-  function createMaterialCard(
-    material
-  ){
-
-    const article =
-      document.createElement(
-        "article"
-      );
-
-
-    const category =
-      String(
-        material.category ||
-        ""
-      ).trim();
-
-
-    const city =
-      String(
-        material.city ||
-        DESTINATION.cityLabel ||
-        ""
-      ).trim();
-
-
-    const owned =
-      userOwns(
-        category,
-        city
-      );
-
-
-    article.className =
-      owned
-        ? "material-card owned"
-        : "material-card";
-
-
-    const icon =
-      document.createElement(
-        "div"
-      );
-
-
-    icon.className =
-      "material-icon";
-
-
-    icon.textContent =
-      getCategoryIcon(
-        category
-      );
-
-
-    const title =
-      document.createElement(
-        "h3"
-      );
-
-
-    title.textContent =
-      category;
-
-
-    const description =
-      document.createElement(
-        "p"
-      );
-
-
-    description.textContent =
-      getCategoryDescription(
-        category
-      );
-
-
-    const price =
-      document.createElement(
-        "div"
-      );
-
-
-    price.className =
-      "material-price";
-
-
-    price.textContent =
-      formatBRL(
-        getPriceForCategory(
-          category
-        )
-      );
-
-
-    const actions =
-      document.createElement(
-        "div"
-      );
-
-
-    actions.className =
-      "material-actions";
-
-
-    article.appendChild(
-      icon
-    );
-
-
-    article.appendChild(
-      title
-    );
-
-
-    article.appendChild(
-      description
-    );
-
-
-    if (owned){
-
-      const ownedButton =
-        document.createElement(
-          "a"
-        );
-
-
-      ownedButton.className =
-        "btn-owned";
-
-
-      ownedButton.href =
-        "/account.html";
-
-
-      ownedButton.textContent =
-        "Disponível na sua conta";
-
-
-      actions.appendChild(
-        ownedButton
-      );
-
-    }else{
-
-      article.appendChild(
-        price
-      );
-
-
-      const buyButton =
-        document.createElement(
-          "button"
-        );
-
-
-      buyButton.type =
-        "button";
-
-
-      buyButton.className =
-        "btn-primary";
-
-
-      buyButton.textContent =
-        "Comprar agora";
-
-
-      buyButton.addEventListener(
-        "click",
-
-        () => {
-
-          startSingleCheckoutFlow(
-            category,
-            city
-          );
-
-        }
-      );
-
-
-      const cartButton =
-        document.createElement(
-          "button"
-        );
-
-
-      cartButton.type =
-        "button";
-
-
-      cartButton.className =
-        "btn-secondary";
-
-
-      cartButton.textContent =
-        "Adicionar ao carrinho";
-
-
-      cartButton.addEventListener(
-        "click",
-
-        () => {
-
-          addToCartAndOpenCart(
-            category,
-            city
-          );
-
-        }
-      );
-
-
-      actions.appendChild(
-        buyButton
-      );
-
-
-      actions.appendChild(
-        cartButton
-      );
-
-    }
-
-
-    article.appendChild(
-      actions
-    );
-
-
-    return article;
-
-  }
-
-
   async function loadDestinationMaterials(){
 
     const grid =
@@ -5351,7 +5480,7 @@ function buildDestinationHtml(destino) {
     if (!sb){
 
       grid.innerHTML =
-        '<div class="materials-empty">Não foi possível carregar os materiais neste momento.</div>';
+        '<div class="error-state">Não foi possível carregar os materiais disponíveis neste momento.</div>';
 
 
       return;
@@ -5359,131 +5488,102 @@ function buildDestinationHtml(destino) {
     }
 
 
-    const destinationCandidates =
-      Array.from(
-        new Set(
-          [
-
-            DESTINATION.cityLabel,
-
-            DESTINATION.city,
-
-            DESTINATION.city +
-            " - " +
-            DESTINATION.country,
-
-            DESTINATION.city +
-            ", " +
-            DESTINATION.country
-
-          ]
-            .filter(Boolean)
-            .map(
-              (value) =>
-                String(
-                  value
-                ).trim()
-            )
+    const {
+      data,
+      error
+    } =
+      await sb
+        .from(
+          "curadoria_materials"
         )
-      );
-
-
-    let materials =
-      [];
-
-
-    for (
-      const candidate
-      of destinationCandidates
-    ){
-
-      const {
-        data,
-        error
-      } =
-        await sb
-          .from(
-            "curadoria_materials"
-          )
-          .select(
-            "*"
-          )
-          .eq(
-            "city",
-            candidate
-          );
-
-
-      if (error){
-
-        console.error(
-          "Erro ao carregar materiais:",
-          error
+        .select(
+          "category, city_label"
+        )
+        .eq(
+          "is_active",
+          true
+        )
+        .order(
+          "category",
+          {
+            ascending:
+              true
+          }
         );
 
 
-        continue;
+    if (error){
 
-      }
-
-
-      if (
-        Array.isArray(data) &&
-        data.length
-      ){
-
-        materials =
-          data;
+      console.error(
+        "Erro ao carregar materiais:",
+        error
+      );
 
 
-        break;
+      grid.innerHTML =
+        '<div class="error-state">Não foi possível carregar os materiais disponíveis neste momento.</div>';
 
-      }
+
+      return;
 
     }
 
 
+    const destinationKey =
+      normalizeCityLabel(
+        DESTINATION.cityLabel
+      );
+
+
+    const materials =
+      (
+        Array.isArray(
+          data
+        )
+          ? data
+          : []
+      )
+      .filter(
+        (row) =>
+
+          normalizeCityLabel(
+            row.city_label ||
+            ""
+          ) ===
+          destinationKey
+      );
+
+
     if (!materials.length){
 
-      const {
-        data,
-        error
-      } =
-        await sb
-          .from(
-            "curadoria_materials"
-          )
-          .select(
-            "*"
-          );
+      grid.innerHTML =
+        '<div class="empty-state">Nenhum material está disponível para este destino no momento.</div>';
 
 
-      if (!error){
+      return;
 
-        const wanted =
-          new Set(
-            destinationCandidates.map(
-              normalizeCityLabel
-            )
-          );
+    }
 
 
-        materials =
-          (
-            data ||
-            []
-          ).filter(
-            (item) =>
+    renderMaterials(
+      materials
+    );
 
-              wanted.has(
-                normalizeCityLabel(
-                  item.city
-                )
-              )
-          );
+  }
 
-      }
 
+  function renderMaterials(
+    materials
+  ){
+
+    const grid =
+      document.getElementById(
+        "materialsGrid"
+      );
+
+
+    if (!grid){
+      return;
     }
 
 
@@ -5491,108 +5591,331 @@ function buildDestinationHtml(destino) {
       "";
 
 
-    if (!materials.length){
+    materials.forEach(
+      (material) => {
 
-      grid.innerHTML =
-        '<div class="materials-empty">Ainda não há materiais disponíveis para este destino.</div>';
-
-
-      return;
-
-    }
-
-
-    materials
-      .sort(
-        (
-          a,
-          b
-        ) => {
-
-          const order = [
-
-            "city guide",
-
-            "gastronomia",
-
-            "atrações turísticas",
-
-            "vida noturna",
-
-            "endereços para compras",
-
-            "sugestão de presentes"
-
-          ];
+        const category =
+          String(
+            material.category ||
+            ""
+          ).trim();
 
 
-          const aIndex =
-            order.indexOf(
-              normalizeCategoryName(
-                a.category
-              )
-            );
+        const cityLabel =
+          String(
+            material.city_label ||
+            ""
+          ).trim();
 
 
-          const bIndex =
-            order.indexOf(
-              normalizeCategoryName(
-                b.category
-              )
-            );
+        if (
+          !category ||
+          !cityLabel
+        ){
+          return;
+        }
 
 
-          if (
-            aIndex === -1 &&
-            bIndex === -1
-          ){
-
-            return String(
-              a.category ||
-              ""
-            ).localeCompare(
-              String(
-                b.category ||
-                ""
-              ),
-              "pt-BR"
-            );
-
-          }
-
-
-          if (
-            aIndex === -1
-          ){
-            return 1;
-          }
-
-
-          if (
-            bIndex === -1
-          ){
-            return -1;
-          }
-
-
-          return (
-            aIndex -
-            bIndex
+        const owned =
+          userOwns(
+            category,
+            cityLabel
           );
 
-        }
-      )
-      .forEach(
-        (material) => {
 
-          grid.appendChild(
-            createMaterialCard(
-              material
+        const article =
+          document.createElement(
+            "article"
+          );
+
+
+        article.className =
+          owned
+            ? "material-card owned"
+            : "material-card";
+
+
+        const icon =
+          document.createElement(
+            "div"
+          );
+
+
+        icon.className =
+          "material-icon";
+
+
+        icon.textContent =
+          getCategoryIcon(
+            category
+          );
+
+
+        const title =
+          document.createElement(
+            "h3"
+          );
+
+
+        title.textContent =
+          category;
+
+
+        const description =
+          document.createElement(
+            "p"
+          );
+
+
+        description.className =
+          "material-description";
+
+
+        description.textContent =
+          getCategoryDescription(
+            category
+          );
+
+
+        const price =
+          document.createElement(
+            "div"
+          );
+
+
+        price.className =
+          "material-price";
+
+
+        price.textContent =
+          formatBRL(
+            getPriceForCategory(
+              category
             )
           );
 
+
+        const actions =
+          document.createElement(
+            "div"
+          );
+
+
+        actions.className =
+          "material-actions";
+
+
+        article.appendChild(
+          icon
+        );
+
+
+        article.appendChild(
+          title
+        );
+
+
+        article.appendChild(
+          description
+        );
+
+
+        if (owned){
+
+          const ownedButton =
+            document.createElement(
+              "a"
+            );
+
+
+          ownedButton.className =
+            "btn-owned";
+
+
+          ownedButton.href =
+            "/account.html";
+
+
+          ownedButton.textContent =
+            "Disponível na sua conta";
+
+
+          actions.appendChild(
+            ownedButton
+          );
+
+        }else{
+
+          article.appendChild(
+            price
+          );
+
+
+          const buyButton =
+            document.createElement(
+              "button"
+            );
+
+
+          buyButton.type =
+            "button";
+
+
+          buyButton.className =
+            "btn-buy";
+
+
+          buyButton.textContent =
+            "Comprar agora";
+
+
+          buyButton.addEventListener(
+            "click",
+
+            () => {
+
+              startSingleCheckoutFlow(
+                category,
+                cityLabel
+              );
+
+            }
+          );
+
+
+          const cartButton =
+            document.createElement(
+              "button"
+            );
+
+
+          cartButton.type =
+            "button";
+
+
+          cartButton.className =
+            "btn-cart";
+
+
+          cartButton.textContent =
+            "Adicionar ao carrinho";
+
+
+          cartButton.addEventListener(
+            "click",
+
+            () => {
+
+              addToCartAndOpenCart(
+                category,
+                cityLabel
+              );
+
+            }
+          );
+
+
+          actions.appendChild(
+            buyButton
+          );
+
+
+          actions.appendChild(
+            cartButton
+          );
+
         }
+
+
+        article.appendChild(
+          actions
+        );
+
+
+        grid.appendChild(
+          article
+        );
+
+      }
+    );
+
+  }
+
+
+  /* =====================================================
+     ABAS — PREPARANDO SUA VIAGEM
+  ===================================================== */
+
+  function initializeTravelTabs(){
+
+    const tabs =
+      Array.from(
+        document.querySelectorAll(
+          "[data-travel-tab]"
+        )
       );
+
+
+    const panels =
+      Array.from(
+        document.querySelectorAll(
+          "[data-travel-panel]"
+        )
+      );
+
+
+    if (
+      !tabs.length ||
+      !panels.length
+    ){
+      return;
+    }
+
+
+    tabs.forEach(
+      (tab) => {
+
+        tab.addEventListener(
+          "click",
+
+          () => {
+
+            const target =
+              tab.getAttribute(
+                "data-travel-tab"
+              );
+
+
+            tabs.forEach(
+              (item) => {
+
+                item.classList.toggle(
+                  "active",
+                  item === tab
+                );
+
+              }
+            );
+
+
+            panels.forEach(
+              (panel) => {
+
+                panel.classList.toggle(
+                  "active",
+                  panel.getAttribute(
+                    "data-travel-panel"
+                  ) === target
+                );
+
+              }
+            );
+
+          }
+        );
+
+      }
+    );
 
   }
 
@@ -5603,10 +5926,32 @@ function buildDestinationHtml(destino) {
 
   async function initializePage(){
 
+    ensureSupabase();
+
+
     startPagePhotoCarousel();
 
 
+    initializeTravelTabs();
+
+
     updateCartBadge();
+
+
+    const logout =
+      document.getElementById(
+        "navLogout"
+      );
+
+
+    if (logout){
+
+      logout.addEventListener(
+        "click",
+        doLogout
+      );
+
+    }
 
 
     await refreshNavAuth();
@@ -5636,61 +5981,58 @@ function buildDestinationHtml(destino) {
     initializePage
   );
 
-  </script>
+</script>
 
 
-  <!-- =====================================================
-       DADOS ESTRUTURADOS
-  ====================================================== -->
-
-  <script type="application/ld+json">
-  ${escapeJsonForScript({
+<script type="application/ld+json">
+${JSON.stringify(
+  {
     "@context":
       "https://schema.org",
 
     "@type":
       "TouristDestination",
 
-    name:
+    "name":
       destino.cidade,
 
-    description:
+    "description":
       getMetaDescription(
         destino
       ),
 
-    url:
+    "url":
       canonicalUrl,
 
-    containedInPlace: {
-
+    "containedInPlace":{
       "@type":
         "Country",
 
-      name:
+      "name":
         destino.pais
-
     },
 
-    publisher: {
-
+    "publisher":{
       "@type":
         "Organization",
 
-      name:
+      "name":
         "Curadoria Elite Travel",
 
-      url:
+      "url":
         SITE_URL
-
     }
+  },
+  null,
+  2
+)}
+</script>
 
-  })}
-  </script>
 
 </body>
 
 </html>`;
+
 }
 
 
@@ -5698,16 +6040,16 @@ function buildDestinationHtml(destino) {
    LEITURA DOS DESTINOS
 ========================================================= */
 
-function loadDestinations() {
+function loadDestinationData(){
 
   if (
     !fs.existsSync(
       DESTINOS_DATA_PATH
     )
-  ) {
+  ){
 
     throw new Error(
-      `Arquivo de destinos não encontrado: ${DESTINOS_DATA_PATH}`
+      "Arquivo data/destinos.json não encontrado."
     );
 
   }
@@ -5726,113 +6068,66 @@ function loadDestinations() {
     );
 
 
-  const destinos =
-    Array.isArray(parsed)
-      ? parsed
-      : parsed.destinos;
-
-
   if (
-    !Array.isArray(destinos)
-  ) {
+    !parsed ||
+    !Array.isArray(
+      parsed.destinos
+    )
+  ){
 
     throw new Error(
-      "O arquivo destinos.json precisa conter um array ou uma propriedade 'destinos' com um array."
+      'data/destinos.json precisa possuir a propriedade "destinos" como array.'
     );
 
   }
 
 
-  destinos.forEach(
-    validateDestination
-  );
-
-
-  return destinos;
-
-}
-/* =========================================================
-   GERAÇÃO DAS PÁGINAS
-========================================================= */
-
-function generateDestinationPages(
-  destinos
-) {
-
-  ensureDirectory(
-    DESTINOS_OUTPUT_DIR
-  );
-
-
-  destinos.forEach(
-    (destino) => {
-
-      const countryDirectory =
-        path.join(
-          DESTINOS_OUTPUT_DIR,
-          destino.slugPais
-        );
-
-
-      const cityDirectory =
-        path.join(
-          countryDirectory,
-          destino.slugCidade
-        );
-
-
-      ensureDirectory(
-        cityDirectory
-      );
-
-
-      const outputPath =
-        path.join(
-          cityDirectory,
-          "index.html"
-        );
-
-
-      const html =
-        buildDestinationHtml(
-          destino
-        );
-
-
-      fs.writeFileSync(
-        outputPath,
-        html,
-        "utf8"
-      );
-
-
-      console.log(
-        `✓ ${destino.cidade}, ${destino.pais} -> ${outputPath}`
-      );
-
-    }
-  );
+  return parsed.destinos;
 
 }
 
 
 /* =========================================================
-   SITEMAP
+   SITEMAP AUTOMÁTICO
 ========================================================= */
 
-function buildSitemap(
-  destinos
-) {
+function escapeXml(value){
 
-  const staticUrls = [
+  return String(
+    value ??
+    ""
+  )
+    .replace(
+      /&/g,
+      "&amp;"
+    )
+    .replace(
+      /</g,
+      "&lt;"
+    )
+    .replace(
+      />/g,
+      "&gt;"
+    )
+    .replace(
+      /"/g,
+      "&quot;"
+    )
+    .replace(
+      /'/g,
+      "&apos;"
+    );
+
+}
+
+
+function buildSitemapXml(
+  destinos
+){
+
+  const fixedUrls = [
 
     "/",
-
-    "/quem-somos.html",
-
-    "/curadoria.html",
-
-    "/buscador.html",
 
     "/documentos.html",
 
@@ -5850,13 +6145,18 @@ function buildSitemap(
 
     "/experiencias.html",
 
-    "/ingressos.html"
+    "/ingressos.html",
+
+    "/contact.html"
 
   ];
 
 
   const destinationUrls =
-    destinos.map(
+    (
+      destinos ||
+      []
+    ).map(
       (destino) =>
         normalizeUrlPath(
           destino.url
@@ -5864,50 +6164,47 @@ function buildSitemap(
     );
 
 
-  const allUrls =
+  const uniqueUrls =
     Array.from(
       new Set(
         [
-          ...staticUrls,
+          ...fixedUrls,
           ...destinationUrls
         ]
       )
     );
 
 
-  const urlsXml =
-    allUrls
-      .map(
-        (url) => {
+  const entries =
+    uniqueUrls.map(
+      (urlPath) => {
 
-          const loc =
-            SITE_URL +
-            (
-              url === "/"
-                ? "/"
-                : url
-            );
+        const absoluteUrl =
+          urlPath === "/"
+            ? SITE_URL + "/"
+            : SITE_URL + urlPath;
 
 
-          return [
-            "  <url>",
-            `    <loc>${escapeHtml(loc)}</loc>`,
-            "  </url>"
-          ].join(
-            "\n"
-          );
+        return [
+          "  <url>",
+          `    <loc>${escapeXml(absoluteUrl)}</loc>`,
+          "  </url>"
+        ].join(
+          "\n"
+        );
 
-        }
-      )
-      .join(
-        "\n"
-      );
+      }
+    );
 
 
   return [
     '<?xml version="1.0" encoding="UTF-8"?>',
     '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">',
-    urlsXml,
+    "",
+    entries.join(
+      "\n\n"
+    ),
+    "",
     "</urlset>",
     ""
   ].join(
@@ -5915,72 +6212,224 @@ function buildSitemap(
   );
 
 }
+/* =========================================================
+   GERAÇÃO DE CADA DESTINO
+========================================================= */
+
+function generateDestination(
+  destino,
+  index
+){
+
+  validateDestination(
+    destino,
+    index
+  );
 
 
-function generateSitemap(
-  destinos
-) {
+  const destinationDirectory =
+    path.join(
+      DESTINOS_OUTPUT_DIR,
+      destino.slugPais,
+      destino.slugCidade
+    );
 
-  const sitemap =
-    buildSitemap(
-      destinos
+
+  ensureDirectory(
+    destinationDirectory
+  );
+
+
+  const outputFile =
+    path.join(
+      destinationDirectory,
+      "index.html"
+    );
+
+
+  const html =
+    buildDestinationHtml(
+      destino
     );
 
 
   fs.writeFileSync(
-    SITEMAP_PATH,
-    sitemap,
+    outputFile,
+    html,
     "utf8"
   );
 
 
   console.log(
-    `✓ Sitemap atualizado -> ${SITEMAP_PATH}`
+    `✓ ${destino.cityLabel} → ${path.relative(ROOT_DIR, outputFile)}`
   );
 
 }
 
 
 /* =========================================================
-   EXECUÇÃO
+   EXECUÇÃO PRINCIPAL
 ========================================================= */
 
-function main() {
+function main(){
 
   console.log(
-    "\nCuradoria Elite Travel"
+    ""
   );
 
 
   console.log(
-    "Gerando páginas de destino...\n"
+    "=============================================="
+  );
+
+
+  console.log(
+    " CURADORIA ELITE TRAVEL"
+  );
+
+
+  console.log(
+    " Gerador automático de páginas de destino"
+  );
+
+
+  console.log(
+    "=============================================="
+  );
+
+
+  console.log(
+    ""
   );
 
 
   const destinos =
-    loadDestinations();
+    loadDestinationData();
 
 
-  generateDestinationPages(
-    destinos
-  );
+  if (
+    !destinos.length
+  ){
+
+    throw new Error(
+      "Nenhum destino encontrado em data/destinos.json."
+    );
+
+  }
 
 
-  generateSitemap(
-    destinos
+  ensureDirectory(
+    DESTINOS_OUTPUT_DIR
   );
 
 
   console.log(
-    `\n✓ ${destinos.length} páginas de destino processadas.`
+    `Destinos encontrados: ${destinos.length}`
   );
 
 
   console.log(
-    "✓ Geração concluída.\n"
+    ""
+  );
+
+
+  destinos.forEach(
+    (
+      destino,
+      index
+    ) => {
+
+      generateDestination(
+        destino,
+        index
+      );
+
+    }
+  );
+
+
+  const sitemapXml =
+    buildSitemapXml(
+      destinos
+    );
+
+
+  fs.writeFileSync(
+    SITEMAP_PATH,
+    sitemapXml,
+    "utf8"
+  );
+
+
+  console.log(
+    ""
+  );
+
+
+  console.log(
+    `✓ Sitemap atualizado → ${path.relative(ROOT_DIR, SITEMAP_PATH)}`
+  );
+
+
+  console.log(
+    ""
+  );
+
+
+  console.log(
+    "=============================================="
+  );
+
+
+  console.log(
+    " Geração concluída com sucesso."
+  );
+
+
+  console.log(
+    "=============================================="
+  );
+
+
+  console.log(
+    ""
   );
 
 }
 
 
-main();
+/* =========================================================
+   INICIAR
+========================================================= */
+
+try{
+
+  main();
+
+}catch(error){
+
+  console.error(
+    ""
+  );
+
+
+  console.error(
+    "ERRO AO GERAR AS PÁGINAS DE DESTINO:"
+  );
+
+
+  console.error(
+    error
+  );
+
+
+  console.error(
+    ""
+  );
+
+
+  process.exit(
+    1
+  );
+
+}
