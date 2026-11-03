@@ -1,48 +1,56 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+
   <url>
     <loc>https://www.curadoriaelitetravel.com/</loc>
   </url>
-  <url>
-    <loc>https://www.curadoriaelitetravel.com/quem-somos.html</loc>
-  </url>
-  <url>
-    <loc>https://www.curadoriaelitetravel.com/curadoria.html</loc>
-  </url>
-  <url>
-    <loc>https://www.curadoriaelitetravel.com/buscador.html</loc>
-  </url>
+
   <url>
     <loc>https://www.curadoriaelitetravel.com/documentos.html</loc>
   </url>
+
   <url>
     <loc>https://www.curadoriaelitetravel.com/transportes.html</loc>
   </url>
+
   <url>
     <loc>https://www.curadoriaelitetravel.com/hospedagem.html</loc>
   </url>
+
   <url>
     <loc>https://www.curadoriaelitetravel.com/transfer.html</loc>
   </url>
+
   <url>
     <loc>https://www.curadoriaelitetravel.com/seguro-viagem.html</loc>
   </url>
+
   <url>
     <loc>https://www.curadoriaelitetravel.com/locacao.html</loc>
   </url>
+
   <url>
     <loc>https://www.curadoriaelitetravel.com/aereo.html</loc>
   </url>
+
   <url>
     <loc>https://www.curadoriaelitetravel.com/experiencias.html</loc>
   </url>
+
   <url>
     <loc>https://www.curadoriaelitetravel.com/ingressos.html</loc>
   </url>
+
+  <url>
+    <loc>https://www.curadoriaelitetravel.com/contact.html</loc>
+  </url>
+
   <url>
     <loc>https://www.curadoriaelitetravel.com/destinos/franca/paris/</loc>
   </url>
+
   <url>
     <loc>https://www.curadoriaelitetravel.com/destinos/usa/new-york/</loc>
   </url>
+
 </urlset>
