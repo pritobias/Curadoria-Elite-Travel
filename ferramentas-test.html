@@ -1,1 +1,60 @@
-
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#101010">
+  <title>Curadoria Elite APP | Prévia de interface</title>
+  <style>
+    :root{font-family:Arial,Helvetica,sans-serif;color-scheme:dark;--bg:#101010;--surface:#1d1d1d;--text:#f7f5ef;--muted:#aaa69e;--line:#3c352a;--gold:#d4af37}
+    :root[data-theme="light"]{color-scheme:light;--bg:#f7f5f0;--surface:#fff;--text:#24211c;--muted:#625e57;--line:#ded6c7;--gold:#84651e}
+    *{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--bg);color:var(--text);padding-bottom:calc(83px + env(safe-area-inset-bottom));min-height:100vh}
+    button,a{font:inherit}button{cursor:pointer}a{color:inherit;text-decoration:none}button:focus-visible,a:focus-visible{outline:3px solid var(--gold);outline-offset:3px}
+    .top{position:sticky;top:0;z-index:10;display:flex;justify-content:space-between;align-items:center;gap:12px;background:var(--bg);padding:16px max(18px,calc((100vw - 600px)/2));border-bottom:1px solid var(--line)}
+    .brand{font-size:15px;font-weight:700;letter-spacing:.065em;color:var(--gold)}.tag{font-size:11px;color:var(--muted);margin-top:4px}.mode{border:1px solid var(--line);border-radius:99px;background:var(--surface);color:var(--text);padding:10px 13px}
+    main{max-width:600px;margin:0 auto;padding:18px 18px 32px}.panel[hidden]{display:none!important}.hero{border:1px solid var(--line);border-radius:15px;overflow:hidden;background:var(--surface)}
+    .hero iframe{width:100%;height:310px;border:0;display:block;background:#101010}.hero-note{padding:12px 14px;font-size:12px;line-height:1.5;color:var(--muted)}
+    .heading{font-size:20px;margin:20px 0 14px}.cards{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:18px}.card{min-height:155px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:11px;text-align:center;padding:18px 10px;background:var(--surface);border:1px solid var(--line);border-radius:15px}
+    .card strong{font-size:17px}.card small{font-size:12px;color:var(--muted);line-height:1.4}.symbol{font-size:31px;color:var(--gold)}.stack{display:grid;gap:10px}.item{display:flex;align-items:center;justify-content:space-between;gap:10px;width:100%;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:16px;text-align:left;color:var(--text)}.item span:first-child{font-weight:600}.item small{display:block;color:var(--muted);font-size:12px;margin-top:4px}.arrow{color:var(--gold);font-size:21px}.tabs{display:flex;gap:7px;margin:12px 0 16px;flex-wrap:wrap}.tab{background:var(--surface);border:1px solid var(--line);border-radius:999px;color:var(--text);padding:10px 12px;font-size:12px}.tab[aria-selected="true"]{background:var(--gold);color:var(--bg);font-weight:700}.bottom{position:fixed;bottom:0;left:0;right:0;z-index:20;display:grid;grid-template-columns:repeat(4,1fr);background:var(--bg);border-top:1px solid var(--line);padding:8px 8px calc(8px + env(safe-area-inset-bottom))}.nav{border:0;background:transparent;color:var(--muted);display:flex;flex-direction:column;align-items:center;gap:5px;padding:8px 2px;font-size:11px}.nav .ico{font-size:22px}.nav[aria-current="page"]{color:var(--gold);font-weight:700}.hint{font-size:12px;line-height:1.6;color:var(--muted);margin:16px 0}.field{width:100%;padding:15px;background:var(--surface);color:var(--text);border:1px solid var(--line);border-radius:12px;font-size:16px}.choices{display:flex;gap:8px;margin-top:14px}.choice{flex:1;padding:12px;border-radius:10px;border:1px solid var(--line);background:var(--surface);color:var(--text)}.choice[aria-pressed="true"]{background:var(--gold);color:var(--bg);font-weight:700}.footer-note{text-align:center;font-size:11px;color:var(--muted);margin-top:24px}
+    @media(min-width:800px){.hero iframe{height:390px}}
+  </style>
+</head>
+<body>
+  <header class="top"><div><div class="brand">CURADORIA ELITE TRAVEL</div><div class="tag">O seu mundo, bem indicado.</div></div><button type="button" class="mode" id="quick-theme" aria-label="Alternar aparência">☾ / ☀</button></header>
+  <main>
+    <section class="panel" id="panel-inicio">
+      <div class="hero"><iframe src="/index.html" title="Hero e carrossel do site original" loading="lazy"></iframe><div class="hero-note">Prévia: o site original aparece acima para preservar suas imagens. Na implementação final, o Hero será integrado diretamente à tela do aplicativo, sem duplicar o cabeçalho.</div></div>
+      <div class="cards"><button class="card" type="button" id="open-curadoria"><span class="symbol">✧</span><strong>Curadoria</strong><small>Destinos e materiais selecionados</small></button><button class="card" type="button" id="open-buscadores"><span class="symbol">▦</span><strong>Buscadores</strong><small>Ferramentas e serviços da viagem</small></button></div>
+    </section>
+    <section class="panel" id="panel-buscar" hidden><h1 class="heading">Buscar</h1><p class="hint">A pesquisa usa o site atual. Assim, não criamos uma segunda busca nem alteramos o funcionamento existente.</p><a class="item" href="/index.html"><span>Abrir pesquisa da Curadoria<small>Pesquisar destinos e materiais na página original</small></span><span class="arrow">›</span></a></section>
+    <section class="panel" id="panel-conta" hidden><h1 class="heading">Minha Conta</h1><a class="item" href="/account.html"><span>Acessar minha conta<small>Entrar e consultar os recursos disponíveis na conta atual</small></span><span class="arrow">›</span></a></section>
+    <section class="panel" id="panel-ajustes" hidden><h1 class="heading">Ajustes</h1><div class="stack"><div class="item"><span>Aparência<small>Escolha o modo de visualização</small></span><span>☼</span></div><div class="choices"><button class="choice" id="theme-dark" type="button">Escuro</button><button class="choice" id="theme-light" type="button">Claro</button></div><a class="item" href="/quem-somos.html"><span>Quem Somos</span><span class="arrow">›</span></a><a class="item" href="/faq.html"><span>Perguntas Frequentes</span><span class="arrow">›</span></a><a class="item" href="/contact.html"><span>Contato</span><span class="arrow">›</span></a></div></section>
+    <section class="panel" id="panel-buscadores" hidden><h1 class="heading">Buscadores</h1><p class="hint">Acesso às páginas já existentes. Os grupos abaixo são atalhos de teste, sem novas integrações.</p><div class="tabs" role="tablist" aria-label="Grupos de serviços"><button class="tab" type="button" data-group="planejamento" aria-selected="true">Planejamento</button><button class="tab" type="button" data-group="servicos" aria-selected="false">Serviços para a viagem</button><button class="tab" type="button" data-group="experiencias" aria-selected="false">Experiências</button></div><div id="service-links" class="stack"></div></section>
+    <section class="panel" id="panel-curadoria" hidden><h1 class="heading">Curadoria</h1><p class="hint">O conteúdo e a pesquisa de destinos permanecem no site original.</p><a class="item" href="/index.html"><span>Explorar destinos e materiais<small>Abrir a Curadoria existente</small></span><span class="arrow">›</span></a></section>
+    <p class="footer-note">Ambiente de testes · Não é a instalação final do aplicativo</p>
+  </main>
+  <nav class="bottom" aria-label="Navegação do aplicativo"><button class="nav" type="button" data-page="inicio" aria-current="page"><span class="ico">⌂</span>Início</button><button class="nav" type="button" data-page="buscar"><span class="ico">⌕</span>Buscar</button><button class="nav" type="button" data-page="conta"><span class="ico">♙</span>Minha Conta</button><button class="nav" type="button" data-page="ajustes"><span class="ico">⚙</span>Ajustes</button></nav>
+  <script>
+    (()=>{
+      'use strict';
+      const root=document.documentElement;
+      const saved=localStorage.getItem('cet-app-preview-theme');
+      let theme=saved==='light'?'light':'dark';
+      function setTheme(next){theme=next;root.dataset.theme=next;localStorage.setItem('cet-app-preview-theme',next);document.getElementById('theme-dark').setAttribute('aria-pressed',String(next==='dark'));document.getElementById('theme-light').setAttribute('aria-pressed',String(next==='light'));}
+      setTheme(theme);
+      document.getElementById('quick-theme').addEventListener('click',()=>setTheme(theme==='dark'?'light':'dark'));
+      document.getElementById('theme-dark').addEventListener('click',()=>setTheme('dark'));
+      document.getElementById('theme-light').addEventListener('click',()=>setTheme('light'));
+      function show(page){document.querySelectorAll('.panel').forEach(el=>{el.hidden=el.id!=='panel-'+page});document.querySelectorAll('.nav').forEach(el=>{if(el.dataset.page===page){el.setAttribute('aria-current','page')}else{el.removeAttribute('aria-current')}});window.scrollTo(0,0)}
+      document.querySelectorAll('.nav').forEach(el=>el.addEventListener('click',()=>show(el.dataset.page)));
+      document.getElementById('open-curadoria').addEventListener('click',()=>show('curadoria'));
+      document.getElementById('open-buscadores').addEventListener('click',()=>show('buscadores'));
+      const groups={planejamento:[['Documentos e vistos','/documentos.html'],['Malha de transportes','/transportes.html']],servicos:[['Hospedagem','/hospedagem.html'],['Seguro viagem','/seguro-viagem.html'],['Transfer','/transfer.html']],experiencias:[['Atividades e experiências','/experiencias.html'],['Ingressos','/ingressos.html']]};
+      const list=document.getElementById('service-links');
+      function renderGroup(key){list.replaceChildren();(groups[key]||[]).forEach(([label,url])=>{const a=document.createElement('a');a.className='item';a.href=url;const span=document.createElement('span');span.textContent=label;const arrow=document.createElement('span');arrow.className='arrow';arrow.textContent='›';a.append(span,arrow);list.append(a)});document.querySelectorAll('[data-group]').forEach(b=>b.setAttribute('aria-selected',String(b.dataset.group===key)))}
+      document.querySelectorAll('[data-group]').forEach(el=>el.addEventListener('click',()=>renderGroup(el.dataset.group)));
+      renderGroup('planejamento');
+    })();
+  </script>
+</body>
+</html>
