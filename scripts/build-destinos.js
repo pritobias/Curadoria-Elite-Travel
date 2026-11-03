@@ -1741,15 +1741,13 @@ function buildDestinationHtml(
 
 
     footer a{
-      color:
-        rgba(255,255,255,.68);
-      text-decoration:none;
+      color:#0000ee;
+      text-decoration:underline;
     }
 
 
     footer a:hover{
-      color:
-        var(--gold);
+      color:#551a8b;
     }
 
 
@@ -1773,7 +1771,9 @@ function buildDestinationHtml(
         rgba(255,255,255,.035);
       border:
         1px solid
-        rgba(255,255,255,.09);
+        rgba(212,175,55,.35);
+      color:var(--gold);
+      text-decoration:none;
       transition:
         border-color .2s ease,
         transform .2s ease,
@@ -2438,7 +2438,7 @@ function buildDestinationHtml(
 
   São Paulo - SP ·
 
-  <a href="/contact.html">
+  <a href="mailto:curadoriaelitetravel@gmail.com">
     curadoriaelitetravel@gmail.com
   </a>
 
