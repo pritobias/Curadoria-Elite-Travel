@@ -1740,14 +1740,13 @@ function buildDestinationHtml(
     }
 
 
-    footer a{
+    footer a.footer-email,
+    footer a.footer-email:link,
+    footer a.footer-email:visited,
+    footer a.footer-email:hover,
+    footer a.footer-email:active{
       color:#0000ee;
       text-decoration:underline;
-    }
-
-
-    footer a:hover{
-      color:#551a8b;
     }
 
 
@@ -2438,7 +2437,7 @@ function buildDestinationHtml(
 
   São Paulo - SP ·
 
-  <a href="mailto:curadoriaelitetravel@gmail.com">
+  <a class="footer-email" href="mailto:curadoriaelitetravel@gmail.com">
     curadoriaelitetravel@gmail.com
   </a>
 
