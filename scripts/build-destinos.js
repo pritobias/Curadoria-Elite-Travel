@@ -1723,6 +1723,9 @@ function buildDestinationHtml(
     ===================================================== */
 
     footer{
+      /* Mantém o rodapé acima das fotografias e do overlay fixos. */
+      position:relative;
+      z-index:2;
       padding:
         34px 20px 42px;
       text-align:center;
