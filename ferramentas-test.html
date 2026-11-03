@@ -11,17 +11,18 @@
     *{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--bg);color:var(--text);padding-bottom:calc(83px + env(safe-area-inset-bottom));min-height:100vh}
     button,a{font:inherit}button{cursor:pointer}a{color:inherit;text-decoration:none}button:focus-visible,a:focus-visible{outline:3px solid var(--gold);outline-offset:3px}
     .top{position:sticky;top:0;z-index:10;display:flex;justify-content:space-between;align-items:center;gap:12px;background:var(--bg);padding:16px max(18px,calc((100vw - 600px)/2));border-bottom:1px solid var(--line)}
-    .brand{font-size:15px;font-weight:700;letter-spacing:.065em;color:var(--gold)}.tag{font-size:11px;color:var(--muted);margin-top:4px}.mode{border:1px solid var(--line);border-radius:99px;background:var(--surface);color:var(--text);padding:10px 13px}
+    .brand-lockup{display:flex;align-items:center;gap:10px;min-width:0}.brand-logo{width:34px;height:42px;object-fit:contain;flex:none}.brand{font-size:15px;font-weight:700;letter-spacing:.065em;color:var(--gold)}.tag{font-size:11px;color:var(--muted);margin-top:4px}.mode{border:1px solid var(--line);border-radius:99px;background:var(--surface);color:var(--text);padding:10px 13px}
     main{max-width:600px;margin:0 auto;padding:18px 18px 32px}.panel[hidden]{display:none!important}.hero{border:1px solid var(--line);border-radius:15px;overflow:hidden;background:var(--surface)}
     .hero{position:relative;min-height:480px;display:flex;align-items:center;justify-content:center;isolation:isolate;background:#090909;color:#fff}.hero-bg{position:absolute;inset:0;background-size:cover;background-position:center;opacity:0;transition:opacity 3.4s ease;filter:brightness(1.10) saturate(.88) contrast(1.02);transform:scale(1.04)}.hero-bg.active{opacity:1}.hero-overlay{position:absolute;inset:0;background:radial-gradient(circle at center,rgba(0,0,0,.08),rgba(0,0,0,.54)),linear-gradient(180deg,rgba(0,0,0,.24),rgba(0,0,0,.48))}.hero-content{position:relative;z-index:1;text-align:center;padding:45px 20px}.hero-content h1{color:#d4af37;font-size:clamp(28px,5vw,45px);line-height:1.12;margin:0 0 18px;letter-spacing:-.6px;text-shadow:0 8px 32px rgba(0,0,0,.4)}.hero-content p{font-size:15px;line-height:1.65;color:rgba(255,255,255,.88);margin:8px 0;text-shadow:0 4px 16px rgba(0,0,0,.35)}.hero-kicker{color:rgba(255,255,255,.7);font-size:11px;letter-spacing:1.6px;text-transform:uppercase}.hero-divider{width:110px;height:1px;background:linear-gradient(90deg,transparent,rgba(212,175,55,.95),transparent);margin:23px auto 20px}
     .heading{font-size:20px;margin:20px 0 14px}.cards{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:18px}.card{min-height:155px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:11px;text-align:center;padding:18px 10px;background:var(--surface);border:1px solid var(--line);border-radius:15px}
     .card strong{font-size:17px}.card small{font-size:12px;color:var(--muted);line-height:1.4}.symbol{font-size:31px;color:var(--gold)}.stack{display:grid;gap:10px}.item{display:flex;align-items:center;justify-content:space-between;gap:10px;width:100%;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:16px;text-align:left;color:var(--text)}.item span:first-child{font-weight:600}.item small{display:block;color:var(--muted);font-size:12px;margin-top:4px}.arrow{color:var(--gold);font-size:21px}.tabs{display:flex;gap:7px;margin:12px 0 16px;flex-wrap:wrap}.tab{background:var(--surface);border:1px solid var(--line);border-radius:999px;color:var(--text);padding:10px 12px;font-size:12px}.tab[aria-selected="true"]{background:var(--gold);color:var(--bg);font-weight:700}.bottom{position:fixed;bottom:0;left:0;right:0;z-index:20;display:grid;grid-template-columns:repeat(4,1fr);background:var(--bg);border-top:1px solid var(--line);padding:8px 8px calc(8px + env(safe-area-inset-bottom))}.nav{border:0;background:transparent;color:var(--muted);display:flex;flex-direction:column;align-items:center;gap:5px;padding:8px 2px;font-size:11px}.nav .ico{font-size:22px}.nav[aria-current="page"]{color:var(--gold);font-weight:700}.hint{font-size:12px;line-height:1.6;color:var(--muted);margin:16px 0}.field{width:100%;padding:15px;background:var(--surface);color:var(--text);border:1px solid var(--line);border-radius:12px;font-size:16px}.choices{display:flex;gap:8px;margin-top:14px}.choice{flex:1;padding:12px;border-radius:10px;border:1px solid var(--line);background:var(--surface);color:var(--text)}.choice[aria-pressed="true"]{background:var(--gold);color:var(--bg);font-weight:700}.footer-note{text-align:center;font-size:11px;color:var(--muted);margin-top:24px}
+    .city-main{display:flex;align-items:flex-start;gap:13px}.city-cover{width:108px;aspect-ratio:3/4;flex:none;display:flex;align-items:center;justify-content:center;border:1px solid var(--line);border-radius:8px;background:var(--bg);overflow:hidden;color:var(--muted);font-size:11px;text-align:center;padding:4px}.city-cover canvas{display:block;width:100%;height:100%;object-fit:contain}.city-info{min-width:0;flex:1}.city-cover-status{line-height:1.4}.city-cover.is-ready{padding:0}.city-cover.is-error{font-size:10px}@media(max-width:380px){.city-cover{width:85px}.brand{font-size:12px}.brand-logo{width:29px}}
     .curadoria-intro{margin:6px 0 18px;color:var(--muted);line-height:1.6;font-size:14px}.overview{width:100%;padding:15px;background:var(--surface);border:1px solid var(--line);border-radius:13px;display:flex;align-items:center;justify-content:space-between;color:var(--text);margin-bottom:18px;text-align:left}.overview strong{color:var(--gold)}.topics{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.topic{background:var(--surface);border:1px solid var(--line);border-radius:14px;overflow:hidden;color:var(--text);text-align:left;padding:0}.topic img{width:100%;height:112px;object-fit:cover;display:block}.topic-copy{padding:12px}.topic strong{display:block;color:var(--gold);font-size:15px;margin-bottom:6px}.topic small{font-size:12px;line-height:1.5;color:var(--muted)}.back{background:transparent;border:1px solid var(--line);color:var(--gold);border-radius:10px;padding:10px 13px}.cat-head{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:12px}.cat-head h1{color:var(--gold);font-size:23px;margin:4px 0}.meta{display:flex;flex-wrap:wrap;gap:7px;margin:12px 0}.pill{font-size:11px;border:1px solid var(--line);border-radius:99px;padding:7px 10px;color:var(--muted)}.pill.available{color:var(--gold)}.city-list{display:grid;gap:12px;margin-top:16px}.city{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:16px}.city h2{font-size:17px;margin:0 0 8px}.city p{font-size:13px;line-height:1.55;color:var(--muted);margin:0}.city-actions{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:16px}.city-actions button{border:1px solid var(--gold);background:transparent;color:var(--gold);border-radius:10px;padding:11px 7px;font-size:12px;font-weight:700}.city-actions button:last-child{background:var(--gold);color:#17130b}.city-actions button:disabled{opacity:.55;cursor:not-allowed}.load-more{width:100%;padding:13px;margin-top:14px;border:1px solid var(--line);border-radius:10px;background:var(--surface);color:var(--text)}.status{font-size:13px;color:var(--muted);line-height:1.5}.modal{position:fixed;inset:0;z-index:40;background:rgba(0,0,0,.85);display:flex;flex-direction:column;padding:calc(20px + env(safe-area-inset-top)) 12px calc(20px + env(safe-area-inset-bottom))}.modal[hidden]{display:none}.modal-head{display:flex;justify-content:space-between;align-items:center;color:white;padding-bottom:12px}.modal iframe{width:100%;flex:1;background:white;border:0;border-radius:12px}.toast{position:fixed;bottom:100px;left:50%;transform:translateX(-50%);z-index:30;background:#29251b;border:1px solid #a78a39;color:#fff;padding:13px;border-radius:10px;max-width:90%;font-size:13px;text-align:center}.toast[hidden]{display:none}
     @media(min-width:800px){.hero{min-height:510px}}@media(max-width:420px){.hero{min-height:520px}.hero-content{padding:32px 17px}}@media(prefers-reduced-motion:reduce){.hero-bg{transition:none}}
   </style>
 </head>
 <body>
-  <header class="top"><div><div class="brand">CURADORIA ELITE TRAVEL</div><div class="tag">O seu mundo, bem indicado.</div></div><button type="button" class="mode" id="quick-theme" aria-label="Alternar aparência">☾ / ☀</button></header>
+  <header class="top"><div class="brand-lockup"><img class="brand-logo" src="images/rosa-dos-ventos.png" alt="Rosa dos Ventos"><div><div class="brand">CURADORIA ELITE TRAVEL</div><div class="tag">O seu mundo, bem indicado.</div></div></div><button type="button" class="mode" id="quick-theme" aria-label="Alternar aparência">☾ / ☀</button></header>
   <main>
     <section class="panel" id="panel-inicio">
       <div class="hero" aria-label="Apresentação da Curadoria Elite Travel"><div class="hero-bg active" id="bg1" aria-hidden="true"></div><div class="hero-bg" id="bg2" aria-hidden="true"></div><div class="hero-overlay" aria-hidden="true"></div><div class="hero-content"><div class="hero-kicker">Curadoria · critério · excelência</div><div class="hero-divider"></div><h1>Uma plataforma de curadoria para viajar melhor.</h1><p>Recomendações selecionadas e organizadas para que você encontre o que precisa com mais critério e segurança.</p><p>Tudo estruturado para otimizar seu tempo e permitir escolhas mais objetivas durante a viagem.</p></div></div>
@@ -90,7 +91,7 @@
           ]);
           if(!materialResponse.ok)throw new Error('Não foi possível carregar os materiais ('+materialResponse.status+').');
           const rows=await materialResponse.json();materials.clear();
-          for(const row of rows){if(!row.category||!row.city_label||!row.pdf_url)continue;const cat=String(row.category).trim();if(!materials.has(cat))materials.set(cat,[]);materials.get(cat).push({city:String(row.city_label).trim()})}
+          for(const row of rows){if(!row.category||!row.city_label||!row.pdf_url)continue;const cat=String(row.category).trim();if(!materials.has(cat))materials.set(cat,[]);materials.get(cat).push({city:String(row.city_label).trim(),pdfUrl:String(row.pdf_url).trim()})}
           prices.clear();if(priceResponse.ok){for(const row of await priceResponse.json()){const value=Number(row.price);if(value>0)prices.set(norm(row.category),value)}}
           return true;
         })();
@@ -106,7 +107,80 @@
         'Sugestão de Presentes':`Encontre ideias de presentes em ${city}, com sugestões selecionadas para facilitar suas escolhas durante a viagem.`};return texts[cat]||`Indicações selecionadas em ${city}, organizadas para facilitar suas decisões.`}
       function getCart(){try{const x=JSON.parse(localStorage.getItem('cet_cart_v2')||'[]');return Array.isArray(x)?x:[]}catch{return []}}
       function addCart(cat,city){const key=norm(cat)+'||'+norm(city);const items=getCart();if(items.some(x=>x&&x.key===key)){toast('Este material já está no carrinho.');return}items.push({key,category:cat,city,qty:1,price:categoryPrice(cat)});try{localStorage.setItem('cet_cart_v2',JSON.stringify(items));toast('Material adicionado ao carrinho.')}catch{toast('Não foi possível salvar o carrinho neste navegador.')}}
-      function renderCities(){const all=materials.get(currentCategory)||[],query=norm(document.getElementById('city-query').value),filtered=all.filter(x=>norm(x.city).includes(query));document.getElementById('total-cities').textContent=filtered.length+(filtered.length===1?' cidade':' cidades');document.getElementById('shown-cities').textContent='Mostrando '+Math.min(shown,filtered.length);const list=document.getElementById('city-list');list.replaceChildren();for(const item of filtered.slice(0,shown)){const card=document.createElement('article');card.className='city';const h=document.createElement('h2');h.textContent=item.city;const p=document.createElement('p');p.textContent=description(currentCategory,item.city);const meta=document.createElement('div');meta.className='meta';const available=document.createElement('span');available.className='pill available';available.textContent='Disponível';const price=document.createElement('span');price.className='pill';price.textContent=formatBRL(categoryPrice(currentCategory));meta.append(available,price);const actions=document.createElement('div');actions.className='city-actions';const add=document.createElement('button');add.type='button';add.textContent='Salvar no carrinho';add.addEventListener('click',()=>addCart(currentCategory,item.city));const buy=document.createElement('button');buy.type='button';buy.textContent='Acessar material';buy.addEventListener('click',()=>{addCart(currentCategory,item.city);window.location.href='/index.html#curadoria';});actions.append(add,buy);card.append(h,p,meta,actions);list.append(card)}const more=document.getElementById('more-cities');more.hidden=shown>=filtered.length;document.getElementById('catalog-status').textContent=filtered.length?'Materiais disponíveis no catálogo atual.':'Nenhum material encontrado nesta categoria.'}
+      // A primeira página é renderizada apenas para os PDFs públicos que o catálogo já expõe.
+      // PDF.js precisa baixar o documento para desenhar a capa; não use este método para PDFs privados.
+      let pdfLibPromise=null;
+      function loadPdfLib(){
+        if(window.pdfjsLib)return Promise.resolve(window.pdfjsLib);
+        if(pdfLibPromise)return pdfLibPromise;
+        pdfLibPromise=new Promise((resolve,reject)=>{
+          const script=document.createElement('script');
+          script.src='https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js';
+          script.onload=()=>{if(!window.pdfjsLib){reject(new Error('PDF.js indisponível'));return}window.pdfjsLib.GlobalWorkerOptions.workerSrc='https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';resolve(window.pdfjsLib)};
+          script.onerror=()=>reject(new Error('Não foi possível carregar PDF.js'));
+          document.head.append(script);
+        });
+        return pdfLibPromise;
+      }
+      const coverObserver=('IntersectionObserver' in window)?new IntersectionObserver(entries=>{
+        for(const entry of entries){if(entry.isIntersecting){coverObserver.unobserve(entry.target);renderPdfCover(entry.target)}}
+      },{rootMargin:'180px'}):null;
+      async function renderPdfCover(holder){
+        const url=holder.dataset.pdf;
+        if(!url||!holder.isConnected)return;
+        try{
+          const pdfjs=await loadPdfLib();
+          if(!holder.isConnected)return;
+          const task=pdfjs.getDocument({url,withCredentials:false});
+          const pdf=await task.promise;
+          try{
+            const page=await pdf.getPage(1);
+            if(!holder.isConnected)return;
+            const base=page.getViewport({scale:1});
+            const scale=Math.min(1.7,Math.max(0.6,220/base.width));
+            const viewport=page.getViewport({scale});
+            const canvas=document.createElement('canvas');
+            canvas.width=Math.ceil(viewport.width);canvas.height=Math.ceil(viewport.height);
+            const ctx=canvas.getContext('2d',{alpha:false});
+            await page.render({canvasContext:ctx,viewport}).promise;
+            if(holder.isConnected){holder.replaceChildren(canvas);holder.classList.add('is-ready');holder.setAttribute('aria-label','Capa do material em PDF')}
+          }finally{await pdf.destroy()}
+        }catch(err){
+          console.warn('Não foi possível mostrar a capa do material:',err);
+          if(holder.isConnected){holder.classList.add('is-error');holder.textContent='Capa indisponível'}
+        }
+      }
+      function renderCities(){
+        const all=materials.get(currentCategory)||[];
+        const query=norm(document.getElementById('city-query').value);
+        const filtered=all.filter(x=>norm(x.city).includes(query));
+        document.getElementById('total-cities').textContent=filtered.length+(filtered.length===1?' cidade':' cidades');
+        document.getElementById('shown-cities').textContent='Mostrando '+Math.min(shown,filtered.length);
+        const list=document.getElementById('city-list');list.replaceChildren();
+        for(const item of filtered.slice(0,shown)){
+          const card=document.createElement('article');card.className='city';
+          const main=document.createElement('div');main.className='city-main';
+          const cover=document.createElement('div');cover.className='city-cover';
+          cover.setAttribute('role','img');cover.setAttribute('aria-label','Carregando capa do PDF');
+          cover.textContent='Carregando capa…';
+          // Somente URLs HTTPS provenientes do catálogo, nunca um endereço inventado.
+          try{const u=new URL(item.pdfUrl,location.href);if(u.protocol==='https:'){cover.dataset.pdf=u.href}else{cover.textContent='Capa indisponível'}}catch{cover.textContent='Capa indisponível'}
+          const info=document.createElement('div');info.className='city-info';
+          const h=document.createElement('h2');h.textContent=item.city;
+          const p=document.createElement('p');p.textContent=description(currentCategory,item.city);
+          const meta=document.createElement('div');meta.className='meta';
+          const available=document.createElement('span');available.className='pill available';available.textContent='Disponível';
+          const price=document.createElement('span');price.className='pill';price.textContent=formatBRL(categoryPrice(currentCategory));
+          meta.append(available,price);info.append(h,p,meta);main.append(cover,info);
+          const actions=document.createElement('div');actions.className='city-actions';
+          const add=document.createElement('button');add.type='button';add.textContent='Salvar no carrinho';add.addEventListener('click',()=>addCart(currentCategory,item.city));
+          const buy=document.createElement('button');buy.type='button';buy.textContent='Acessar material';buy.addEventListener('click',()=>{addCart(currentCategory,item.city);window.location.href='/index.html#curadoria';});
+          actions.append(add,buy);card.append(main,actions);list.append(card);
+          if(cover.dataset.pdf){if(coverObserver)coverObserver.observe(cover);else renderPdfCover(cover)}
+        }
+        const more=document.getElementById('more-cities');more.hidden=shown>=filtered.length;
+        document.getElementById('catalog-status').textContent=filtered.length?'Materiais disponíveis no catálogo atual.':'Nenhum material encontrado nesta categoria.';
+      }
       async function openCategory(cat){currentCategory=cat;shown=12;document.getElementById('cat-title').textContent=cat;document.getElementById('cat-breadcrumb').textContent='Curadoria › '+cat;document.getElementById('city-query').value='';show('categoria');document.getElementById('catalog-status').textContent='Carregando materiais...';document.getElementById('city-list').replaceChildren();try{await fetchCatalog();if(currentCategory===cat)renderCities()}catch(e){document.getElementById('catalog-status').textContent='Não foi possível consultar o catálogo. Verifique a conexão ou as permissões de leitura.';console.error(e)}}
       document.getElementById('back-topics').addEventListener('click',()=>show('curadoria'));
       document.getElementById('city-query').addEventListener('input',()=>{shown=12;renderCities()});
