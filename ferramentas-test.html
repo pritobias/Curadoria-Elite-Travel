@@ -13,17 +13,17 @@
     .top{position:sticky;top:0;z-index:10;display:flex;justify-content:space-between;align-items:center;gap:12px;background:var(--bg);padding:16px max(18px,calc((100vw - 600px)/2));border-bottom:1px solid var(--line)}
     .brand{font-size:15px;font-weight:700;letter-spacing:.065em;color:var(--gold)}.tag{font-size:11px;color:var(--muted);margin-top:4px}.mode{border:1px solid var(--line);border-radius:99px;background:var(--surface);color:var(--text);padding:10px 13px}
     main{max-width:600px;margin:0 auto;padding:18px 18px 32px}.panel[hidden]{display:none!important}.hero{border:1px solid var(--line);border-radius:15px;overflow:hidden;background:var(--surface)}
-    .hero iframe{width:100%;height:310px;border:0;display:block;background:#101010}.hero-note{padding:12px 14px;font-size:12px;line-height:1.5;color:var(--muted)}
+    .hero{position:relative;min-height:480px;display:flex;align-items:center;justify-content:center;isolation:isolate;background:#090909;color:#fff}.hero-bg{position:absolute;inset:0;background-size:cover;background-position:center;opacity:0;transition:opacity 3.4s ease;filter:brightness(1.10) saturate(.88) contrast(1.02);transform:scale(1.04)}.hero-bg.active{opacity:1}.hero-overlay{position:absolute;inset:0;background:radial-gradient(circle at center,rgba(0,0,0,.08),rgba(0,0,0,.54)),linear-gradient(180deg,rgba(0,0,0,.24),rgba(0,0,0,.48))}.hero-content{position:relative;z-index:1;text-align:center;padding:45px 20px}.hero-content h1{color:#d4af37;font-size:clamp(28px,5vw,45px);line-height:1.12;margin:0 0 18px;letter-spacing:-.6px;text-shadow:0 8px 32px rgba(0,0,0,.4)}.hero-content p{font-size:15px;line-height:1.65;color:rgba(255,255,255,.88);margin:8px 0;text-shadow:0 4px 16px rgba(0,0,0,.35)}.hero-kicker{color:rgba(255,255,255,.7);font-size:11px;letter-spacing:1.6px;text-transform:uppercase}.hero-divider{width:110px;height:1px;background:linear-gradient(90deg,transparent,rgba(212,175,55,.95),transparent);margin:23px auto 20px}
     .heading{font-size:20px;margin:20px 0 14px}.cards{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:18px}.card{min-height:155px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:11px;text-align:center;padding:18px 10px;background:var(--surface);border:1px solid var(--line);border-radius:15px}
     .card strong{font-size:17px}.card small{font-size:12px;color:var(--muted);line-height:1.4}.symbol{font-size:31px;color:var(--gold)}.stack{display:grid;gap:10px}.item{display:flex;align-items:center;justify-content:space-between;gap:10px;width:100%;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:16px;text-align:left;color:var(--text)}.item span:first-child{font-weight:600}.item small{display:block;color:var(--muted);font-size:12px;margin-top:4px}.arrow{color:var(--gold);font-size:21px}.tabs{display:flex;gap:7px;margin:12px 0 16px;flex-wrap:wrap}.tab{background:var(--surface);border:1px solid var(--line);border-radius:999px;color:var(--text);padding:10px 12px;font-size:12px}.tab[aria-selected="true"]{background:var(--gold);color:var(--bg);font-weight:700}.bottom{position:fixed;bottom:0;left:0;right:0;z-index:20;display:grid;grid-template-columns:repeat(4,1fr);background:var(--bg);border-top:1px solid var(--line);padding:8px 8px calc(8px + env(safe-area-inset-bottom))}.nav{border:0;background:transparent;color:var(--muted);display:flex;flex-direction:column;align-items:center;gap:5px;padding:8px 2px;font-size:11px}.nav .ico{font-size:22px}.nav[aria-current="page"]{color:var(--gold);font-weight:700}.hint{font-size:12px;line-height:1.6;color:var(--muted);margin:16px 0}.field{width:100%;padding:15px;background:var(--surface);color:var(--text);border:1px solid var(--line);border-radius:12px;font-size:16px}.choices{display:flex;gap:8px;margin-top:14px}.choice{flex:1;padding:12px;border-radius:10px;border:1px solid var(--line);background:var(--surface);color:var(--text)}.choice[aria-pressed="true"]{background:var(--gold);color:var(--bg);font-weight:700}.footer-note{text-align:center;font-size:11px;color:var(--muted);margin-top:24px}
-    @media(min-width:800px){.hero iframe{height:390px}}
+    @media(min-width:800px){.hero{min-height:510px}}@media(max-width:420px){.hero{min-height:520px}.hero-content{padding:32px 17px}}@media(prefers-reduced-motion:reduce){.hero-bg{transition:none}}
   </style>
 </head>
 <body>
   <header class="top"><div><div class="brand">CURADORIA ELITE TRAVEL</div><div class="tag">O seu mundo, bem indicado.</div></div><button type="button" class="mode" id="quick-theme" aria-label="Alternar aparência">☾ / ☀</button></header>
   <main>
     <section class="panel" id="panel-inicio">
-      <div class="hero"><iframe src="/index.html" title="Hero e carrossel do site original" loading="lazy"></iframe><div class="hero-note">Prévia: o site original aparece acima para preservar suas imagens. Na implementação final, o Hero será integrado diretamente à tela do aplicativo, sem duplicar o cabeçalho.</div></div>
+      <div class="hero" aria-label="Apresentação da Curadoria Elite Travel"><div class="hero-bg active" id="bg1" aria-hidden="true"></div><div class="hero-bg" id="bg2" aria-hidden="true"></div><div class="hero-overlay" aria-hidden="true"></div><div class="hero-content"><div class="hero-kicker">Curadoria · critério · excelência</div><div class="hero-divider"></div><h1>Uma plataforma de curadoria para viajar melhor.</h1><p>Recomendações selecionadas e organizadas para que você encontre o que precisa com mais critério e segurança.</p><p>Tudo estruturado para otimizar seu tempo e permitir escolhas mais objetivas durante a viagem.</p></div></div>
       <div class="cards"><button class="card" type="button" id="open-curadoria"><span class="symbol">✧</span><strong>Curadoria</strong><small>Destinos e materiais selecionados</small></button><button class="card" type="button" id="open-buscadores"><span class="symbol">▦</span><strong>Buscadores</strong><small>Ferramentas e serviços da viagem</small></button></div>
     </section>
     <section class="panel" id="panel-buscar" hidden><h1 class="heading">Buscar</h1><p class="hint">A pesquisa usa o site atual. Assim, não criamos uma segunda busca nem alteramos o funcionamento existente.</p><a class="item" href="/index.html"><span>Abrir pesquisa da Curadoria<small>Pesquisar destinos e materiais na página original</small></span><span class="arrow">›</span></a></section>
@@ -37,6 +37,28 @@
   <script>
     (()=>{
       'use strict';
+      // Imagens, ordem e transição preservadas do Hero do index.html original.
+      const HERO_IMAGES=[
+        "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=1800&q=80",
+        "https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&w=1800&q=80",
+        "https://images.unsplash.com/photo-1510812431401-41d2bd2722f3?auto=format&fit=crop&w=1800&q=80",
+        "https://images.unsplash.com/photo-1493558103817-58b2924bce98?auto=format&fit=crop&w=1800&q=80",
+        "https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=1800&q=80"
+      ];
+      function startHero(){
+        const first=document.getElementById('bg1'),second=document.getElementById('bg2');
+        let index=0,showingFirst=true;
+        first.style.backgroundImage=`url("${HERO_IMAGES[0]}")`;
+        if(window.matchMedia('(prefers-reduced-motion: reduce)').matches)return;
+        setInterval(()=>{
+          index=(index+1)%HERO_IMAGES.length;
+          const visible=showingFirst?first:second,hidden=showingFirst?second:first;
+          hidden.style.backgroundImage=`url("${HERO_IMAGES[index]}")`;
+          hidden.classList.add('active');visible.classList.remove('active');
+          showingFirst=!showingFirst;
+        },6200);
+      }
+      startHero();
       const root=document.documentElement;
       const saved=localStorage.getItem('cet-app-preview-theme');
       let theme=saved==='light'?'light':'dark';
