@@ -66,18 +66,9 @@
     .intro { text-align: center; }
     .intro h2 { margin: 0 0 10px; color: var(--gold); font-size: 24px; }
     .intro p { margin: 0 auto 24px; max-width: 560px; color: var(--muted); line-height: 1.7; font-size: 14px; }
-    .widget-shell {
-      width: 100%; min-height: 430px; padding: 18px 12px;
-      border-radius: 17px; background: #fff; color: #171717;
-      overflow: visible; display: flex; align-items: flex-start;
-      justify-content: center;
-    }
-    .widget-shell .eg-widget { width: 100% !important; max-width: 100% !important; min-height: 390px; }
-    .widget-shell iframe { width: 100% !important; max-width: 100% !important; border: 0; }
-    .widget-help { color: var(--muted); text-align: center; font-size: 12px; line-height: 1.6; margin: 14px 0 20px; }
     .partner-box { background: rgba(255,255,255,.98); color: #171717; border-radius: 17px; padding: 30px 21px; text-align: center; }
     .partner-label { display: inline-block; padding: 8px 13px; border: 1px solid rgba(212,175,55,.48); border-radius: 99px; color: #806515; background: rgba(212,175,55,.08); text-transform: uppercase; letter-spacing: 1px; font-size: 11px; font-weight: 700; }
-    .partner-box h3 { margin: 12px 0 10px; font-size: 23px; }
+    .partner-box h3 { margin: 17px 0 12px; font-size: 30px; }
     .partner-box p { color: #5c5c5c; line-height: 1.7; font-size: 14px; margin: 0; }
     .partner-button {
       display: flex; justify-content: center; align-items: center;
@@ -105,8 +96,7 @@
     @media (min-width: 600px) {
       main { padding-top: 58px; }
       .tool-card { padding: 35px 30px; }
-      .partner-box { padding: 26px 30px; }
-      .widget-shell { padding: 22px 18px; }
+      .partner-box { padding: 38px 36px; }
       .partner-button { max-width: 320px; }
     }
   </style>
@@ -140,26 +130,15 @@
         <p>Pesquise destinos, datas e opções de hospedagem diretamente por meio do nosso parceiro.</p>
       </div>
 
-      <div class="widget-shell" aria-label="Pesquisa de hospedagem do Expedia Group">
-        <div class="eg-widget"
-             data-widget="search"
-             data-program="br-hcom"
-             data-lobs="stays"
-             data-network="pz"
-             data-camref="1011I6ubrl"
-             data-pubref=""></div>
-      </div>
-      <p class="widget-help">Pesquise no widget do Expedia Group. A disponibilidade, os preços e a conclusão da reserva são apresentados pelo parceiro.</p>
-
       <div class="partner-box">
-        <div class="partner-label">Acesso alternativo</div>
-        <h3>Pesquisar na Hotels.com</h3>
-        <p>Se o widget não aparecer corretamente ou ficar difícil de utilizar no seu dispositivo, continue diretamente no site do parceiro.</p>
+        <div class="partner-label">Parceiro indicado</div>
+        <h3>Hotels.com</h3>
+        <p>Continue sua pesquisa diretamente na plataforma do parceiro. Consulte as opções de hospedagem, disponibilidade, preços e condições antes de reservar.</p>
         <a class="partner-button"
            href="https://www.hotels.com/affiliate/ijv3809"
            target="_blank"
-           rel="noopener noreferrer sponsored">Abrir pesquisa de hospedagem</a>
-        <p class="partner-note">Você será direcionado à plataforma do parceiro para pesquisar e reservar.</p>
+           rel="noopener noreferrer sponsored">Pesquisar hospedagem</a>
+        <p class="partner-note">A pesquisa e a contratação são realizadas diretamente na plataforma do parceiro.</p>
       </div>
     </section>
 
@@ -178,6 +157,5 @@
     <a href="ferramentas-test.html#conta"><span class="symbol" aria-hidden="true">♙</span>Minha Conta</a>
     <a href="ferramentas-test.html#ajustes"><span class="symbol" aria-hidden="true">⚙</span>Ajustes</a>
   </nav>
-  <script class="eg-widgets-script" src="https://creator.expediagroup.com/products/widgets/assets/eg-widgets.js" async></script>
 </body>
 </html>
