@@ -27,20 +27,51 @@
     .section-photo-slider::after{content:"";position:absolute;inset:0;pointer-events:none;background:linear-gradient(180deg,rgba(0,0,0,.13),rgba(0,0,0,.35))}
     @media(max-width:420px){.section-photo-slider{min-height:200px}}
     @media(prefers-reduced-motion:reduce){.section-photo-bg{transition:none}}
+
+    /* V9 — fotografia cinematográfica por tela; preserva todas as rotinas de negócio. */
+    .app-cinema{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden;background:var(--bg)}
+    .app-cinema-scene{position:absolute;inset:0;opacity:0;visibility:hidden;transition:opacity .35s ease,visibility .35s}
+    .app-cinema-scene.active{opacity:1;visibility:visible}
+    .cinema-photo{position:absolute;inset:0;background-position:center;background-size:cover;opacity:0;transform:scale(1.04);filter:brightness(1.1) saturate(.88) contrast(1.02);transition:opacity 3.4s ease}
+    .cinema-photo.active{opacity:1}
+    .app-cinema-shade{position:absolute;inset:0;background:radial-gradient(circle at center,rgba(0,0,0,.32),rgba(0,0,0,.72)),linear-gradient(180deg,rgba(0,0,0,.42),rgba(0,0,0,.68))}
+    .top{z-index:30;background:rgba(8,8,8,.82);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px)}
+    main{position:relative;z-index:1;min-height:calc(100vh - 150px)}
+    .bottom{background:rgba(8,8,8,.9);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px)}
+    .hero{background:transparent;border:0;border-radius:0;min-height:clamp(390px,68vh,650px)}
+    .hero-content{max-width:580px}
+    #panel-curadoria>.heading,#panel-buscadores>.heading{margin-top:30px;color:#e4bd46;text-shadow:0 3px 18px rgba(0,0,0,.8)}
+    #panel-curadoria>.curadoria-intro,#panel-buscadores>.hint{color:#f1e9da;text-shadow:0 2px 10px #000}
+    .card,.item,.topic,.overview,.city,.choice,.field,.tab,.mode{background:rgba(18,18,18,.89);backdrop-filter:blur(7px);-webkit-backdrop-filter:blur(7px)}
+    .card small,.item small,.topic small,.curadoria-intro,.hint,.status,.city p{color:#d2c9b8}
+    .tab[aria-selected="true"],.choice[aria-pressed="true"]{background:var(--gold);color:#17130b}
+    :root[data-theme="light"] .card,:root[data-theme="light"] .item,:root[data-theme="light"] .topic,:root[data-theme="light"] .overview,:root[data-theme="light"] .city,:root[data-theme="light"] .choice,:root[data-theme="light"] .field,:root[data-theme="light"] .tab{background:rgba(255,255,255,.94);backdrop-filter:blur(7px)}
+    :root[data-theme="light"] .card small,:root[data-theme="light"] .item small,:root[data-theme="light"] .topic small,:root[data-theme="light"] .status,:root[data-theme="light"] .city p{color:var(--muted)}
+    :root[data-theme="light"] .tab[aria-selected="true"],:root[data-theme="light"] .choice[aria-pressed="true"]{background:var(--gold);color:#fff}
+    :root[data-theme="light"] .top,:root[data-theme="light"] .bottom{background:rgba(247,245,240,.94)}
+    :root[data-theme="light"] .mode{background:rgba(255,255,255,.92)}
+    @media(prefers-reduced-motion:reduce){.cinema-photo,.app-cinema-scene{transition:none;transform:none}}
   </style>
 </head>
 <body>
+  <!-- Camadas independentes: as mesmas imagens e tempos da versão anterior. -->
+  <div class="app-cinema" aria-hidden="true">
+    <div class="app-cinema-scene active" data-cinema="inicio"><div class="cinema-photo active" id="bg1"></div><div class="cinema-photo" id="bg2"></div></div>
+    <div class="app-cinema-scene" data-cinema="curadoria"><div class="cinema-photo active" id="curadoriaBg1"></div><div class="cinema-photo" id="curadoriaBg2"></div></div>
+    <div class="app-cinema-scene" data-cinema="buscadores"><div class="cinema-photo active" id="buscadorBg1"></div><div class="cinema-photo" id="buscadorBg2"></div></div>
+    <div class="app-cinema-shade"></div>
+  </div>
   <header class="top"><a class="brand-lockup" href="ferramentas-test.html" aria-label="Voltar ao início do aplicativo" style="text-decoration:none;color:inherit;cursor:pointer"><img class="brand-logo" src="images/rosa-dos-ventos.png" alt="Rosa dos Ventos"><div><div class="brand">CURADORIA ELITE TRAVEL</div><div class="tag">O seu mundo, bem indicado.</div></div></a><button type="button" class="mode" id="quick-theme" aria-label="Alternar aparência">☾ / ☀</button></header>
   <main>
     <section class="panel" id="panel-inicio">
-      <div class="hero" aria-label="Apresentação da Curadoria Elite Travel"><div class="hero-bg active" id="bg1" aria-hidden="true"></div><div class="hero-bg" id="bg2" aria-hidden="true"></div><div class="hero-overlay" aria-hidden="true"></div><div class="hero-content"><div class="hero-kicker">Curadoria · critério · excelência</div><div class="hero-divider"></div><h1>Uma plataforma de curadoria para viajar melhor.</h1><p>Recomendações selecionadas e organizadas para que você encontre o que precisa com mais critério e segurança.</p><p>Tudo estruturado para otimizar seu tempo e permitir escolhas mais objetivas durante a viagem.</p></div></div>
+      <div class="hero" aria-label="Apresentação da Curadoria Elite Travel"><div class="hero-content"><div class="hero-kicker">Curadoria · critério · excelência</div><div class="hero-divider"></div><h1>Uma plataforma de curadoria para viajar melhor.</h1><p>Recomendações selecionadas e organizadas para que você encontre o que precisa com mais critério e segurança.</p><p>Tudo estruturado para otimizar seu tempo e permitir escolhas mais objetivas durante a viagem.</p></div></div>
       <div class="cards"><button class="card" type="button" id="open-curadoria"><span class="symbol">✧</span><strong>Curadoria</strong><small>Destinos e materiais selecionados</small></button><button class="card" type="button" id="open-buscadores"><span class="symbol">▦</span><strong>Buscadores</strong><small>Ferramentas e serviços da viagem</small></button></div>
     </section>
     <section class="panel" id="panel-buscar" hidden><h1 class="heading">Buscar</h1><p class="hint">A pesquisa usa o site atual. Assim, não criamos uma segunda busca nem alteramos o funcionamento existente.</p><a class="item" href="/index.html"><span>Abrir pesquisa da Curadoria<small>Pesquisar destinos e materiais na página original</small></span><span class="arrow">›</span></a></section>
     <section class="panel" id="panel-conta" hidden><h1 class="heading">Minha Conta</h1><a class="item" href="/account.html"><span>Acessar minha conta<small>Entrar e consultar os recursos disponíveis na conta atual</small></span><span class="arrow">›</span></a></section>
     <section class="panel" id="panel-ajustes" hidden><h1 class="heading">Ajustes</h1><div class="stack"><div class="item"><span>Aparência<small>Escolha o modo de visualização</small></span><span>☼</span></div><div class="choices"><button class="choice" id="theme-dark" type="button">Escuro</button><button class="choice" id="theme-light" type="button">Claro</button></div><a class="item" href="/quem-somos.html"><span>Quem Somos</span><span class="arrow">›</span></a><a class="item" href="/faq.html"><span>Perguntas Frequentes</span><span class="arrow">›</span></a><a class="item" href="/contact.html"><span>Contato</span><span class="arrow">›</span></a></div></section>
-    <section class="panel" id="panel-buscadores" hidden><div class="section-photo-slider" aria-label="Fotografias dos Buscadores"><div class="section-photo-bg active" id="buscadorBg1" aria-hidden="true"></div><div class="section-photo-bg" id="buscadorBg2" aria-hidden="true"></div></div><h1 class="heading">Buscadores</h1><p class="hint">Acesso às páginas já existentes. Os grupos abaixo são atalhos de teste, sem novas integrações.</p><div class="tabs" role="tablist" aria-label="Grupos de serviços"><button class="tab" type="button" data-group="planejamento" aria-selected="true">Planejamento</button><button class="tab" type="button" data-group="servicos" aria-selected="false">Serviços para a viagem</button><button class="tab" type="button" data-group="experiencias" aria-selected="false">Experiências</button></div><div id="service-links" class="stack"></div></section>
-    <section class="panel" id="panel-curadoria" hidden><div class="section-photo-slider" aria-label="Fotografias da Curadoria"><div class="section-photo-bg active" id="curadoriaBg1" aria-hidden="true"></div><div class="section-photo-bg" id="curadoriaBg2" aria-hidden="true"></div></div><h1 class="heading">A Curadoria</h1><p class="curadoria-intro">Reunimos, filtramos e organizamos cada destino por categorias, para que você escolha com clareza e aproveite melhor sua viagem.</p><button type="button" class="overview" id="open-overview"><span><strong>Overview</strong><small style="display:block;color:var(--muted);margin-top:5px">Entenda como funciona a curadoria e o padrão dos materiais.</small></span><span style="color:var(--gold)">Abrir ›</span></button><div class="topics" id="topics"></div></section>
+    <section class="panel" id="panel-buscadores" hidden><h1 class="heading">Buscadores</h1><p class="hint">Acesso às páginas já existentes. Os grupos abaixo são atalhos de teste, sem novas integrações.</p><div class="tabs" role="tablist" aria-label="Grupos de serviços"><button class="tab" type="button" data-group="planejamento" aria-selected="true">Planejamento</button><button class="tab" type="button" data-group="servicos" aria-selected="false">Serviços para a viagem</button><button class="tab" type="button" data-group="experiencias" aria-selected="false">Experiências</button></div><div id="service-links" class="stack"></div></section>
+    <section class="panel" id="panel-curadoria" hidden><h1 class="heading">A Curadoria</h1><p class="curadoria-intro">Reunimos, filtramos e organizamos cada destino por categorias, para que você escolha com clareza e aproveite melhor sua viagem.</p><button type="button" class="overview" id="open-overview"><span><strong>Overview</strong><small style="display:block;color:var(--muted);margin-top:5px">Entenda como funciona a curadoria e o padrão dos materiais.</small></span><span style="color:var(--gold)">Abrir ›</span></button><div class="topics" id="topics"></div></section>
     <section class="panel" id="panel-categoria" hidden><div class="cat-head"><div><div class="status" id="cat-breadcrumb">Curadoria › Categoria</div><h1 id="cat-title">Categoria</h1></div><button type="button" class="back" id="back-topics">← Voltar</button></div><div class="meta"><span class="pill" id="total-cities">0 cidades</span><span class="pill" id="shown-cities">Mostrando 0</span></div><input class="field" id="city-query" placeholder="Buscar cidade..." aria-label="Buscar cidade" autocomplete="off"><p class="status" id="catalog-status" role="status">Carregando materiais...</p><div class="city-list" id="city-list"></div><button class="load-more" id="more-cities" type="button" hidden>Ver mais cidades</button></section>
     <p class="footer-note">Ambiente de testes · Não é a instalação final do aplicativo</p>
   </main>
@@ -231,7 +262,7 @@
       document.getElementById('quick-theme').addEventListener('click',()=>setTheme(theme==='dark'?'light':'dark'));
       document.getElementById('theme-dark').addEventListener('click',()=>setTheme('dark'));
       document.getElementById('theme-light').addEventListener('click',()=>setTheme('light'));
-      function show(page){history.replaceState(null,'',page==='inicio'?location.pathname:'#'+page);document.querySelectorAll('.panel').forEach(el=>{el.hidden=el.id!=='panel-'+page});document.querySelectorAll('.nav').forEach(el=>{if(el.dataset.page===page){el.setAttribute('aria-current','page')}else{el.removeAttribute('aria-current')}});window.scrollTo(0,0)}
+      function show(page){document.querySelectorAll('.app-cinema-scene').forEach(scene=>scene.classList.toggle('active',scene.dataset.cinema===(page==='categoria'?'curadoria':page)));history.replaceState(null,'',page==='inicio'?location.pathname:'#'+page);document.querySelectorAll('.panel').forEach(el=>{el.hidden=el.id!=='panel-'+page});document.querySelectorAll('.nav').forEach(el=>{if(el.dataset.page===page){el.setAttribute('aria-current','page')}else{el.removeAttribute('aria-current')}});window.scrollTo(0,0)}
       document.querySelectorAll('.nav').forEach(el=>el.addEventListener('click',()=>show(el.dataset.page)));
       document.getElementById('open-curadoria').addEventListener('click',()=>show('curadoria'));
       document.getElementById('open-buscadores').addEventListener('click',()=>show('buscadores'));
