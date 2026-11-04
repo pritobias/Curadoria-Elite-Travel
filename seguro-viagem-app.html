@@ -1,0 +1,169 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#101010">
+  <meta name="description" content="Compare opções de seguro viagem por meio de um parceiro indicado pela Curadoria Elite Travel.">
+  <title>Seguro Viagem | Curadoria Elite Travel APP</title>
+  <style>
+    :root {
+      color-scheme: dark;
+      --gold: #d4af37;
+      --text: #f7f5ef;
+      --muted: #d5cfc3;
+      --line: rgba(212,175,55,.30);
+      font-family: Arial, Helvetica, sans-serif;
+    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      color: var(--text);
+      background: #0b0b0b;
+      padding-bottom: calc(78px + env(safe-area-inset-bottom));
+    }
+    a { color: inherit; text-decoration: none; }
+    a:focus-visible { outline: 3px solid var(--gold); outline-offset: 3px; }
+    .cinema { position: fixed; inset: 0; z-index: -1; overflow: hidden; background: #101010; pointer-events: none; }
+    .cinema-photo {
+      position: absolute; inset: 0;
+      background: url("https://images.unsplash.com/photo-1488646953014-85cb44e25828?auto=format&fit=crop&w=2000&q=80") center / cover no-repeat;
+      filter: brightness(.65) saturate(.85);
+    }
+    .cinema-shade {
+      position: absolute; inset: 0;
+      background: linear-gradient(180deg, rgba(0,0,0,.55), rgba(0,0,0,.80)),
+                  radial-gradient(circle at top, rgba(212,175,55,.13), transparent 45%);
+    }
+    .header {
+      position: sticky; top: 0; z-index: 20;
+      background: rgba(10,10,10,.88);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--line);
+      padding: 13px 18px;
+    }
+    .header-inner { max-width: 760px; margin: auto; }
+    .brand { display: inline-flex; align-items: center; gap: 10px; }
+    .brand img { width: 34px; height: 38px; object-fit: contain; }
+    .brand-name { display: block; font-size: 13px; font-weight: 700; color: var(--gold); letter-spacing: .06em; }
+    .brand-tagline { display: block; font-size: 11px; color: var(--muted); margin-top: 3px; }
+    main { width: min(100% - 32px, 720px); margin: auto; padding: 44px 0 50px; }
+    .eyebrow { text-align: center; font-size: 11px; text-transform: uppercase; letter-spacing: 2px; color: #e3c876; }
+    h1 { text-align: center; color: var(--gold); font-size: clamp(36px, 8vw, 52px); margin: 13px 0 0; }
+    .divider { width: 90px; height: 1px; margin: 20px auto 28px; background: linear-gradient(90deg, transparent, var(--gold), transparent); }
+    .tool-card, .about-tool {
+      background: rgba(13,13,13,.88);
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      backdrop-filter: blur(9px);
+      -webkit-backdrop-filter: blur(9px);
+      box-shadow: 0 18px 48px rgba(0,0,0,.28);
+    }
+    .tool-card { padding: 25px 18px; }
+    .intro { text-align: center; }
+    .intro h2 { margin: 0 0 10px; color: var(--gold); font-size: 24px; }
+    .intro p { margin: 0 auto 24px; max-width: 560px; color: var(--muted); line-height: 1.7; font-size: 14px; }
+    .partner-box { background: rgba(255,255,255,.98); color: #171717; border-radius: 17px; padding: 30px 21px; text-align: center; }
+    .partner-label { display: inline-block; padding: 8px 13px; border: 1px solid rgba(212,175,55,.48); border-radius: 99px; color: #806515; background: rgba(212,175,55,.08); text-transform: uppercase; letter-spacing: 1px; font-size: 11px; font-weight: 700; }
+    .partner-box h3 { margin: 17px 0 12px; font-size: 30px; }
+    .partner-box p { color: #5c5c5c; line-height: 1.7; font-size: 14px; margin: 0; }
+    .partner-button {
+      display: flex; justify-content: center; align-items: center;
+      width: 100%; min-height: 52px; margin: 24px auto 0; padding: 13px 16px;
+      border-radius: 99px; background: var(--gold); color: #111; font-size: 15px;
+      font-weight: 700; text-align: center;
+    }
+    .partner-button:hover { filter: brightness(1.06); }
+    .partner-box .partner-note { margin-top: 16px; font-size: 12px; color: #777; }
+    .partner-features { display: grid; grid-template-columns: 1fr; gap: 10px; margin: 22px 0 4px; }
+    .feature { border-top: 1px solid #e3e3e3; padding: 12px 4px; text-align: center; }
+    .feature strong { display: block; color: #222; font-size: 13px; margin-bottom: 5px; }
+    .feature span { display: block; color: #777; font-size: 12px; line-height: 1.5; }
+    .about-tool p + p { margin-top: 12px; }
+    .about-tool { margin-top: 17px; padding: 24px 21px; }
+    .about-tool h2 { margin: 0 0 12px; color: var(--gold); font-size: 21px; }
+    .about-tool p { color: var(--muted); font-size: 13px; line-height: 1.75; margin: 0; }
+    .about-tool .commission-note { margin-top: 14px; font-style: italic; }
+    .footer { text-align: center; font-size: 12px; color: var(--muted); margin: 28px 0 0; line-height: 1.6; }
+    .bottom {
+      position: fixed; bottom: 0; left: 0; right: 0; z-index: 30;
+      display: grid; grid-template-columns: repeat(4, minmax(0,1fr));
+      background: rgba(8,8,8,.94); border-top: 1px solid var(--line);
+      backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+      padding: 8px 6px calc(8px + env(safe-area-inset-bottom));
+    }
+    .bottom a { display: flex; flex-direction: column; align-items: center; gap: 4px; text-align: center; font-size: 11px; color: var(--muted); padding: 4px 1px; }
+    .bottom a:hover { color: var(--gold); }
+    .bottom .symbol { font-size: 23px; line-height: 1; }
+    @media (min-width: 600px) {
+      main { padding-top: 58px; }
+      .tool-card { padding: 35px 30px; }
+      .partner-box { padding: 38px 36px; }
+      .partner-button { max-width: 320px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="cinema" aria-hidden="true">
+    <div class="cinema-photo"></div>
+    <div class="cinema-shade"></div>
+  </div>
+
+  <header class="header">
+    <div class="header-inner">
+      <a class="brand" href="ferramentas-test.html" aria-label="Ir ao início do aplicativo">
+        <img src="images/rosa-dos-ventos.png" alt="Rosa dos Ventos">
+        <span>
+          <span class="brand-name">CURADORIA ELITE TRAVEL</span>
+          <span class="brand-tagline">O seu mundo, bem indicado.</span>
+        </span>
+      </a>
+    </div>
+  </header>
+
+  <main>
+    <div class="eyebrow">Ferramenta de viagem</div>
+    <h1>Seguro Viagem</h1>
+    <div class="divider"></div>
+
+    <section class="tool-card" aria-labelledby="insurance-search-title">
+      <div class="intro">
+        <h2 id="insurance-search-title">Encontre seu seguro viagem</h2>
+        <p>Compare opções de seguro viagem por meio de um parceiro indicado pela Curadoria Elite Travel e escolha a cobertura que melhor combina com a sua viagem.</p>
+      </div>
+
+      <div class="partner-box">
+        <div class="partner-label">Parceiro indicado</div>
+        <h3>Seguro Viagem Real</h3>
+        <p>Compare diferentes opções de seguro viagem, coberturas e preços para encontrar uma alternativa adequada ao seu destino e período de viagem.</p>
+        <div class="partner-features">
+          <div class="feature"><strong>Compare opções</strong><span>Consulte diferentes alternativas em um só lugar.</span></div>
+          <div class="feature"><strong>Veja coberturas</strong><span>Analise as coberturas disponíveis antes de contratar.</span></div>
+          <div class="feature"><strong>Escolha diretamente</strong><span>A contratação é realizada diretamente com o parceiro.</span></div>
+        </div>
+        <a class="partner-button" href="https://www.seguroviagem.srv.br/?ag=jO5XNaQlA4" target="_blank" rel="noopener noreferrer sponsored">Pesquisar seguro viagem</a>
+        <p class="partner-note">Você será direcionado ao site do parceiro para realizar a comparação, escolher sua opção e concluir a contratação.</p>
+      </div>
+    </section>
+
+    <section class="about-tool" aria-labelledby="about-tool-title">
+      <h2 id="about-tool-title">Sobre esta ferramenta</h2>
+      <p>A Curadoria Elite Travel atua exclusivamente como plataforma de indicação. Os parceiros disponibilizados nesta página são opções externas para que você possa pesquisar e contratar serviços relacionados à sua viagem.</p>
+      <p>A pesquisa, disponibilidade, preços, coberturas, contratação, pagamento, alteração ou cancelamento do seguro são realizados diretamente com o parceiro escolhido.</p>
+      <p class="commission-note">A Curadoria Elite Travel pode receber uma comissão pelas contratações realizadas por meio de nossa indicação, sem custo adicional para você.</p>
+    </section>
+
+    <div class="footer">Curadoria Elite Travel · O seu mundo, bem indicado.</div>
+  </main>
+
+  <nav class="bottom" aria-label="Navegação do aplicativo">
+    <a href="ferramentas-test.html"><span class="symbol" aria-hidden="true">⌂</span>Início</a>
+    <a href="ferramentas-test.html#buscar"><span class="symbol" aria-hidden="true">⌕</span>Buscar</a>
+    <a href="ferramentas-test.html#conta"><span class="symbol" aria-hidden="true">♙</span>Minha Conta</a>
+    <a href="ferramentas-test.html#ajustes"><span class="symbol" aria-hidden="true">⚙</span>Ajustes</a>
+  </nav>
+</body>
+</html>
