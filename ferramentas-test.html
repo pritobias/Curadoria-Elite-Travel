@@ -30,7 +30,7 @@
   </style>
 </head>
 <body>
-  <header class="top"><div class="brand-lockup"><img class="brand-logo" src="images/rosa-dos-ventos.png" alt="Rosa dos Ventos"><div><div class="brand">CURADORIA ELITE TRAVEL</div><div class="tag">O seu mundo, bem indicado.</div></div></div><button type="button" class="mode" id="quick-theme" aria-label="Alternar aparência">☾ / ☀</button></header>
+  <header class="top"><a class="brand-lockup" href="ferramentas-test.html" aria-label="Voltar ao início do aplicativo" style="text-decoration:none;color:inherit;cursor:pointer"><img class="brand-logo" src="images/rosa-dos-ventos.png" alt="Rosa dos Ventos"><div><div class="brand">CURADORIA ELITE TRAVEL</div><div class="tag">O seu mundo, bem indicado.</div></div></a><button type="button" class="mode" id="quick-theme" aria-label="Alternar aparência">☾ / ☀</button></header>
   <main>
     <section class="panel" id="panel-inicio">
       <div class="hero" aria-label="Apresentação da Curadoria Elite Travel"><div class="hero-bg active" id="bg1" aria-hidden="true"></div><div class="hero-bg" id="bg2" aria-hidden="true"></div><div class="hero-overlay" aria-hidden="true"></div><div class="hero-content"><div class="hero-kicker">Curadoria · critério · excelência</div><div class="hero-divider"></div><h1>Uma plataforma de curadoria para viajar melhor.</h1><p>Recomendações selecionadas e organizadas para que você encontre o que precisa com mais critério e segurança.</p><p>Tudo estruturado para otimizar seu tempo e permitir escolhas mais objetivas durante a viagem.</p></div></div>
@@ -235,7 +235,7 @@
       document.querySelectorAll('.nav').forEach(el=>el.addEventListener('click',()=>show(el.dataset.page)));
       document.getElementById('open-curadoria').addEventListener('click',()=>show('curadoria'));
       document.getElementById('open-buscadores').addEventListener('click',()=>show('buscadores'));
-      const groups={planejamento:[['Documentos e vistos','/documentos-app.html'],['Malha de transportes','/transportes.html']],servicos:[['Hospedagem','/hospedagem.html'],['Seguro viagem','/seguro-viagem.html'],['Transfer','/transfer.html']],experiencias:[['Atividades e experiências','/experiencias.html'],['Ingressos','/ingressos.html']]};
+      const groups={planejamento:[['Documentos e vistos','/documentos-app.html'],['Malha de transportes','/transportes-app.html']],servicos:[['Hospedagem','/hospedagem.html'],['Seguro viagem','/seguro-viagem.html'],['Transfer','/transfer.html']],experiencias:[['Atividades e experiências','/experiencias.html'],['Ingressos','/ingressos.html']]};
       const list=document.getElementById('service-links');
       function renderGroup(key){list.replaceChildren();(groups[key]||[]).forEach(([label,url])=>{const a=document.createElement('a');a.className='item';a.href=url;const span=document.createElement('span');span.textContent=label;const arrow=document.createElement('span');arrow.className='arrow';arrow.textContent='›';a.append(span,arrow);list.append(a)});document.querySelectorAll('[data-group]').forEach(b=>b.setAttribute('aria-selected',String(b.dataset.group===key)))}
       document.querySelectorAll('[data-group]').forEach(el=>el.addEventListener('click',()=>renderGroup(el.dataset.group)));
