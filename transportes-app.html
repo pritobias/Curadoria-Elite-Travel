@@ -2522,9 +2522,6 @@
 
     /* Navegação da versão APP: independente do cabeçalho do site. */
     .cet-app-header { gap: 14px; }
-    .cet-app-navigation { display:flex; align-items:center; gap:12px; margin-left:auto; }
-    .cet-app-back { display:inline-flex; align-items:center; justify-content:center; padding:10px 15px; border:1px solid rgba(212,175,55,.45); border-radius:12px; color:var(--gold); font-weight:700; white-space:nowrap; background:rgba(5,5,5,.75); }
-    .cet-app-back:hover,.cet-app-back:focus-visible { background:rgba(212,175,55,.13); }
     .cet-app-header .nav-menu { gap:16px; }
     .cet-app-header .brand { flex-shrink:1; min-width:0; }
     .cet-app-header .brand-name { overflow-wrap:anywhere; }
@@ -2533,8 +2530,6 @@
       .cet-app-header .brand img { width:36px; height:36px; object-fit:contain; }
       .cet-app-header .brand-name { font-size:clamp(12px,3.2vw,16px); }
       .cet-app-header .brand-tagline { font-size:10px; }
-      .cet-app-navigation { gap:8px; }
-      .cet-app-back { padding:8px 10px; font-size:12px; }
       .cet-app-header .nav-toggle { flex-shrink:0; }
       .cet-app-header .nav-menu { right:12px; left:auto; top:100%; width:min(300px,calc(100vw - 24px)); }
     }
@@ -2565,19 +2560,6 @@
         <div class="brand-tagline">O seu mundo, bem indicado.</div>
       </div>
     </a>
-    <nav class="cet-app-navigation" aria-label="Navegação do aplicativo">
-      <a class="cet-app-back" href="ferramentas-test.html#buscadores" aria-label="Voltar aos buscadores do aplicativo">‹ Voltar</a>
-      <button class="nav-toggle" id="navToggle" type="button" aria-label="Menu" title="Menu" aria-controls="navMenu" aria-expanded="false">
-        <span></span><span></span><span></span>
-      </button>
-      <div class="nav-menu" id="navMenu">
-        <a href="ferramentas-test.html">Início</a>
-        <a href="ferramentas-test.html#curadoria">Curadoria</a>
-        <a href="ferramentas-test.html#buscadores">Buscadores</a>
-        <a href="ferramentas-test.html#buscar">Buscar</a>
-        <a href="ferramentas-test.html#conta">Minha Conta</a>
-      </div>
-    </nav>
   </header>
 
   <main>
@@ -3640,43 +3622,8 @@
       });
     }
 
-    const siteHeader = document.getElementById("siteHeader");
-    const navToggle = document.getElementById("navToggle");
-    const navMenu = document.getElementById("navMenu");
-
-    function closeMobileNavigation() {
-      if (!siteHeader || !navToggle) return;
-      siteHeader.classList.remove("nav-open");
-      navToggle.setAttribute("aria-expanded", "false");
-    }
-
-    if (navToggle && siteHeader) {
-      navToggle.addEventListener("click", () => {
-        const willOpen = !siteHeader.classList.contains("nav-open");
-        siteHeader.classList.toggle("nav-open", willOpen);
-        navToggle.setAttribute("aria-expanded", String(willOpen));
-      });
-    }
-
-    if (navMenu) {
-      navMenu.querySelectorAll("a").forEach((link) => {
-        link.addEventListener("click", closeMobileNavigation);
-      });
-    }
-
-    document.addEventListener("click", (event) => {
-      if (!siteHeader || !siteHeader.classList.contains("nav-open")) return;
-      if (!siteHeader.contains(event.target)) closeMobileNavigation();
-    });
-
     startTransportCinema();
 
-    document.addEventListener("keydown", (event) => {
-      if (event.key === "Escape" && siteHeader && siteHeader.classList.contains("nav-open")) {
-        closeMobileNavigation();
-        if (navToggle) navToggle.focus();
-      }
-    });
   </script>
 
   <script>
