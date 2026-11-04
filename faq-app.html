@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#101010">
+<meta name="description" content="Respostas às perguntas frequentes sobre os materiais digitais e o funcionamento da Curadoria Elite Travel.">
+<title>Perguntas Frequentes | Curadoria Elite Travel</title>
+<style>
+:root{font-family:Arial,Helvetica,sans-serif;color-scheme:dark;--gold:#d4af37;--text:#f7f5ef;--muted:#d5cfc3;--line:rgba(212,175,55,.3)}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;min-height:100vh;background:#0b0b0b;color:var(--text);padding-bottom:calc(75px + env(safe-area-inset-bottom))}a{color:inherit;text-decoration:none}a:focus-visible,button:focus-visible{outline:3px solid var(--gold);outline-offset:3px}
+.cinema{position:fixed;inset:0;z-index:-1;overflow:hidden;background:#101010;pointer-events:none}.photo{position:absolute;inset:0;background-position:center;background-size:cover;opacity:0;transform:scale(1.04);filter:brightness(1.08) saturate(.85) contrast(1.03);transition:opacity 3.4s ease}.photo.active{opacity:1}.shade{position:absolute;inset:0;background:radial-gradient(circle at 50% 28%,rgba(0,0,0,.28),rgba(0,0,0,.75)),linear-gradient(180deg,rgba(0,0,0,.48),rgba(0,0,0,.78))}
+.header{position:sticky;top:0;z-index:10;background:rgba(10,10,10,.85);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-bottom:1px solid var(--line);padding:13px 18px}.header-inner{max-width:760px;margin:auto}.brand{display:inline-flex;align-items:center;gap:10px}.brand img{width:34px;height:42px;object-fit:contain}.brand-name{color:var(--gold);font-weight:700;letter-spacing:.06em;font-size:14px}.tagline{color:var(--muted);font-size:11px;margin-top:4px}
+main{width:min(100% - 36px,720px);margin:0 auto;padding:52px 0 54px}.eyebrow{text-align:center;font-size:11px;letter-spacing:2px;text-transform:uppercase;color:#e3c876}.title{text-align:center;font-size:clamp(31px,7vw,48px);line-height:1.1;color:var(--gold);margin:14px 0 18px}.divider{height:1px;width:115px;margin:0 auto 30px;background:linear-gradient(90deg,transparent,var(--gold),transparent)}.intro{text-align:center;line-height:1.7;font-size:16px;color:#f1ece2;max-width:600px;margin:0 auto 29px}.panel{border:1px solid var(--line);border-radius:17px;background:rgba(13,13,13,.83);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);padding:clamp(22px,5vw,38px);box-shadow:0 18px 50px rgba(0,0,0,.22)}.panel p{font-size:15px;line-height:1.85;margin:0 0 19px;color:#eee9df}.panel p:last-child{margin-bottom:0}.panel strong{color:#f0cf75}.slogan{text-align:center;font-weight:700;color:var(--gold)!important;letter-spacing:.03em;padding-top:7px}.important{margin-top:22px}.important h2{font-size:20px;color:var(--gold);margin:0 0 19px}.important p{font-size:14px;line-height:1.8}.note{color:#f0cf75;font-weight:700}.footer{text-align:center;margin-top:32px;font-size:12px;color:#ded6c5;line-height:1.6}.bottom{position:fixed;bottom:0;left:0;right:0;z-index:20;display:grid;grid-template-columns:repeat(4,1fr);padding:8px 8px calc(8px + env(safe-area-inset-bottom));border-top:1px solid var(--line);background:rgba(9,9,9,.94);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px)}.bottom a{display:flex;flex-direction:column;align-items:center;gap:5px;padding:7px 2px;font-size:11px;color:#d4c9b3;text-align:center}.bottom .symbol{font-size:22px;line-height:1.1}.bottom a.active{color:var(--gold);font-weight:700}@media(max-width:380px){.brand-name{font-size:12px}.panel{padding:20px}.bottom a{font-size:10px}}@media(prefers-reduced-motion:reduce){.photo{transition:none;transform:none}}
+
+.faq-list{display:grid;gap:11px}.faq-item{border:1px solid var(--line);border-radius:15px;background:rgba(13,13,13,.86);backdrop-filter:blur(9px);overflow:hidden}.faq-item summary{list-style:none;cursor:pointer;display:flex;align-items:center;justify-content:space-between;gap:16px;padding:20px 19px;font-size:15px;font-weight:600;line-height:1.5}.faq-item summary::-webkit-details-marker{display:none}.faq-item summary:focus-visible{outline:3px solid var(--gold);outline-offset:-3px}.faq-item summary::after{content:'+';color:var(--gold);font-size:25px;font-weight:400;flex:none;line-height:1}.faq-item[open] summary::after{content:'−'}.faq-answer{padding:0 19px 22px;color:#eee9df;line-height:1.8;font-size:14px}.faq-item[open]{border-color:rgba(212,175,55,.55)}.intro{margin-bottom:31px}@media(max-width:380px){.faq-item summary{padding:17px 15px}.faq-answer{padding:0 15px 18px}}
+</style>
+</head>
+<body>
+<div class="cinema" aria-hidden="true"><div class="photo active" id="cinemaA"></div><div class="photo" id="cinemaB"></div><div class="shade"></div></div>
+<header class="header"><div class="header-inner"><a class="brand" href="ferramentas-test.html" aria-label="Ir ao início do aplicativo"><img src="images/rosa-dos-ventos.png" alt="Rosa dos Ventos"><span><span class="brand-name" style="display:block">CURADORIA ELITE TRAVEL</span><span class="tagline" style="display:block">O seu mundo, bem indicado.</span></span></a></div></header>
+<main>
+<div class="eyebrow">Orientação · Clareza · Autonomia</div>
+<h1 class="title">Perguntas Frequentes</h1>
+<div class="divider"></div>
+<p class="intro">Respostas objetivas para ajudar você a entender como funciona a curadoria e acessar seus materiais com tranquilidade.</p>
+<section class="faq-list" aria-label="Dúvidas frequentes">
+<details class="faq-item"><summary>Como recebo meu material?</summary><div class="faq-answer">O acesso é liberado imediatamente após a compra, diretamente na sua conta dentro do site.<br/><br/>
+            Você poderá acessar sempre que precisar, de forma simples e organizada.</div></details>
+<details class="faq-item"><summary>O acesso é vitalício?</summary><div class="faq-answer">Sim. O material fica disponível para você acessar quando quiser, sem prazo de expiração.</div></details>
+<details class="faq-item"><summary>Posso acessar pelo celular durante a viagem?</summary><div class="faq-answer">Sim. Todo o conteúdo é adaptado para celular, tablet e computador, pensado para acompanhar você antes e durante a viagem.</div></details>
+<details class="faq-item"><summary>Preciso comprar todas as categorias do destino?</summary><div class="faq-answer">Não. Você pode escolher apenas as categorias que fazem sentido para a sua viagem.</div></details>
+<details class="faq-item"><summary>Vocês realizam reservas ou compram ingressos para o cliente?</summary><div class="faq-answer">Não. A Curadoria Elite Travel oferece indicações organizadas para apoiar suas decisões.<br/><br/>
+            As reservas e compras são feitas diretamente por você, com mais autonomia e flexibilidade.</div></details>
+<details class="faq-item"><summary>O que diferencia essa curadoria de pesquisas comuns na internet?</summary><div class="faq-answer">Tudo já foi filtrado com critério para você não perder tempo pesquisando e focar apenas no que realmente vale a pena.</div></details>
+<details class="faq-item"><summary>Posso confiar na qualidade das indicações?</summary><div class="faq-answer">Sim. Todo o conteúdo é desenvolvido com base em experiência prática, critério e atenção aos detalhes, para oferecer escolhas seguras e bem orientadas.</div></details>
+<details class="faq-item"><summary>Posso solicitar reembolso após a compra?</summary><div class="faq-answer">Por se tratar de conteúdo digital com acesso imediato, não realizamos cancelamentos ou reembolsos.</div></details>
+</section>
+<div class="footer">Curadoria Elite Travel · O seu mundo, bem indicado.</div>
+</main>
+<nav class="bottom" aria-label="Navegação do aplicativo"><a href="ferramentas-test.html"><span class="symbol">⌂</span>Início</a><a href="ferramentas-test.html#buscar"><span class="symbol">⌕</span>Buscar</a><a href="ferramentas-test.html#conta"><span class="symbol">♙</span>Minha Conta</a><a class="active" href="ferramentas-test.html#ajustes" aria-current="page"><span class="symbol">⚙</span>Ajustes</a></nav>
+<script>
+(()=>{'use strict';const images=[
+'https://images.unsplash.com/photo-1507842217343-583bb7270b66?auto=format&fit=crop&w=2200&q=80',
+'https://images.unsplash.com/photo-1521587760476-6c12a4b040da?auto=format&fit=crop&w=2200&q=80',
+'https://images.unsplash.com/photo-1512820790803-83ca734da794?auto=format&fit=crop&w=2200&q=80'];
+const a=document.getElementById('cinemaA'),b=document.getElementById('cinemaB');a.style.backgroundImage=`url("${images[0]}")`;let index=0,first=true;if(window.matchMedia('(prefers-reduced-motion: reduce)').matches)return;window.setInterval(()=>{index=(index+1)%images.length;const visible=first?a:b,hidden=first?b:a;hidden.style.backgroundImage=`url("${images[index]}")`;hidden.classList.add('active');visible.classList.remove('active');first=!first},8800);
+})();
+</script>
+</body>
+</html>
