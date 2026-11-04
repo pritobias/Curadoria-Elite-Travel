@@ -956,8 +956,13 @@
     }
   </style>
 <style id="cet-app-mobile-style">
-  body{background:#101010!important;padding-bottom:90px!important}
-  .page-bg{display:none!important}
+  body{background:#050505!important;padding-bottom:90px!important;isolation:isolate}
+  .page-bg{display:block!important;position:fixed!important;inset:0!important;z-index:-1!important;pointer-events:none}
+  .page-bg-layer{filter:brightness(1.10) saturate(.88) contrast(1.02);transition:opacity 3.4s ease}
+  .page-bg::after{background:radial-gradient(circle at center,rgba(0,0,0,.08),rgba(0,0,0,.54)),linear-gradient(180deg,rgba(0,0,0,.24),rgba(0,0,0,.48))}
+  .cet-app-header{background:rgba(0,0,0,.78)!important;backdrop-filter:blur(10px)}
+  .cet-app-intro,main.tool-wrap{position:relative;z-index:1}
+  .tool-panel{background:rgba(8,8,8,.92)!important;backdrop-filter:blur(8px)}
   .cet-app-header{position:sticky;top:0;z-index:50;background:#101010;border-bottom:1px solid #3c352a;display:flex;align-items:center;justify-content:space-between;gap:10px;padding:13px max(16px,calc((100vw - 600px)/2))}
   .cet-app-brand{display:flex;align-items:center;gap:9px;min-width:0;color:#d4af37!important;text-decoration:none}
   .cet-app-brand img{width:30px;height:36px;object-fit:contain;flex:none}
@@ -995,7 +1000,6 @@
       <img src="images/rosa-dos-ventos.png" alt="">
       <span><strong>CURADORIA ELITE TRAVEL</strong><small>O seu mundo, bem indicado.</small></span>
     </a>
-    <a class="cet-app-back" href="ferramentas-test.html">‹ Voltar</a>
   </header>
   <div class="cet-app-intro">
     <span>BUSCADORES · PLANEJAMENTO</span>
