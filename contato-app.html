@@ -1,0 +1,729 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <title>Contato e Avaliação | Curadoria Elite APP</title>
+  <meta
+    name="description"
+    content="Entre em contato com a Curadoria Elite Travel para dúvidas, sugestões, correções, parcerias ou para avaliar sua experiência com a plataforma."
+  />
+
+  <meta name="theme-color" content="#101010" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <style>
+    *{
+      box-sizing:border-box;
+    }
+
+    body{
+      margin:0;
+      font-family:"Segoe UI",sans-serif;
+      background:#070707;
+      color:#fff;
+      overflow-x:hidden;
+      min-height:100vh;
+      position:relative;
+    }
+
+    .background-carousel{
+      position:fixed;
+      inset:0;
+      z-index:-3;
+      overflow:hidden;
+      background:#050505;
+    }
+
+    .background-slide{
+      position:absolute;
+      inset:0;
+      background-size:cover;
+      background-position:center;
+      background-repeat:no-repeat;
+      opacity:0;
+      transform:scale(1.06);
+      animation:backgroundFade 45s infinite;
+      will-change:opacity, transform;
+    }
+
+    .background-slide:nth-child(1){
+      background-image:url("https://images.unsplash.com/photo-1465101046530-73398c7f28ca?auto=format&fit=crop&w=1800&q=80");
+      animation-delay:0s;
+    }
+
+    .background-slide:nth-child(2){
+      background-image:url("https://images.unsplash.com/photo-1483347756197-71ef80e95f73?auto=format&fit=crop&w=1800&q=80");
+      animation-delay:15s;
+    }
+
+    .background-slide:nth-child(3){
+      background-image:url("https://images.unsplash.com/photo-1444703686981-a3abbc4d4fe3?auto=format&fit=crop&w=1800&q=80");
+      animation-delay:30s;
+    }
+
+    @keyframes backgroundFade{
+      0%{
+        opacity:0;
+        transform:scale(1.06);
+      }
+      8%{
+        opacity:1;
+      }
+      30%{
+        opacity:1;
+        transform:scale(1.1);
+      }
+      38%{
+        opacity:0;
+        transform:scale(1.12);
+      }
+      100%{
+        opacity:0;
+        transform:scale(1.12);
+      }
+    }
+
+    .background-overlay{
+      position:fixed;
+      inset:0;
+      z-index:-2;
+      background:
+        linear-gradient(180deg, rgba(0,0,0,0.45), rgba(0,0,0,0.55)),
+        radial-gradient(circle at top center, rgba(8,24,60,0.24), transparent 45%),
+        radial-gradient(circle at bottom center, rgba(2,10,28,0.28), transparent 50%);
+      pointer-events:none;
+    }
+
+    header{
+      padding:16px 40px;
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      position:sticky;
+      top:0;
+      z-index:1000;
+      background:rgba(0,0,0,0.30);
+      backdrop-filter:blur(10px);
+      border-bottom:1px solid rgba(255,255,255,0.08);
+      gap:16px;
+      width:100%;
+    }
+
+    .brand{
+      display:flex;
+      align-items:center;
+      gap:12px;
+      min-width:240px;
+      cursor:pointer;
+      text-decoration:none;
+    }
+
+    .brand img{
+      height:34px;
+      width:34px;
+      display:block;
+    }
+
+    .brand-name{
+      font-family:"Cinzel","Georgia",serif;
+      font-size:18px;
+      color:#d4af37;
+      letter-spacing:0.8px;
+      text-transform:uppercase;
+      line-height:1.1;
+    }
+
+    .brand-tagline{
+      font-size:12px;
+      color:rgba(255,255,255,0.7);
+      line-height:1.2;
+      margin-top:2px;
+    }
+
+    .header-actions{
+      display:flex;
+      align-items:center;
+      gap:12px;
+      flex-wrap:wrap;
+      justify-content:flex-end;
+    }
+
+    .btn-ghost{
+      background:transparent;
+      border:1px solid rgba(212,175,55,0.38);
+      color:#d4af37;
+      font-weight:600;
+      border-radius:10px;
+      padding:11px 18px;
+      cursor:pointer;
+      text-decoration:none;
+      transition:transform 0.2s ease, opacity 0.2s ease, box-shadow 0.2s ease;
+      box-shadow:none;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      white-space:nowrap;
+    }
+
+    .btn-ghost:hover{
+      transform:translateY(-1px);
+      opacity:0.92;
+    }
+
+    main{
+      width:100%;
+      max-width:1240px;
+      margin:0 auto;
+      padding:56px 24px 72px;
+    }
+
+    .page-intro{
+      text-align:center;
+      max-width:840px;
+      margin:0 auto 34px;
+    }
+
+    .page-kicker{
+      color:rgba(212,175,55,0.86);
+      font-size:12px;
+      text-transform:uppercase;
+      letter-spacing:1.6px;
+      margin-bottom:14px;
+    }
+
+    .page-intro h1{
+      margin:0 0 14px;
+      color:#d4af37;
+      font-size:clamp(30px,4vw,46px);
+      line-height:1.1;
+      letter-spacing:-0.4px;
+      text-shadow:0 4px 18px rgba(0,0,0,0.30);
+    }
+
+    .page-intro p{
+      margin:0;
+      color:rgba(255,255,255,0.84);
+      font-size:16px;
+      line-height:1.8;
+      text-shadow:0 2px 12px rgba(0,0,0,0.25);
+    }
+
+    .contact-layout{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:28px;
+      align-items:stretch;
+    }
+
+    .card{
+      position:relative;
+      background:linear-gradient(180deg, rgba(8,20,44,0.88), rgba(4,12,28,0.92));
+      border:1px solid rgba(255,255,255,0.10);
+      border-radius:22px;
+      padding:36px;
+      min-height:480px;
+      box-shadow:0 20px 52px rgba(0,0,0,0.34);
+      overflow:hidden;
+      backdrop-filter:blur(7px);
+    }
+
+    .card::before{
+      content:"";
+      position:absolute;
+      inset:0;
+      background:
+        radial-gradient(circle at top right, rgba(212,175,55,0.08), transparent 28%),
+        linear-gradient(180deg, rgba(255,255,255,0.02), transparent 30%);
+      pointer-events:none;
+    }
+
+    .card-content{
+      position:relative;
+      z-index:2;
+    }
+
+    .card h2{
+      margin:0 0 18px;
+      font-size:22px;
+      line-height:1.2;
+      color:#ffffff;
+    }
+
+    .contact-copy{
+      max-width:520px;
+      color:#ffffff;
+      font-size:15px;
+      line-height:1.7;
+      margin:0 0 26px;
+    }
+
+    .contact-email{
+      display:inline-flex;
+      align-items:center;
+      gap:10px;
+      color:#ffffff;
+      font-size:17px;
+      font-weight:600;
+      line-height:1.5;
+      word-break:break-word;
+    }
+
+    .topics{
+      display:flex;
+      flex-wrap:wrap;
+      gap:10px;
+      margin:18px 0 0;
+    }
+
+    .topic{
+      font-family:inherit;
+      padding:10px 16px;
+      border:1px solid rgba(255,255,255,0.18);
+      border-radius:999px;
+      cursor:pointer;
+      font-size:14px;
+      line-height:1;
+      color:#fff;
+      background:rgba(255,255,255,0.02);
+      transition:all 0.2s ease;
+      user-select:none;
+    }
+
+    .topic:hover{
+      border-color:rgba(212,175,55,0.42);
+      color:#d4af37;
+    }
+
+    .topic.active{
+      background:#d4af37;
+      color:#000;
+      border-color:#d4af37;
+      font-weight:700;
+    }
+
+    .contact-note{
+      margin-top:22px;
+      color:rgba(255,255,255,0.68);
+      font-size:13.5px;
+      line-height:1.7;
+      max-width:540px;
+    }
+
+    .contact-helper{
+      margin-top:14px;
+      color:rgba(255,255,255,0.60);
+      font-size:12.8px;
+      line-height:1.6;
+    }
+
+    .stars{
+      display:flex;
+      gap:8px;
+      flex-wrap:wrap;
+      margin:8px 0 14px;
+    }
+
+    .star{
+      border:0;
+      background:transparent;
+      padding:0;
+      font-size:38px;
+      line-height:1;
+      color:rgba(255,255,255,0.26);
+      cursor:pointer;
+      transition:transform 0.18s ease, color 0.18s ease, text-shadow 0.18s ease;
+      user-select:none;
+    }
+
+    .star:hover{
+      transform:translateY(-1px) scale(1.04);
+    }
+
+    .star.active{
+      color:#d4af37;
+      text-shadow:0 0 18px rgba(212,175,55,0.30);
+    }
+
+    .rating-text{
+      min-height:22px;
+      margin:0 0 18px;
+      color:rgba(255,255,255,0.78);
+      font-size:14px;
+      line-height:1.5;
+    }
+
+    .input-field{
+      width:100%;
+      border-radius:14px;
+      border:1px solid rgba(255,255,255,0.14);
+      background:rgba(5,15,34,0.86);
+      color:#fff;
+      padding:14px 16px;
+      outline:none;
+      font-family:inherit;
+      font-size:14px;
+      line-height:1.5;
+      transition:border-color 0.2s ease, box-shadow 0.2s ease;
+      margin-bottom:18px;
+    }
+
+    .input-field:focus{
+      border-color:rgba(212,175,55,0.38);
+      box-shadow:0 0 0 3px rgba(212,175,55,0.08);
+    }
+
+    .input-field::placeholder{
+      color:rgba(255,255,255,0.42);
+    }
+
+    textarea{
+      width:100%;
+      min-height:152px;
+      border-radius:16px;
+      border:1px solid rgba(255,255,255,0.14);
+      background:rgba(5,15,34,0.86);
+      color:#fff;
+      padding:16px 16px;
+      resize:none;
+      outline:none;
+      font-family:inherit;
+      font-size:14px;
+      line-height:1.6;
+      transition:border-color 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    textarea:focus{
+      border-color:rgba(212,175,55,0.38);
+      box-shadow:0 0 0 3px rgba(212,175,55,0.08);
+    }
+
+    textarea::placeholder{
+      color:rgba(255,255,255,0.42);
+    }
+
+    .primary-btn{
+      margin-top:22px;
+      cursor:pointer;
+      padding:13px 22px;
+      border-radius:12px;
+      border:none;
+      background:#d4af37;
+      color:#000;
+      font-weight:700;
+      font-size:15px;
+      transition:transform 0.2s ease, opacity 0.2s ease, box-shadow 0.2s ease;
+      box-shadow:0 12px 28px rgba(212,175,55,0.18);
+    }
+
+    .primary-btn:hover{
+      transform:translateY(-1px);
+      opacity:0.96;
+    }
+
+    .helper-text{
+      margin-top:14px;
+      color:rgba(255,255,255,0.60);
+      font-size:12.8px;
+      line-height:1.6;
+    }
+
+    .section-label{
+      display:block;
+      margin:0 0 12px;
+      color:rgba(255,255,255,0.76);
+      font-size:13px;
+      line-height:1.5;
+    }
+
+    footer{
+      border-top:1px solid rgba(255,255,255,0.08);
+      padding:26px 20px 32px;
+      text-align:center;
+      color:rgba(255,255,255,0.62);
+      font-size:13px;
+      line-height:1.7;
+      margin-top:4px;
+      position:relative;
+      z-index:2;
+    }
+
+    @media (max-width:980px){
+      header{
+        padding:14px 16px;
+      }
+
+      main{
+        padding:40px 16px 56px;
+      }
+
+      .contact-layout{
+        grid-template-columns:1fr;
+      }
+
+      .card{
+        min-height:auto;
+        padding:28px 22px;
+      }
+
+      .page-intro{
+        margin-bottom:26px;
+      }
+
+      .star{
+        font-size:34px;
+      }
+    }
+
+    @media (max-width:640px){
+      .brand{
+        min-width:auto;
+      }
+
+      .brand-name{
+        font-size:16px;
+      }
+
+      .brand-tagline{
+        font-size:11px;
+      }
+
+      .header-actions{
+        width:100%;
+        justify-content:flex-start;
+      }
+
+      .topic{
+        font-size:13px;
+        padding:9px 14px;
+      }
+
+      .contact-email{
+        font-size:16px;
+      }
+    }
+
+    /* Ajustes exclusivos da experiência móvel do aplicativo. */
+    body{padding-bottom:calc(82px + env(safe-area-inset-bottom));}
+    header{padding:15px max(18px,calc((100vw - 600px)/2));background:rgba(8,8,8,.82);}
+    main{max-width:680px;padding:30px 18px 44px;}
+    .contact-layout{grid-template-columns:1fr;gap:16px;}
+    .card{min-height:auto;padding:25px 20px;}
+    .page-intro{margin-bottom:24px;}
+    .page-intro h1{font-size:clamp(27px,6vw,38px);}
+    .page-intro p{font-size:14px;line-height:1.65;}
+    .topic{font-family:inherit;}
+    .topic:focus-visible,.star:focus-visible,.app-nav a:focus-visible{outline:2px solid #d4af37;outline-offset:3px;}
+    .app-nav{position:fixed;bottom:0;left:0;right:0;z-index:1001;display:grid;grid-template-columns:repeat(4,1fr);padding:8px 8px calc(8px + env(safe-area-inset-bottom));background:rgba(8,8,8,.94);border-top:1px solid rgba(212,175,55,.25);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);}
+    .app-nav a{display:flex;flex-direction:column;align-items:center;gap:5px;padding:8px 2px;color:#aaa69e;text-decoration:none;font-size:11px;}
+    .app-nav .ico{font-size:22px;line-height:1;}
+    .app-nav a[aria-current="page"]{color:#d4af37;font-weight:700;}
+    footer{padding-bottom:22px;}
+    @media(max-width:640px){header{padding:14px 18px;}main{padding:28px 16px 40px;}.card{padding:24px 18px;}.brand-name{font-size:15px;}}
+    @media(prefers-reduced-motion:reduce){.background-slide{animation:none;}.background-slide:first-child{opacity:1;}}
+  </style>
+</head>
+<body>
+
+  <div class="background-carousel" aria-hidden="true">
+    <div class="background-slide"></div>
+    <div class="background-slide"></div>
+    <div class="background-slide"></div>
+  </div>
+  <div class="background-overlay" aria-hidden="true"></div>
+
+  <header>
+    <a class="brand" href="ferramentas-test.html" aria-label="Início do aplicativo">
+      <img src="images/rosa-dos-ventos.png" alt="Rosa dos Ventos">
+      <div>
+        <div class="brand-name">Curadoria Elite Travel</div>
+        <div class="brand-tagline">O seu mundo, bem indicado.</div>
+      </div>
+    </a>
+  </header>
+
+  <main>
+    <div class="page-intro">
+      <div class="page-kicker">Contato · Escuta · Avaliação</div>
+      <h1>Fale conosco ou avalie sua experiência</h1>
+      <p>
+        Este espaço foi criado para facilitar o contato direto e receber impressões valiosas sobre a Curadoria Elite Travel.
+      </p>
+    </div>
+
+    <div class="contact-layout">
+      <section class="card">
+        <div class="card-content">
+          <h2>Contato</h2>
+
+          <p class="contact-copy">
+            Se desejar falar diretamente conosco, envie um email. Responderemos o mais breve possível.
+          </p>
+
+          <span class="section-label">Email institucional</span>
+
+          <div class="contact-email">
+            curadoriaelitetravel@gmail.com
+          </div>
+
+          <span class="section-label" style="margin-top:20px;">Selecione o assunto da mensagem</span>
+
+          <div class="topics" id="contactTopics">
+            <button type="button" class="topic" data-subject="Sugestão — Curadoria Elite Travel">Sugestão</button>
+            <button type="button" class="topic" data-subject="Dúvida — Curadoria Elite Travel">Dúvida</button>
+            <button type="button" class="topic" data-subject="Correção — Curadoria Elite Travel">Correção</button>
+            <button type="button" class="topic" data-subject="Parceria — Curadoria Elite Travel">Parceria</button>
+            <button type="button" class="topic" data-subject="Outro — Curadoria Elite Travel">Outro</button>
+          </div>
+
+          <div class="contact-note">
+            Este canal pode ser utilizado para dúvidas gerais, esclarecimentos e aproximações institucionais.
+          </div>
+
+          <div class="contact-helper">
+            Ao clicar em um tema, seu aplicativo de email será aberto com o assunto já organizado.
+          </div>
+        </div>
+      </section>
+
+      <section class="card">
+        <div class="card-content">
+          <h2>Avaliação da Curadoria</h2>
+
+          <span class="section-label">Como você avalia sua experiência?</span>
+
+          <div class="stars">
+            <button type="button" class="star" aria-label="Avaliar com estrela" data-value="1">★</button>
+            <button type="button" class="star" aria-label="Avaliar com estrela" data-value="2">★</button>
+            <button type="button" class="star" aria-label="Avaliar com estrela" data-value="3">★</button>
+            <button type="button" class="star" aria-label="Avaliar com estrela" data-value="4">★</button>
+            <button type="button" class="star" aria-label="Avaliar com estrela" data-value="5">★</button>
+          </div>
+
+          <div class="rating-text" id="ratingText">Nenhuma nota selecionada.</div>
+
+          <span class="section-label">Nome</span>
+          <input
+            id="name"
+            class="input-field"
+            type="text"
+            placeholder="Digite seu nome"
+          />
+
+          <span class="section-label">Mensagem de avaliação</span>
+
+          <textarea id="message" placeholder="Escreva aqui sua avaliação sobre a experiência com a Curadoria Elite Travel..."></textarea>
+
+          <button class="primary-btn" onclick="sendFeedback()">Enviar avaliação</button>
+
+          <div class="helper-text">
+            Ao clicar em enviar, seu aplicativo de email será aberto com a nota e a avaliação preenchidas automaticamente.
+          </div>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <footer>
+    Curadoria Elite Travel · O seu mundo, bem indicado.
+  </footer>
+
+
+  <nav class="app-nav" aria-label="Navegação do aplicativo">
+    <a href="ferramentas-test.html"><span class="ico" aria-hidden="true">⌂</span>Início</a>
+    <a href="ferramentas-test.html#buscar"><span class="ico" aria-hidden="true">⌕</span>Buscar</a>
+    <a href="ferramentas-test.html#conta"><span class="ico" aria-hidden="true">♙</span>Minha Conta</a>
+    <a href="ferramentas-test.html#ajustes" aria-current="page"><span class="ico" aria-hidden="true">⚙</span>Ajustes</a>
+  </nav>
+
+  <script>
+    let rating = 0;
+
+    const stars = document.querySelectorAll(".star");
+    const ratingText = document.getElementById("ratingText");
+
+    function getRatingLabel(value){
+      if (value === 1) return "1 estrela";
+      if (value === 2) return "2 estrelas";
+      if (value === 3) return "3 estrelas";
+      if (value === 4) return "4 estrelas";
+      if (value === 5) return "5 estrelas";
+      return "Sem nota";
+    }
+
+    function updateRatingText(){
+      if (!rating){
+        ratingText.textContent = "Nenhuma nota selecionada.";
+        return;
+      }
+
+      ratingText.textContent = "Nota: " + getRatingLabel(rating);
+    }
+
+    stars.forEach((star) => {
+      star.addEventListener("click", () => {
+        const clickedValue = Number(star.dataset.value || 0);
+
+        if (rating === clickedValue){
+          rating = 0;
+        } else {
+          rating = clickedValue;
+        }
+
+        stars.forEach((s) => s.classList.remove("active"));
+
+        for (let i = 0; i < rating; i++) {
+          if (stars[i]) stars[i].classList.add("active");
+        }
+
+        updateRatingText();
+      });
+    });
+
+    const contactTopics = document.querySelectorAll("#contactTopics .topic");
+
+    contactTopics.forEach((topic) => {
+      topic.addEventListener("click", () => {
+        const subject = topic.dataset.subject || "Contato — Curadoria Elite Travel";
+        const body =
+          "Olá,\n\n" +
+          "Estou entrando em contato com a Curadoria Elite Travel.\n\n" +
+          "Assunto: " + topic.innerText + "\n\n" +
+          "Mensagem:\n\n" +
+          "—\n" +
+          "Mensagem enviada pela página de contato\n" +
+          "Curadoria Elite Travel";
+
+        window.location.href =
+          "mailto:curadoriaelitetravel@gmail.com" +
+          "?subject=" + encodeURIComponent(subject) +
+          "&body=" + encodeURIComponent(body);
+      });
+    });
+
+    function sendFeedback(){
+      const name = (document.getElementById("name").value || "").trim();
+      const message = document.getElementById("message").value || "";
+      const ratingLabel = getRatingLabel(rating);
+      const subject = "Avaliação " + ratingLabel + " — Curadoria Elite Travel";
+
+      const body =
+        "Olá,\n\n" +
+        "Realizei uma avaliação da Curadoria Elite Travel.\n\n" +
+        "Nome: " + (name || "Não informado") + "\n" +
+        "Nota: " + ratingLabel + "\n\n" +
+        "Avaliação:\n" + message + "\n\n" +
+        "—\n" +
+        "Mensagem enviada pela página de avaliação\n" +
+        "Curadoria Elite Travel";
+
+      window.location.href =
+        "mailto:curadoriaelitetravel@gmail.com" +
+        "?subject=" + encodeURIComponent(subject) +
+        "&body=" + encodeURIComponent(body);
+    }
+
+    updateRatingText();
+  </script>
+
+</body>
+</html>
