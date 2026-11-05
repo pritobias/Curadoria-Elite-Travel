@@ -1,5 +1,5 @@
 {
-  "updatedAt": "04/11/2026, 13:52:20",
+  "updatedAt": "05/11/2026, 14:07:09",
   "monitoring": {
     "enabled": true,
     "frequency": "daily",
@@ -93,8 +93,8 @@
           "url": "https://www.auswaertiges-amt.de/en/visa-service"
         }
       ],
-      "lastChecked": "04/11/2026, 13:52:16",
-      "lastAutomaticUpdate": "04/11/2026, 13:52:16",
+      "lastChecked": "05/11/2026, 14:07:05",
+      "lastAutomaticUpdate": "05/11/2026, 14:07:05",
       "origin": "extracted"
     },
     {
@@ -972,8 +972,8 @@
           "url": "https://travel.state.gov/"
         }
       ],
-      "lastChecked": "04/11/2026, 13:52:17",
-      "lastAutomaticUpdate": "04/11/2026, 13:52:17",
+      "lastChecked": "05/11/2026, 14:07:06",
+      "lastAutomaticUpdate": "05/11/2026, 14:07:06",
       "origin": "extracted"
     },
     {
@@ -1099,8 +1099,8 @@
           "url": "https://france-visas.gouv.fr/"
         }
       ],
-      "lastChecked": "04/11/2026, 13:52:20",
-      "lastAutomaticUpdate": "04/11/2026, 13:52:20",
+      "lastChecked": "05/11/2026, 14:07:09",
+      "lastAutomaticUpdate": "05/11/2026, 14:07:09",
       "origin": "extracted"
     },
     {
