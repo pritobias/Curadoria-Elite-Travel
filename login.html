@@ -4,314 +4,109 @@
 <meta charset="UTF-8" />
 <title>Entrar | Curadoria Elite Travel</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
 <style>
-
-body{
-  margin:0;
-  font-family:"Segoe UI",sans-serif;
-  background:
-  linear-gradient(rgba(0,0,0,0.35), rgba(0,0,0,0.35)),
-  url("images/recepcao-hotel.jpeg") center/cover no-repeat fixed;
-  color:#fff;
-  min-height:100vh;
-  box-sizing:border-box;
-}
-
-/* barra superior */
-
-header{
-  width:100%;
-  padding:14px 28px;
-  box-sizing:border-box;
-  background:rgba(30,30,30,0.42);
-  border-bottom:1px solid rgba(255,255,255,0.10);
-  backdrop-filter:blur(4px);
-  -webkit-backdrop-filter:blur(4px);
-}
-
-.brand{
-  display:flex;
-  align-items:center;
-  gap:12px;
-}
-
-.brand img{
-  width:34px;
-  height:34px;
-  object-fit:contain;
-}
-
-.brand-text{
-  display:flex;
-  flex-direction:column;
-}
-
-.brand-name{
-  color:#d4af37;
-  font-size:18px;
-  font-weight:700;
-  letter-spacing:0.4px;
-  text-transform:uppercase;
-}
-
-.brand-sub{
-  color:rgba(255,255,255,0.78);
-  font-size:12px;
-  margin-top:2px;
-}
-
-/* centralização da tela */
-
-main{
-  min-height:calc(100vh - 63px);
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  padding:24px 18px;
-  box-sizing:border-box;
-}
-
-/* card login */
-
-.card{
-  width:100%;
-  max-width:520px;
-  background:linear-gradient(145deg,rgba(16,19,23,0.92),rgba(11,11,11,0.92));
-  border:1px solid rgba(255,255,255,0.10);
-  border-radius:16px;
-  padding:28px;
-  box-sizing:border-box;
-  backdrop-filter:blur(6px);
-  -webkit-backdrop-filter:blur(6px);
-  box-shadow:0 25px 60px rgba(0,0,0,0.55);
-}
-
-h1{
-  margin:0 0 6px;
-  font-size:22px;
-}
-
-.sub{
-  margin:0 0 18px;
-  color:rgba(255,255,255,0.72);
-  font-size:14px;
-}
-
-label{
-  display:block;
-  margin:14px 0 6px;
-  font-size:13px;
-  color:rgba(255,255,255,0.72);
-}
-
-input{
-  width:100%;
-  padding:12px 14px;
-  border-radius:12px;
-  border:1px solid rgba(255,255,255,0.10);
-  background:#eaf2ff;
-  color:#000;
-  box-sizing:border-box;
-  outline:none;
-}
-
-.password-wrap{
-  position:relative;
-}
-
-.toggle-eye{
-  position:absolute;
-  right:10px;
-  top:50%;
-  transform:translateY(-50%);
-  border:none;
-  background:transparent;
-  cursor:pointer;
-  padding:8px 10px;
-  border-radius:10px;
-  font-weight:700;
-  color:rgba(0,0,0,0.70);
-  font-size:12.5px;
-}
-
-.remember-row{
-  margin-top:12px;
-  display:flex;
-  align-items:center;
-  gap:10px;
-  color:rgba(255,255,255,0.78);
-  font-size:13px;
-}
-
-.remember-row input{
-  width:auto;
-  accent-color:#d4af37;
-}
-
-.btn{
-  margin-top:16px;
-  width:100%;
-  padding:12px;
-  border-radius:12px;
-  border:none;
-  background:#ffffff;
-  color:#000;
-  font-weight:800;
-  cursor:pointer;
-}
-
-.btn:disabled{
-  opacity:0.65;
-  cursor:not-allowed;
-}
-
-.row{
-  margin-top:14px;
-  font-size:13px;
-}
-
-a{
-  color:#d4af37;
-  text-decoration:none;
-  font-weight:700;
-}
-
-.error{
-  margin-top:12px;
-  padding:10px 12px;
-  border-radius:12px;
-  border:1px solid rgba(255,255,255,0.10);
-  background:rgba(212,175,55,0.10);
-  display:none;
-}
-
-.ok{
-  margin-top:12px;
-  padding:10px 12px;
-  border-radius:12px;
-  border:1px solid rgba(255,255,255,0.10);
-  background:rgba(255,255,255,0.06);
-  display:none;
-}
-
+*{box-sizing:border-box}
+body{margin:0;font-family:"Segoe UI",sans-serif;background:linear-gradient(rgba(0,0,0,.35),rgba(0,0,0,.35)),url("images/recepcao-hotel.jpeg") center/cover no-repeat fixed;color:#fff;min-height:100vh}
+header{width:100%;padding:14px 28px;background:rgba(30,30,30,.42);border-bottom:1px solid rgba(255,255,255,.10);backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px)}
+.brand{display:flex;align-items:center;gap:12px}.brand img{width:34px;height:34px;object-fit:contain}.brand-text{display:flex;flex-direction:column}.brand-name{color:#d4af37;font-size:18px;font-weight:700;letter-spacing:.4px;text-transform:uppercase}.brand-sub{color:rgba(255,255,255,.78);font-size:12px;margin-top:2px}
+main{min-height:calc(100vh - 63px);display:flex;align-items:center;justify-content:center;padding:24px 18px}
+.card{width:100%;max-width:520px;background:linear-gradient(145deg,rgba(16,19,23,.92),rgba(11,11,11,.92));border:1px solid rgba(255,255,255,.10);border-radius:16px;padding:28px;backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);box-shadow:0 25px 60px rgba(0,0,0,.55)}
+h1{margin:0 0 6px;font-size:22px}.sub{margin:0 0 18px;color:rgba(255,255,255,.72);font-size:14px;line-height:1.5}label{display:block;margin:14px 0 6px;font-size:13px;color:rgba(255,255,255,.72)}
+input{width:100%;padding:12px 14px;border-radius:12px;border:1px solid rgba(255,255,255,.10);background:#eaf2ff;color:#000;outline:none}.password-wrap{position:relative}.toggle-eye{position:absolute;right:10px;top:50%;transform:translateY(-50%);border:none;background:transparent;cursor:pointer;padding:8px 10px;border-radius:10px;font-weight:700;color:rgba(0,0,0,.70);font-size:12.5px}
+.remember-row{margin-top:12px;display:flex;align-items:center;gap:10px;color:rgba(255,255,255,.78);font-size:13px}.remember-row input{width:auto;accent-color:#d4af37}.remember-row label{margin:0}
+.btn{margin-top:16px;width:100%;padding:12px;border-radius:12px;border:none;background:#fff;color:#000;font-weight:800;cursor:pointer}.btn:disabled{opacity:.65;cursor:not-allowed}.row{margin-top:14px;font-size:13px;line-height:1.7}a{color:#d4af37;text-decoration:none;font-weight:700}.error,.ok{margin-top:12px;padding:10px 12px;border-radius:12px;border:1px solid rgba(255,255,255,.10);display:none;font-size:13px;line-height:1.5}.error{background:rgba(212,175,55,.10)}.ok{background:rgba(255,255,255,.06)}[hidden]{display:none!important}
 </style>
 </head>
-
 <body>
-
-<header>
-<div class="brand">
-<img src="images/rosa-dos-ventos.png">
-<div class="brand-text">
-<div class="brand-name">Curadoria Elite Travel</div>
-<div class="brand-sub">O seu mundo, bem indicado.</div>
-</div>
-</div>
-</header>
-
-<main>
-
-<div class="card">
-
-<h1>Entrar</h1>
-<p class="sub">Acesse sua conta para visualizar seus materiais.</p>
-
+<header><div class="brand"><img src="images/rosa-dos-ventos.png" alt="Curadoria Elite Travel"><div class="brand-text"><div class="brand-name">Curadoria Elite Travel</div><div class="brand-sub">O seu mundo, bem indicado.</div></div></div></header>
+<main><div class="card">
+<section id="loginSection">
+<h1>Entrar</h1><p class="sub">Acesse sua conta para visualizar seus materiais.</p>
 <form id="loginForm">
-
-<label>E-mail</label>
-<input id="email" type="email" required />
-
-<label>Senha</label>
-
-<div class="password-wrap">
-<input id="password" type="password" required />
-<button type="button" id="toggleEye" class="toggle-eye">Mostrar</button>
-</div>
-
-<div class="remember-row">
-<input type="checkbox" id="rememberEmail">
-<label for="rememberEmail">Lembrar meu e-mail</label>
-</div>
-
-<button class="btn" id="btnLogin">Entrar</button>
-
-<div class="error" id="errorBox"></div>
-<div class="ok" id="okBox"></div>
-
-<div class="row">
-Não tem conta? <a href="register.html">Criar cadastro</a>
-</div>
-
+<label for="email">E-mail</label><input id="email" type="email" autocomplete="email" required>
+<label for="password">Senha</label><div class="password-wrap"><input id="password" type="password" autocomplete="current-password" required><button type="button" id="toggleEye" class="toggle-eye">Mostrar</button></div>
+<div class="remember-row"><input type="checkbox" id="rememberEmail"><label for="rememberEmail">Lembrar meu e-mail</label></div>
+<button class="btn" id="btnLogin" type="submit">Entrar</button>
+<div class="row"><a href="#" id="forgotLink">Esqueci minha senha</a></div>
+<div class="row">Não tem conta? <a href="register.html">Criar cadastro</a></div>
 </form>
-
-</div>
-
-</main>
-
+</section>
+<section id="requestSection" hidden>
+<h1>Recuperar senha</h1><p class="sub">Informe o e-mail cadastrado. Enviaremos um link para você definir uma nova senha.</p>
+<form id="requestForm"><label for="recoveryEmail">E-mail</label><input id="recoveryEmail" type="email" autocomplete="email" required><button class="btn" id="btnRequest" type="submit">Enviar link de recuperação</button></form>
+<div class="row"><a href="#" data-back-login>Voltar ao login</a></div>
+</section>
+<section id="resetSection" hidden>
+<h1>Definir nova senha</h1><p class="sub">Escolha uma senha com pelo menos 8 caracteres.</p>
+<form id="resetForm"><label for="newPassword">Nova senha</label><input id="newPassword" type="password" autocomplete="new-password" minlength="8" required><label for="confirmPassword">Confirmar nova senha</label><input id="confirmPassword" type="password" autocomplete="new-password" minlength="8" required><button class="btn" id="btnReset" type="submit">Salvar nova senha</button></form>
+<div class="row"><a href="#" data-back-login>Voltar ao login</a></div>
+</section>
+<div class="error" id="errorBox" role="alert"></div><div class="ok" id="okBox" role="status"></div>
+</div></main>
 <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
-
 <script>
-
 const SUPABASE_URL="https://lnyoqoezezisakghtmim.supabase.co";
 const SUPABASE_ANON_KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxueW9xb2V6ZXppc2FrZ2h0bWltIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjQxNjI4OTMsImV4cCI6MjA3OTczODg5M30.Nn9ZPRXeJlvCGJ2kXQ3XBvT743pQn2VIXEsT9pexqnA";
-
 const sb=window.supabase.createClient(SUPABASE_URL,SUPABASE_ANON_KEY);
-
-const params=new URLSearchParams(window.location.search);
-const returnTo=params.get("return_to")||"account.html";
-
-const emailEl=document.getElementById("email");
-const passEl=document.getElementById("password");
-const toggleEye=document.getElementById("toggleEye");
-
-const form=document.getElementById("loginForm");
-const btn=document.getElementById("btnLogin");
-const errorBox=document.getElementById("errorBox");
-const okBox=document.getElementById("okBox");
-
-toggleEye.addEventListener("click",()=>{
-const hidden=passEl.type==="password";
-passEl.type=hidden?"text":"password";
-toggleEye.innerText=hidden?"Ocultar":"Mostrar";
+const params=new URLSearchParams(location.search);
+const candidate=params.get("return_to")||"account.html";
+// Permite somente páginas locais da CET; impede redirecionamento externo.
+const returnTo=/^(?!\/\/)(?!.*\\)[a-zA-Z0-9_-]+\.html(?:\?[a-zA-Z0-9_=&%-]*)?$/.test(candidate)?candidate:"account.html";
+const el=id=>document.getElementById(id);
+const errorBox=el("errorBox"),okBox=el("okBox");
+const sections=["loginSection","requestSection","resetSection"];
+function notice(type,text){errorBox.style.display="none";okBox.style.display="none";const target=type==="error"?errorBox:okBox;target.textContent=text;target.style.display="block";}
+function clearNotice(){errorBox.style.display="none";okBox.style.display="none";}
+function show(section){sections.forEach(id=>el(id).hidden=id!==section);clearNotice();}
+const remembered=localStorage.getItem("cet_remembered_email");if(remembered){el("email").value=remembered;el("rememberEmail").checked=true;}
+el("toggleEye").addEventListener("click",()=>{const hidden=el("password").type==="password";el("password").type=hidden?"text":"password";el("toggleEye").textContent=hidden?"Ocultar":"Mostrar";});
+el("forgotLink").addEventListener("click",e=>{e.preventDefault();el("recoveryEmail").value=el("email").value;show("requestSection");});
+document.querySelectorAll("[data-back-login]").forEach(a=>a.addEventListener("click",e=>{e.preventDefault();history.replaceState(null,"",location.pathname);show("loginSection");}));
+el("loginForm").addEventListener("submit",async e=>{
+ e.preventDefault();clearNotice();const email=el("email").value.trim(),password=el("password").value;
+ if(!email||!password){notice("error","Preencha e-mail e senha.");return;}
+ const btn=el("btnLogin");btn.disabled=true;btn.textContent="Entrando...";
+ try{const {error}=await sb.auth.signInWithPassword({email,password});if(error){notice("error","Não foi possível entrar. Confira seu e-mail e senha.");return;}
+ if(el("rememberEmail").checked)localStorage.setItem("cet_remembered_email",email);else localStorage.removeItem("cet_remembered_email");
+ notice("ok","Acesso confirmado. Redirecionando...");location.assign(returnTo);
+ }catch(err){notice("error","Não foi possível concluir o acesso. Tente novamente.");}finally{btn.disabled=false;btn.textContent="Entrar";}
 });
-
-form.addEventListener("submit",async(e)=>{
-
-e.preventDefault();
-
-const email=emailEl.value.trim();
-const password=passEl.value;
-
-if(!email||!password){
-errorBox.innerText="Preencha e-mail e senha.";
-errorBox.style.display="block";
-return;
-}
-
-btn.disabled=true;
-btn.innerText="Entrando...";
-
-const {data,error}=await sb.auth.signInWithPassword({email,password});
-
-if(error){
-errorBox.innerText="E-mail ou senha incorretos.";
-errorBox.style.display="block";
-btn.disabled=false;
-btn.innerText="Entrar";
-return;
-}
-
-okBox.innerText="Acesso confirmado. Redirecionando...";
-okBox.style.display="block";
-
-setTimeout(()=>{
-window.location.href=returnTo;
-},350);
-
+el("requestForm").addEventListener("submit",async e=>{
+ e.preventDefault();clearNotice();const btn=el("btnRequest");btn.disabled=true;btn.textContent="Enviando...";
+ try{const redirectTo=new URL("login.html?mode=recovery",location.origin).href;
+ const {error}=await sb.auth.resetPasswordForEmail(el("recoveryEmail").value.trim(),{redirectTo});
+ if(error){notice("error","Não foi possível enviar o link agora. Aguarde e tente novamente.");return;}
+ notice("ok","Se o e-mail estiver cadastrado, você receberá as instruções de recuperação. Confira também a pasta de spam.");
+ }catch(err){notice("error","Não foi possível enviar o link agora. Tente novamente.");}finally{btn.disabled=false;btn.textContent="Enviar link de recuperação";}
 });
-
+let recoveryVerified=false;
+sb.auth.onAuthStateChange((event,session)=>{
+ if(event==="PASSWORD_RECOVERY"&&session){recoveryVerified=true;show("resetSection");}
+});
+const hashParams=new URLSearchParams(location.hash.replace(/^#/,""));
+const recoveryRequested=params.get("mode")==="recovery";
+const recoveryError=params.get("error")||hashParams.get("error");
+if(recoveryRequested){
+ show("requestSection");
+ if(recoveryError)notice("error","O link de recuperação expirou ou é inválido. Solicite um novo link.");
+ else if(hashParams.get("type")==="recovery"&&hashParams.get("access_token")){
+   // A biblioteca Supabase processa o token e dispara PASSWORD_RECOVERY.
+   notice("ok","Validando seu link de recuperação...");
+ }else if(params.get("code")){
+   notice("ok","Validando seu link de recuperação...");
+ }else{
+   notice("error","Solicite um link de recuperação válido para definir uma nova senha.");
+ }
+}
+el("resetForm").addEventListener("submit",async e=>{
+ e.preventDefault();clearNotice();if(!recoveryVerified){notice("error","O link não foi validado. Solicite um novo link.");return;}
+ const password=el("newPassword").value;if(password.length<8){notice("error","A senha deve ter pelo menos 8 caracteres.");return;}
+ if(password!==el("confirmPassword").value){notice("error","As senhas não coincidem.");return;}
+ const btn=el("btnReset");btn.disabled=true;btn.textContent="Salvando...";
+ try{const {error}=await sb.auth.updateUser({password});if(error){notice("error","Não foi possível atualizar a senha. Solicite outro link se necessário.");return;}
+ recoveryVerified=false;await sb.auth.signOut();history.replaceState(null,"",location.pathname);show("loginSection");notice("ok","Senha atualizada. Entre com sua nova senha.");
+ }catch(err){notice("error","Não foi possível atualizar a senha. Tente novamente.");}finally{btn.disabled=false;btn.textContent="Salvar nova senha";}
+});
 </script>
-
 </body>
 </html>
