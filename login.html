@@ -80,24 +80,52 @@ el("requestForm").addEventListener("submit",async e=>{
  }catch(err){notice("error","Não foi possível enviar o link agora. Tente novamente.");}finally{btn.disabled=false;btn.textContent="Enviar link de recuperação";}
 });
 let recoveryVerified=false;
-sb.auth.onAuthStateChange((event,session)=>{
- if(event==="PASSWORD_RECOVERY"&&session){recoveryVerified=true;show("resetSection");}
-});
 const hashParams=new URLSearchParams(location.hash.replace(/^#/,""));
 const recoveryRequested=params.get("mode")==="recovery";
 const recoveryError=params.get("error")||hashParams.get("error");
-if(recoveryRequested){
- show("requestSection");
- if(recoveryError)notice("error","O link de recuperação expirou ou é inválido. Solicite um novo link.");
- else if(hashParams.get("type")==="recovery"&&hashParams.get("access_token")){
-   // A biblioteca Supabase processa o token e dispara PASSWORD_RECOVERY.
-   notice("ok","Validando seu link de recuperação...");
- }else if(params.get("code")){
-   notice("ok","Validando seu link de recuperação...");
- }else{
-   notice("error","Solicite um link de recuperação válido para definir uma nova senha.");
+const tokenHash=params.get("token_hash");
+const recoveryType=params.get("type");
+const hasLegacyRecovery=hashParams.get("type")==="recovery"&&!!hashParams.get("access_token");
+const hasCode=!!params.get("code");
+
+// Mantém o suporte a links antigos que chegam pelo fluxo padrão do Supabase.
+sb.auth.onAuthStateChange((event,session)=>{
+ if(event==="PASSWORD_RECOVERY"&&session){
+  recoveryVerified=true;
+  history.replaceState(null,"",location.pathname+"?mode=recovery");
+  show("resetSection");
  }
+});
+
+async function initializeRecovery(){
+ if(!recoveryRequested)return;
+ show("requestSection");
+ if(recoveryError){notice("error","O link de recuperação expirou ou é inválido. Solicite um novo link.");return;}
+ if(tokenHash){
+  // O token é de uso único. Retira-o da barra de endereço antes da validação.
+  history.replaceState(null,"",location.pathname+"?mode=recovery");
+  notice("ok","Validando seu link de recuperação...");
+  if(recoveryType!=="recovery"){
+   notice("error","Link de recuperação inválido. Solicite um novo link.");return;
+  }
+  try{
+   const {data,error}=await sb.auth.verifyOtp({token_hash:tokenHash,type:"recovery"});
+   if(error||!data?.session){
+    notice("error","O link de recuperação expirou ou já foi utilizado. Solicite um novo link.");return;
+   }
+   recoveryVerified=true;
+   show("resetSection");
+  }catch(err){notice("error","Não foi possível validar o link. Solicite um novo link.");}
+  return;
+ }
+ if(hasLegacyRecovery||hasCode){
+  notice("ok","Validando seu link de recuperação...");
+  // O cliente Supabase processa automaticamente links antigos e dispara PASSWORD_RECOVERY.
+  return;
+ }
+ notice("error","Solicite um link de recuperação válido para definir uma nova senha.");
 }
+initializeRecovery();
 el("resetForm").addEventListener("submit",async e=>{
  e.preventDefault();clearNotice();if(!recoveryVerified){notice("error","O link não foi validado. Solicite um novo link.");return;}
  const password=el("newPassword").value;if(password.length<8){notice("error","A senha deve ter pelo menos 8 caracteres.");return;}
