@@ -138,12 +138,28 @@ async function initializeRecovery(){
  notice("error","Solicite um link de recuperação válido para definir uma nova senha.");
 }
 initializeRecovery();
+// Traduz apenas erros identificáveis; não presume que toda falha seja senha repetida.
+function resetPasswordErrorMessage(error){
+ const code=String(error?.code||"").toLowerCase();
+ const message=String(error?.message||"").toLowerCase();
+ const status=Number(error?.status||0);
+ if(code==="same_password"||/new password should be different|same password|different from the old password|password.*(same|previous|already used|reused)/i.test(message)){
+  return "Esta senha já foi utilizada. Escolha uma senha diferente da anterior.";
+ }
+ if(code==="weak_password"||/password.*(weak|short|length|character|requirement)|at least.*character/i.test(message)){
+  return "A senha não atende aos requisitos de segurança. Escolha uma senha mais forte e tente novamente.";
+ }
+ if(code==="session_not_found"||code==="invalid_jwt"||code==="bad_jwt"||code==="refresh_token_not_found"||code==="refresh_token_already_used"||status===401||/session.*(expired|missing|not found|invalid)|jwt.*(expired|invalid)/i.test(message)){
+  return "Sua sessão de recuperação expirou ou não é mais válida. Solicite um novo link.";
+ }
+ return "Não foi possível atualizar a senha. Tente novamente; se o problema continuar, solicite um novo link.";
+}
 el("resetForm").addEventListener("submit",async e=>{
  e.preventDefault();clearNotice();if(!recoveryVerified){notice("error","O link não foi validado. Solicite um novo link.");return;}
  const password=el("newPassword").value;if(password.length<8){notice("error","A senha deve ter pelo menos 8 caracteres.");return;}
  if(password!==el("confirmPassword").value){notice("error","As senhas não coincidem.");return;}
  const btn=el("btnReset");btn.disabled=true;btn.textContent="Salvando...";
- try{const {error}=await sb.auth.updateUser({password});if(error){notice("error","Não foi possível atualizar a senha. Solicite outro link se necessário.");return;}
+ try{const {error}=await sb.auth.updateUser({password});if(error){notice("error",resetPasswordErrorMessage(error));return;}
  recoveryVerified=false;await sb.auth.signOut();history.replaceState(null,"",location.pathname);show("loginSection");notice("ok","Senha atualizada. Entre com sua nova senha.");
  }catch(err){notice("error","Não foi possível atualizar a senha. Tente novamente.");}finally{btn.disabled=false;btn.textContent="Salvar nova senha";}
 });
