@@ -295,7 +295,7 @@
           <h3 class="section-title">Visão geral</h3>
           <p class="sub">Acesso rápido aos módulos internos e leitura básica do acervo atual.</p>
         </div>
-        <span class="status-pill" id="connectionStatus">Supabase conectado</span>
+        <span class="status-pill" id="connectionStatus">Verificando autorização</span>
       </div>
 
       <div class="metrics">
@@ -334,7 +334,7 @@
             <h4>CRM — Gestão de Clientes</h4>
             <p>
               Acessar a estrutura do CRM para organizar o relacionamento com clientes,
-              cadastros, compras e acessos. Integração de dados e permissões administrativas ainda em preparação.
+              cadastros, compras e acessos. Integração de dados em preparação. Acesso ao painel sujeito à autorização administrativa.
             </p>
           </div>
           <a class="btn gold" href="crm.html">Abrir CRM</a>
@@ -428,8 +428,8 @@
       <div class="note">
         <strong>Importante:</strong> este painel não substitui a Área Partner e não deve ser usado pela empresa.
         Ele é apenas a entrada administrativa para você acessar os módulos internos da Curadoria Elite Travel.
-        O CRM está em preparação: antes de liberar dados pessoais, será necessário validar a autorização administrativa
-        no Supabase e as políticas de acesso de cada tabela.
+        O acesso a este painel exige autorização na tabela cet_admin_users. O CRM permanece em preparação:
+        suas consultas de dados pessoais e as políticas de cada tabela ainda precisam ser validadas.
       </div>
     </section>
   </main>
@@ -449,6 +449,9 @@
     const passwordInput = document.getElementById("passwordInput");
     const loginError = document.getElementById("loginError");
     const loginSuccess = document.getElementById("loginSuccess");
+    const connectionStatus = document.getElementById("connectionStatus");
+
+    let authorizationVersion = 0;
 
     function showMessage(element, text) {
       if (!element) return;
@@ -457,10 +460,44 @@
       setTimeout(function() { element.style.display = "none"; }, 5200);
     }
 
-    function setAuthenticatedState(isAuthenticated) {
-      loginCard.style.display = isAuthenticated ? "none" : "block";
-      dashboardShell.style.display = isAuthenticated ? "block" : "none";
-      logoutButton.style.display = isAuthenticated ? "inline-flex" : "none";
+    function setAuthenticatedState(isAuthorized) {
+      loginCard.style.display = isAuthorized ? "none" : "block";
+      dashboardShell.style.display = isAuthorized ? "block" : "none";
+      logoutButton.style.display = isAuthorized ? "inline-flex" : "none";
+    }
+
+    function setBusy(isBusy) {
+      loginButton.disabled = isBusy;
+      loginButton.textContent = isBusy ? "Verificando acesso..." : "Entrar no Admin";
+    }
+
+    // A autenticação identifica o usuário. A tabela protegida por RLS
+    // determina se ele pode acessar o painel administrativo.
+    async function verifyAdminAccess() {
+      const { data: userData, error: userError } = await supabaseClient.auth.getUser();
+      if (userError || !userData || !userData.user) {
+        return { allowed: false, reason: "Faça login para acessar a administração." };
+      }
+
+      const { data: adminRecord, error: adminError } = await supabaseClient
+        .from("cet_admin_users")
+        .select("admin_role, is_active")
+        .eq("user_id", userData.user.id)
+        .maybeSingle();
+
+      if (adminError) {
+        return { allowed: false, reason: "Não foi possível validar sua autorização administrativa. Tente novamente." };
+      }
+
+      const allowed = Boolean(
+        adminRecord &&
+        adminRecord.is_active === true &&
+        (adminRecord.admin_role === "owner" || adminRecord.admin_role === "admin")
+      );
+      return {
+        allowed,
+        reason: allowed ? "" : "Esta conta não possui autorização para acessar o painel administrativo."
+      };
     }
 
     async function updateCount(tableName, elementId, queryBuilder) {
@@ -477,13 +514,7 @@
         }
 
         const { count, error } = await query;
-
-        if (error) {
-          element.textContent = "--";
-          return;
-        }
-
-        element.textContent = String(count || 0);
+        element.textContent = error ? "--" : String(count || 0);
       } catch (error) {
         element.textContent = "--";
       }
@@ -500,44 +531,78 @@
     }
 
     async function checkSession() {
-      const { data } = await supabaseClient.auth.getSession();
-      const hasSession = Boolean(data && data.session);
-      setAuthenticatedState(hasSession);
-      if (hasSession) await loadDashboardCounts();
+      const version = ++authorizationVersion;
+      setAuthenticatedState(false);
+      setBusy(true);
+      try {
+        const result = await verifyAdminAccess();
+        if (version !== authorizationVersion) return;
+        setAuthenticatedState(result.allowed);
+        if (result.allowed) {
+          connectionStatus.textContent = "Acesso administrativo validado";
+          await loadDashboardCounts();
+        } else {
+          connectionStatus.textContent = "Acesso não autorizado";
+        }
+      } catch (error) {
+        if (version === authorizationVersion) {
+          setAuthenticatedState(false);
+          showMessage(loginError, "Não foi possível verificar o acesso. Tente novamente.");
+        }
+      } finally {
+        if (version === authorizationVersion) setBusy(false);
+      }
     }
 
     async function login() {
       const email = emailInput.value.trim();
-      const password = passwordInput.value.trim();
+      const password = passwordInput.value;
 
       if (!email || !password) {
         showMessage(loginError, "Preencha e-mail e senha para entrar.");
         return;
       }
 
-      loginButton.disabled = true;
-      loginButton.textContent = "Entrando...";
+      const version = ++authorizationVersion;
+      setAuthenticatedState(false);
+      loginError.style.display = "none";
+      loginSuccess.style.display = "none";
+      setBusy(true);
 
-      const { data, error } = await supabaseClient.auth.signInWithPassword({ email, password });
+      try {
+        const { error } = await supabaseClient.auth.signInWithPassword({ email, password });
+        if (version !== authorizationVersion) return;
+        if (error) {
+          showMessage(loginError, "Não foi possível entrar. Confira seu e-mail e senha.");
+          return;
+        }
 
-      loginButton.disabled = false;
-      loginButton.textContent = "Entrar no Admin";
+        const result = await verifyAdminAccess();
+        if (version !== authorizationVersion) return;
+        if (!result.allowed) {
+          showMessage(loginError, result.reason);
+          return;
+        }
 
-      if (error) {
-        showMessage(loginError, "Erro ao entrar: " + error.message);
-        return;
-      }
-
-      if (data && data.user) {
-        showMessage(loginSuccess, "Login realizado com sucesso.");
         setAuthenticatedState(true);
+        connectionStatus.textContent = "Acesso administrativo validado";
+        passwordInput.value = "";
+        showMessage(loginSuccess, "Acesso administrativo autorizado.");
         await loadDashboardCounts();
+      } catch (error) {
+        if (version === authorizationVersion) {
+          showMessage(loginError, "Ocorreu um erro ao validar seu acesso. Tente novamente.");
+        }
+      } finally {
+        if (version === authorizationVersion) setBusy(false);
       }
     }
 
     async function logout() {
-      await supabaseClient.auth.signOut();
+      ++authorizationVersion;
       setAuthenticatedState(false);
+      setBusy(false);
+      await supabaseClient.auth.signOut();
       emailInput.value = "";
       passwordInput.value = "";
     }
