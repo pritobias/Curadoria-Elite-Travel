@@ -1604,34 +1604,34 @@ main>.grid[hidden]{display:none!important}
     </nav>
     <section class="grid" hidden>
       <aside class="card">
-        <h3>Perfil da empresa</h3>
-        <p class="sub">Dados usados para personalizar os materiais Partner.</p>
+        <h3><span aria-hidden="true">🔒</span> Identidade do material</h3>
+        <p class="sub">Definida pela Gestão da empresa. O agente não pode alterar a marca ou a apresentação institucional.</p>
 
         <div class="logo-preview" id="logoPreview">
           Logo da marca apresentada ao cliente
         </div>
 
-        <input type="file" id="logoInput" accept="image/*" />
+        <input type="file" id="logoInput" accept="image/*" hidden disabled aria-label="Logo gerenciado pela Gestão" />
 
         <div class="company-box">
           <div class="form-group">
             <label for="partnerCompanyInput">Empresa parceira</label>
-            <input class="partner-input" id="partnerCompanyInput" type="text" value="" placeholder="Ex.: Ten Group Brasil" />
+            <input class="partner-input" id="partnerCompanyInput" type="text" value="" placeholder="Aguardando configuração da Gestão" readonly aria-readonly="true" />
           </div>
 
           <div class="form-group">
             <label for="clientBrandInput">Marca apresentada ao cliente</label>
-            <input class="partner-input" id="clientBrandInput" type="text" value="" placeholder="Ex.: Mastercard Concierge" />
+            <input class="partner-input" id="clientBrandInput" type="text" value="" placeholder="Aguardando configuração da Gestão" readonly aria-readonly="true" />
           </div>
 
           <div class="form-group">
             <label for="presentationModeInput">Apresentação do material</label>
-            <select class="partner-select" id="presentationModeInput">
+            <select class="partner-select" id="presentationModeInput" disabled aria-label="Apresentação definida pela Gestão">
               <option value="curadoria">Com assinatura Curadoria Elite Travel</option>
               <option value="whitelabel">Exclusivo</option>
             </select>
             <small class="presentation-mode-help">
-              Escolha como o material será apresentado ao cliente final.
+              Esta escolha é exclusiva da Gestão. Até sua configuração ser integrada, permanece o modo com assinatura CET.
             </small>
           </div>
 
@@ -3064,13 +3064,9 @@ main>.grid[hidden]{display:none!important}
     ["clientGreetingType", "clientNameInput", "clientMessageInput"].forEach(id => document.getElementById(id).addEventListener("input", renderClientPreviewText));
     document.getElementById("applyClientPersonalization").addEventListener("click", applyClientPersonalization);
     document.getElementById("clearClientPersonalization").addEventListener("click", clearClientPersonalization);
-    ["partnerCompanyInput", "clientBrandInput"].forEach(id => document.getElementById(id).addEventListener("input", syncPartnerBrandData));
-    document.getElementById("presentationModeInput").addEventListener("change", updatePresentationModeInfo);
-    document.getElementById("logoInput").addEventListener("change", async event => {
-      if (!event.target.files[0]) return;
-      try { partnerLogoDataUrl = await prepareImage(event.target.files[0]); document.getElementById("logoPreview").innerHTML = getBrandLogoHtml(); syncPartnerBrandData(); }
-      catch (error) { alert(error.message || "Não foi possível preparar o logo."); }
-    });
+    // Campos institucionais são somente leitura na Operação.
+    // O modo institucional é definido pela Gestão, nunca pelo agente.
+    // Upload de logo desabilitado na Operação. A Gestão configurará a identidade em integração futura.
     document.getElementById("whiteLabelPhotosList").addEventListener("focusin", event => {
       activePhotoIndex = event.target.matches(".photo-paste-target") ? Number(event.target.dataset.photoIndex) : null;
     });
