@@ -1600,8 +1600,6 @@ main>.grid[hidden]{display:none!important}
       <button type="button" class="partner-tab active" data-partner-tab="materiais">Materiais</button>
       <button type="button" class="partner-tab" data-partner-tab="pedidos">Pedidos <span id="partnerNavOrderCount">(0)</span></button>
       <button type="button" class="partner-tab" data-partner-tab="clientes">Clientes</button>
-      <button type="button" class="partner-tab" data-partner-tab="crm">CRM</button>
-      <button type="button" class="partner-tab" data-partner-tab="configuracoes">Configurações</button>
       <div class="partner-theme-switch"><button type="button" class="btn" id="partnerThemeToggle" aria-label="Alternar entre tema claro e escuro">☀ Modo claro</button></div>
     </nav>
     <section class="grid" hidden>
@@ -3024,6 +3022,7 @@ main>.grid[hidden]{display:none!important}
         const { data, error } = await supabaseClient.auth.getUser();
         if (error || !data?.user) { showLogin(true); return; }
         showLogin(false);
+        window.dispatchEvent(new CustomEvent("cet-partner-user", {detail:{email:data.user.email || "", metadata:data.user.user_metadata || {}}}));
         await loadMaterialsFromPublication();
       } catch (error) {
         showLogin(true); document.getElementById("loginStatus").textContent = "Não foi possível verificar a sessão. Tente entrar novamente.";
@@ -3112,21 +3111,36 @@ main>.grid[hidden]{display:none!important}
     section.innerHTML='<h2 class="partner-work-title">'+title+'</h2><p class="partner-work-subtitle">'+subtitle+'</p>';
     root.appendChild(section);tabs[id]=section;return section;
   }
-  const inicio=createTab('inicio','Bom dia!','Acesse o acervo e acompanhe as atividades disponíveis nesta versão.');
-  // Saudação baseada no horário local do navegador do agente.
+  const inicio=createTab('inicio','Bem-vindo(a)!','Desejamos a você um excelente dia de trabalho!');
+  // Nome exibido somente quando informado pelo perfil autenticado; sem nome fictício.
   const greetingTitle=inicio.querySelector('.partner-work-title');
+  let employeeFirstName='';
   function updatePartnerGreeting(){
     const hour=new Date().getHours();
-    greetingTitle.textContent=hour>=5&&hour<12?'Bom dia!':hour>=12&&hour<18?'Boa tarde!':'Boa noite!';
+    const salutation=hour>=5&&hour<12?'Bom dia':hour>=12&&hour<18?'Boa tarde':'Boa noite';
+    greetingTitle.textContent=salutation+(employeeFirstName?', '+employeeFirstName:'')+'!';
   }
+  window.addEventListener('cet-partner-user',event=>{
+    const m=event.detail?.metadata||{};
+    const fullName=[m.full_name,m.name,m.display_name,m.first_name].find(v=>typeof v==='string'&&v.trim());
+    employeeFirstName=fullName?fullName.trim().split(/\s+/)[0]:'';
+    updatePartnerGreeting();
+  });
   updatePartnerGreeting();
   document.addEventListener('visibilitychange',()=>{if(!document.hidden)updatePartnerGreeting();});
   window.setInterval(updatePartnerGreeting,60000);
+  const managerMessages=document.createElement('section');
+  managerMessages.className='partner-quick-bar';
+  managerMessages.setAttribute('aria-label','Recados da Gestão');
+  managerMessages.innerHTML='<h3 style="margin:0 0 10px">Recados da Gestão</h3><p class="partner-nav-note" style="margin:0">Nenhum recado disponível no momento. As mensagens da Gestão aparecerão aqui após a integração do módulo de comunicação interna.</p>';
+  inicio.appendChild(managerMessages);
+  const activityOverview=document.createElement('section');
+  activityOverview.className='partner-quick-bar';
+  activityOverview.innerHTML='<h3 style="margin:0 0 10px">Minha operação</h3><p class="partner-nav-note" style="margin:0">Os indicadores individuais de pedidos, entregas, FUPs e prazos serão exibidos quando o registro operacional estiver conectado ao Supabase. Nenhum dado demonstrativo é apresentado como resultado real.</p>';
+  inicio.appendChild(activityOverview);
   const materiais=createTab('materiais','Biblioteca de materiais','Escolha uma categoria e destino. Use o material original em poucos cliques ou personalize apenas quando necessário.');
   const pedidos=createTab('pedidos','Pedido em preparação','Reúna materiais para o mesmo atendimento. Nesta etapa, a seleção é temporária e não representa um envio.');
   const clientes=createTab('clientes','Clientes','A gestão de clientes e o histórico de atendimentos serão conectados ao CRM após a configuração das permissões.');
-  const crm=createTab('crm','CRM Partner','Indicadores disponíveis nesta sessão. Os relatórios permanentes dependem de integração com a base de dados.');
-  const configuracoes=createTab('configuracoes','Configurações da empresa','Identidade e apresentação usadas no documento. A gestão de marcas e permissões será integrada posteriormente.');
   const library=document.createElement('div');library.className='partner-library-layout';materiais.appendChild(library);
   const loading=document.getElementById('materialsLoading');
   const refresh=document.getElementById('refreshMaterialsButton');
@@ -3166,11 +3180,13 @@ main>.grid[hidden]{display:none!important}
   const downloadRow=oldMain.querySelector('.download-row');
   if(downloadRow)editorPreview.appendChild(downloadRow);
   pedidos.appendChild(order);
-  configuracoes.appendChild(oldAside);
-  inicio.appendChild(oldMain.querySelector('.partner-dashboard-section'));
+  // Controles de apresentação continuam no editor, sem aba administrativa.
+  editorTools.appendChild(oldAside);
+  const legacyDashboard=oldMain.querySelector('.partner-dashboard-section');
+  legacyDashboard.hidden=true;
+  root.appendChild(legacyDashboard);
   oldMain.remove();
   const clientNote=document.createElement('div');clientNote.className='partner-quick-bar';clientNote.innerHTML='<strong>Cadastro de clientes</strong><p class="partner-nav-note" style="margin:8px 0 0">A integração do cadastro, do envio de e-mail e do histórico permanente ainda não está configurada. Nenhum cliente é registrado nesta tela.</p>';clientes.appendChild(clientNote);
-  const crmNote=document.createElement('div');crmNote.className='partner-quick-bar';crmNote.innerHTML='<strong>Histórico de alterações</strong><p class="partner-nav-note" style="margin:8px 0 0">Nesta versão, é possível conferir as personalizações desta sessão no pedido. Auditoria persistente por funcionário e pedido exige autenticação individual e tabelas protegidas no Supabase.</p>';crm.appendChild(crmNote);
   const originalLogin=showLogin;
   showLogin=function(show){originalLogin(show);nav.hidden=show};
   window.showPartnerTab=function(id){
