@@ -1763,6 +1763,18 @@
               </div>
             </div>
 
+            <div class="partner-order-panel" id="partnerOrderPanel">
+              <h3>Pedido em preparação <span id="partnerOrderCount">(0 materiais)</span></h3>
+              <p class="sub">Reúna diferentes destinos e categorias para o mesmo atendimento. Esta seleção é temporária: ainda não é um envio, não registra um cliente e não gera um PDF conjunto.</p>
+              <div class="partner-order-actions">
+                <button class="btn gold" id="addToPartnerOrder" type="button" disabled>Adicionar material selecionado</button>
+                <button class="btn" id="personalizeSelectedMaterial" type="button" disabled>Personalizar antes de adicionar</button>
+                <button class="btn" id="clearPartnerOrder" type="button" disabled>Limpar seleção</button>
+              </div>
+              <div class="partner-order-list" id="partnerOrderList" aria-live="polite"><p class="sub">Nenhum material adicionado.</p></div>
+              <p class="partner-order-notice" id="partnerOrderNotice" role="status"></p>
+            </div>
+
             <div class="download-row">
               <button class="btn gold" id="downloadButton" type="button">
                 Salvar como PDF / imprimir
@@ -2284,6 +2296,47 @@
       finally { if (businessContentLoading[key] === pending) delete businessContentLoading[key]; }
     }
 
+    // Seleção temporária por atendimento; sem gravação no banco e sem envio automático.
+    const partnerOrder = new Map();
+    function renderPartnerOrder() {
+      const list = document.getElementById("partnerOrderList");
+      const items = Array.from(partnerOrder.values());
+      document.getElementById("partnerOrderCount").textContent = `(${items.length} ${items.length === 1 ? "material" : "materiais"})`;
+      document.getElementById("clearPartnerOrder").disabled = !items.length;
+      document.getElementById("addToPartnerOrder").disabled = !selectedMaterial;
+      document.getElementById("personalizeSelectedMaterial").disabled = !selectedMaterial;
+      list.replaceChildren();
+      if (!items.length) { const p = document.createElement("p"); p.className="sub"; p.textContent="Nenhum material adicionado."; list.appendChild(p); return; }
+      items.forEach(material => {
+        const row = document.createElement("div"); row.className="partner-order-item";
+        const label = document.createElement("div");
+        const strong = document.createElement("strong"); strong.textContent = material.city_label || "Destino";
+        const small = document.createElement("small"); small.textContent = `${normalizeCategoryName(material.category)} • ${material.year || "Edição não informada"}`;
+        label.append(strong,small);
+        const actions = document.createElement("div"); actions.className="partner-order-actions"; actions.style.marginTop="0";
+        const open = document.createElement("button"); open.className="btn"; open.type="button"; open.textContent="Visualizar";
+        open.addEventListener("click", () => { selectMaterial(material); document.getElementById("partnerOrderNotice").textContent="Material selecionado para visualização ou impressão individual."; });
+        const remove = document.createElement("button"); remove.className="btn"; remove.type="button"; remove.textContent="Remover";
+        remove.addEventListener("click", () => { partnerOrder.delete(getMaterialKey(material)); renderPartnerOrder(); });
+        actions.append(open,remove); row.append(label,actions); list.appendChild(row);
+      });
+    }
+    function addSelectedToPartnerOrder() {
+      if (!selectedMaterial) return;
+      const key = getMaterialKey(selectedMaterial);
+      partnerOrder.set(key, selectedMaterial);
+      document.getElementById("partnerOrderNotice").textContent = "Material adicionado. Você pode selecionar outros destinos ou categorias.";
+      renderPartnerOrder();
+    }
+    function openSelectedPersonalization() {
+      if (!selectedMaterial) return;
+      const panel = document.getElementById("clientPersonalizationPanel");
+      panel.classList.add("active");
+      document.getElementById("partnerOrderNotice").textContent = "Use as opções de identidade, saudação e fotografias existentes; depois adicione o material ao pedido.";
+      document.getElementById("clientNameInput").focus();
+      panel.scrollIntoView({behavior:"smooth",block:"start"});
+    }
+
     function selectMaterial(material) {
       selectedMaterial = material;
       const category = normalizeCategoryName(material.category);
@@ -2294,6 +2347,7 @@
       businessPreviewPageIndex = 0;
       document.querySelectorAll(".list-item").forEach(row => row.classList.toggle("active", row.dataset.materialKey === getMaterialKey(material)));
       loadAndRenderBusinessContent(material);
+      renderPartnerOrder();
     }
 
     function buildBusinessDocumentHtml(autoPrint, material = selectedMaterial) {
@@ -2548,6 +2602,16 @@
     .cover-page .professional-panel { margin-top: 24px; padding: 24px; }
     .cover-page .professional-panel h2 { font-size: 26px; margin-bottom: 12px; }
     .cover-page .professional-panel li { font-size: 16px; line-height: 1.65; }
+
+    /* Pedido em preparação — armazenamento apenas nesta sessão da página. */
+    .partner-order-panel{margin-top:22px;padding:22px;border:1px solid rgba(214,173,50,.32);border-radius:18px;background:rgba(214,173,50,.045)}
+    .partner-order-panel h3{color:#d6ad32;margin-bottom:9px}.partner-order-panel .sub{line-height:1.55}
+    .partner-order-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px}
+    .partner-order-list{display:grid;gap:10px;margin-top:16px}
+    .partner-order-item{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px;border:1px solid rgba(255,255,255,.14);border-radius:12px}
+    .partner-order-item small{display:block;color:#bdbdbd;margin-top:5px}.partner-order-item .btn{padding:8px 12px}
+    .partner-order-notice{margin-top:12px;color:#d6ad32;font-size:13px}
+    @media(max-width:600px){.partner-order-item{align-items:flex-start;flex-direction:column}}
   </style>
 </head>
 <body>
@@ -2899,6 +2963,13 @@
       window.location.reload();
     });
     document.getElementById("refreshMaterialsButton").addEventListener("click", initializePartner);
+    document.getElementById("addToPartnerOrder").addEventListener("click", addSelectedToPartnerOrder);
+    document.getElementById("personalizeSelectedMaterial").addEventListener("click", openSelectedPersonalization);
+    document.getElementById("clearPartnerOrder").addEventListener("click", () => {
+      partnerOrder.clear(); renderPartnerOrder();
+      document.getElementById("partnerOrderNotice").textContent="Seleção temporária limpa.";
+    });
+    renderPartnerOrder();
     document.getElementById("previewButton").addEventListener("click", () => openBusinessMaterial(false));
     document.getElementById("downloadButton").addEventListener("click", () => openBusinessMaterial(true));
     document.getElementById("destinationSearchInput").addEventListener("input", filterDestinations);
