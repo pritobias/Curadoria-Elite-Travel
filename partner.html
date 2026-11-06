@@ -1480,6 +1480,81 @@
     .business-a4-page > img{max-width:180px;max-height:100px;object-fit:contain;margin-bottom:20px}
     .business-item-photo img{object-fit:cover}
     @media(max-width:680px){header{height:auto;padding:16px;flex-wrap:wrap;gap:12px}.business-item-card{grid-template-columns:1fr}.business-item-photo{width:100%;height:220px;min-height:0}.business-a4-page{padding:18px}.doc-title{overflow-wrap:anywhere}}
+
+/* CET Partner — interface organizada e temas, sem alterar os estilos do PDF impresso */
+:root{color-scheme:dark;--cet-bg:#050b16;--cet-card:#0b1525;--cet-card-2:#101e31;--cet-text:#f7f8fb;--cet-muted:#b8c6d8;--cet-border:rgba(222,230,242,.16);--cet-gold:#d6ad32;--cet-field:#071222}
+body[data-theme="light"]{color-scheme:light;--cet-bg:#f2f4f7;--cet-card:#fff;--cet-card-2:#f7f8fb;--cet-text:#172337;--cet-muted:#516176;--cet-border:#dce2eb;--cet-gold:#987116;--cet-field:#fff;background:#f2f4f7;color:var(--cet-text)}
+body[data-theme="light"] header{background:#fff;border-color:var(--cet-border)}
+body[data-theme="light"] .brand p{color:#42526a}
+body[data-theme="light"] .card,body[data-theme="light"] .destinations-card,body[data-theme="light"] .partner-order-panel,body[data-theme="light"] .client-personalization-panel,body[data-theme="light"] .field,body[data-theme="light"] .company-box,body[data-theme="light"] .partner-dashboard-card{background:#fff;color:var(--cet-text);border-color:var(--cet-border);box-shadow:0 8px 24px rgba(16,30,50,.05)}
+body[data-theme="light"] .card h3,body[data-theme="light"] .partner-order-panel h3{color:#9a7419}
+body[data-theme="light"] .sub,body[data-theme="light"] .card .sub,body[data-theme="light"] .field small,body[data-theme="light"] .partner-order-item small,body[data-theme="light"] .presentation-mode-help,body[data-theme="light"] .white-label-photo-source{color:var(--cet-muted)}
+body[data-theme="light"] .btn:not(.gold){color:#25334a;background:#fff;border-color:#b8a16a}
+body[data-theme="light"] .partner-input,body[data-theme="light"] .partner-select,body[data-theme="light"] .partner-textarea,body[data-theme="light"] .destination-search{color:#172337;background:#fff;border-color:#cbd3df}
+body[data-theme="light"] input[type="file"]{color:#25334a}
+body[data-theme="light"] .category,body[data-theme="light"] .list-item,body[data-theme="light"] .white-label-photo-row,body[data-theme="light"] .partner-order-item,body[data-theme="light"] .client-preview-box,body[data-theme="light"] .presentation-mode-info,body[data-theme="light"] .loading-state{background:#f8f9fc;color:#172337;border-color:#dce2eb}
+body[data-theme="light"] .category p,body[data-theme="light"] .category strong,body[data-theme="light"] .list-item,body[data-theme="light"] .list-item *{color:#24344d}
+body[data-theme="light"] .partner-dashboard-section,body[data-theme="light"] .partner-dashboard-header p,body[data-theme="light"] .fair-use{color:#24344d}
+body[data-theme="light"] .pill:not(.gold){color:#24344d;background:#edf0f5}
+body[data-theme="light"] .hero{display:none}
+body[data-theme="light"] .viewer{background:#f8f6f1;color:#111}
+body[data-theme="light"] .doc-title,body[data-theme="light"] .doc-subtitle{color:#111}
+body[data-theme="light"] .partner-work-title,body[data-theme="light"] .partner-nav-note{color:#172337}
+body[data-theme="light"] .partner-work-subtitle{color:#516176}
+body[data-theme="light"] .partner-tab{color:#28364d;background:#fff;border-color:#d8dfe9}
+body[data-theme="light"] .partner-tab.active{background:#171f2e;color:#fff;border-color:#171f2e}
+body[data-theme="light"] .partner-section{background:#fff;border-color:#dce2eb}
+body[data-theme="light"] .partner-editor-tools{background:#f7f8fb;border-color:#dce2eb}
+body[data-theme="light"] .partner-edit-row{background:#fff;border-color:#dce2eb}
+body[data-theme="light"] .partner-section .partner-nav-note{color:#516176}
+body[data-theme="light"] .partner-quick-bar{background:#f6f8fb;border-color:#dce2eb}
+body[data-theme="light"] .partner-editor-heading{color:#172337}
+body[data-theme="light"] .form-group label,body[data-theme="light"] .partner-edit-row label{color:#475569}
+body[data-theme="light"] .top-actions .btn:not(.gold),body[data-theme="light"] #partnerThemeToggle{color:#24344d;background:#fff;border-color:#c5a85d;opacity:1}
+body[data-theme="light"] .field strong{color:#172337}
+body[data-theme="light"] .partner-order-panel .partner-order-notice{color:#987116}
+main{max-width:1600px;padding-top:24px}
+main>.hero{display:none}
+main>.grid{display:block!important}
+main>.grid[hidden]{display:none!important}
+.partner-navigation{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin:0 0 20px;padding:12px;border:1px solid var(--cet-border);border-radius:18px;background:var(--cet-card)}
+.partner-tab{padding:11px 18px;border-radius:12px;border:1px solid rgba(255,255,255,.16);background:transparent;color:#f6f6f6;font-weight:700;cursor:pointer}
+.partner-tab.active{background:linear-gradient(135deg,#e3bd43,#b88712);border-color:transparent;color:#101010}
+.partner-theme-switch{margin-left:auto;display:flex;gap:6px;align-items:center}
+.partner-theme-switch .btn{padding:10px 13px}
+.partner-section{padding:24px;border:1px solid var(--cet-border);border-radius:22px;background:var(--cet-card);min-height:350px}
+.partner-section[hidden]{display:none!important}
+.partner-work-title{font-size:25px;color:var(--cet-text);margin:0 0 8px}
+.partner-work-subtitle,.partner-nav-note{color:var(--cet-muted);font-size:14px;line-height:1.55;margin:0 0 20px}
+.partner-quick-bar{padding:17px;margin:16px 0;border:1px solid var(--cet-border);border-radius:16px;background:var(--cet-card-2)}
+.partner-quick-bar .partner-order-actions{margin-top:12px}
+.partner-library-layout{display:grid;grid-template-columns:minmax(0,1fr);gap:18px}
+.partner-library-layout .categories{margin:14px 0}
+.partner-library-layout .workspace{display:block;margin:0}
+.partner-library-layout .destinations-card{padding:16px;overflow:visible}
+.partner-library-layout .destinations-head{text-align:left;padding:10px}
+.partner-library-layout .destinations-card .list-item{cursor:pointer}
+.partner-editor-layout{display:grid;grid-template-columns:minmax(290px,35%) minmax(0,1fr);gap:22px;align-items:start}
+.partner-editor-tools{background:var(--cet-card-2);border:1px solid var(--cet-border);padding:18px;border-radius:18px;max-height:calc(100vh - 190px);overflow:auto}
+.partner-editor-tools .white-label-photos-panel{margin:14px 0}
+.partner-editor-tools .white-label-photos-list{max-width:100%}
+.partner-editor-tools .client-personalization{margin-top:12px}
+.partner-editor-preview .preview-area{width:100%;align-items:stretch}
+.partner-editor-preview .viewer{width:min(720px,100%);max-height:none;margin:0 auto;padding:30px}
+.partner-editor-preview .business-content-preview{max-width:100%}
+.partner-editor-preview .download-row{justify-content:center;flex-wrap:wrap}
+.partner-editor-heading{font-size:16px;margin:0 0 14px;color:var(--cet-text)}
+.partner-edit-row{border:1px solid var(--cet-border);border-radius:12px;padding:12px;background:var(--cet-card);margin-bottom:12px}
+.partner-edit-row label{display:block;font-size:13px;margin-bottom:8px;color:var(--cet-muted)}
+.partner-edit-row textarea{min-height:120px}
+.partner-edit-row .btn{margin-top:8px;padding:9px 12px}
+.partner-dashboard-section{margin:0}
+.partner-order-panel{margin-top:0}
+.partner-hidden-helper{display:none!important}
+.partner-status{margin:10px 0;color:var(--cet-gold);font-size:13px;min-height:18px}
+@media(max-width:900px){.partner-editor-layout{grid-template-columns:1fr}.partner-editor-tools{max-height:none}.partner-theme-switch{margin-left:0}.partner-navigation{gap:6px}.partner-tab{padding:9px 12px}}
+@media(max-width:550px){.partner-section{padding:14px}.partner-navigation{padding:9px}.partner-editor-preview .viewer{padding:14px}.partner-work-title{font-size:21px}}
+
 </style>
 </head>
 
@@ -1520,6 +1595,15 @@
         <p class="sub" id="loginStatus" role="status" style="margin-top:16px"></p>
       </form>
     </section>
+    <nav class="partner-navigation" id="partnerNavigation" aria-label="Áreas do Partner" hidden>
+      <button type="button" class="partner-tab" data-partner-tab="inicio">Início</button>
+      <button type="button" class="partner-tab active" data-partner-tab="materiais">Materiais</button>
+      <button type="button" class="partner-tab" data-partner-tab="pedidos">Pedidos <span id="partnerNavOrderCount">(0)</span></button>
+      <button type="button" class="partner-tab" data-partner-tab="clientes">Clientes</button>
+      <button type="button" class="partner-tab" data-partner-tab="crm">CRM</button>
+      <button type="button" class="partner-tab" data-partner-tab="configuracoes">Configurações</button>
+      <div class="partner-theme-switch"><button type="button" class="btn" id="partnerThemeToggle" aria-label="Alternar entre tema claro e escuro">☀ Modo claro</button></div>
+    </nav>
     <section class="grid" hidden>
       <aside class="card">
         <h3>Perfil da empresa</h3>
@@ -3013,5 +3097,187 @@
     initializePartner();
 
   </script>
+
+<script>
+/* CET Partner: navegação e editor visual. Sem escrita no Supabase. */
+(function(){
+  const root=document.querySelector('main > .grid');
+  const oldAside=root.querySelector(':scope > aside.card');
+  const oldMain=root.querySelector(':scope > section.card');
+  const nav=document.getElementById('partnerNavigation');
+  const tabs={};
+  function createTab(id,title,subtitle){
+    const section=document.createElement('section');section.className='partner-section';section.dataset.partnerView=id;
+    section.hidden=id!=='materiais';
+    section.innerHTML='<h2 class="partner-work-title">'+title+'</h2><p class="partner-work-subtitle">'+subtitle+'</p>';
+    root.appendChild(section);tabs[id]=section;return section;
+  }
+  const inicio=createTab('inicio','Visão geral','Acesse o acervo e acompanhe as atividades disponíveis nesta versão.');
+  const materiais=createTab('materiais','Biblioteca de materiais','Escolha uma categoria e destino. Use o material original em poucos cliques ou personalize apenas quando necessário.');
+  const pedidos=createTab('pedidos','Pedido em preparação','Reúna materiais para o mesmo atendimento. Nesta etapa, a seleção é temporária e não representa um envio.');
+  const clientes=createTab('clientes','Clientes','A gestão de clientes e o histórico de atendimentos serão conectados ao CRM após a configuração das permissões.');
+  const crm=createTab('crm','CRM Partner','Indicadores disponíveis nesta sessão. Os relatórios permanentes dependem de integração com a base de dados.');
+  const configuracoes=createTab('configuracoes','Configurações da empresa','Identidade e apresentação usadas no documento. A gestão de marcas e permissões será integrada posteriormente.');
+  const library=document.createElement('div');library.className='partner-library-layout';materiais.appendChild(library);
+  const loading=document.getElementById('materialsLoading');
+  const refresh=document.getElementById('refreshMaterialsButton');
+  const categories=document.getElementById('categoriesContainer');
+  const workspace=oldMain.querySelector('.workspace');
+  library.append(loading,refresh,categories);
+  library.appendChild(workspace);
+  const destinationCard=workspace.querySelector('.destinations-card');
+  const preview=workspace.querySelector('.preview-area');
+  const order=document.getElementById('partnerOrderPanel');
+  const orderActions=order.querySelector('.partner-order-actions');
+  const quick=document.createElement('div');quick.className='partner-quick-bar';
+  quick.innerHTML='<strong>Material selecionado</strong><p class="partner-nav-note" style="margin:5px 0">Adicionar sem alterações ou abrir a área de trabalho para personalizar.</p>';
+  const quickActions=document.createElement('div');quickActions.className='partner-order-actions';
+  quickActions.append(document.getElementById('addToPartnerOrder'),document.getElementById('personalizeSelectedMaterial'));
+  const gotoOrder=document.createElement('button');gotoOrder.type='button';gotoOrder.className='btn';gotoOrder.textContent='Ver pedido';gotoOrder.addEventListener('click',()=>showPartnerTab('pedidos'));
+  quickActions.appendChild(gotoOrder);quick.appendChild(quickActions);
+  library.appendChild(quick);
+  const editor=createTab('editor','Área de edição','Edite somente as indicações necessárias. O acervo original CET permanece intacto.');
+  const editorLayout=document.createElement('div');editorLayout.className='partner-editor-layout';editor.appendChild(editorLayout);
+  const editorTools=document.createElement('div');editorTools.className='partner-editor-tools';editorLayout.appendChild(editorTools);
+  const editorPreview=document.createElement('div');editorPreview.className='partner-editor-preview';editorLayout.appendChild(editorPreview);
+  const editorTop=document.createElement('div');editorTop.className='partner-quick-bar';
+  editorTop.innerHTML='<strong id="partnerEditorMaterial">Material selecionado</strong><p class="partner-nav-note" style="margin:6px 0">Prévia ampliada e alterações isoladas nesta sessão.</p>';
+  const editorTopActions=document.createElement('div');editorTopActions.className='partner-order-actions';
+  const back=document.createElement('button');back.className='btn';back.type='button';back.textContent='← Voltar à biblioteca';back.addEventListener('click',()=>showPartnerTab('materiais'));
+  const saveAdd=document.createElement('button');saveAdd.className='btn gold';saveAdd.type='button';saveAdd.textContent='Adicionar ao pedido';saveAdd.addEventListener('click',()=>{addSelectedToPartnerOrder();showPartnerTab('pedidos')});
+  editorTopActions.append(back,saveAdd);editorTop.appendChild(editorTopActions);editorTools.appendChild(editorTop);
+  const photoPanel=document.getElementById('whiteLabelPhotosPanel');
+  editorTools.appendChild(photoPanel);
+  const descriptionBox=document.createElement('div');descriptionBox.className='partner-edit-row';
+  descriptionBox.innerHTML='<h3 class="partner-editor-heading">Editar descrição de uma indicação</h3><label for="partnerEditIndication">Indicação</label><select id="partnerEditIndication" class="partner-select"></select><label for="partnerEditDescription" style="margin-top:12px">Descrição</label><textarea id="partnerEditDescription" class="partner-textarea" maxlength="2500"></textarea><p class="partner-nav-note" style="margin:6px 0">As mudanças são locais, não modificam o acervo. Respeite o espaço editorial do documento.</p><button type="button" class="btn" id="partnerRestoreDescription">Restaurar descrição original</button><p id="partnerEditStatus" class="partner-status" role="status"></p>';
+  editorTools.appendChild(descriptionBox);
+  const clientPanel=oldAside.querySelector('.client-personalization');
+  editorTools.appendChild(clientPanel);
+  editorPreview.appendChild(preview);
+  const downloadRow=oldMain.querySelector('.download-row');
+  if(downloadRow)editorPreview.appendChild(downloadRow);
+  pedidos.appendChild(order);
+  configuracoes.appendChild(oldAside);
+  inicio.appendChild(oldMain.querySelector('.partner-dashboard-section'));
+  oldMain.remove();
+  const clientNote=document.createElement('div');clientNote.className='partner-quick-bar';clientNote.innerHTML='<strong>Cadastro de clientes</strong><p class="partner-nav-note" style="margin:8px 0 0">A integração do cadastro, do envio de e-mail e do histórico permanente ainda não está configurada. Nenhum cliente é registrado nesta tela.</p>';clientes.appendChild(clientNote);
+  const crmNote=document.createElement('div');crmNote.className='partner-quick-bar';crmNote.innerHTML='<strong>Histórico de alterações</strong><p class="partner-nav-note" style="margin:8px 0 0">Nesta versão, é possível conferir as personalizações desta sessão no pedido. Auditoria persistente por funcionário e pedido exige autenticação individual e tabelas protegidas no Supabase.</p>';crm.appendChild(crmNote);
+  const originalLogin=showLogin;
+  showLogin=function(show){originalLogin(show);nav.hidden=show};
+  window.showPartnerTab=function(id){
+    Object.entries(tabs).forEach(([key,section])=>section.hidden=key!==id);
+    nav.querySelectorAll('[data-partner-tab]').forEach(b=>b.classList.toggle('active',b.dataset.partnerTab===id||(id==='editor'&&b.dataset.partnerTab==='materiais')));
+    window.scrollTo({top:0,behavior:'instant'});
+  };
+  nav.querySelectorAll('[data-partner-tab]').forEach(b=>b.addEventListener('click',()=>showPartnerTab(b.dataset.partnerTab)));
+  const themeButton=document.getElementById('partnerThemeToggle');
+  function setTheme(theme){document.body.dataset.theme=theme;themeButton.textContent=theme==='light'?'☾ Modo escuro':'☀ Modo claro';themeButton.setAttribute('aria-pressed',String(theme==='light'));try{localStorage.setItem('cet-partner-theme',theme)}catch(_){}}
+  let savedTheme='dark';try{savedTheme=localStorage.getItem('cet-partner-theme')||'dark'}catch(_){}
+  setTheme(savedTheme==='light'?'light':'dark');themeButton.addEventListener('click',()=>setTheme(document.body.dataset.theme==='light'?'dark':'light'));
+  // Editor por indicação: sobrescritas somente na memória da aba, sem alterar businessContentCache.
+  const textOverrides=new Map();
+  const editSelect=document.getElementById('partnerEditIndication');
+  const editText=document.getElementById('partnerEditDescription');
+  const editStatus=document.getElementById('partnerEditStatus');
+  const textKey=(material,item)=>getMaterialKey(material)+'::'+item.id;
+  function refreshEditList(){
+    editSelect.replaceChildren();
+    if(!selectedMaterial)return;
+    const content=businessContentCache[getBusinessContentCacheKey(selectedMaterial)];
+    if(!content){editStatus.textContent='Aguarde o carregamento do material.';return;}
+    content.items.forEach((item,index)=>{const opt=document.createElement('option');opt.value=String(index);opt.textContent=String(index+1).padStart(2,'0')+' · '+item.name;editSelect.appendChild(opt)});
+    refreshEditText();
+  }
+  function refreshEditText(){
+    if(!selectedMaterial)return;
+    const item=businessContentCache[getBusinessContentCacheKey(selectedMaterial)]?.items[Number(editSelect.value)];
+    editText.disabled=!item;editText.value=item?(textOverrides.get(textKey(selectedMaterial,item))??item.description??''):'';
+    editStatus.textContent=item?'Edição local · original preservado':'Nenhuma indicação disponível.';
+  }
+  editSelect.addEventListener('change',refreshEditText);
+  editText.addEventListener('input',()=>{
+    if(!selectedMaterial)return;
+    const item=businessContentCache[getBusinessContentCacheKey(selectedMaterial)]?.items[Number(editSelect.value)];if(!item)return;
+    const key=textKey(selectedMaterial,item);
+    if(editText.value===item.description)textOverrides.delete(key);else textOverrides.set(key,editText.value);
+    renderBusinessContentPreview(selectedMaterial);
+    editStatus.textContent='Descrição alterada nesta sessão. Original preservado.';
+  });
+  document.getElementById('partnerRestoreDescription').addEventListener('click',()=>{
+    if(!selectedMaterial)return;
+    const item=businessContentCache[getBusinessContentCacheKey(selectedMaterial)]?.items[Number(editSelect.value)];if(!item)return;
+    textOverrides.delete(textKey(selectedMaterial,item));refreshEditText();renderBusinessContentPreview(selectedMaterial);
+  });
+  const originalPreview=renderBusinessContentPreview;
+  renderBusinessContentPreview=function(material){
+    const content=businessContentCache[getBusinessContentCacheKey(material)];
+    if(!content)return originalPreview(material);
+    const originals=content.items;
+    // Temporarily supply a shallow copy to existing preview renderer, never edit the cached originals.
+    const key=getBusinessContentCacheKey(material);
+    businessContentCache[key]={...content,items:originals.map(item=>({...item,description:textOverrides.get(textKey(material,item))??item.description}))};
+    try{return originalPreview(material)}finally{businessContentCache[key]=content}
+  };
+  const originalBuild=buildBusinessDocumentHtml;
+  buildBusinessDocumentHtml=function(autoPrint,material=selectedMaterial){
+    const content=businessContentCache[getBusinessContentCacheKey(material)];if(!content)return originalBuild(autoPrint,material);
+    const key=getBusinessContentCacheKey(material);
+    businessContentCache[key]={...content,items:content.items.map(item=>({...item,description:textOverrides.get(textKey(material,item))??item.description}))};
+    try{return originalBuild(autoPrint,material)}finally{businessContentCache[key]=content}
+  };
+  const originalOpen=openSelectedPersonalization;
+  openSelectedPersonalization=function(){
+    if(!selectedMaterial)return;
+    document.getElementById('partnerEditorMaterial').textContent=normalizeCategoryName(selectedMaterial.category)+' · '+selectedMaterial.city_label;
+    showPartnerTab('editor');
+    refreshEditList();
+    if(!editSelect.options.length){setTimeout(refreshEditList,700)}
+  };
+  // Record which fields were changed in the current browser session. Not a permanent audit.
+  const sessionOrderChanges=new Map();
+  const originalAdd=addSelectedToPartnerOrder;
+  addSelectedToPartnerOrder=function(){
+    if(!selectedMaterial)return;
+    originalAdd();
+    const material=selectedMaterial;
+    const content=businessContentCache[getBusinessContentCacheKey(material)];
+    const changes=[];
+    if(content)content.items.forEach((item,index)=>{
+      if(textOverrides.has(textKey(material,item)))changes.push('Indicação '+String(index+1).padStart(2,'0')+' · descrição');
+      if(whiteLabelPhotoData[material.id+':'+item.id])changes.push('Indicação '+String(index+1).padStart(2,'0')+' · fotografia');
+    });
+    sessionOrderChanges.set(getMaterialKey(material),changes);
+    decorateOrderRows();
+    document.getElementById('partnerNavOrderCount').textContent='('+partnerOrder.size+')';
+  };
+  // Ensure the selected material is visible in the editor, including when loaded asynchronously.
+  const originalLoad=loadAndRenderBusinessContent;
+  loadAndRenderBusinessContent=async function(material){await originalLoad(material);if(selectedMaterial===material&&!tabs.editor.hidden)refreshEditList()};
+  function decorateOrderRows(){
+    const rows=Array.from(document.querySelectorAll('#partnerOrderList .partner-order-item'));
+    rows.forEach((row,index)=>{
+      const material=Array.from(partnerOrder.values())[index];if(!material)return;
+      const changes=sessionOrderChanges.get(getMaterialKey(material))||[];
+      const note=document.createElement('small');note.className='partner-order-change-summary';
+      note.textContent=changes.length?'Alterações nesta sessão: '+changes.join('; '):'Sem alterações editoriais';
+      row.querySelector('div')?.appendChild(note);
+    });
+  }
+  const originalRenderOrder=renderPartnerOrder;
+  renderPartnerOrder=function(){originalRenderOrder();decorateOrderRows();document.getElementById('partnerNavOrderCount').textContent='('+partnerOrder.size+')'};
+  // Existing event listeners were registered before these wrappers; replace handlers for primary actions.
+  document.getElementById('personalizeSelectedMaterial').replaceWith(document.getElementById('personalizeSelectedMaterial').cloneNode(true));
+  document.getElementById('personalizeSelectedMaterial').addEventListener('click',()=>openSelectedPersonalization());
+  document.getElementById('addToPartnerOrder').replaceWith(document.getElementById('addToPartnerOrder').cloneNode(true));
+  document.getElementById('addToPartnerOrder').addEventListener('click',()=>addSelectedToPartnerOrder());
+  // Material previews in the order open the expanded editor after selecting the material.
+  document.getElementById('partnerOrderList').addEventListener('click',event=>{
+    if(event.target.tagName==='BUTTON'&&event.target.textContent==='Visualizar')setTimeout(()=>showPartnerTab('editor'),0);
+  });
+  const currentRender=renderPartnerOrder;renderPartnerOrder=function(){currentRender();};renderPartnerOrder();
+  // Hide editor-only controls when no material is selected.
+  nav.hidden=!document.querySelector('main > .grid')||document.querySelector('main > .grid').hidden;
+})();
+</script>
 </body>
 </html>
