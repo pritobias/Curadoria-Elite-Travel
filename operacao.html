@@ -3135,7 +3135,11 @@ main>.grid[hidden]{display:none!important}
   activityOverview.innerHTML='<h3 style="margin:0 0 10px">Minha operação</h3><p class="partner-nav-note" style="margin:0">Os indicadores individuais de pedidos, entregas, FUPs e prazos serão exibidos quando o registro operacional estiver conectado ao Supabase. Nenhum dado demonstrativo é apresentado como resultado real.</p>';
   inicio.appendChild(activityOverview);
   const materiais=createTab('materiais','Biblioteca de materiais','Escolha uma categoria e destino. Use o material original em poucos cliques ou personalize apenas quando necessário.');
-  const pedidos=createTab('pedidos','Pedido em preparação','Reúna materiais para o mesmo atendimento. Nesta etapa, a seleção é temporária e não representa um envio.');
+  const pedidos=createTab('pedidos','Preparação de materiais','Reúna os materiais para o atendimento. Esta seleção é temporária e ainda não constitui um pedido registrado nem um e-mail enviado.');
+  const statusGuide=document.createElement('div');
+  statusGuide.className='partner-quick-bar';
+  statusGuide.innerHTML='<h3 style="margin:0 0 8px">Etapas do atendimento</h3><p class="partner-nav-note" style="margin:0 0 6px"><strong>Em preparação</strong> → <strong>E-mail encaminhado</strong> → <strong>FUP</strong> → <strong>Encerrado</strong>.</p><p class="partner-nav-note" style="margin:0">As três primeiras etapas permanecem em aberto e aparecem na fila do agente e na visão consolidada da Gestão. O encerramento retira o pedido da fila ativa, mas preserva o histórico. <strong>Atenção:</strong> nesta versão, a Operação ainda não grava essas etapas no banco de dados; a lista de materiais é somente uma preparação local.</p>';
+  pedidos.appendChild(statusGuide);
   const clientes=createTab('clientes','Clientes','A gestão de clientes e o histórico de atendimentos serão conectados ao CRM após a configuração das permissões.');
   const library=document.createElement('div');library.className='partner-library-layout';materiais.appendChild(library);
   const loading=document.getElementById('materialsLoading');
