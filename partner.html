@@ -3112,7 +3112,16 @@ main>.grid[hidden]{display:none!important}
     section.innerHTML='<h2 class="partner-work-title">'+title+'</h2><p class="partner-work-subtitle">'+subtitle+'</p>';
     root.appendChild(section);tabs[id]=section;return section;
   }
-  const inicio=createTab('inicio','Visão geral','Acesse o acervo e acompanhe as atividades disponíveis nesta versão.');
+  const inicio=createTab('inicio','Bom dia!','Acesse o acervo e acompanhe as atividades disponíveis nesta versão.');
+  // Saudação baseada no horário local do navegador do agente.
+  const greetingTitle=inicio.querySelector('.partner-work-title');
+  function updatePartnerGreeting(){
+    const hour=new Date().getHours();
+    greetingTitle.textContent=hour>=5&&hour<12?'Bom dia!':hour>=12&&hour<18?'Boa tarde!':'Boa noite!';
+  }
+  updatePartnerGreeting();
+  document.addEventListener('visibilitychange',()=>{if(!document.hidden)updatePartnerGreeting();});
+  window.setInterval(updatePartnerGreeting,60000);
   const materiais=createTab('materiais','Biblioteca de materiais','Escolha uma categoria e destino. Use o material original em poucos cliques ou personalize apenas quando necessário.');
   const pedidos=createTab('pedidos','Pedido em preparação','Reúna materiais para o mesmo atendimento. Nesta etapa, a seleção é temporária e não representa um envio.');
   const clientes=createTab('clientes','Clientes','A gestão de clientes e o histórico de atendimentos serão conectados ao CRM após a configuração das permissões.');
