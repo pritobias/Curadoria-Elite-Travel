@@ -15,6 +15,13 @@ h1{margin:0 0 6px;font-size:22px}.sub{margin:0 0 18px;color:rgba(255,255,255,.72
 input{width:100%;padding:12px 14px;border-radius:12px;border:1px solid rgba(255,255,255,.10);background:#eaf2ff;color:#000;outline:none}.password-wrap{position:relative}.password-wrap input{padding-right:52px}.toggle-eye{position:absolute;right:7px;top:50%;transform:translateY(-50%);display:flex;align-items:center;justify-content:center;width:40px;height:40px;border:none;background:transparent;cursor:pointer;border-radius:10px;color:#333}.toggle-eye:hover{background:rgba(0,0,0,.07)}.toggle-eye:focus-visible{outline:2px solid #a47d13;outline-offset:1px}.toggle-eye svg{width:21px;height:21px;display:block;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
 .remember-row{margin-top:12px;display:flex;align-items:center;gap:10px;color:rgba(255,255,255,.78);font-size:13px}.remember-row input{width:auto;accent-color:#d4af37}.remember-row label{margin:0}
 .btn{margin-top:16px;width:100%;padding:12px;border-radius:12px;border:none;background:#fff;color:#000;font-weight:800;cursor:pointer}.btn:disabled{opacity:.65;cursor:not-allowed}.google-btn{display:flex;align-items:center;justify-content:center;gap:10px;background:transparent;color:#fff;border:1px solid rgba(255,255,255,.35);font-weight:600}.google-btn svg{width:19px;height:19px;flex:none}.login-divider{display:flex;align-items:center;gap:12px;margin-top:18px;color:rgba(255,255,255,.7);font-size:12px}.login-divider:before,.login-divider:after{content:"";height:1px;background:rgba(255,255,255,.18);flex:1}.row{margin-top:14px;font-size:13px;line-height:1.7}a{color:#d4af37;text-decoration:none;font-weight:700}.error,.ok{margin-top:12px;padding:10px 12px;border-radius:12px;border:1px solid rgba(255,255,255,.10);display:none;font-size:13px;line-height:1.5}.error{background:rgba(212,175,55,.10)}.ok{background:rgba(255,255,255,.06)}[hidden]{display:none!important}
+/* Ajuda contextual para recuperação de senha. */
+.password-help-row{display:flex;align-items:center;gap:8px}
+.password-help-button{display:inline-flex;align-items:center;justify-content:center;width:23px;height:23px;border:1px solid rgba(255,255,255,.4);border-radius:50%;background:transparent;color:#d4af37;cursor:pointer;padding:0;font-size:13px;font-weight:700;line-height:1}
+.password-help-button:hover,.password-help-button:focus-visible{border-color:#d4af37;outline-offset:3px}
+.password-help-panel{margin-top:10px;padding:12px 14px;border:1px solid rgba(212,175,55,.35);border-radius:10px;background:rgba(16,19,23,.96);color:rgba(255,255,255,.88);font-size:13px;line-height:1.6}
+.password-help-panel strong{color:#d4af37}
+.password-help-close{margin-top:8px;border:0;background:transparent;color:#d4af37;font-weight:700;padding:3px 0;cursor:pointer}
 </style>
 </head>
 <body>
@@ -29,7 +36,8 @@ input{width:100%;padding:12px 14px;border-radius:12px;border:1px solid rgba(255,
 <button class="btn" id="btnLogin" type="submit">Entrar</button>
 <div class="login-divider">ou</div>
 <button class="btn google-btn" id="btnGoogle" type="button"><svg viewBox="0 0 48 48" aria-hidden="true"><path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/><path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6C44.4 38.03 46.98 31.89 46.98 24.55z"/><path fill="#FBBC05" d="M10.53 28.59A14.4 14.4 0 0 1 9.75 24c0-1.59.27-3.13.76-4.59l-7.98-6.2A23.9 23.9 0 0 0 0 24c0 3.87.93 7.52 2.56 10.78l7.97-6.19z"/><path fill="#34A853" d="M24 48c6.48 0 11.92-2.13 15.89-5.8l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.97 6.19C6.51 42.62 14.62 48 24 48z"/></svg>Continuar com Google</button>
-<div class="row"><a href="#" id="forgotLink">Esqueci minha senha</a></div>
+<div class="row password-help-row"><a href="#" id="forgotLink">Esqueci minha senha</a><button type="button" id="passwordHelpButton" class="password-help-button" aria-label="Informações sobre recuperação de senha" aria-expanded="false" aria-controls="passwordHelpPanel" title="Como funciona a recuperação de senha?">i</button></div>
+<div id="passwordHelpPanel" class="password-help-panel" hidden><strong>Sobre a recuperação de senha</strong><div>A recuperação de senha é válida para o acesso com e-mail e senha da Curadoria Elite Travel.</div><div>Se você utiliza sua conta Google, recupere sua senha diretamente pelo Google.</div><button type="button" id="passwordHelpClose" class="password-help-close">Fechar</button></div>
 <div class="row">Não tem conta? <a href="register.html">Criar cadastro</a></div>
 </form>
 </section>
@@ -98,6 +106,12 @@ async function finishGoogleLogin(){
  }catch(err){notice("error","Não foi possível confirmar o acesso com Google. Tente novamente.");}
 }
 finishGoogleLogin();
+// Mostra a explicação apenas quando solicitada, sem afetar a autenticação.
+const passwordHelpButton=el("passwordHelpButton"),passwordHelpPanel=el("passwordHelpPanel");
+function setPasswordHelp(open){passwordHelpPanel.hidden=!open;passwordHelpButton.setAttribute("aria-expanded",String(open));if(!open)passwordHelpButton.focus();}
+passwordHelpButton.addEventListener("click",()=>setPasswordHelp(passwordHelpPanel.hidden));
+el("passwordHelpClose").addEventListener("click",()=>setPasswordHelp(false));
+passwordHelpPanel.addEventListener("keydown",e=>{if(e.key==="Escape")setPasswordHelp(false);});
 el("forgotLink").addEventListener("click",e=>{e.preventDefault();el("recoveryEmail").value=el("email").value;show("requestSection");});
 document.querySelectorAll("[data-back-login]").forEach(a=>a.addEventListener("click",e=>{e.preventDefault();history.replaceState(null,"",location.pathname);show("loginSection");}));
 el("loginForm").addEventListener("submit",async e=>{
