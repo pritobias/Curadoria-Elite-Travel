@@ -1,26 +1,1104 @@
 <!doctype html>
-<html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Estúdio Editorial | Curadoria Elite Travel</title>
-<style>
-:root{--black:#171717;--gold:#c6a35c;--cream:#f5f2eb;--paper:#fff;--line:#dedbd4;--muted:#777}*{box-sizing:border-box}body{margin:0;font:14px Arial,sans-serif;background:#e8e7e4;color:#222}button,input,textarea{font:inherit}button{cursor:pointer}header{height:70px;background:#151515;color:#fff;display:flex;align-items:center;gap:20px;padding:0 22px;border-bottom:2px solid var(--gold)}.brand{color:#d5b571;font:19px Georgia,serif;letter-spacing:1px;min-width:270px}.brand small{display:block;color:#ccc;font:11px Arial;margin-top:4px}.document-title{flex:1;font-weight:600}.status{font-size:12px;color:#b7d7bc}.btn{padding:10px 14px;border:1px solid #aaa;border-radius:6px;background:#fff;color:#222}.btn.gold{background:#e7be69;border-color:#e7be69;color:#161616;font-weight:bold}.btn.dark{background:transparent;border-color:#777;color:#fff}.layout{display:grid;grid-template-columns:84px 355px minmax(420px,1fr) 164px;height:calc(100vh - 70px);min-height:620px}.rail{background:#1a1a1a;color:#eee;padding:14px 7px;display:flex;flex-direction:column;gap:8px}.rail button{border:0;background:transparent;color:inherit;border-radius:7px;padding:12px 4px;font-size:11px}.rail button.active{background:#e7be69;color:#111}.rail .symbol{display:block;font-size:23px;margin-bottom:6px}.panel{background:#fbfaf8;overflow:auto;border-right:1px solid var(--line);padding:21px}.panel h2{margin:0 0 4px;font:23px Georgia}.sub{color:var(--muted);font-size:12px}.section{border-top:1px solid var(--line);margin-top:18px;padding-top:16px}.label{display:block;font-size:12px;font-weight:bold;margin:12px 0 6px}input,textarea{width:100%;padding:11px;border:1px solid #d6d1c7;border-radius:5px;background:white;color:#222}textarea{min-height:136px;resize:vertical;line-height:1.45}.hint{display:flex;justify-content:space-between;color:#777;font-size:11px;margin-top:5px}.warning{color:#b54329!important}.thumbphoto{width:100%;height:105px;object-fit:cover;border:1px solid #ddd;background:#e9e5dc}.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}.actions button{padding:8px 10px;border:1px solid #cfc9bf;border-radius:5px;background:white}.workspace{overflow:auto;padding:18px 26px 50px}.toolbar{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:20px}.toolbar button{padding:8px 12px;border:1px solid #d4d0c9;border-radius:5px;background:white}.sheet{width:min(100%,595px);min-height:842px;background:#fff;margin:auto;box-shadow:0 8px 32px #0002;position:relative;padding:30px 0 28px;overflow:hidden}.sheet .topline{display:flex;justify-content:space-between;padding:0 38px;font-weight:bold;font-size:12px;letter-spacing:.5px}.topline .goldmark{color:var(--gold)}.sheet .logo{text-align:center;margin:22px auto 13px;font:20px Georgia;letter-spacing:2px}.sheet .logo small{display:block;font:8px Arial;letter-spacing:1px;color:#999;margin-top:5px}.sheet .tagline{text-align:center;font:21px Georgia;margin:10px 20px 4px}.sheet .quote{text-align:center;font:italic 11px Georgia;margin:0 20px 23px}.entry{display:grid;grid-template-columns:46% 54%;height:204px;margin-bottom:15px;position:relative}.entry img{height:196px;width:100%;object-fit:cover;background:#eee}.entry .name{position:absolute;top:0;left:26%;background:#111;color:white;padding:8px 12px;font:14px Georgia;max-width:70%;z-index:1}.entry .details{padding:0 25px 0 31px;font:11px/1.35 Arial;overflow:hidden}.entry .details .desc{height:124px;overflow:hidden;text-align:justify}.entry .details .meta{margin-top:5px;overflow-wrap:anywhere}.entry .details strong{color:#222}.entry .details .value{color:#a44b2b}.entry.selected:after{content:"";position:absolute;inset:-3px;border:2px solid #c6a35c;pointer-events:none}.sheet footer{position:absolute;bottom:12px;left:38px;right:38px;display:flex;justify-content:space-between;color:#a58447;font:11px Georgia}.pages{background:#f8f7f5;border-left:1px solid var(--line);overflow:auto;padding:20px 12px;text-align:center}.pages h3{font-size:13px}.page-mini{width:100%;background:white;border:2px solid transparent;border-radius:6px;margin:12px auto;padding:8px 4px;box-shadow:0 2px 6px #0001}.page-mini.selected{border-color:var(--gold)}.mini-paper{aspect-ratio:595/842;background:#fff;border:1px solid #eee;display:flex;flex-direction:column;gap:5px;padding:12px 7px}.mini-paper span{display:block;height:21%;background:linear-gradient(90deg,#c6a35c 46%,#eee 46%)}.mini-paper b{font:9px Georgia}.page-mini small{color:#777}.notice{padding:12px;background:#f3e8d4;border-radius:5px;font-size:12px;line-height:1.5;margin-top:18px}.empty{height:130px;background:#ece7dd;display:grid;place-items:center;color:#888;font-size:12px}.mobilepages{display:none}.modal{position:fixed;inset:0;background:#0009;display:none;align-items:center;justify-content:center;padding:20px;z-index:5}.modal.open{display:flex}.dialog{background:white;max-width:460px;padding:25px;border-radius:9px;line-height:1.5}.dialog h2{font:23px Georgia}.dialog button{margin-top:10px}.error{color:#ad3b28;font-size:12px;margin-top:5px}@media(max-width:1100px){.layout{grid-template-columns:68px 315px minmax(350px,1fr)}.pages{display:none}.brand{min-width:220px}.sheet{transform-origin:top center}}@media(max-width:760px){header{height:auto;min-height:70px;flex-wrap:wrap;padding:12px}.document-title{font-size:12px}.layout{display:block;height:auto}.rail{flex-direction:row;overflow:auto}.rail button{min-width:90px}.panel{max-height:none}.workspace{padding:12px}.sheet{min-width:595px}.workspace{overflow-x:auto}.pages{display:none}}@media print{header,.rail,.panel,.pages,.toolbar,.notice{display:none!important}.layout,.workspace{display:block;height:auto;padding:0;margin:0;overflow:visible}.sheet{box-shadow:none;margin:0;width:595px;min-height:842px;page-break-after:always}.entry.selected:after{display:none}body{background:white}@page{size:A4;margin:0}}
-</style></head><body>
-<header><div class="brand">✧ CURADORIA ELITE TRAVEL<small>Estúdio Editorial</small></div><div class="document-title">Atrações Turísticas · São Paulo · Edição 2027</div><div class="status" id="status">Demonstração local</div><button class="btn dark" id="preview">Pré-visualizar</button><button class="btn gold" id="export">Imprimir teste</button></header>
-<div class="layout"><nav class="rail"><button class="active" data-section="editor"><span class="symbol">✎</span>Editor</button><button data-section="models"><span class="symbol">▦</span>Modelos</button><button data-section="projects"><span class="symbol">▤</span>Projetos</button><button data-section="images"><span class="symbol">▧</span>Imagens</button><button data-section="ai"><span class="symbol">✧</span>IA e Pesquisa</button><button data-section="history"><span class="symbol">◷</span>Versões</button></nav>
-<aside class="panel"><h2>Editar indicação</h2><div class="sub" id="selection">Atração 1 de 12</div><div class="actions"><button id="prevAttraction">← Anterior</button><button id="nextAttraction">Próxima →</button></div><div class="section"><label class="label" for="name">Nome da atração</label><input id="name"><label class="label" for="description">Descrição</label><textarea id="description"></textarea><div class="hint"><span>Referência editorial: texto do MASP</span><span id="count"></span></div><label class="label" for="address">Endereço</label><input id="address"><label class="label" for="site">Site oficial</label><input id="site"><label class="label" for="ticket">Entrada</label><input id="ticket"><label class="label" for="photo">Fotografia (arquivo local)</label><input id="photo" type="file" accept="image/*"><div class="hint">Imagens enviadas nesta demonstração ficam somente na sessão atual.</div><div id="photoHolder" class="empty">Sem fotografia selecionada</div><div class="actions"><button id="clearPhoto">Remover foto</button><button id="reset">Restaurar exemplo</button></div><div class="notice">Protótipo independente: não consulta IA, não publica, não acessa o Supabase e não altera o site. O PDF de impressão é apenas um teste visual.</div></div></aside>
-<main class="workspace"><div class="toolbar"><div><button id="prevPage">‹ Página anterior</button> <button id="nextPage">Próxima página ›</button></div><span id="pageLabel">Página de indicações 1/4</span><button id="zoom">Ajustar visualização</button></div><div id="sheetContainer"></div></main><aside class="pages"><h3>Páginas de indicações</h3><div id="pageList"></div></aside></div>
-<div class="modal" id="modal"><div class="dialog"><h2 id="modalTitle">Funcionalidade planejada</h2><p id="modalText"></p><button class="btn gold" id="closeModal">Entendi</button></div></div>
-<script>
-(()=>{'use strict';
-const limit='O principal cartão-postal da Avenida Paulista é famoso por seu vão livre e acervo europeu. Com seus cavaletes de cristal, o museu oferece uma forma inovadora de apreciar arte, sendo um símbolo mundial da arquitetura moderna de Lina Bo Bardi.'.length;
-const base=[
-{name:'MASP',description:'O principal cartão-postal da Avenida Paulista é famoso por seu vão livre e acervo europeu. Com seus cavaletes de cristal, o museu oferece uma forma inovadora de apreciar arte, sendo um símbolo mundial da arquitetura moderna de Lina Bo Bardi.',address:'Avenida Paulista, 1578 - Bela Vista',site:'masp.org.br',ticket:'A verificar',photo:''},
-{name:'CATEDRAL DA SÉ',description:'Localizada no coração geográfico da capital, esta catedral em estilo neogótico impressiona por suas torres e cúpula renascentista. O interior abriga um dos maiores órgãos do mundo e uma cripta vasta, sendo um marco da fé e da história de SP.',address:'Praça da Sé, s/n - Centro Histórico',site:'catedraldase.org.br',ticket:'Gratuita',photo:''},
-{name:'FAROL SANTANDER',description:'Inspirado no Empire State, este icônico arranha-céu oferece uma das vistas mais deslumbrantes do centro. O espaço foi revitalizado e hoje abriga exposições de arte e um museu sobre a história bancária, unindo lazer e arquitetura de forma única.',address:'A verificar',site:'A verificar',ticket:'A verificar',photo:''}];
-let data=Array.from({length:12},(_,i)=>structuredClone(base[i]||{name:'ATRAÇÃO '+String(i+1).padStart(2,'0'),description:'',address:'',site:'',ticket:'A verificar',photo:''}));let selected=0,page=0;const $=id=>document.getElementById(id),fields=['name','description','address','site','ticket'];
-function esc(s){return String(s||'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
-function render(){page=Math.floor(selected/3);$('selection').textContent='Atração '+(selected+1)+' de 12 · '+(selected<8?'Tradicional':'Alternativa');fields.forEach(f=>$(f).value=data[selected][f]);$('count').textContent=data[selected].description.length+' / '+limit;$('count').className=data[selected].description.length>limit?'warning':'';$('pageLabel').textContent='Indicações · Página '+(page+1)+' de 4';$('photoHolder').innerHTML=data[selected].photo?'<img class="thumbphoto" alt="Foto selecionada" src="'+data[selected].photo+'">':'Sem fotografia selecionada';renderPage();renderMini()}
-function renderPage(){const entries=data.slice(page*3,page*3+3).map((a,i)=>{const ix=page*3+i;return '<article class="entry '+(ix===selected?'selected':'')+'" data-index="'+ix+'"><div>'+(a.photo?'<img src="'+a.photo+'" alt="Fotografia de '+esc(a.name)+'">':'<div class="empty" style="height:196px">Fotografia pendente</div>')+'</div><div class="name">'+esc(a.name)+'</div><div class="details"><div class="desc"><strong>Descrição: </strong><span class="value">'+esc(a.description||'Descrição pendente')+'</span></div><div class="meta"><strong>Endereço: </strong><span class="value">'+esc(a.address||'Pendente')+'</span><br><strong>Site: </strong><span class="value">'+esc(a.site||'Pendente')+'</span><br><strong>Entrada: </strong><span class="value">'+esc(a.ticket||'Pendente')+'</span></div></div></article>'}).join('');$('sheetContainer').innerHTML='<div class="sheet"><div class="topline"><span></span><span>PONTOS TURÍSTICOS <span class="goldmark">✧</span></span></div><div class="logo">CURADORIA<br>ELITE TRAVEL<small>O seu mundo, bem indicado.</small></div><div class="tagline">Mais que paisagens, memórias que permanecem</div><div class="quote">Porque o verdadeiro destino é a lembrança que a gente guarda para sempre no coração</div>'+entries+'<footer><span>CURADORIA ELITE TRAVEL</span><span>'+(page+1)+'/4</span></footer></div>';document.querySelectorAll('.entry').forEach(el=>el.addEventListener('click',()=>{selected=+el.dataset.index;render()}))}
-function renderMini(){$('pageList').innerHTML=Array.from({length:4},(_,i)=>'<button class="page-mini '+(i===page?'selected':'')+'" data-page="'+i+'"><div class="mini-paper"><b>PONTOS TURÍSTICOS</b><span></span><span></span><span></span></div><small>Indicações '+(i*3+1)+'–'+(i*3+3)+'</small></button>').join('');document.querySelectorAll('[data-page]').forEach(el=>el.addEventListener('click',()=>{selected=+el.dataset.page*3;render()}))}
-function modal(title,msg){$('modalTitle').textContent=title;$('modalText').textContent=msg;$('modal').classList.add('open')}
-fields.forEach(f=>$(f).addEventListener('input',()=>{data[selected][f]=$(f).value;$('status').textContent='Alterações na sessão atual';$('count').textContent=data[selected].description.length+' / '+limit;$('count').className=data[selected].description.length>limit?'warning':'';renderPage()}));$('photo').addEventListener('change',e=>{const f=e.target.files[0];if(!f)return;if(!f.type.startsWith('image/'))return modal('Arquivo inválido','Escolha uma fotografia em formato de imagem.');const reader=new FileReader();reader.onload=()=>{data[selected].photo=reader.result;render()};reader.readAsDataURL(f)});$('clearPhoto').onclick=()=>{data[selected].photo='';$('photo').value='';render()};$('reset').onclick=()=>{data[selected]=structuredClone(base[selected]||{name:'ATRAÇÃO '+(selected+1),description:'',address:'',site:'',ticket:'A verificar',photo:''});render()};$('prevAttraction').onclick=()=>{selected=(selected+11)%12;render()};$('nextAttraction').onclick=()=>{selected=(selected+1)%12;render()};$('prevPage').onclick=()=>{selected=((page+3)%4)*3;render()};$('nextPage').onclick=()=>{selected=((page+1)%4)*3;render()};$('closeModal').onclick=()=>$('modal').classList.remove('open');$('preview').onclick=()=>modal('Pré-visualização','A página central já apresenta a prévia editável. A visualização completa do PDF será desenvolvida após validarmos a fidelidade do modelo.');$('export').onclick=()=>modal('Exportação definitiva ainda não disponível','Esta versão não gera um PDF comercial. Precisamos validar as páginas, as fontes e a composição antes de ativar a exportação.');$('zoom').onclick=()=>modal('Visualização','O zoom ajustável será implementado na próxima etapa de refinamento.');document.querySelectorAll('[data-section]').forEach(b=>b.onclick=()=>{if(b.dataset.section==='editor')return;modal('Área planejada',({models:'Os seis modelos editoriais serão incorporados progressivamente.',projects:'A biblioteca de projetos será conectada após a validação do editor.',images:'O banco de imagens exigirá controle de licenças e direitos de uso.',ai:'A pesquisa por IA ainda não está conectada. Não há resultados simulados nem informações verificadas automaticamente.',history:'O histórico persistente de versões será implementado antes da publicação.',}[b.dataset.section]))});render();
+<html lang="pt-BR">
+ <head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width,initial-scale=1" name="viewport"/>
+  <title>
+   Estúdio Editorial | Curadoria Elite Travel
+  </title>
+  <style>
+   :root {
+  --black:#171717;
+  --gold:#c6a35c;
+  --cream:#f5f2eb;
+  --paper:#fff;
+  --line:#dedbd4;
+  --muted:#777;
+}
+
+* {
+  box-sizing:border-box;
+}
+
+body {
+  margin:0;
+  font:14px Arial,sans-serif;
+  background:#e8e7e4;
+  color:#222;
+}
+
+button,input,textarea {
+  font:inherit;
+}
+
+button {
+  cursor:pointer;
+}
+
+header {
+  height:70px;
+  background:#151515;
+  color:#fff;
+  display:flex;
+  align-items:center;
+  gap:20px;
+  padding:0 22px;
+  border-bottom:2px solid var(--gold);
+}
+
+.brand {
+  color:#d5b571;
+  font:19px Georgia,serif;
+  letter-spacing:1px;
+  min-width:270px;
+}
+
+.brand small {
+  display:block;
+  color:#ccc;
+  font:11px Arial;
+  margin-top:4px;
+}
+
+.document-title {
+  flex:1;
+  font-weight:600;
+}
+
+.status {
+  font-size:12px;
+  color:#b7d7bc;
+}
+
+.btn {
+  padding:10px 14px;
+  border:1px solid #aaa;
+  border-radius:6px;
+  background:#fff;
+  color:#222;
+}
+
+.btn.gold {
+  background:#e7be69;
+  border-color:#e7be69;
+  color:#161616;
+  font-weight:bold;
+}
+
+.btn.dark {
+  background:transparent;
+  border-color:#777;
+  color:#fff;
+}
+
+.layout {
+  display:grid;
+  grid-template-columns:84px 355px minmax(420px,1fr) 164px;
+  height:calc(100vh - 70px);
+  min-height:620px;
+}
+
+.rail {
+  background:#1a1a1a;
+  color:#eee;
+  padding:14px 7px;
+  display:flex;
+  flex-direction:column;
+  gap:8px;
+}
+
+.rail button {
+  border:0;
+  background:transparent;
+  color:inherit;
+  border-radius:7px;
+  padding:12px 4px;
+  font-size:11px;
+}
+
+.rail button.active {
+  background:#e7be69;
+  color:#111;
+}
+
+.rail .symbol {
+  display:block;
+  font-size:23px;
+  margin-bottom:6px;
+}
+
+.panel {
+  background:#fbfaf8;
+  overflow:auto;
+  border-right:1px solid var(--line);
+  padding:21px;
+}
+
+.panel h2 {
+  margin:0 0 4px;
+  font:23px Georgia;
+}
+
+.sub {
+  color:var(--muted);
+  font-size:12px;
+}
+
+.section {
+  border-top:1px solid var(--line);
+  margin-top:18px;
+  padding-top:16px;
+}
+
+.label {
+  display:block;
+  font-size:12px;
+  font-weight:bold;
+  margin:12px 0 6px;
+}
+
+input,textarea {
+  width:100%;
+  padding:11px;
+  border:1px solid #d6d1c7;
+  border-radius:5px;
+  background:white;
+  color:#222;
+}
+
+textarea {
+  min-height:136px;
+  resize:vertical;
+  line-height:1.45;
+}
+
+.hint {
+  display:flex;
+  justify-content:space-between;
+  color:#777;
+  font-size:11px;
+  margin-top:5px;
+}
+
+.warning {
+  color:#b54329!important;
+}
+
+.thumbphoto {
+  width:100%;
+  height:105px;
+  object-fit:cover;
+  border:1px solid #ddd;
+  background:#e9e5dc;
+}
+
+.actions {
+  display:flex;
+  gap:8px;
+  flex-wrap:wrap;
+  margin-top:10px;
+}
+
+.actions button {
+  padding:8px 10px;
+  border:1px solid #cfc9bf;
+  border-radius:5px;
+  background:white;
+}
+
+.workspace {
+  overflow:auto;
+  padding:18px 26px 50px;
+}
+
+.toolbar {
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:8px;
+  margin-bottom:20px;
+}
+
+.toolbar button {
+  padding:8px 12px;
+  border:1px solid #d4d0c9;
+  border-radius:5px;
+  background:white;
+}
+
+.sheet {
+  width:min(100%,595px);
+  min-height:842px;
+  background:#fff;
+  margin:auto;
+  box-shadow:0 8px 32px #0002;
+  position:relative;
+  padding:30px 0 28px;
+  overflow:hidden;
+}
+
+.sheet .topline {
+  display:flex;
+  justify-content:space-between;
+  padding:0 38px;
+  font-weight:bold;
+  font-size:12px;
+  letter-spacing:.5px;
+}
+
+.topline .goldmark {
+  color:var(--gold);
+}
+
+.sheet .logo {
+  text-align:center;
+  margin:22px auto 13px;
+  font:20px Georgia;
+  letter-spacing:2px;
+}
+
+.sheet .logo small {
+  display:block;
+  font:8px Arial;
+  letter-spacing:1px;
+  color:#999;
+  margin-top:5px;
+}
+
+.sheet .tagline {
+  text-align:center;
+  font:21px Georgia;
+  margin:10px 20px 4px;
+}
+
+.sheet .quote {
+  text-align:center;
+  font:italic 11px Georgia;
+  margin:0 20px 23px;
+}
+
+.entry {
+  display:grid;
+  grid-template-columns:46% 54%;
+  height:204px;
+  margin-bottom:15px;
+  position:relative;
+}
+
+.entry img {
+  height:196px;
+  width:100%;
+  object-fit:cover;
+  background:#eee;
+}
+
+.entry .name {
+  position:absolute;
+  top:0;
+  left:26%;
+  background:#111;
+  color:white;
+  padding:8px 12px;
+  font:14px Georgia;
+  max-width:70%;
+  z-index:1;
+}
+
+.entry .details {
+  padding:0 25px 0 31px;
+  font:11px/1.35 Arial;
+  overflow:hidden;
+}
+
+.entry .details .desc {
+  height:124px;
+  overflow:hidden;
+  text-align:justify;
+}
+
+.entry .details .meta {
+  margin-top:5px;
+  overflow-wrap:anywhere;
+}
+
+.entry .details strong {
+  color:#222;
+}
+
+.entry .details .value {
+  color:#a44b2b;
+}
+
+.entry.selected:after {
+  content:"";
+  position:absolute;
+  inset:-3px;
+  border:2px solid #c6a35c;
+  pointer-events:none;
+}
+
+.sheet footer {
+  position:absolute;
+  bottom:12px;
+  left:38px;
+  right:38px;
+  display:flex;
+  justify-content:space-between;
+  color:#a58447;
+  font:11px Georgia;
+}
+
+.pages {
+  background:#f8f7f5;
+  border-left:1px solid var(--line);
+  overflow:auto;
+  padding:20px 12px;
+  text-align:center;
+}
+
+.pages h3 {
+  font-size:13px;
+}
+
+.page-mini {
+  width:100%;
+  background:white;
+  border:2px solid transparent;
+  border-radius:6px;
+  margin:12px auto;
+  padding:8px 4px;
+  box-shadow:0 2px 6px #0001;
+}
+
+.page-mini.selected {
+  border-color:var(--gold);
+}
+
+.mini-paper {
+  aspect-ratio:595/842;
+  background:#fff;
+  border:1px solid #eee;
+  display:flex;
+  flex-direction:column;
+  gap:5px;
+  padding:12px 7px;
+}
+
+.mini-paper span {
+  display:block;
+  height:21%;
+  background:linear-gradient(90deg,#c6a35c 46%,#eee 46%);
+}
+
+.mini-paper b {
+  font:9px Georgia;
+}
+
+.page-mini small {
+  color:#777;
+}
+
+.notice {
+  padding:12px;
+  background:#f3e8d4;
+  border-radius:5px;
+  font-size:12px;
+  line-height:1.5;
+  margin-top:18px;
+}
+
+.empty {
+  height:130px;
+  background:#ece7dd;
+  display:grid;
+  place-items:center;
+  color:#888;
+  font-size:12px;
+}
+
+.mobilepages {
+  display:none;
+}
+
+.modal {
+  position:fixed;
+  inset:0;
+  background:#0009;
+  display:none;
+  align-items:center;
+  justify-content:center;
+  padding:20px;
+  z-index:5;
+}
+
+.modal.open {
+  display:flex;
+}
+
+.dialog {
+  background:white;
+  max-width:460px;
+  padding:25px;
+  border-radius:9px;
+  line-height:1.5;
+}
+
+.dialog h2 {
+  font:23px Georgia;
+}
+
+.dialog button {
+  margin-top:10px;
+}
+
+.error {
+  color:#ad3b28;
+  font-size:12px;
+  margin-top:5px;
+}
+
+@media(max-width:1100px) {
+  .layout{grid-template-columns:68px 315px minmax(350px,1fr)}.pages{display:none}.brand{min-width:220px}.sheet{transform-origin:top center};
+}
+
+@media(max-width:760px) {
+  header{height:auto;
+  min-height:70px;
+  flex-wrap:wrap;
+  padding:12px}.document-title{font-size:12px}.layout{display:block;
+  height:auto}.rail{flex-direction:row;
+  overflow:auto}.rail button{min-width:90px}.panel{max-height:none}.workspace{padding:12px}.sheet{min-width:595px}.workspace{overflow-x:auto}.pages{display:none};
+}
+
+@media print {
+  header,.rail,.panel,.pages,.toolbar,.notice{display:none!important}.layout,.workspace{display:block;
+  height:auto;
+  padding:0;
+  margin:0;
+  overflow:visible}.sheet{box-shadow:none;
+  margin:0;
+  width:595px;
+  min-height:842px;
+  page-break-after:always}.entry.selected:after{display:none}body{background:white}@page{size:A4;
+  margin:0};
+}
+
+.brand {
+  display:flex;
+  align-items:center;
+  gap:9px;
+}
+
+.brand img {
+  width:28px;
+  height:28px;
+  object-fit:contain;
+}
+
+.brand .fallback {
+  font-size:26px;
+  color:var(--gold);
+}
+
+.brand .brandtext {
+  font:19px Georgia;
+  letter-spacing:1px;
+}
+
+.brand small {
+  font:11px Arial;
+  color:#ccc;
+  letter-spacing:0;
+}
+
+.layout {
+  grid-template-columns:84px 355px minmax(420px,1fr) 164px;
+}
+
+.panel h2 {
+  font-size:23px;
+}
+
+.view {
+  display:none;
+}
+
+.view.active {
+  display:block;
+}
+
+.project-row {
+  border:1px solid #ddd5c9;
+  border-radius:8px;
+  background:white;
+  padding:12px;
+  margin:10px 0;
+}
+
+.project-row b {
+  display:block;
+  margin-bottom:6px;
+}
+
+.project-row .actions {
+  margin-top:9px;
+}
+
+.muted {
+  color:#777;
+  font-size:12px;
+}
+
+.formgroup {
+  margin:10px 0;
+}
+
+.formgroup select {
+  width:100%;
+  padding:10px;
+  border:1px solid #d6d1c7;
+  background:white;
+  border-radius:5px;
+}
+
+.mini-paper {
+  overflow:hidden;
+}
+
+.mini-paper .mini-title {
+  font:8px Georgia;
+}
+
+.mini-paper img {
+  width:100%;
+  height:70%;
+  object-fit:cover;
+}
+
+.mini-paper .miniline {
+  height:6px;
+  background:#c6a35c;
+}
+
+.sheet.institutional {
+  padding:35px 35px 45px;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:20px;
+  text-align:center;
+}
+
+.institutional h1 {
+  font:34px Georgia;
+  margin:10px 0;
+}
+
+.institutional h2 {
+  font:28px Georgia;
+  margin:0;
+}
+
+.institutional .large-photo {
+  width:100%;
+  height:480px;
+  object-fit:cover;
+  background:#eee9e0;
+  display:grid;
+  place-items:center;
+  color:#888;
+}
+
+.institutional .body-copy {
+  font:17px/1.5 Georgia;
+  max-width:450px;
+}
+
+.institutional .muted {
+  font-size:12px;
+}
+
+.institutional .goldrule {
+  height:3px;
+  background:var(--gold);
+  width:100%;
+}
+
+.institutional .brandlogo {
+  font:22px Georgia;
+  letter-spacing:2px;
+}
+
+.institutional .siteurl {
+  margin-top:auto;
+  font:13px Georgia;
+}
+
+.institutional .duophoto {
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:8px;
+  width:100%;
+  margin-top:25px;
+}
+
+.institutional .duophoto img {
+  width:100%;
+  height:300px;
+  object-fit:cover;
+}
+
+.institutional .duophoto .empty {
+  height:300px;
+}
+
+.sheet .empty {
+  background:#eee9e0;
+}
+
+.fixed-flag {
+  display:inline-block;
+  border:1px solid #c6a35c;
+  color:#785c25;
+  padding:6px 9px;
+  border-radius:4px;
+  font-size:12px;
+}
+
+.tinyhelp {
+  font-size:12px;
+  color:#777;
+  line-height:1.5;
+}
+
+.ai-box {
+  padding:13px;
+  background:#f2e9d8;
+  border-radius:7px;
+  margin:14px 0;
+  font-size:12px;
+  line-height:1.6;
+}
+
+.pdf-viewer {
+  width:100%;
+  height:450px;
+  border:1px solid #ddd;
+  background:white;
+}
+
+.button-row {
+  display:flex;
+  flex-wrap:wrap;
+  gap:7px;
+  margin:12px 0;
+}
+
+.button-row button {
+  padding:8px 10px;
+  border:1px solid #d4d0c9;
+  border-radius:5px;
+  background:white;
+}
+
+.button-row .gold {
+  background:#e7be69;
+}
+
+.statusbar {
+  font-size:11px;
+  color:#999;
+  margin-top:12px;
+}
+
+.page-mini {
+  cursor:pointer;
+}
+
+.page-mini small {
+  display:block;
+  margin-top:6px;
+}
+
+.mini-paper {
+  gap:4px;
+}
+
+.mini-paper span {
+  height:15%;
+}
+
+.notice strong {
+  display:block;
+  margin-bottom:4px;
+}
+
+@media(max-width:1100px) {
+  .layout{grid-template-columns:68px 315px minmax(350px,1fr)};
+}
+
+@media(max-width:760px) {
+  .layout{display:block}.pages{display:none};
+}
+  </style>
+ </head>
+ <body>
+  <header>
+   <div class="brand">
+    <img alt="Rosa dos Ventos" onerror="this.style.display='none';this.nextElementSibling.style.display='inline'" src="../images/rosa-dos-ventos.png"/>
+    <span class="fallback" style="display:none">
+     ✧
+    </span>
+    <div class="brandtext">
+     CURADORIA ELITE TRAVEL
+     <small>
+      Estúdio Editorial
+     </small>
+    </div>
+   </div>
+   <div class="document-title" id="documentTitle">
+    Biblioteca Editorial
+   </div>
+   <div class="status" id="status">
+    Dados locais deste navegador
+   </div>
+   <button class="btn dark" id="preview">
+    Pré-visualizar
+   </button>
+   <button class="btn gold" id="export">
+    Imprimir teste
+   </button>
+  </header>
+  <div class="layout">
+   <nav class="rail">
+    <button class="active" data-section="library">
+     <span class="symbol">
+      ▤
+     </span>
+     Biblioteca
+    </button>
+    <button data-section="new">
+     <span class="symbol">
+      ⊕
+     </span>
+     Novo material
+    </button>
+    <button data-section="editor">
+     <span class="symbol">
+      ✎
+     </span>
+     Editor
+    </button>
+    <button data-section="images">
+     <span class="symbol">
+      ▧
+     </span>
+     Imagens
+    </button>
+    <button data-section="ai">
+     <span class="symbol">
+      ✧
+     </span>
+     IA e Pesquisa
+    </button>
+    <button data-section="history">
+     <span class="symbol">
+      ◷
+     </span>
+     Versões
+    </button>
+   </nav>
+   <aside class="panel">
+    <div class="view active" id="view-library">
+     <h2>
+      Biblioteca Editorial
+     </h2>
+     <p class="sub">
+      Seus projetos editáveis e PDFs de referência
+     </p>
+     <div class="actions">
+      <button id="createFromLibrary">
+       + Novo material
+      </button>
+     </div>
+     <div class="section" id="projectList">
+     </div>
+     <div class="section">
+      <h3>
+       PDF para consulta
+      </h3>
+      <p class="tinyhelp">
+       Abra um PDF existente para revisar visualmente. Importar o PDF não converte seus textos em campos editáveis.
+      </p>
+      <input accept="application/pdf" id="pdfFile" type="file"/>
+      <div class="actions">
+       <button id="closePdf">
+        Fechar PDF
+       </button>
+      </div>
+      <p class="tinyhelp">
+       O arquivo selecionado permanece apenas na sessão e não é enviado a servidores.
+      </p>
+     </div>
+    </div>
+    <div class="view" id="view-new">
+     <h2>
+      Novo material
+     </h2>
+     <p class="sub">
+      Crie um projeto em branco, usando o modelo editorial da categoria.
+     </p>
+     <label class="label">
+      Categoria
+     </label>
+     <select id="newCategory">
+      <option>
+       Atrações Turísticas
+      </option>
+      <option>
+       Gastronomia
+      </option>
+      <option>
+       Vida Noturna
+      </option>
+      <option>
+       Endereços para Compras
+      </option>
+      <option>
+       Sugestões de Presentes
+      </option>
+      <option>
+       City Guide
+      </option>
+     </select>
+     <label class="label">
+      Cidade
+     </label>
+     <input id="newCity" placeholder="Ex.: Roma"/>
+     <label class="label">
+      País
+     </label>
+     <input id="newCountry" placeholder="Ex.: Itália"/>
+     <label class="label">
+      Edição
+     </label>
+     <input id="newYear" inputmode="numeric" value="2027"/>
+     <div class="actions">
+      <button class="btn gold" id="createProject">
+       Criar projeto
+      </button>
+     </div>
+     <div class="notice">
+      O editor visual completo está disponível nesta versão somente para Atrações Turísticas. As outras categorias ficam registradas como projetos em preparação, sem um modelo incorreto.
+     </div>
+    </div>
+    <div class="view" id="view-editor">
+     <h2 id="editorTitle">
+      Editar indicação
+     </h2>
+     <div class="sub" id="selection">
+      Atração 1 de 12
+     </div>
+     <div class="actions" id="attractionNav">
+      <button id="prevAttraction">
+       ← Anterior
+      </button>
+      <button id="nextAttraction">
+       Próxima →
+      </button>
+     </div>
+     <div class="section" id="editorFields">
+      <label class="label" for="name">
+       Nome da atração
+      </label>
+      <input id="name"/>
+      <label class="label" for="description">
+       Descrição
+      </label>
+      <textarea id="description"></textarea>
+      <div class="hint">
+       <span>
+        Referência editorial: MASP
+       </span>
+       <span id="count">
+       </span>
+      </div>
+      <label class="label" for="address">
+       Endereço
+      </label>
+      <input id="address"/>
+      <label class="label" for="site">
+       Site oficial
+      </label>
+      <input id="site"/>
+      <label class="label" for="ticket">
+       Entrada
+      </label>
+      <input id="ticket"/>
+      <label class="label" for="photo">
+       Fotografia (arquivo local)
+      </label>
+      <input accept="image/*" id="photo" type="file"/>
+      <div class="empty" id="photoHolder">
+       Sem fotografia selecionada
+      </div>
+      <div class="actions">
+       <button id="clearPhoto">
+        Remover foto
+       </button>
+      </div>
+     </div>
+     <div class="section" id="pageFields" style="display:none">
+     </div>
+     <div class="notice">
+      Alterações editáveis são guardadas neste navegador. Use “Exportar projeto” para fazer uma cópia de segurança. Não há sincronização com Supabase.
+     </div>
+    </div>
+    <div class="view" id="view-ai">
+     <h2>
+      IA e Pesquisa
+     </h2>
+     <p class="sub">
+      Prepare um briefing para pesquisa editorial
+     </p>
+     <div class="ai-box">
+      <strong>
+       Pesquisa real, sem resultados inventados.
+      </strong>
+      <p>
+       Esta versão não possui conexão autenticada com um provedor de IA. Você pode gerar um briefing com o destino e a categoria, copiá-lo e utilizá-lo nesta conversa para pesquisar e verificar fontes.
+      </p>
+     </div>
+     <label class="label">
+      Briefing para pesquisa
+     </label>
+     <textarea id="aiPrompt" style="min-height:260px"></textarea>
+     <div class="actions">
+      <button id="generatePrompt">
+       Atualizar briefing
+      </button>
+      <button id="copyPrompt">
+       Copiar briefing
+      </button>
+      <button id="openChatGPT">
+       Abrir ChatGPT
+      </button>
+     </div>
+     <p class="tinyhelp">
+      Para uma pesquisa integrada dentro do Estúdio, precisaremos de um serviço seguro no servidor. Nenhuma chave de IA será colocada no HTML público.
+     </p>
+    </div>
+    <div class="view" id="view-images">
+     <h2>
+      Imagens
+     </h2>
+     <p class="sub">
+      Gerenciamento fotográfico
+     </p>
+     <p class="tinyhelp">
+      Nesta versão, selecione as fotos no editor de cada atração ou nas páginas que permitem alterações. Confirme direitos de uso comercial antes de publicar.
+     </p>
+     <div class="actions">
+      <button id="goEditorImages">
+       Abrir editor
+      </button>
+     </div>
+    </div>
+    <div class="view" id="view-history">
+     <h2>
+      Versões e segurança
+     </h2>
+     <p class="sub">
+      Projetos editáveis armazenados localmente
+     </p>
+     <div class="actions">
+      <button id="exportJSON">
+       Exportar projeto (.json)
+      </button>
+      <button id="importJSONBtn">
+       Importar projeto (.json)
+      </button>
+      <input accept="application/json" id="importJSON" style="display:none" type="file"/>
+     </div>
+     <p class="tinyhelp">
+      Exportar o projeto salva os campos editáveis e imagens incorporadas em um arquivo de backup. Não é um PDF final. O histórico completo de versões e o armazenamento definitivo ainda serão implementados.
+     </p>
+    </div>
+   </aside>
+   <main class="workspace">
+    <div class="toolbar">
+     <div>
+      <button id="prevPage">
+       ‹ Página anterior
+      </button>
+      <button id="nextPage">
+       Próxima página ›
+      </button>
+     </div>
+     <span id="pageLabel">
+      Biblioteca
+     </span>
+     <button id="zoom">
+      Ajustar visualização
+     </button>
+    </div>
+    <div id="sheetContainer">
+     <div class="sheet institutional">
+      <h1>
+       Biblioteca Editorial
+      </h1>
+      <p>
+       Selecione um projeto ou crie um novo material.
+      </p>
+     </div>
+    </div>
+   </main>
+   <aside class="pages">
+    <h3 id="pagesTitle">
+     Páginas do material
+    </h3>
+    <div id="pageList">
+    </div>
+   </aside>
+  </div>
+  <div class="modal" id="modal">
+   <div class="dialog">
+    <h2 id="modalTitle">
+     Aviso
+    </h2>
+    <p id="modalText">
+    </p>
+    <button class="btn gold" id="closeModal">
+     Entendi
+    </button>
+   </div>
+  </div>
+  <script>
+   (()=>{'use strict';
+const $=id=>document.getElementById(id), key='cet_editorial_v2_projects', limit='O principal cartão-postal da Avenida Paulista é famoso por seu vão livre e acervo europeu. Com seus cavaletes de cristal, o museu oferece uma forma inovadora de apreciar arte, sendo um símbolo mundial da arquitetura moderna de Lina Bo Bardi.'.length;
+const types=['Capa','Introdução','Nosso trabalho','Tips','Abertura turística','Atrações 1–3','Atrações 4–6','Atrações 7–9','Atrações 10–12','Encerramento','Contracapa'];
+const defaults=[{name:'MASP',description:'O principal cartão-postal da Avenida Paulista é famoso por seu vão livre e acervo europeu. Com seus cavaletes de cristal, o museu oferece uma forma inovadora de apreciar arte, sendo um símbolo mundial da arquitetura moderna de Lina Bo Bardi.',address:'Avenida Paulista, 1578 - Bela Vista',site:'masp.org.br',ticket:'A verificar',photo:''},{name:'CATEDRAL DA SÉ',description:'Localizada no coração geográfico da capital, esta catedral em estilo neogótico impressiona por suas torres e cúpula renascentista. O interior abriga um dos maiores órgãos do mundo e uma cripta vasta, sendo um marco da fé e da história de SP.',address:'Praça da Sé, s/n - Centro Histórico',site:'A verificar',ticket:'Gratuita',photo:''},{name:'FAROL SANTANDER',description:'Inspirado no Empire State, este icônico arranha-céu oferece uma das vistas mais deslumbrantes do centro.',address:'A verificar',site:'A verificar',ticket:'A verificar',photo:''}];
+const blank=()=>({name:'',description:'',address:'',site:'',ticket:'A verificar',photo:''});
+const create=(city,country,category,year,sample=false)=>({id:'p'+Date.now()+Math.random().toString(36).slice(2,8),city,country,category,year,created:new Date().toISOString(),coverPhoto:'',openingPhoto:'',closingPhotos:['',''],coverText:'Descubra o mundo, um marco de cada vez em '+city,openingTitle:'A Arte dos Destinos',openingText:'',entries:Array.from({length:12},(_,i)=>sample&&i<3?{...defaults[i]}:blank())});
+let projects=[],activeId=null,page=0,selected=0,section='library',pdfUrl=null;
+function escapeHtml(s){return String(s||'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+function modal(t,m){$('modalTitle').textContent=t;$('modalText').textContent=m;$('modal').classList.add('open')}
+function load(){try{const arr=JSON.parse(localStorage.getItem(key)||'[]');projects=Array.isArray(arr)?arr:[]}catch{projects=[]}if(!projects.length){projects=[create('São Paulo','Brasil','Atrações Turísticas','2027',true)];save()}activeId=projects[0].id}
+function save(){try{localStorage.setItem(key,JSON.stringify(projects));$('status').textContent='Rascunho salvo neste navegador';return true}catch(e){$('status').textContent='Falha ao salvar';modal('Armazenamento insuficiente','O navegador não conseguiu salvar. Exporte o projeto em JSON para preservar seu trabalho. Fotografias grandes podem exceder o limite local.');return false}}
+function current(){return projects.find(p=>p.id===activeId)}
+function show(sectionName){section=sectionName;document.querySelectorAll('.view').forEach(v=>v.classList.toggle('active',v.id==='view-'+sectionName));document.querySelectorAll('.rail button').forEach(b=>b.classList.toggle('active',b.dataset.section===sectionName));if(sectionName==='library')listProjects();if(sectionName==='ai')prompt();if(sectionName==='editor')editFields();render()}
+function listProjects(){const el=$('projectList');el.replaceChildren();projects.forEach(p=>{const box=document.createElement('div');box.className='project-row';const title=document.createElement('b');title.textContent=p.city+' · '+p.category;box.append(title);const sub=document.createElement('div');sub.className='muted';sub.textContent=p.country+' · Edição '+p.year;box.append(sub);const acts=document.createElement('div');acts.className='actions';const open=document.createElement('button');open.textContent='Abrir projeto';open.onclick=()=>{activeId=p.id;page=0;selected=0;show('editor')};acts.append(open);const research=document.createElement('button');research.textContent='Pesquisa IA';research.onclick=()=>{activeId=p.id;show('ai')};acts.append(research);box.append(acts);el.append(box)})}
+function filePhoto(input,cb){const file=input.files&&input.files[0];if(!file)return;if(!file.type.startsWith('image/'))return modal('Arquivo inválido','Selecione uma imagem.');if(file.size>3*1024*1024)return modal('Imagem grande','Para esta demonstração local, escolha uma imagem com até 3 MB.');const reader=new FileReader();reader.onload=()=>{cb(reader.result);save();render();editFields()};reader.readAsDataURL(file)}
+function editFields(){const p=current();if(!p){show('library');return}const supported=p.category==='Atrações Turísticas';$('editorTitle').textContent=supported?(page>=5&&page<=8?'Editar indicação':'Editar página'):'Modelo em preparação';$('attractionNav').style.display=supported&&page>=5&&page<=8?'flex':'none';$('editorFields').style.display=supported&&page>=5&&page<=8?'block':'none';$('pageFields').style.display=supported&&!(page>=5&&page<=8)?'block':'none';if(!supported){$('pageFields').style.display='block';$('pageFields').innerHTML='<p class="tinyhelp">Esta categoria já pode ser cadastrada na biblioteca. O modelo visual específico será implementado posteriormente.</p>';return}if(page>=5&&page<=8){selected=Math.max((page-5)*3,Math.min(selected,(page-5)*3+2));const a=p.entries[selected];$('selection').textContent='Atração '+(selected+1)+' de 12 · '+(selected<8?'Tradicional':'Alternativa');['name','description','address','site','ticket'].forEach(f=>$(f).value=a[f]);$('count').textContent=a.description.length+' / '+limit;$('count').className=a.description.length>limit?'warning':'';$('photoHolder').innerHTML=a.photo?'<img class="thumbphoto" alt="Fotografia escolhida" src="'+a.photo+'">':'Sem fotografia selecionada';return}const root=$('pageFields');root.replaceChildren();const heading=document.createElement('h3');heading.textContent=types[page];root.append(heading);const hint=document.createElement('p');hint.className='tinyhelp';root.append(hint);function addText(label,field,multi=false){const l=document.createElement('label');l.className='label';l.textContent=label;root.append(l);const el=document.createElement(multi?'textarea':'input');el.value=p[field]||'';el.oninput=()=>{p[field]=el.value;save();render()};root.append(el)}function addPhoto(label,callback){const l=document.createElement('label');l.className='label';l.textContent=label;root.append(l);const f=document.createElement('input');f.type='file';f.accept='image/*';f.onchange=()=>filePhoto(f,callback);root.append(f)}
+if(page===0){hint.textContent='Identidade, título e site fixos. Edite apenas a fotografia e a frase do destino.';addText('Frase da capa', 'coverText');addPhoto('Fotografia da capa',v=>p.coverPhoto=v)}else if(page===3){hint.textContent='O texto institucional permanece protegido. O ano acompanha a edição do projeto.';addText('Ano da edição','year')}else if(page===4){hint.textContent='Abertura turística: fotografia e textos específicos do destino.';addText('Título editorial','openingTitle');addText('Texto editorial','openingText',true);addPhoto('Fotografia de abertura',v=>p.openingPhoto=v)}else if(page===9){hint.textContent='Encerramento: apenas as duas fotografias são editáveis.';addPhoto('Fotografia superior',v=>p.closingPhotos[0]=v);addPhoto('Fotografia inferior',v=>p.closingPhotos[1]=v)}else{hint.textContent='Página institucional fixa e protegida. Conteúdo representado aqui de forma provisória; a reprodução gráfica fiel exige os recursos originais do Canva.'}}
+function imageOrEmpty(src,label){return src?'<img class="large-photo" src="'+src+'" alt="'+escapeHtml(label)+'">':'<div class="large-photo">'+escapeHtml(label)+' — fotografia pendente</div>'}
+function render(){const p=current();$('documentTitle').textContent=p?p.category+' · '+p.city+' · Edição '+p.year:'Biblioteca Editorial';$('pageLabel').textContent=p&&p.category==='Atrações Turísticas'?'Página '+(page+1)+' de 11 · '+types[page]:'Biblioteca / projeto';$('pagesTitle').textContent=p?'Páginas do material':'Páginas';$('preview').disabled=!p;$('export').disabled=!p; if(pdfUrl){$('sheetContainer').innerHTML='<iframe class="pdf-viewer" title="PDF de referência" src="'+pdfUrl+'"></iframe>';return}if(!p){$('sheetContainer').innerHTML='<div class="sheet institutional"><h1>Biblioteca Editorial</h1></div>';return}if(p.category!=='Atrações Turísticas'){$('sheetContainer').innerHTML='<div class="sheet institutional"><h1>'+escapeHtml(p.category)+'</h1><h2>'+escapeHtml(p.city)+'</h2><p>Projeto criado. Modelo gráfico ainda não implementado.</p></div>';$('pageList').innerHTML='';return}let content='';if(page>=5&&page<=8){const entries=p.entries.slice((page-5)*3,(page-5)*3+3).map((a,i)=>{const ix=(page-5)*3+i;return '<article class="entry '+(ix===selected?'selected':'')+'" data-index="'+ix+'"><div>'+(a.photo?'<img src="'+a.photo+'" alt="'+escapeHtml(a.name)+'">':'<div class="empty" style="height:196px">Fotografia pendente</div>')+'</div><div class="name">'+escapeHtml(a.name||'ATRAÇÃO '+(ix+1))+'</div><div class="details"><div class="desc"><strong>Descrição: </strong><span class="value">'+escapeHtml(a.description||'Descrição pendente')+'</span></div><div class="meta"><strong>Endereço: </strong><span class="value">'+escapeHtml(a.address||'Pendente')+'</span><br><strong>Site: </strong><span class="value">'+escapeHtml(a.site||'Pendente')+'</span><br><strong>Entrada: </strong><span class="value">'+escapeHtml(a.ticket||'Pendente')+'</span></div></div></article>'}).join('');content='<div class="sheet"><div class="topline"><span></span><span>PONTOS TURÍSTICOS <span class="goldmark">✧</span></span></div><div class="logo">CURADORIA<br>ELITE TRAVEL<small>O seu mundo, bem indicado.</small></div><div class="tagline">Mais que paisagens, memórias que permanecem</div><div class="quote">Porque o verdadeiro destino é a lembrança que a gente guarda para sempre no coração</div>'+entries+'<footer><span>CURADORIA ELITE TRAVEL</span><span>'+(page+1)+'/11</span></footer></div>'}else{let body='';if(page===0)body='<div class="brandlogo">✧<br>CURADORIA<br>ELITE TRAVEL</div><h1>ATRAÇÕES TURÍSTICAS</h1><div class="goldrule"></div><p>'+escapeHtml(p.coverText)+'</p>'+imageOrEmpty(p.coverPhoto,'Capa')+'<div class="siteurl">WWW.CURADORIAELITETRAVEL.COM</div>';if(page===1)body='<div class="brandlogo">CURADORIA ELITE TRAVEL</div><h2>Um Brinde à<br>Sua Escolha!</h2><div class="body-copy">Seu guia para experiências autênticas, curadoria especializada e momentos que ficarão para sempre na memória.</div><div class="fixed-flag">Página institucional protegida</div>';if(page===2)body='<div class="brandlogo">CURADORIA ELITE TRAVEL</div><h2>Aqui, cada detalhe foi pensado para você.</h2><div class="body-copy">Descubra os pontos turísticos com um olhar que revela sua beleza única e ressalta sua alma.</div><div class="fixed-flag">Página institucional protegida</div>';if(page===3)body='<div class="brandlogo">CURADORIA ELITE TRAVEL</div><h2>Um Toque de Atenção<br>Para sua Jornada!</h2><p class="body-copy">Em um mundo dinâmico, horários, valores e funcionamentos podem mudar. Consulte os canais oficiais antes de visitar.</p><p class="muted">Este material foi produzido em '+escapeHtml(p.year)+'.</p><div class="fixed-flag">Somente o ano é editável</div>';if(page===4)body='<div class="brandlogo">CURADORIA ELITE TRAVEL</div><p>Cartão Postal Vivo</p><h1>'+escapeHtml(p.openingTitle)+'</h1>'+imageOrEmpty(p.openingPhoto,'Abertura turística')+'<p class="body-copy">'+escapeHtml(p.openingText||'Texto editorial do destino pendente')+'</p>';if(page===9)body='<div class="brandlogo">CURADORIA ELITE TRAVEL</div><div class="duophoto">'+p.closingPhotos.map((s,i)=>s?'<img src="'+s+'" alt="Foto de encerramento">':'<div class="empty">Fotografia '+(i+1)+' pendente</div>').join('')+'</div><h2>É um prazer imenso apresentar a você este trabalho</h2><p class="body-copy">Feito com dedicação e carinho para transformar seus dias em histórias inesquecíveis.</p><div class="fixed-flag">Somente fotografias editáveis</div>';if(page===10)body='<div class="brandlogo">✧<br>CURADORIA<br>ELITE TRAVEL</div><div class="large-photo">Fotografia institucional de encerramento — referência gráfica pendente</div><h2>ATRAÇÕES TURÍSTICAS</h2><p>By Curadoria Elite Travel</p><div class="siteurl">www.curadoriaelitetravel.com</div><div class="fixed-flag">Contracapa protegida</div>';content='<div class="sheet institutional">'+body+'</div>'}$('sheetContainer').innerHTML=content;document.querySelectorAll('.entry').forEach(e=>e.onclick=()=>{selected=Number(e.dataset.index);editFields();render()});renderMini()}
+function renderMini(){const p=current();if(!p||p.category!=='Atrações Turísticas'){$('pageList').innerHTML='';return}$('pageList').innerHTML=types.map((name,i)=>'<button class="page-mini '+(i===page?'selected':'')+'" data-page="'+i+'"><div class="mini-paper"><b class="mini-title">'+escapeHtml(name)+'</b>'+(i>=5&&i<=8?'<span></span><span></span><span></span>':'<div class="miniline"></div><div style="flex:1;background:#f0eee9"></div>')+'</div><small>'+String(i+1).padStart(2,'0')+' · '+escapeHtml(name)+'</small></button>').join('');document.querySelectorAll('[data-page]').forEach(b=>b.onclick=()=>{page=Number(b.dataset.page);selected=Math.max(0,(page-5)*3);pdfUrl&&closePdf();show('editor')})}
+function prompt(){const p=current();if(!p)return;const lines=['Você é pesquisador editorial da Curadoria Elite Travel.','Destino: '+p.city+', '+p.country+'.','Categoria: '+p.category+'. Edição: '+p.year+'.','Pesquise na internet, priorizando fontes oficiais, e forneça links e datas de verificação.','Não invente preços, endereços, horários ou sites. Identifique dados não confirmados.','Para Atrações Turísticas: proponha 12 atrações, sendo 8 tradicionais e 4 alternativas menos óbvias.','Para cada atração: nome, descrição com até '+limit+' caracteres (incluindo espaços), endereço, site oficial e valor de entrada na moeda local ou indicação de gratuidade.','Não inclua imagens sem comprovar a licença de uso comercial.','Organize os resultados para minha aprovação, sem substituir automaticamente o que já está aprovado.'];$('aiPrompt').value=lines.join('\n\n')}
+function closePdf(){if(pdfUrl){URL.revokeObjectURL(pdfUrl);pdfUrl=null;render()}}
+function download(name,contents,type){const url=URL.createObjectURL(new Blob([contents],{type})),a=document.createElement('a');a.href=url;a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(url),1000)}
+load();$('closeModal').onclick=()=>$('modal').classList.remove('open');document.querySelectorAll('[data-section]').forEach(b=>b.onclick=()=>{closePdf();show(b.dataset.section)});$('createFromLibrary').onclick=()=>show('new');$('createProject').onclick=()=>{const city=$('newCity').value.trim(),country=$('newCountry').value.trim(),year=$('newYear').value.trim(),category=$('newCategory').value;if(!city||!country||!/^(20\d\d)$/.test(year))return modal('Dados incompletos','Informe cidade, país e um ano válido entre 2000 e 2099.');const p=create(city,country,category,year);projects.unshift(p);activeId=p.id;page=0;selected=0;save();show('editor')};$('prevAttraction').onclick=()=>{selected=(selected+11)%12;page=5+Math.floor(selected/3);show('editor')};$('nextAttraction').onclick=()=>{selected=(selected+1)%12;page=5+Math.floor(selected/3);show('editor')};$('prevPage').onclick=()=>{page=(page+10)%11;selected=Math.max(0,(page-5)*3);closePdf();show('editor')};$('nextPage').onclick=()=>{page=(page+1)%11;selected=Math.max(0,(page-5)*3);closePdf();show('editor')};['name','description','address','site','ticket'].forEach(f=>$(f).oninput=()=>{const p=current();if(!p)return;p.entries[selected][f]=$(f).value;$('count').textContent=p.entries[selected].description.length+' / '+limit;$('count').className=p.entries[selected].description.length>limit?'warning':'';save();render()});$('photo').onchange=()=>filePhoto($('photo'),v=>current().entries[selected].photo=v);$('clearPhoto').onclick=()=>{current().entries[selected].photo='';$('photo').value='';save();editFields();render()};$('pdfFile').onchange=()=>{closePdf();const f=$('pdfFile').files[0];if(!f)return;if(f.type!=='application/pdf')return modal('Formato inválido','Selecione um PDF.');pdfUrl=URL.createObjectURL(f);render()};$('closePdf').onclick=()=>{closePdf();$('pdfFile').value=''};$('preview').onclick=()=>modal('Prévia editorial','Navegue pelas 11 páginas na lateral direita. As páginas institucionais ainda são representações simplificadas e não estão prontas para um PDF comercial.');$('export').onclick=()=>modal('PDF comercial indisponível','Esta versão não exporta um PDF definitivo. Primeiro precisamos reproduzir fielmente as páginas fixas, validar imagens e revisar todos os dados.');$('zoom').onclick=()=>modal('Zoom','O ajuste de zoom será refinado após validar a composição das páginas.');$('generatePrompt').onclick=prompt;$('copyPrompt').onclick=async()=>{try{await navigator.clipboard.writeText($('aiPrompt').value);modal('Briefing copiado','Cole o briefing na conversa do ChatGPT para iniciar a pesquisa.')}catch{ $('aiPrompt').focus();$('aiPrompt').select();modal('Selecione e copie','Seu navegador não permitiu copiar automaticamente. Use Ctrl+C no texto selecionado.')}};$('openChatGPT').onclick=()=>window.open('https://chatgpt.com/','_blank','noopener,noreferrer');$('goEditorImages').onclick=()=>show('editor');$('exportJSON').onclick=()=>{const p=current();if(!p)return;download('cet-'+p.city.toLowerCase().replace(/[^a-z0-9]+/g,'-')+'-'+p.year+'.json',JSON.stringify({format:'cet-editorial-v2',project:p},null,2),'application/json')};$('importJSONBtn').onclick=()=>$('importJSON').click();$('importJSON').onchange=async()=>{const f=$('importJSON').files[0];if(!f)return;try{const obj=JSON.parse(await f.text());const p=obj.project;if(obj.format!=='cet-editorial-v2'||!p||!Array.isArray(p.entries)||p.entries.length!==12||typeof p.city!=='string'||typeof p.category!=='string')throw Error();p.id='p'+Date.now()+Math.random().toString(36).slice(2,7);projects.unshift(p);activeId=p.id;save();page=0;show('editor')}catch{modal('Arquivo incompatível','Escolha um projeto JSON exportado por esta versão do Estúdio.')}};show('library');
 })();
-</script></body></html>
+  </script>
+ </body>
+</html>
