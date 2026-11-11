@@ -842,158 +842,155 @@ textarea {
 
 /* ============================================================
    PÁGINA 2 — INTRODUÇÃO INSTITUCIONAL
-   Layout editorial próprio; conteúdo fixo em todas as edições.
-   Somente a fotografia é um recurso de imagem independente.
+   Composição de revista, aprovada como direção visual.
+   Estrutura e textos fixos; somente a fotografia é substituível.
+   Sem linha dourada superior e sem rodapé com endereço do site.
    ============================================================ */
 .sheet.intro-fixed {
+  position: relative;
   width: 595px;
   height: 842px;
   min-height: 842px;
   padding: 0;
-  position: relative;
   overflow: hidden;
   background: #fff;
-  color: #202020;
+  color: #191919;
   text-align: left;
   font-family: Arial, Helvetica, sans-serif;
 }
 
-/* Institucional: uma composição única reutilizada em todos os materiais. */
+/* Cabeçalho: duas áreas separadas, sem linhas decorativas superiores. */
 .intro-fixed .intro-category {
   position: absolute;
-  top: 35px;
-  left: 38px;
-  width: 230px;
-  color: #ad8746;
-  font: 700 9px/1.5 Arial, sans-serif;
-  letter-spacing: 1.6px;
+  top: 43px;
+  left: 39px;
+  width: 265px;
+  color: #252525;
+  font: 700 10px/1.35 Arial, Helvetica, sans-serif;
+  letter-spacing: 1.1px;
+}
+
+.intro-fixed .intro-category::first-letter {
+  color: #bb8c3a;
 }
 
 .intro-fixed .intro-brand {
   position: absolute;
-  top: 32px;
-  right: 36px;
-  width: 236px;
+  top: 28px;
+  right: 39px;
+  width: 222px;
+  color: #242424;
   text-align: right;
-  color: #252525;
-  font: 14px/1.2 Georgia, serif;
-  letter-spacing: 0.6px;
+  font: 16px/1.15 Georgia, 'Times New Roman', serif;
+  letter-spacing: 0.5px;
 }
 
 .intro-fixed .intro-brand small {
   display: block;
-  margin-top: 5px;
-  color: #ad8746;
-  font: 9px Arial, sans-serif;
+  margin-top: 6px;
+  color: #a98143;
+  font: 9px Arial, Helvetica, sans-serif;
   letter-spacing: 0;
 }
 
 .intro-fixed .intro-kicker {
   position: absolute;
-  top: 115px;
-  left: 42px;
+  top: 108px;
+  left: 40px;
   display: flex;
   align-items: center;
-  gap: 13px;
-  font: italic 26px Georgia, serif;
+  gap: 12px;
+  font: italic 25px Georgia, 'Times New Roman', serif;
 }
 
 .intro-fixed .intro-kicker::before {
   content: '';
-  width: 30px;
+  width: 28px;
   height: 1px;
-  background: #c6a35c;
+  background: #bc8c38;
 }
 
 .intro-fixed .intro-title {
   position: absolute;
-  top: 166px;
-  left: 56px;
-  width: 480px;
+  top: 157px;
+  left: 48px;
+  width: 510px;
   margin: 0;
   z-index: 2;
-  font: 400 47px/1.06 Arial, Helvetica, sans-serif;
-  letter-spacing: -1.5px;
+  font: 400 45px/1.04 Georgia, 'Times New Roman', serif;
+  letter-spacing: -1.3px;
 }
 
+.intro-fixed .intro-title em {
+  color: #b5822f;
+  font-weight: 400;
+  font-style: italic;
+}
+
+/* Imagem única: pode ser trocada sem afetar o layout institucional. */
 .intro-fixed .intro-photo {
   position: absolute;
-  top: 327px;
-  left: 56px;
-  width: 198px;
-  height: 423px;
+  top: 287px;
+  left: 42px;
+  width: 216px;
+  height: 463px;
   object-fit: cover;
   object-position: center;
-  background: #ebe7df;
+  background: #ebe6dd;
 }
 
 .intro-fixed .intro-photo-placeholder {
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 18px;
+  padding: 20px;
   text-align: center;
-  color: #877c6b;
-  font: 11px/1.5 Arial, sans-serif;
+  color: #8a7e6d;
+  font: 12px/1.5 Arial, Helvetica, sans-serif;
 }
 
 .intro-fixed .intro-copy {
   position: absolute;
-  top: 328px;
-  left: 281px;
-  width: 264px;
+  top: 287px;
+  left: 280px;
+  width: 273px;
   z-index: 2;
 }
 
 .intro-fixed .intro-lead {
-  margin: 0 0 19px;
-  font: italic 700 12px/1.4 Georgia, serif;
+  margin: 0 0 22px;
+  padding-left: 11px;
+  border-left: 2px solid #bd8b37;
+  font: italic 700 13px/1.32 Georgia, 'Times New Roman', serif;
 }
 
 .intro-fixed .intro-body {
-  font: 10.7px/1.43 Arial, Helvetica, sans-serif;
+  font: 11px/1.46 Arial, Helvetica, sans-serif;
   text-align: left;
 }
 
 .intro-fixed .intro-body p {
-  margin: 0 0 11px;
+  margin: 0 0 14px;
 }
 
+/* Marca d'água discreta: não atravessa o texto. */
 .intro-fixed .intro-watermark {
   position: absolute;
-  color: rgba(70, 60, 45, 0.045);
-  font: 24px/1.08 Georgia, serif;
-  text-align: center;
+  color: rgba(177, 142, 80, 0.10);
+  font: 115px/1 Georgia, 'Times New Roman', serif;
   pointer-events: none;
   user-select: none;
+  z-index: 0;
 }
 
 .intro-fixed .intro-watermark.w1 {
-  top: 225px;
-  right: 39px;
+  top: 150px;
+  right: -21px;
 }
 
 .intro-fixed .intro-watermark.w2 {
-  bottom: 50px;
-  left: 24px;
-}
-
-.intro-fixed .intro-bottom-rule {
-  position: absolute;
-  bottom: 36px;
-  left: 56px;
-  width: 48px;
-  height: 2px;
-  background: #c6a35c;
-}
-
-.intro-fixed .intro-footer {
-  position: absolute;
-  bottom: 29px;
-  right: 39px;
-  color: #a78649;
-  font: 9px Georgia, serif;
-  letter-spacing: 0.7px;
+  bottom: 13px;
+  right: -10px;
 }
 
 @media print {
@@ -1356,13 +1353,15 @@ function editFields(){const p=current();if(!p){show('library');return}const supp
 if(page===1){hint.textContent='Introdução institucional fixa em todos os materiais. Apenas a fotografia pode ser substituída.';addPhoto('Fotografia da introdução',v=>p.introPhoto=v);const remove=document.createElement('button');remove.textContent='Remover fotografia';remove.className='btn';remove.onclick=()=>{p.introPhoto='';save();render();editFields()};root.append(remove)}else if(page===0){hint.textContent='Identidade, título e site fixos. Edite apenas a fotografia e a frase do destino.';addText('Frase da capa', 'coverText');addPhoto('Fotografia da capa',v=>p.coverPhoto=v)}else if(page===3){hint.textContent='O texto institucional permanece protegido. O ano acompanha a edição do projeto.';addText('Ano da edição','year')}else if(page===4){hint.textContent='Abertura turística: fotografia e textos específicos do destino.';addText('Título editorial','openingTitle');addText('Texto editorial','openingText',true);addPhoto('Fotografia de abertura',v=>p.openingPhoto=v)}else if(page===9){hint.textContent='Encerramento: apenas as duas fotografias são editáveis.';addPhoto('Fotografia superior',v=>p.closingPhotos[0]=v);addPhoto('Fotografia inferior',v=>p.closingPhotos[1]=v)}else{hint.textContent='Página institucional fixa e protegida. Conteúdo representado aqui de forma provisória; a reprodução gráfica fiel exige os recursos originais do Canva.'}}
 function imageOrEmpty(src,label){return src?'<img class="large-photo" src="'+src+'" alt="'+escapeHtml(label)+'">':'<div class="large-photo">'+escapeHtml(label)+' — fotografia pendente</div>'}
 function render(){const p=current();$('documentTitle').textContent=p?p.category+' · '+p.city+' · Edição '+p.year:'Biblioteca Editorial';$('pageLabel').textContent=p&&p.category==='Atrações Turísticas'?'Página '+(page+1)+' de 11 · '+types[page]:'Biblioteca / projeto';$('pagesTitle').textContent=p?'Páginas do material':'Páginas';$('preview').disabled=!p;$('export').disabled=!p; if(pdfUrl){$('sheetContainer').innerHTML='<iframe class="pdf-viewer" title="PDF de referência" src="'+pdfUrl+'"></iframe>';return}if(!p){$('sheetContainer').innerHTML='<div class="sheet institutional"><h1>Biblioteca Editorial</h1></div>';return}if(p.category!=='Atrações Turísticas'){$('sheetContainer').innerHTML='<div class="sheet institutional"><h1>'+escapeHtml(p.category)+'</h1><h2>'+escapeHtml(p.city)+'</h2><p>Projeto criado. Modelo gráfico ainda não implementado.</p></div>';$('pageList').innerHTML='';return}let content='';if(page>=5&&page<=8){const entries=p.entries.slice((page-5)*3,(page-5)*3+3).map((a,i)=>{const ix=(page-5)*3+i;return '<article class="entry '+(ix===selected?'selected':'')+'" data-index="'+ix+'"><div>'+(a.photo?'<img src="'+a.photo+'" alt="'+escapeHtml(a.name)+'">':'<div class="empty" style="height:196px">Fotografia pendente</div>')+'</div><div class="name">'+escapeHtml(a.name||'ATRAÇÃO '+(ix+1))+'</div><div class="details"><div class="desc"><strong>Descrição: </strong><span class="value">'+escapeHtml(a.description||'Descrição pendente')+'</span></div><div class="meta"><strong>Endereço: </strong><span class="value">'+escapeHtml(a.address||'Pendente')+'</span><br><strong>Site: </strong><span class="value">'+escapeHtml(a.site||'Pendente')+'</span><br><strong>Entrada: </strong><span class="value">'+escapeHtml(a.ticket||'Pendente')+'</span></div></div></article>'}).join('');content='<div class="sheet"><div class="topline"><span></span><span>PONTOS TURÍSTICOS <span class="goldmark">✧</span></span></div><div class="logo">CURADORIA<br>ELITE TRAVEL<small>O seu mundo, bem indicado.</small></div><div class="tagline">Mais que paisagens, memórias que permanecem</div><div class="quote">Porque o verdadeiro destino é a lembrança que a gente guarda para sempre no coração</div>'+entries+'<footer><span>CURADORIA ELITE TRAVEL</span><span>'+(page+1)+'/11</span></footer></div>'}else{let body='';if(page===0)body='<div class="brandlogo">✧<br>CURADORIA<br>ELITE TRAVEL</div><h1>ATRAÇÕES TURÍSTICAS</h1><div class="goldrule"></div><p>'+escapeHtml(p.coverText)+'</p>'+imageOrEmpty(p.coverPhoto,'Capa')+'<div class="siteurl">WWW.CURADORIAELITETRAVEL.COM</div>';if(page===1)body=
-  '<div class="intro-category">UMA PUBLICAÇÃO CURADORIA ELITE TRAVEL</div>' +
+  '<div class="intro-category">CURADORIA ELITE TRAVEL · PUBLICAÇÃO EDITORIAL</div>' +
   '<div class="intro-brand">CURADORIA ELITE TRAVEL<small>O seu mundo, bem indicado.</small></div>' +
   '<div class="intro-kicker">Intro</div>' +
-  '<div class="intro-watermark w1">CURADORIA<br>ELITE TRAVEL</div>' +
-  '<div class="intro-watermark w2">CURADORIA<br>ELITE TRAVEL</div>' +
-  '<h1 class="intro-title">Um Brinde à<br>Sua Escolha!</h1>' +
-  (p.introPhoto?'<img class="intro-photo" src="'+p.introPhoto+'" alt="Fotografia da introdução">':'<div class="intro-photo intro-photo-placeholder">Fotografia da introdução pendente</div>') +
+  '<div class="intro-watermark w1" aria-hidden="true">✧</div>' +
+  '<div class="intro-watermark w2" aria-hidden="true">✧</div>' +
+  '<h1 class="intro-title">Um Brinde à<br><em>Sua Escolha!</em></h1>' +
+  (p.introPhoto
+    ? '<img class="intro-photo" src="'+p.introPhoto+'" alt="Fotografia da introdução">'
+    : '<div class="intro-photo intro-photo-placeholder">Fotografia da introdução pendente</div>') +
   '<div class="intro-copy">' +
   '  <p class="intro-lead">Seu guia para experiências autênticas, curadoria especializada e momentos que ficarão para sempre na memória.</p>' +
   '  <div class="intro-body">' +
@@ -1370,9 +1369,7 @@ function render(){const p=current();$('documentTitle').textContent=p?p.category+
   '    <p>Combinamos rigor técnico e sensibilidade para selecionar informações que realmente importam, garantindo que seu tempo seja aproveitado com leveza e confiança. Este guia não é apenas um material de apoio; é um companheiro de viagem, criado para que você se sinta seguro, inspirado e profundamente encantado por cada passo dessa aventura.</p>' +
   '    <p>Agora, respire fundo e embarque conosco. O mundo espera por você — e estamos aqui para iluminar o caminho.</p>' +
   '  </div>' +
-  '</div>' +
-  '<div class="intro-bottom-rule"></div>' +
-  '<div class="intro-footer">WWW.CURADORIAELITETRAVEL.COM</div>';if(page===2)body='<div class="brandlogo">CURADORIA ELITE TRAVEL</div><h2>Aqui, cada detalhe foi pensado para você.</h2><div class="body-copy">Descubra os pontos turísticos com um olhar que revela sua beleza única e ressalta sua alma.</div><div class="fixed-flag">Página institucional protegida</div>';if(page===3)body='<div class="brandlogo">CURADORIA ELITE TRAVEL</div><h2>Um Toque de Atenção<br>Para sua Jornada!</h2><p class="body-copy">Em um mundo dinâmico, horários, valores e funcionamentos podem mudar. Consulte os canais oficiais antes de visitar.</p><p class="muted">Este material foi produzido em '+escapeHtml(p.year)+'.</p><div class="fixed-flag">Somente o ano é editável</div>';if(page===4)body='<div class="brandlogo">CURADORIA ELITE TRAVEL</div><p>Cartão Postal Vivo</p><h1>'+escapeHtml(p.openingTitle)+'</h1>'+imageOrEmpty(p.openingPhoto,'Abertura turística')+'<p class="body-copy">'+escapeHtml(p.openingText||'Texto editorial do destino pendente')+'</p>';if(page===9)body='<div class="closing-watermark watermark-a">CURADORIA ELITE TRAVEL</div><div class="closing-watermark watermark-b">CURADORIA ELITE TRAVEL</div><div class="closing-watermark watermark-c">CURADORIA ELITE TRAVEL</div><div class="closing-social">◎ @curadoriaelitetravel</div><div class="closing-columns"><div class="closing-photos">'+p.closingPhotos.map((src,i)=>src?'<img class="'+(i===0?'closing-photo-top':'closing-photo-bottom')+'" src="'+src+'" alt="Fotografia '+(i+1)+' de encerramento">':'<div class="closing-photo-placeholder '+(i===0?'closing-photo-top':'closing-photo-bottom')+'">Fotografia '+(i+1)+' pendente</div>').join('')+'</div><div class="closing-copy"><div class="closing-arrow">↘</div><p class="closing-intro">Cada página foi pensada não apenas para informar, mas para inspirar; não só para guiar, mas para encantar. Que estas palavras sejam o começo de uma jornada tão especial quanto foi elaborá-las para você.</p><p class="closing-message">É um prazer imenso apresentar a você este trabalho, feito com dedicação e carinho para transformar seus dias em histórias inesquecíveis.</p><p class="closing-thanks">Agradeço sua confiança e parceria nessa aventura! Que nossos caminhos se cruzem novamente nas próximas páginas e destinos.</p></div></div>';if(page===10)body='<div class="brandlogo">✧<br>CURADORIA<br>ELITE TRAVEL</div><div class="large-photo">Fotografia institucional de encerramento — referência gráfica pendente</div><h2>ATRAÇÕES TURÍSTICAS</h2><p>By Curadoria Elite Travel</p><div class="siteurl">www.curadoriaelitetravel.com</div><div class="fixed-flag">Contracapa protegida</div>';content='<div class="sheet '+(page===9?'editorial-closing':page===1?'intro-fixed':'institutional')+'">'+body+'</div>'}$('sheetContainer').innerHTML=content;document.querySelectorAll('.entry').forEach(e=>e.onclick=()=>{selected=Number(e.dataset.index);editFields();render()});renderMini()}
+  '</div>' ;if(page===2)body='<div class="brandlogo">CURADORIA ELITE TRAVEL</div><h2>Aqui, cada detalhe foi pensado para você.</h2><div class="body-copy">Descubra os pontos turísticos com um olhar que revela sua beleza única e ressalta sua alma.</div><div class="fixed-flag">Página institucional protegida</div>';if(page===3)body='<div class="brandlogo">CURADORIA ELITE TRAVEL</div><h2>Um Toque de Atenção<br>Para sua Jornada!</h2><p class="body-copy">Em um mundo dinâmico, horários, valores e funcionamentos podem mudar. Consulte os canais oficiais antes de visitar.</p><p class="muted">Este material foi produzido em '+escapeHtml(p.year)+'.</p><div class="fixed-flag">Somente o ano é editável</div>';if(page===4)body='<div class="brandlogo">CURADORIA ELITE TRAVEL</div><p>Cartão Postal Vivo</p><h1>'+escapeHtml(p.openingTitle)+'</h1>'+imageOrEmpty(p.openingPhoto,'Abertura turística')+'<p class="body-copy">'+escapeHtml(p.openingText||'Texto editorial do destino pendente')+'</p>';if(page===9)body='<div class="closing-watermark watermark-a">CURADORIA ELITE TRAVEL</div><div class="closing-watermark watermark-b">CURADORIA ELITE TRAVEL</div><div class="closing-watermark watermark-c">CURADORIA ELITE TRAVEL</div><div class="closing-social">◎ @curadoriaelitetravel</div><div class="closing-columns"><div class="closing-photos">'+p.closingPhotos.map((src,i)=>src?'<img class="'+(i===0?'closing-photo-top':'closing-photo-bottom')+'" src="'+src+'" alt="Fotografia '+(i+1)+' de encerramento">':'<div class="closing-photo-placeholder '+(i===0?'closing-photo-top':'closing-photo-bottom')+'">Fotografia '+(i+1)+' pendente</div>').join('')+'</div><div class="closing-copy"><div class="closing-arrow">↘</div><p class="closing-intro">Cada página foi pensada não apenas para informar, mas para inspirar; não só para guiar, mas para encantar. Que estas palavras sejam o começo de uma jornada tão especial quanto foi elaborá-las para você.</p><p class="closing-message">É um prazer imenso apresentar a você este trabalho, feito com dedicação e carinho para transformar seus dias em histórias inesquecíveis.</p><p class="closing-thanks">Agradeço sua confiança e parceria nessa aventura! Que nossos caminhos se cruzem novamente nas próximas páginas e destinos.</p></div></div>';if(page===10)body='<div class="brandlogo">✧<br>CURADORIA<br>ELITE TRAVEL</div><div class="large-photo">Fotografia institucional de encerramento — referência gráfica pendente</div><h2>ATRAÇÕES TURÍSTICAS</h2><p>By Curadoria Elite Travel</p><div class="siteurl">www.curadoriaelitetravel.com</div><div class="fixed-flag">Contracapa protegida</div>';content='<div class="sheet '+(page===9?'editorial-closing':page===1?'intro-fixed':'institutional')+'">'+body+'</div>'}$('sheetContainer').innerHTML=content;document.querySelectorAll('.entry').forEach(e=>e.onclick=()=>{selected=Number(e.dataset.index);editFields();render()});renderMini()}
 function renderMini(){const p=current();if(!p||p.category!=='Atrações Turísticas'){$('pageList').innerHTML='';return}$('pageList').innerHTML=types.map((name,i)=>'<button class="page-mini '+(i===page?'selected':'')+'" data-page="'+i+'"><div class="mini-paper"><b class="mini-title">'+escapeHtml(name)+'</b>'+(i>=5&&i<=8?'<span></span><span></span><span></span>':'<div class="miniline"></div><div style="flex:1;background:#f0eee9"></div>')+'</div><small>'+String(i+1).padStart(2,'0')+' · '+escapeHtml(name)+'</small></button>').join('');document.querySelectorAll('[data-page]').forEach(b=>b.onclick=()=>{page=Number(b.dataset.page);selected=Math.max(0,(page-5)*3);pdfUrl&&closePdf();show('editor')})}
 function prompt(){const p=current();if(!p)return;const lines=['Você é pesquisador editorial da Curadoria Elite Travel.','Destino: '+p.city+', '+p.country+'.','Categoria: '+p.category+'. Edição: '+p.year+'.','Pesquise na internet, priorizando fontes oficiais, e forneça links e datas de verificação.','Não invente preços, endereços, horários ou sites. Identifique dados não confirmados.','Para Atrações Turísticas: proponha 12 atrações, sendo 8 tradicionais e 4 alternativas menos óbvias.','Para cada atração: nome, descrição com até '+limit+' caracteres (incluindo espaços), endereço, site oficial e valor de entrada na moeda local ou indicação de gratuidade.','Não inclua imagens sem comprovar a licença de uso comercial.','Organize os resultados para minha aprovação, sem substituir automaticamente o que já está aprovado.'];$('aiPrompt').value=lines.join('\n\n')}
 function closePdf(){if(pdfUrl){URL.revokeObjectURL(pdfUrl);pdfUrl=null;render()}}
