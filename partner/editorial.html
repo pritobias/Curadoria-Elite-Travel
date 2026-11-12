@@ -1185,6 +1185,7 @@ textarea {
 .tourism-index .index-brand small {font:6px Arial,sans-serif; color:#b88c50; margin-top:4px;}
 .tourism-index .index-category {position:absolute; top:42px; right:28px; font:700 11px Arial,sans-serif; display:flex; align-items:center; gap:5px;}
 .tourism-index .index-category-mark {color:#b98c43; font-size:21px; line-height:10px;}
+.tourism-index .index-category-mountains {width:35px; height:22px; flex:none; color:#bd8a33; display:block;}
 .tourism-index .index-kicker {position:absolute; top:96px; left:27px; display:flex; align-items:center; gap:12px; font:italic 27px Georgia,serif; color:#555;}
 .tourism-index .index-kicker:before {content:''; display:block; width:29px; height:1px; background:#c6a35c;}
 .tourism-index .index-photo,.tourism-index .index-photo-placeholder {position:absolute; top:149px; right:0; width:263px; height:646px; object-fit:cover; object-position:center;}
@@ -1609,7 +1610,11 @@ function render(){const p=current();$('documentTitle').textContent=p?p.category+
   '  </div>' +
   '</div>' ;if(page===2)body=
   '<div class="index-brand"><img src="../images/rosa-dos-ventos.png" alt="Rosa dos Ventos" onerror="this.style.visibility=\'hidden\'"><div class="index-brand-name">CURADORIA<br>ELITE TRAVEL</div><small>O seu mundo, bem indicado.</small></div>' +
-  '<div class="index-category">PONTOS TURÍSTICOS <span class="index-category-mark">✧</span></div>' +
+  '<div class="index-category">PONTOS TURÍSTICOS ' +
+  '<svg class="index-category-mountains" viewBox="0 0 64 38" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">' +
+    '<path d="M2 33 17 9l8 13L34 4l28 29M10 33l7-13 6 9 11-16 15 20" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"/>' +
+    '<path d="m12 18 5-3 4 6m7-8 6-5 8 11" fill="none" stroke="currentColor" stroke-width="1.2"/>' +
+  '</svg></div>' +
   '<div class="index-kicker">Index</div>' +
   '<div class="index-watermark w1" aria-hidden="true">CURADORIA<br>ELITE TRAVEL</div>' +
   '<div class="index-watermark w2" aria-hidden="true">CURADORIA<br>ELITE TRAVEL</div>' +
