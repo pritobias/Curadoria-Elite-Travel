@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Roteiros | Operação Partner CET</title>
+<style>
+:root{font-family:Arial,Helvetica,sans-serif;color:#f4f6fa;background:#03060b}*{box-sizing:border-box}body{margin:0;background:radial-gradient(circle at 20% 0%,#192031,#03060b 55%);min-height:100vh}header{display:flex;justify-content:space-between;align-items:center;gap:15px;padding:17px max(22px,calc((100vw - 1200px)/2));background:#050505;border-bottom:1px solid #303036}.brand{font-weight:800;color:#d6ad32;letter-spacing:.5px}.brand small{display:block;color:white;font-size:11px;margin-top:4px}a{color:inherit;text-decoration:none}.back,.btn{display:inline-block;border:1px solid #92701e;border-radius:11px;padding:12px 17px;font-weight:700;background:#0c1523;color:#fff;cursor:pointer}.btn.gold{background:linear-gradient(120deg,#e3bd43,#b88712);color:#070707;border:0}main{max-width:1200px;margin:auto;padding:38px 22px 70px}.eyebrow{font-size:12px;letter-spacing:2px;color:#d6ad32;font-weight:800;text-transform:uppercase}h1{font-size:clamp(29px,4vw,43px);margin:12px 0}p{line-height:1.6;color:#c4cad6}.intro{margin-bottom:25px}.layout{display:grid;grid-template-columns:minmax(0,1fr) 350px;gap:22px}.panel{background:#0b1423;border:1px solid #273447;border-radius:18px;padding:24px;margin-bottom:20px}h2{font-size:20px;margin:0 0 17px}.fields{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}.field{display:flex;flex-direction:column;gap:7px}.full{grid-column:1/-1}label{font-size:13px;font-weight:700}input,select,textarea{width:100%;border:1px solid #344153;border-radius:10px;background:#060c16;color:white;padding:12px;font:inherit}textarea{min-height:95px;resize:vertical}.hint{font-size:12px;color:#9da9b9}.actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:20px}.preview{white-space:pre-wrap;line-height:1.65;font-size:14px;color:#dce2eb;min-height:150px}.notice{border-left:3px solid #d6ad32;padding-left:12px}.status{font-size:13px;color:#d6ad32}button:disabled{opacity:.5;cursor:not-allowed}@media(max-width:850px){.layout{grid-template-columns:1fr}}@media(max-width:560px){.fields{grid-template-columns:1fr}header{padding:16px}main{padding:25px 15px}.panel{padding:17px}}@media print{header,.form-panel,.actions,.intro .eyebrow,.notice{display:none!important}body,:root{background:white;color:black}main{padding:0}.layout{display:block}.panel{border:0;background:white;color:black}.preview{color:black}}
+</style>
+</head>
+<body>
+<header><div class="brand">✦ CURADORIA ELITE TRAVEL<small>O seu mundo, bem indicado.</small></div><a class="back" href="partner.html">← Voltar à Operação</a></header>
+<main>
+<div class="intro"><div class="eyebrow">Operação Partner · Ferramenta exclusiva</div><h1>Roteiros</h1><p>Reúna as preferências do cliente e prepare as informações para a geração de uma roteiro personalizado com IA. A empresa poderá revisar o conteúdo antes de encaminhá-lo.</p></div>
+<div class="layout"><section class="form-panel">
+<form id="tripForm">
+<div class="panel"><h2>01 · Cliente e viagem</h2><div class="fields">
+<div class="field"><label for="client">Nome do cliente</label><input id="client" autocomplete="off" placeholder="Nome para personalização"></div>
+<div class="field"><label for="destination">Destino *</label><input id="destination" required placeholder="Ex.: Paris, França"></div>
+<div class="field"><label for="arrival">Chegada</label><input id="arrival" type="date"></div>
+<div class="field"><label for="departure">Retorno</label><input id="departure" type="date"></div>
+<div class="field"><label for="days">Dias do roteiro *</label><input id="days" type="number" min="1" max="60" value="3" required></div>
+<div class="field"><label for="budget">Orçamento</label><select id="budget"><option>Intermediário</option><option>Econômico</option><option>Conforto elevado</option><option>Não definido</option></select></div>
+<div class="field full"><label for="hotel">Hospedagem ou ponto de partida</label><input id="hotel" placeholder="Nome do hotel e localização"></div>
+<div class="field full"><label for="unavailable">Dias indisponíveis</label><input id="unavailable" placeholder="Ex.: 02/06 — compromissos pessoais"></div>
+</div></div>
+<div class="panel"><h2>02 · Perfil e preferências</h2><div class="fields">
+<div class="field full"><label for="travelers">Viajantes e necessidades específicas</label><textarea id="travelers" placeholder="Ex.: casal, gestante, mobilidade reduzida, pausas frequentes"></textarea></div>
+<div class="field full"><label for="interests">Interesses e experiências desejadas</label><textarea id="interests" placeholder="Ex.: museus, gastronomia, cafés, pontos turísticos, experiências menos óbvias"></textarea></div>
+<div class="field full"><label for="must">Visitas indispensáveis e exclusões</label><textarea id="must" placeholder="Ex.: Musée d’Orsay; evitar Louvre"></textarea></div>
+<div class="field full"><label for="transport">Preferências de deslocamento</label><input id="transport" placeholder="Ex.: táxi, poucos trajetos a pé"></div>
+<div class="field full"><label for="notes">Observações adicionais</label><textarea id="notes" placeholder="Ritmo, horários de chegada e partida, restrições alimentares etc."></textarea></div>
+</div></div>
+<div class="panel"><h2>03 · Preparar para IA</h2><p class="hint">A conexão com o serviço de IA ainda não foi implementada. Por enquanto, este botão prepara um briefing estruturado para copiar e utilizar na etapa de integração/testes.</p><div class="actions"><button class="btn gold" type="submit">Preparar briefing</button><button class="btn" type="reset">Limpar campos</button></div></div>
+</form></section>
+<aside><div class="panel"><h2>Prévia do briefing</h2><div class="preview" id="preview">Preencha os campos e selecione “Preparar briefing”.</div><div class="actions"><button class="btn" id="copy" type="button" disabled>Copiar briefing</button></div><p class="status" id="status" role="status"></p></div><div class="panel notice"><h2>Critérios editoriais</h2><p>As sugestões deverão respeitar as necessidades dos viajantes, considerar deslocamentos e períodos de descanso e distinguir estimativas de informações confirmadas.</p><p>Disponibilidade e valores de passeios podem mudar até a contratação. Nenhuma reserva é efetuada nesta ferramenta.</p><p class="hint">O PDF final, a edição das sugestões e o vínculo ao pedido serão desenvolvidos na próxima etapa.</p></div></aside>
+</div>
+</main>
+<script>
+(function(){const form=document.getElementById('tripForm'),preview=document.getElementById('preview'),copy=document.getElementById('copy'),status=document.getElementById('status');const ids=['client','destination','arrival','departure','days','budget','hotel','unavailable','travelers','interests','must','transport','notes'];const labels=['Cliente','Destino','Chegada','Retorno','Dias do roteiro','Orçamento','Hospedagem','Dias indisponíveis','Perfil e necessidades','Interesses','Visitas e exclusões','Transporte','Observações'];form.addEventListener('submit',e=>{e.preventDefault();const a=ids.map((id,i)=>labels[i]+': '+(document.getElementById(id).value.trim()||'Não informado'));preview.textContent='BRIEFING — ROTEIROS\n\n'+a.join('\n')+'\n\nINSTRUÇÕES PARA A IA\nOrganizar os dias disponíveis em sequência lógica, com horários aproximados, atrações, refeições, pausas e opções de transporte. Considerar restrições, distâncias estimadas e ritmo do cliente. Não inventar horários oficiais, preços ou disponibilidade. Sugerir bate-voltas apenas quando adequados. Incluir aviso de que a disponibilidade de passeios pode mudar até a contratação. Apresentar para revisão humana antes do envio.';copy.disabled=false;status.textContent='Briefing preparado. A geração automática por IA ainda depende de integração.';});copy.addEventListener('click',async()=>{try{await navigator.clipboard.writeText(preview.textContent);status.textContent='Briefing copiado.'}catch(_){status.textContent='Não foi possível copiar automaticamente. Selecione o texto da prévia.'}});form.addEventListener('reset',()=>{preview.textContent='Preencha os campos e selecione “Preparar briefing”.';copy.disabled=true;status.textContent=''})})();
+</script>
+</body></html>
