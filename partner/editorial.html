@@ -1839,8 +1839,14 @@ function renderTourismCover(p) {
     '<path d="m12 18 5-3 4 6m7-8 6-5 8 11" fill="none" stroke="currentColor" stroke-width="1.2"/>' +
     '</svg>';
 
-  const tray = '<svg class="cover-mountains" viewBox="0 0 64 38" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">' +
-    '<path d="M6 29h52M11 25h42M14 23a18 18 0 0 1 36 0M32 5v-3M27 5h10" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+  // Gastronomia: cloche dourado exclusivo da capa, com vapor e bandeja.
+  const tray = '<svg class="cover-mountains" viewBox="0 0 100 76" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">' +
+    '<g fill="none" stroke="currentColor" stroke-linecap="round">' +
+    '<path d="M43 23C34 14 45 9 40 2M53 23C46 14 59 10 53 1M63 23C57 14 70 10 64 3" stroke-width="2.6"/>' +
+    '</g>' +
+    '<path d="M47 30c0-3 1-6 3-6s3 3 3 6v3C74 35 87 48 90 62H10c3-14 16-27 37-29z" fill="currentColor"/>' +
+    '<path d="M6 66h88l-9 7H15z" fill="currentColor"/>' +
+    '</svg>';
   const photo = p.coverPhoto
     ? '<img class="cover-photo" src="' + p.coverPhoto + '" alt="Fotografia de capa de ' + escapeHtml(city) + '">'
     : '<div class="cover-photo-pending">Fotografia da capa pendente</div>';
