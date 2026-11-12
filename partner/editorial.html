@@ -1352,6 +1352,47 @@ function filePhoto(input,cb){const file=input.files&&input.files[0];if(!file)ret
 function editFields(){const p=current();if(!p){show('library');return}const supported=p.category==='Atrações Turísticas';$('editorTitle').textContent=supported?(page>=5&&page<=8?'Editar indicação':'Editar página'):'Modelo em preparação';$('attractionNav').style.display=supported&&page>=5&&page<=8?'flex':'none';$('editorFields').style.display=supported&&page>=5&&page<=8?'block':'none';$('pageFields').style.display=supported&&!(page>=5&&page<=8)?'block':'none';if(!supported){$('pageFields').style.display='block';$('pageFields').innerHTML='<p class="tinyhelp">Esta categoria já pode ser cadastrada na biblioteca. O modelo visual específico será implementado posteriormente.</p>';return}if(page>=5&&page<=8){selected=Math.max((page-5)*3,Math.min(selected,(page-5)*3+2));const a=p.entries[selected];$('selection').textContent='Atração '+(selected+1)+' de 12 · '+(selected<8?'Tradicional':'Alternativa');['name','description','address','site','ticket'].forEach(f=>$(f).value=a[f]);$('count').textContent=a.description.length+' / '+limit;$('count').className=a.description.length>limit?'warning':'';$('photoHolder').innerHTML=a.photo?'<img class="thumbphoto" alt="Fotografia escolhida" src="'+a.photo+'">':'Sem fotografia selecionada';return}const root=$('pageFields');root.replaceChildren();const heading=document.createElement('h3');heading.textContent=types[page];root.append(heading);const hint=document.createElement('p');hint.className='tinyhelp';root.append(hint);function addText(label,field,multi=false){const l=document.createElement('label');l.className='label';l.textContent=label;root.append(l);const el=document.createElement(multi?'textarea':'input');el.value=p[field]||'';el.oninput=()=>{p[field]=el.value;save();render()};root.append(el)}function addPhoto(label,callback){const l=document.createElement('label');l.className='label';l.textContent=label;root.append(l);const f=document.createElement('input');f.type='file';f.accept='image/*';f.onchange=()=>filePhoto(f,callback);root.append(f)}
 if(page===1){hint.textContent='Introdução institucional fixa em todos os materiais. Apenas a fotografia pode ser substituída.';addPhoto('Fotografia da introdução',v=>p.introPhoto=v);const remove=document.createElement('button');remove.textContent='Remover fotografia';remove.className='btn';remove.onclick=()=>{p.introPhoto='';save();render();editFields()};root.append(remove)}else if(page===0){hint.textContent='Identidade, título e site fixos. Edite apenas a fotografia e a frase do destino.';addText('Frase da capa', 'coverText');addPhoto('Fotografia da capa',v=>p.coverPhoto=v)}else if(page===3){hint.textContent='O texto institucional permanece protegido. O ano acompanha a edição do projeto.';addText('Ano da edição','year')}else if(page===4){hint.textContent='Abertura turística: fotografia e textos específicos do destino.';addText('Título editorial','openingTitle');addText('Texto editorial','openingText',true);addPhoto('Fotografia de abertura',v=>p.openingPhoto=v)}else if(page===9){hint.textContent='Encerramento: apenas as duas fotografias são editáveis.';addPhoto('Fotografia superior',v=>p.closingPhotos[0]=v);addPhoto('Fotografia inferior',v=>p.closingPhotos[1]=v)}else{hint.textContent='Página institucional fixa e protegida. Conteúdo representado aqui de forma provisória; a reprodução gráfica fiel exige os recursos originais do Canva.'}}
 function imageOrEmpty(src,label){return src?'<img class="large-photo" src="'+src+'" alt="'+escapeHtml(label)+'">':'<div class="large-photo">'+escapeHtml(label)+' — fotografia pendente</div>'}
+
+/* Página 1: capa editorial. Função isolada para preservar as demais páginas. */
+function renderTourismCover(p) {
+  const city = String(p.city || '').trim();
+  const phrase = String(p.coverText || '');
+  const hasCityAtEnd = city && phrase.toLocaleLowerCase().endsWith(city.toLocaleLowerCase());
+  const description = hasCityAtEnd
+    ? escapeHtml(phrase.slice(0, -city.length)) + '<span class="cover-city">' + escapeHtml(city) + '</span>'
+    : escapeHtml(phrase);
+
+  const compass = '../images/rosa-dos-ventos.png';
+  const logo = (footer = false) =>
+    '<img src="' + compass + '" alt="Rosa dos Ventos" onerror="this.style.visibility=\'hidden\'">' +
+    '<div class="' + (footer ? 'cover-footer-brand-name' : 'cover-brand-name') + '">' +
+    'CURADORIA<br>ELITE TRAVEL</div>' +
+    '<div class="' + (footer ? 'cover-footer-slogan' : 'cover-slogan') + '">' +
+    'O seu mundo, bem indicado.</div>';
+
+  const mountains =
+    '<svg class="cover-mountains" viewBox="0 0 64 38" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">' +
+    '<path d="M2 33 17 9l8 13L34 4l28 29M10 33l7-13 6 9 11-16 15 20" ' +
+    'fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"/>' +
+    '<path d="m12 18 5-3 4 6m7-8 6-5 8 11" fill="none" stroke="currentColor" stroke-width="1.2"/>' +
+    '</svg>';
+
+  const photo = p.coverPhoto
+    ? '<img class="cover-photo" src="' + p.coverPhoto + '" alt="Fotografia de capa de ' + escapeHtml(city) + '">'
+    : '<div class="cover-photo-pending">Fotografia da capa pendente</div>';
+
+  return '<div class="cover-brand-top">' + logo() + '</div>' +
+    '<h1 class="cover-heading">ATRAÇÕES TURÍSTICAS</h1>' +
+    '<div class="cover-rule" aria-hidden="true"></div>' +
+    '<p class="cover-description">' + description + '</p>' +
+    photo +
+    '<div class="cover-footer">' +
+      '<div class="cover-footer-left">' + mountains +
+        '<span class="cover-url">WWW.CURADORIAELITETRAVEL.COM</span></div>' +
+      '<div class="cover-footer-brand">' + logo(true) + '</div>' +
+    '</div>';
+}
+
 function render(){const p=current();$('documentTitle').textContent=p?p.category+' · '+p.city+' · Edição '+p.year:'Biblioteca Editorial';$('pageLabel').textContent=p&&p.category==='Atrações Turísticas'?'Página '+(page+1)+' de 11 · '+types[page]:'Biblioteca / projeto';$('pagesTitle').textContent=p?'Páginas do material':'Páginas';$('preview').disabled=!p;$('export').disabled=!p; if(pdfUrl){$('sheetContainer').innerHTML='<iframe class="pdf-viewer" title="PDF de referência" src="'+pdfUrl+'"></iframe>';return}if(!p){$('sheetContainer').innerHTML='<div class="sheet institutional"><h1>Biblioteca Editorial</h1></div>';return}if(p.category!=='Atrações Turísticas'){$('sheetContainer').innerHTML='<div class="sheet institutional"><h1>'+escapeHtml(p.category)+'</h1><h2>'+escapeHtml(p.city)+'</h2><p>Projeto criado. Modelo gráfico ainda não implementado.</p></div>';$('pageList').innerHTML='';return}let content='';if(page>=5&&page<=8){const entries=p.entries.slice((page-5)*3,(page-5)*3+3).map((a,i)=>{const ix=(page-5)*3+i;return '<article class="entry '+(ix===selected?'selected':'')+'" data-index="'+ix+'"><div>'+(a.photo?'<img src="'+a.photo+'" alt="'+escapeHtml(a.name)+'">':'<div class="empty" style="height:196px">Fotografia pendente</div>')+'</div><div class="name">'+escapeHtml(a.name||'ATRAÇÃO '+(ix+1))+'</div><div class="details"><div class="desc"><strong>Descrição: </strong><span class="value">'+escapeHtml(a.description||'Descrição pendente')+'</span></div><div class="meta"><strong>Endereço: </strong><span class="value">'+escapeHtml(a.address||'Pendente')+'</span><br><strong>Site: </strong><span class="value">'+escapeHtml(a.site||'Pendente')+'</span><br><strong>Entrada: </strong><span class="value">'+escapeHtml(a.ticket||'Pendente')+'</span></div></div></article>'}).join('');content='<div class="sheet"><div class="topline"><span></span><span>PONTOS TURÍSTICOS <span class="goldmark">✧</span></span></div><div class="logo">CURADORIA<br>ELITE TRAVEL<small>O seu mundo, bem indicado.</small></div><div class="tagline">Mais que paisagens, memórias que permanecem</div><div class="quote">Porque o verdadeiro destino é a lembrança que a gente guarda para sempre no coração</div>'+entries+'<footer><span>CURADORIA ELITE TRAVEL</span><span>'+(page+1)+'/11</span></footer></div>'}else{let body='';if(page===0)body=renderTourismCover(p);if(page===1)body=
   '<div class="intro-category">CURADORIA ELITE TRAVEL · PUBLICAÇÃO EDITORIAL</div>' +
   '<div class="intro-brand">CURADORIA ELITE TRAVEL<small>O seu mundo, bem indicado.</small></div>' +
