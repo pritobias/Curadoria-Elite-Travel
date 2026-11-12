@@ -876,20 +876,36 @@ textarea {
 
 .intro-fixed .intro-brand {
   position: absolute;
-  top: 28px;
-  right: 39px;
-  width: 222px;
+  top: 17px;
+  right: 38px;
+  width: 160px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
   color: #242424;
-  text-align: right;
-  font: 16px/1.15 Georgia, 'Times New Roman', serif;
-  letter-spacing: 0.5px;
+}
+
+.intro-fixed .intro-brand > img {
+  display: block;
+  width: 34px;
+  height: 34px;
+  max-width: 34px;
+  max-height: 34px;
+  object-fit: contain;
+}
+
+.intro-fixed .intro-brand-name {
+  margin-top: 2px;
+  font: 15px/0.96 Georgia, 'Times New Roman', serif;
+  letter-spacing: 0;
 }
 
 .intro-fixed .intro-brand small {
   display: block;
-  margin-top: 6px;
-  color: #a98143;
-  font: 9px Arial, Helvetica, sans-serif;
+  margin-top: 5px;
+  color: #b58d51;
+  font: 7px Arial, Helvetica, sans-serif;
   letter-spacing: 0;
 }
 
@@ -1554,7 +1570,7 @@ function renderTourismCover(p) {
 }
 
 function render(){const p=current();$('documentTitle').textContent=p?p.category+' · '+p.city+' · Edição '+p.year:'Biblioteca Editorial';$('pageLabel').textContent=p&&p.category==='Atrações Turísticas'?'Página '+(page+1)+' de 11 · '+types[page]:'Biblioteca / projeto';$('pagesTitle').textContent=p?'Páginas do material':'Páginas';$('preview').disabled=!p;$('export').disabled=!p; if(pdfUrl){$('sheetContainer').innerHTML='<iframe class="pdf-viewer" title="PDF de referência" src="'+pdfUrl+'"></iframe>';return}if(!p){$('sheetContainer').innerHTML='<div class="sheet institutional"><h1>Biblioteca Editorial</h1></div>';return}if(p.category!=='Atrações Turísticas'){$('sheetContainer').innerHTML='<div class="sheet institutional"><h1>'+escapeHtml(p.category)+'</h1><h2>'+escapeHtml(p.city)+'</h2><p>Projeto criado. Modelo gráfico ainda não implementado.</p></div>';$('pageList').innerHTML='';return}let content='';if(page>=5&&page<=8){const entries=p.entries.slice((page-5)*3,(page-5)*3+3).map((a,i)=>{const ix=(page-5)*3+i;return '<article class="entry '+(ix===selected?'selected':'')+'" data-index="'+ix+'"><div>'+(a.photo?'<img src="'+a.photo+'" alt="'+escapeHtml(a.name)+'">':'<div class="empty" style="height:196px">Fotografia pendente</div>')+'</div><div class="name">'+escapeHtml(a.name||'ATRAÇÃO '+(ix+1))+'</div><div class="details"><div class="desc"><strong>Descrição: </strong><span class="value">'+escapeHtml(a.description||'Descrição pendente')+'</span></div><div class="meta"><strong>Endereço: </strong><span class="value">'+escapeHtml(a.address||'Pendente')+'</span><br><strong>Site: </strong><span class="value">'+escapeHtml(a.site||'Pendente')+'</span><br><strong>Entrada: </strong><span class="value">'+escapeHtml(a.ticket||'Pendente')+'</span></div></div></article>'}).join('');content='<div class="sheet"><div class="topline"><span></span><span>PONTOS TURÍSTICOS <span class="goldmark">✧</span></span></div><div class="logo">CURADORIA<br>ELITE TRAVEL<small>O seu mundo, bem indicado.</small></div><div class="tagline">Mais que paisagens, memórias que permanecem</div><div class="quote">Porque o verdadeiro destino é a lembrança que a gente guarda para sempre no coração</div>'+entries+'<footer><span>CURADORIA ELITE TRAVEL</span><span>'+(page+1)+'/11</span></footer></div>'}else{let body='';if(page===0)body=renderTourismCover(p);if(page===1)body=
-  '<div class="intro-brand">CURADORIA ELITE TRAVEL<small>O seu mundo, bem indicado.</small></div>' +
+  '<div class="intro-brand"><img src="../images/rosa-dos-ventos.png" alt="Rosa dos Ventos" onerror="this.style.visibility=\'hidden\'"><div class="intro-brand-name">CURADORIA<br>ELITE TRAVEL</div><small>O seu mundo, bem indicado.</small></div>' +
   '<div class="intro-kicker">Intro</div>' +
   '<div class="intro-watermark w1" aria-hidden="true">✧</div>' +
   '<div class="intro-watermark w2" aria-hidden="true">✧</div>' +
