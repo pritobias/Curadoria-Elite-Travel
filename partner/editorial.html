@@ -1403,7 +1403,8 @@ textarea {
   position:relative; display:grid; grid-template-columns:47% 53%;
   min-height:0; border-bottom:2px solid #c6a35c;
 }
-.tourism-attractions .attraction-item:last-child {border-bottom:0;}
+.tourism-attractions .attraction-item:last-child {border-bottom:2px solid #c6a35c;}
+.tourism-attractions .attraction-item:first-child {border-top:2px solid #c6a35c;}
 .tourism-attractions .attraction-photo,
 .tourism-attractions .attraction-photo-pending {
   width:100%; height:100%; object-fit:cover; display:block;
@@ -1431,8 +1432,7 @@ textarea {
 .tourism-attractions .attraction-info strong {color:#222;}
 .tourism-attractions .attraction-value {color:#b65c4b;}
 .tourism-attractions .attraction-item.selected:after {
-  content:""; position:absolute; inset:0; border:2px solid #c6a35c;
-  pointer-events:none; z-index:3;
+  content:none;
 }
 .tourism-attractions .attractions-footer {
   position:absolute; bottom:17px; left:0; right:0; text-align:center;
