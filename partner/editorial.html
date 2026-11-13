@@ -2070,7 +2070,7 @@ function render(){const p=current();$('documentTitle').textContent=p?p.category+
  const globeIcon='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><ellipse cx="12" cy="12" rx="4" ry="9"/><path d="M3 12h18M5 7h14M5 17h14"/></svg>';
  body=photo+
  '<div class="back-brand"><img src="../images/rosa-dos-ventos.png" alt="Rosa dos Ventos" onerror="this.style.display=\'none\'"><div class="back-brand-rule"></div><div class="back-brand-name">CURADORIA<br>ELITE TRAVEL</div><div class="back-slogan">✦ &nbsp; O seu mundo, bem indicado. &nbsp; ✦</div></div>'+
- '<div class="back-footer"><h2 class="back-heading">ATRAÇÕES TURÍSTICAS</h2><div class="back-mountain">'+mountain+'</div>'+
+ '<div class="back-footer"><h2 class="back-heading">'+(p.category==='Gastronomia'?'GASTRONOMIA':'ATRAÇÕES TURÍSTICAS')+'</h2><div class="back-mountain">'+(p.category==='Gastronomia'?'<svg viewBox="0 0 100 76" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"><g fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M43 23C34 14 45 9 40 2M53 23C46 14 59 10 53 1M63 23C57 14 70 10 64 3"/><path d="M47 30c0-3 1-6 3-6s3 3 3 6v3C74 35 87 48 90 62H10c3-14 16-27 37-29z"/><path d="M6 66h88l-9 7H15z"/></g></svg>':mountain)+'</div>'+
  '<p class="back-quote">“Porque acreditamos que o seu mundo merece ser bem indicado, seguimos adiante — transformando viagens em sonhos e destinos em experiências inesquecíveis.”</p>'+
  '<div class="back-by">By Curadoria Elite Travel</div>'+
  '<div class="back-contacts">'+
