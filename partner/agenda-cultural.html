@@ -1,72 +1,1243 @@
 <!doctype html>
 <html lang="pt-BR">
-<head>
-<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="theme-color" content="#111111">
-<title>Agenda Cultural | Curadoria Elite Travel</title>
-<style>
-@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@400;500;600&display=swap');
-:root{--ink:#151515;--gold:#b59a66;--paper:#f6f4ef;--line:#ddd7cc;--muted:#716e68;font-family:'DM Sans',Arial,sans-serif;color:var(--ink);background:var(--paper)}
-*{box-sizing:border-box}body{margin:0}button,input,select{font:inherit}button{cursor:pointer}
-.site-header{background:#101010;color:#fff;border-bottom:1px solid #504630}
-.header-inner{max-width:1280px;margin:auto;min-height:88px;padding:16px 30px;display:flex;align-items:center;justify-content:space-between;gap:25px}
-.logo{display:flex;gap:15px;align-items:center}.logo img{width:45px;height:45px;object-fit:contain}.logo-mark{width:45px;height:45px;border:1px solid var(--gold);border-radius:50%;display:grid;place-items:center;color:var(--gold);font-size:26px}
-.logo-name{font-family:Georgia,serif;letter-spacing:2px;font-size:18px}.logo-caption{font-size:10px;letter-spacing:3px;color:#b8ab95;margin-top:5px}
-.header-nav{display:flex;gap:25px;align-items:center;color:#d4d0c9;font-size:12px;letter-spacing:1.5px;text-transform:uppercase}.header-nav span:last-child{color:var(--gold)}
-.hero{position:relative;background:linear-gradient(110deg,rgba(9,12,15,.95),rgba(9,12,15,.58)),url('https://images.unsplash.com/photo-1514525253161-7a46d19cd819?auto=format&fit=crop&w=1800&q=80') center 47%/cover;color:#fff}
-.hero-inner{max-width:1180px;margin:auto;padding:90px 30px 95px}.eyebrow{color:#d1b983;font-size:12px;letter-spacing:4px;text-transform:uppercase;font-weight:700}.hero h1{font-family:'Playfair Display',Georgia,serif;font-weight:400;font-size:clamp(36px,5.2vw,66px);line-height:1.13;max-width:780px;margin:20px 0}.hero p{max-width:650px;color:#e1ded7;font-size:15px;line-height:1.8}
-.hero-meta{display:flex;gap:25px;flex-wrap:wrap;margin-top:28px;color:#e6dfd4;font-size:13px}.hero-meta span{border-left:2px solid var(--gold);padding-left:12px}
-.wrap{max-width:1180px;margin:-43px auto 0;padding:0 24px;position:relative;z-index:2}.panel{background:#fff;border:1px solid #e8e2d8;box-shadow:0 18px 60px rgba(31,26,17,.09);padding:38px 45px}
-.brand{display:none}h1,h2{font-family:'Playfair Display',Georgia,serif;font-weight:500}h1{font-size:30px;margin:0 0 10px}h2{font-size:27px}hr{border:0;border-top:1px solid var(--line);margin:28px 0}.muted{color:var(--muted)}.small{font-size:13px}.summary{display:flex;gap:16px;flex-wrap:wrap;margin:22px 0}.summary div{padding:13px 16px;background:#f8f7f4;border:1px solid #eee8df;font-size:13px}.chips{display:flex;flex-wrap:wrap;gap:8px;margin:16px 0 10px}.chip{border:1px solid #ded8cc;color:#4e483f;padding:8px 13px;border-radius:20px;font-size:12px}.formgrid{display:grid;grid-template-columns:1fr 1fr;gap:15px}.formgrid .field:first-child select{border:1px solid var(--gold);background:#fcfaf5;font-weight:700}.field{display:grid;gap:8px;margin:12px 0}label{font-weight:600;font-size:12px;letter-spacing:.4px}input,select{width:100%;padding:14px;border:1px solid #d8d1c5;border-radius:3px;background:#fff;color:#171717}button{border-radius:2px;padding:14px 22px;border:1px solid #161616;background:#161616;color:#fff;font-size:12px;font-weight:700;letter-spacing:1.2px;text-transform:uppercase}button:hover{background:#39342a}button.secondary{background:white;color:#171717;border-color:#b5a991}button.secondary:hover{background:#f4f0e7}button:disabled{opacity:.5;cursor:not-allowed}.access{display:flex;gap:15px;align-items:center;background:#f7f5ef;border-left:3px solid var(--gold);padding:18px}.actions{margin-top:24px;display:flex;flex-wrap:wrap;gap:10px}.hidden{display:none!important}.notice{padding:18px;border:1px solid #e1d9cb;background:#f8f6f1;margin:16px 0}.resulthead{display:flex;justify-content:space-between;gap:12px;align-items:center}.event{border:1px solid #e2ddd3;margin:16px 0;overflow:hidden;background:white}.eventtop{display:flex;gap:20px;align-items:center;padding:17px;cursor:pointer}.eventtop:hover{background:#faf9f6}.eventtop img,.placeholder{width:164px;height:116px;object-fit:cover;flex-shrink:0;background:linear-gradient(135deg,#2a2926,#77705f);color:#eee0c3}.placeholder{display:grid;place-items:center;font-size:12px;text-align:center;padding:12px}.eventmain{flex:1}.eventmain strong{display:block;margin:9px 0;font-family:Georgia,serif;font-size:21px;font-weight:500}.time{font-size:12px;letter-spacing:1.3px;color:#927445;font-weight:700}.arrow{font-size:25px;color:#9e865c}.details{border-top:1px solid #eee6db;padding:24px 28px;line-height:1.7}.details p{margin:9px 0}.tag{font-size:11px;letter-spacing:1px;text-transform:uppercase;border:1px solid #c7b38c;padding:8px 12px;color:#8a6e3f}.buy{display:inline-block;margin-top:15px;padding:13px 18px;background:#161616;color:white;text-decoration:none}.buy.disabled{background:#e9e5de;color:#746f66;pointer-events:none}.special{border-left:4px solid #b79b67}.football{background:#181818;color:#fff;padding:19px;margin:12px 0}.football .small{color:#d6c19a}.foot{max-width:1120px;margin:27px auto 50px;font-size:11px;color:#746f66;line-height:1.6}.preview{font-size:12px;color:#746f66}.toolbar{display:flex;gap:10px;flex-wrap:wrap;align-items:end}.toolbar .field{flex:1;min-width:160px}.cards{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}.price{border:1px solid #ded6c9;padding:24px}.price strong{display:block;font-family:Georgia,serif;font-size:29px;margin:12px 0}.price p{line-height:1.6}.site-footer{background:#101010;color:#bcb5aa;text-align:center;padding:30px 20px;font-size:12px;letter-spacing:1px}.site-footer b{color:#d4b987}
-@media(max-width:720px){.header-inner{padding:15px 18px;min-height:75px}.header-nav{display:none}.logo-name{font-size:14px}.hero-inner{padding:70px 22px 80px}.wrap{padding:0 12px}.panel{padding:24px 18px}.formgrid,.cards{grid-template-columns:1fr}.eventtop{gap:12px;padding:12px}.eventtop img,.placeholder{width:96px;height:98px}.eventmain strong{font-size:16px}.details{padding:18px}.summary{display:grid;gap:8px}.hero-meta{gap:12px}}
-</style>
-</head>
-<body>
-<header class="site-header"><div class="header-inner"><div class="logo"><img src="/images/rosa-dos-ventos.png" alt="" onerror="this.style.display='none';this.nextElementSibling.style.display='grid'"><span class="logo-mark" style="display:none">✧</span><div><div class="logo-name">CURADORIA ELITE TRAVEL</div><div class="logo-caption">O SEU MUNDO, BEM INDICADO.</div></div></div><nav class="header-nav" aria-label="Seções"><span>Curadoria</span><span>Buscadores</span><span>Partner</span><span>Agenda Cultural</span></nav></div></header>
-<section class="hero"><div class="hero-inner"><div class="eyebrow">Curadoria Elite Travel · Experiências & Cultura</div><h1>O que acontece hoje em <span id="heroCity">São Paulo</span>?</h1><p>Descubra apresentações, exposições, espetáculos, cinema e grandes encontros esportivos. Informações organizadas para você escolher o que viver em cada destino.</p><div class="hero-meta"><span id="heroDate">Programação de hoje</span><span>Ingressos em canais oficiais</span><span>Até 5 eventos no acesso gratuito</span></div></div></section>
-<main class="wrap"><section class="panel">
-<header class="brand"><span class="rose">✧</span><div><strong>CURADORIA ELITE TRAVEL</strong><div class="muted">Agenda Cultural · <span id="cityHeading">São Paulo</span></div></div></header><hr>
-<h1 id="headline">O que acontece hoje em São Paulo?</h1><p class="muted" id="todayLabel"></p>
-<div class="summary"><div>⌖ &nbsp; <strong id="summaryCity">São Paulo, Brasil</strong></div><div>▦ &nbsp; <span id="summaryDate">Hoje</span></div><div>▦ &nbsp; <span id="summaryCategory">Todas as categorias</span></div></div>
-<strong>Categorias incluídas</strong><div class="chips" id="chips"></div><hr>
-<div class="access"><span>♧</span><div><strong>Acesso gratuito</strong><div class="muted small" style="margin-top:7px">Até cinco eventos completos, com preços disponíveis e links oficiais de compra.</div></div></div>
-<div id="filters"><hr><div class="formgrid"><div class="field"><label for="city">Destino</label><select id="city"></select></div><div class="field"><label for="when">Quando?</label><select id="when"><option value="today">Hoje</option><option value="tomorrow">Amanhã</option><option value="day">Uma data</option><option value="range">Um período</option></select></div><div class="field hidden" id="startField"><label for="start">Data inicial</label><input type="date" id="start"></div><div class="field hidden" id="endField"><label for="end">Data final</label><input type="date" id="end"></div><div class="field"><label for="category">Categoria</label><select id="category"></select></div><div class="field"><label for="genre">Gênero</label><select id="genre"><option>Todos</option><option>Infantil</option><option>Comédia</option><option>Drama</option><option>Rock</option><option>Pop</option><option>Pagode</option><option>Axé</option><option>Futebol</option></select></div></div><p class="small muted">Escolha o destino e os filtros antes de consultar. No acesso gratuito, uma pesquisa a cada 24 horas.</p></div><div class="actions"><button id="see">VER EVENTOS</button><button class="secondary" id="toggleFilters">Ocultar filtros</button></div>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>
+      Agenda Cultural | Curadoria Elite Travel
+    </title>
+    <meta name="description" content="Consulte eventos culturais por cidade, data e categoria, com acesso às páginas oficiais de ingressos.">
+    <style>
+    :root {
+      --bg: #050505;
+      --panel: #0b0b0b;
+      --panel-2: #101010;
+      --line: rgba(201, 157, 44, 0.26);
+      --gold: #d4af37;
+      --gold-soft: #b78f2d;
+      --text: #f5f1e8;
+      --muted: #cfc6b6;
+      --shadow: 0 12px 34px rgba(0,0,0,0.28);
+      --radius: 22px;
+      --max: 1180px;
+    }
 
-<div id="auth" class="hidden"><hr><h2>Identificação por e-mail</h2><p class="muted">Informe seu e-mail para verificar seu acesso à pesquisa gratuita.</p><div class="field"><label for="email">E-mail</label><input id="email" type="email" placeholder="voce@exemplo.com"></div><button id="checkEmail">Continuar</button><p class="preview">Demonstração local: nenhum e-mail é enviado. O bloqueio por 24h é simulado neste navegador e não substitui autenticação segura.</p></div>
-<div id="returning" class="hidden"><hr><h2>Bem-vindo de volta!</h2><p>Sua última pesquisa está disponível. Próxima pesquisa gratuita em <strong id="countdown"></strong>.</p><button id="last">Ver minha última pesquisa</button> <button class="secondary" id="paidReturn">Ver opções de acesso</button></div>
-<div id="results" class="hidden"><hr><div class="resulthead"><h2>Programação encontrada</h2><span class="tag" id="accessLabel">Gratuito</span></div><p id="countLabel" class="muted"></p><div class="toolbar"><div class="field"><label for="displayCategory">Organizar os resultados exibidos</label><select id="displayCategory"></select></div></div><div id="events"></div><div id="upsell" class="notice hidden"><strong id="moreCount"></strong><p class="muted">Desbloqueie os demais resultados desta pesquisa.</p><button id="showPlans">Ver opções de acesso</button></div></div>
-<div id="plans" class="hidden"><hr><h2>Opções de acesso</h2><div class="cards"><div class="price">Pesquisa avulsa<strong>R$ 4,90</strong><p class="small">Resultados completos desta pesquisa por 24 horas.</p></div><div class="price">Passe semanal<strong>R$ 12,90</strong><p class="small">Pesquisas ilimitadas por 7 dias.</p></div><div class="price">Passe mensal<strong>R$ 24,90</strong><p class="small">Pesquisas ilimitadas por 30 dias.</p></div></div><p class="notice">Pagamento ainda não integrado. Nenhum botão efetua cobrança nesta versão de teste.</p></div>
-</section><p class="foot">Protótipo demonstrativo da Agenda Cultural CET. Eventos, contagens, preços e endereços exemplificativos não representam programação real. Fontes oficiais, pagamento, verificação de e-mail, controle de acesso no servidor e CRM Partner exigem integração posterior. Não utilizar para venda ou publicação como agenda real.</p></main><footer class="site-footer">CURADORIA ELITE TRAVEL <b>✧</b> O seu mundo, bem indicado.</footer>
-<script>
-'use strict';
-// Cadastro extensível: novos destinos são adicionados aqui, sem reescrever a interface.
-const DESTINATIONS=[{id:'sp',name:'São Paulo',country:'Brasil',tz:'America/Sao_Paulo',currency:'BRL',sources:['Sympla','Cinemark','Clubes e bilheterias oficiais']},{id:'rj',name:'Rio de Janeiro',country:'Brasil',tz:'America/Sao_Paulo',currency:'BRL',sources:['Sympla','Cinemark','Clubes e bilheterias oficiais']},{id:'ny',name:'Nova York',country:'Estados Unidos',tz:'America/New_York',currency:'USD',sources:['Ticketmaster','Cinemark e exibidores oficiais','Clubes e bilheterias oficiais']},{id:'miami',name:'Miami',country:'Estados Unidos',tz:'America/New_York',currency:'USD',sources:['Ticketmaster','Cinemark e exibidores oficiais','Clubes e bilheterias oficiais']},{id:'orlando',name:'Orlando',country:'Estados Unidos',tz:'America/New_York',currency:'USD',sources:['Ticketmaster','Cinemark e exibidores oficiais','Clubes e bilheterias oficiais']},{id:'paris',name:'Paris',country:'França',tz:'Europe/Paris',currency:'EUR',sources:['Ticketmaster France','Bilheterias oficiais','Clubes e bilheterias oficiais']}];
-const CATEGORIES=['Todos','Cinema','Shows','Teatro','Musicais','Exposições','Festivais','Infantil','Comédia','Dança','Ópera','Esportes','Futebol','Outros'];
-// ADAPTERS FUTUROS: conectar somente após autorização, validação dos termos e implementação segura no servidor.
-const SOURCE_ADAPTERS={sympla:{enabled:false},ticketmaster:{enabled:false},cinemark:{enabled:false},officialFootball:{enabled:false}};
-const $=id=>document.getElementById(id);const hide=(id,yes)=>$(id).classList.toggle('hidden',yes);
-const state={city:'sp',when:'today',category:'Todos',genre:'Todos',results:[],last:null,paid:false};
-function localDate(city,offset=0){const fmt=new Intl.DateTimeFormat('en-CA',{timeZone:city.tz,year:'numeric',month:'2-digit',day:'2-digit'});const parts=Object.fromEntries(fmt.formatToParts(new Date()).filter(p=>p.type!=='literal').map(p=>[p.type,p.value]));const d=new Date(Date.UTC(+parts.year,+parts.month-1,+parts.day+offset));return d.toISOString().slice(0,10)}
-function dateBR(s){return s?s.split('-').reverse().join('/'):''}function currentCity(){return DESTINATIONS.find(x=>x.id===state.city)}
-function queryDates(){const city=currentCity();if(state.when==='today')return [localDate(city),localDate(city)];if(state.when==='tomorrow')return [localDate(city,1),localDate(city,1)];if(state.when==='day')return [$('start').value,$('start').value];return [$('start').value,$('end').value]}
-function updateHeading(){const c=currentCity();$('heroCity').textContent=c.name;$('cityHeading').textContent=c.name;$('summaryCity').textContent=c.name+', '+c.country;$('headline').textContent='O que acontece hoje em '+c.name+'?';$('todayLabel').textContent=new Intl.DateTimeFormat('pt-BR',{timeZone:c.tz,weekday:'long',day:'numeric',month:'long',year:'numeric'}).format(new Date());const [a,b]=queryDates();$('heroDate').textContent=state.when==='today'?'Hoje · '+dateBR(a):dateBR(a)+(b!==a?' a '+dateBR(b):'');$('summaryDate').textContent=state.when==='today'?'Hoje · '+dateBR(a):state.when==='tomorrow'?'Amanhã · '+dateBR(a):a===b?dateBR(a):dateBR(a)+' a '+dateBR(b);$('summaryCategory').textContent=state.category==='Todos'?'Todas as categorias':state.category;$('headline').textContent=(state.when==='today'?'O que acontece hoje em ':'Agenda Cultural em ')+c.name+'?'}
-function setup(){DESTINATIONS.forEach(c=>$('city').add(new Option(c.name+', '+c.country,c.id)));CATEGORIES.forEach(c=>{$('category').add(new Option(c,c));$('displayCategory').add(new Option(c,c))});$('city').value=state.city;$('chips').innerHTML=CATEGORIES.filter(c=>c!=='Todos').map(c=>'<span class="chip">'+c+'</span>').join('');$('start').value=localDate(currentCity());$('end').value=localDate(currentCity(),2);updateHeading()}
-$('toggleFilters').onclick=()=>{const willHide=!$('filters').classList.contains('hidden');hide('filters',willHide);$('toggleFilters').textContent=willHide?'Mostrar filtros':'Ocultar filtros'};
-$('city').onchange=e=>{state.city=e.target.value;$('start').value=localDate(currentCity());$('end').value=localDate(currentCity(),2);updateHeading()};
-$('when').onchange=e=>{state.when=e.target.value;hide('startField',!['day','range'].includes(state.when));hide('endField',state.when!=='range');updateHeading()};$('category').onchange=e=>{state.category=e.target.value;updateHeading()};$('start').onchange=updateHeading;$('end').onchange=updateHeading;$('genre').onchange=e=>state.genre=e.target.value;
-$('see').onclick=()=>{hide('auth',false);hide('returning',true);hide('results',true);hide('plans',true)};
-// Somente demonstração: localStorage não é seguro para controlar gratuidade ou verificar identidade.
-const KEY='cet_agenda_demo_v2';function readDemo(){try{return JSON.parse(localStorage.getItem(KEY)||'{}')}catch{return {}}}function saveDemo(o){try{localStorage.setItem(KEY,JSON.stringify(o))}catch{}}
-$('checkEmail').onclick=()=>{const email=$('email').value.trim().toLowerCase();if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){alert('Informe um e-mail válido.');return}const d=readDemo();const prior=d[email];if(prior&&Date.now()-prior.time<86400000){state.last=prior;hide('auth',true);hide('returning',false);updateCountdown();return}runDemoSearch(email)};
-function updateCountdown(){if(!state.last)return;const remaining=Math.max(0,state.last.time+86400000-Date.now());const h=Math.floor(remaining/3600000),m=Math.floor(remaining%3600000/60000),s=Math.floor(remaining%60000/1000);$('countdown').textContent=[h,m,s].map(v=>String(v).padStart(2,'0')).join(':');if(!remaining){$('countdown').textContent='00:00:00 — uma nova pesquisa gratuita já está disponível'}}
-// Exemplos fictícios sem URLs de venda: nunca inventar links oficiais.
-const EXAMPLES=[{time:'10:00',name:'Exposição de arte — exemplo',category:'Exposições',genre:'Arte',venue:'Espaço cultural (exemplo)',description:'Uma mostra ilustrativa de arte contemporânea, com diferentes linguagens e propostas visuais. Este registro demonstra como a descrição de um evento poderá aparecer na Agenda Cultural, sem representar uma exposição real.',full:null,half:null,status:'Não verificado',url:null,image:null},{time:'13:30',name:'Filme em cartaz — exemplo',category:'Cinema',genre:'Drama',venue:'Cinema (exemplo)',description:'Ficha demonstrativa de uma sessão de cinema, com campo para sinopse, classificação, local, horário e compra oficial. A programação real dependerá dos dados autorizados pela rede exibidora.',full:null,half:null,status:'Não verificado',url:null,image:null},{time:'15:00',name:'Espetáculo infantil — exemplo',category:'Infantil',genre:'Infantil',venue:'Teatro (exemplo)',description:'Uma apresentação fictícia voltada a famílias, utilizada exclusivamente para testar a organização cronológica e a expansão das fichas. Os dados reais virão de fontes oficiais integradas.',full:null,half:null,status:'Não verificado',url:null,image:null},{time:'19:30',name:'Peça de comédia — exemplo',category:'Teatro',genre:'Comédia',venue:'Teatro (exemplo)',description:'Registro de demonstração de um espetáculo teatral. O espaço para descrição comporta um texto editorial curto, com informações verificadas sobre a apresentação e seu contexto cultural.',full:null,half:null,status:'Não verificado',url:null,image:null},{time:'21:00',name:'Show musical — exemplo',category:'Shows',genre:'Rock',venue:'Casa de espetáculos (exemplo)',description:'Uma apresentação musical fictícia, incluída para testar a ficha com nome, gênero, endereço, valores, disponibilidade e link oficial de compra quando a integração estiver ativa.',full:null,half:null,status:'Não verificado',url:null,image:null},{time:'21:30',name:'Partida de futebol — exemplo',category:'Futebol',genre:'Futebol',venue:'Estádio (exemplo)',description:'Exemplo de apresentação especial de futebol. A versão conectada poderá informar mandante, visitante, campeonato, estádio, horário e bilheteria oficial, sem sugerir ingressos não verificados.',full:null,half:null,status:'Não verificado',url:null,image:null,home:'Clube mandante',away:'Clube visitante',competition:'Competição a confirmar'}];
-function demoEvents(){let arr=EXAMPLES.map(e=>({...e}));if(state.category!=='Todos')arr=arr.filter(e=>e.category===state.category);if(state.genre!=='Todos')arr=arr.filter(e=>e.genre===state.genre);return arr.sort((a,b)=>a.time.localeCompare(b.time))}
-function runDemoSearch(email){const [a,b]=queryDates();if(!a||!b||b<a){alert('Verifique as datas da pesquisa.');return}const events=demoEvents();const record={time:Date.now(),city:state.city,when:state.when,start:a,end:b,category:state.category,genre:state.genre,events};const d=readDemo();d[email]=record;saveDemo(d);state.last=record;state.paid=false;hide('auth',true);hide('returning',true);render(record)}
-$('last').onclick=()=>{hide('returning',true);render(state.last)};$('paidReturn').onclick=()=>hide('plans',false);$('showPlans').onclick=()=>hide('plans',false);
-$('displayCategory').onchange=()=>renderEvents(state.last);
-function render(record){if(!record)return;state.last=record;hide('results',false);hide('plans',true);$('displayCategory').value='Todos';$('accessLabel').textContent='Gratuito · demonstração';const n=record.events.length;$('countLabel').textContent=n+' evento(s) ilustrativo(s) encontrado(s) · exibindo '+Math.min(n,5)+' de '+n+'. Na versão real, o total dependerá das fontes conectadas.';renderEvents(record);hide('upsell',n<=5);$('moreCount').textContent='Mais '+Math.max(0,n-5)+' evento(s) disponível(is)';$('results').scrollIntoView({behavior:'smooth',block:'start'})}
-function safe(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
-function renderEvents(record){const arr=record.events.slice(0,5).filter(e=>$('displayCategory').value==='Todos'||e.category===$('displayCategory').value);const root=$('events');root.innerHTML='';if(!arr.length){root.innerHTML='<div class="notice">Nenhuma apresentação correspondente foi encontrada nesta pesquisa. A consulta foi concluída.</div>';return}arr.forEach(e=>{const article=document.createElement('article');article.className='event'+(e.category==='Futebol'?' special':'');const football=e.category==='Futebol'?'<div class="football"><strong>⚽ '+safe(e.home)+' × '+safe(e.away)+'</strong><div class="small">'+safe(e.competition)+'</div></div>':'';article.innerHTML='<div class="eventtop" role="button" tabindex="0" aria-expanded="false"><div class="placeholder">Foto oficial<br>indisponível</div><div class="eventmain"><span class="time">'+safe(e.time.replace(':','h'))+'</span><strong>'+safe(e.name)+'</strong><div class="muted small">'+safe(e.category)+' · '+safe(e.venue)+'</div></div><span class="arrow">⌄</span></div><div class="details hidden">'+football+'<p>'+safe(e.description)+'</p><p><strong>Tipo:</strong> '+safe(e.category)+' · <strong>Gênero:</strong> '+safe(e.genre)+'</p><p><strong>Endereço:</strong> '+safe(e.venue)+'</p><p><strong>Ingresso inteiro:</strong> '+safe(e.full??'Não informado')+'</p><p><strong>Meia-entrada:</strong> '+safe(e.half??'Não informado')+'</p><p><strong>Situação:</strong> '+safe(e.status)+'</p><span class="buy disabled">Consultar ingressos — sem link verificado</span><p class="preview">Na versão conectada, este botão abrirá o link oficial do evento para todos os níveis de acesso, inclusive o gratuito.</p></div>';const top=article.querySelector('.eventtop'),detail=article.querySelector('.details');const toggle=()=>{const opening=detail.classList.contains('hidden');detail.classList.toggle('hidden',!opening);top.setAttribute('aria-expanded',String(opening))};top.onclick=toggle;top.onkeydown=ev=>{if(ev.key==='Enter'||ev.key===' '){ev.preventDefault();toggle()}};root.appendChild(article)})}
-setup();
-</script></body></html>
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      font-family: Arial, Helvetica, sans-serif;
+      background: #050505;
+      color: var(--text);
+      line-height: 1.6;
+    }
+
+    .page-bg {
+      position: fixed;
+      inset: 0;
+      z-index: -2;
+      background: #050505;
+      overflow: hidden;
+    }
+
+    .page-bg-layer {
+      position: absolute;
+      inset: 0;
+      background-size: cover;
+      background-position: center;
+      opacity: 0;
+      transform: scale(1.04);
+      transition: opacity 2.8s ease;
+      filter: brightness(0.82) saturate(0.9) contrast(1.02);
+    }
+
+    .page-bg-layer.active { opacity: 1; }
+
+    .page-bg::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+      radial-gradient(circle at center, rgba(0,0,0,0.12), rgba(0,0,0,0.55)),
+      linear-gradient(rgba(0,0,0,0.58), rgba(0,0,0,0.82));
+      z-index: 2;
+      pointer-events: none;
+    }
+
+    a { color: inherit; text-decoration: none; }
+
+    .site-header {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      background: rgba(8,8,8,0.88);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid rgba(212,175,55,0.16);
+    }
+
+    .site-header-inner {
+      width: 100%;
+      margin: 0;
+      padding: 12px 30px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      min-width: 260px;
+    }
+
+    .brand img {
+      width: 34px;
+      height: 34px;
+      object-fit: contain;
+      opacity: 0.92;
+    }
+
+    .brand-text {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .brand-title {
+      color: var(--gold);
+      font-family: Georgia, 'Times New Roman', serif;
+      font-weight: 700;
+      letter-spacing: 0.03em;
+      font-size: 22px;
+      line-height: 1.05;
+    }
+
+    .brand-sub {
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.2;
+    }
+
+    .nav {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+      align-items: center;
+      gap: 16px;
+      color: var(--gold);
+      font-weight: 700;
+      font-size: 15px;
+    }
+
+    .nav-sep {
+      width: 1px;
+      height: 16px;
+      background: rgba(255,255,255,0.14);
+      display: inline-block;
+    }
+
+    .hero {
+      padding: 80px 20px 42px;
+      text-align: center;
+    }
+
+    .hero-inner {
+      max-width: 980px;
+      margin: 0 auto;
+    }
+
+    .hero-kicker {
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+      font-size: 14px;
+      margin-bottom: 14px;
+    }
+
+    .hero h1 {
+      margin: 0 0 20px;
+      font-size: clamp(36px, 6vw, 74px);
+      line-height: 1.04;
+      color: var(--gold);
+      font-weight: 700;
+    }
+
+    .hero p {
+      margin: 0 auto 26px;
+      max-width: 860px;
+      color: var(--text);
+      font-size: 22px;
+    }
+
+    .tool-wrap {
+      max-width: var(--max);
+      margin: 0 auto;
+      padding: 0 20px 60px;
+    }
+
+    .tool-panel {
+      background: rgba(8,8,8,0.92);
+      border: 1px solid var(--line);
+      border-radius: 28px;
+      box-shadow: var(--shadow);
+      padding: 28px;
+    }
+
+    .breadcrumbs {
+      color: var(--muted);
+      font-size: 14px;
+      margin-bottom: 8px;
+    }
+
+    .panel-title {
+      font-size: 36px;
+      margin: 0 0 8px;
+      color: var(--gold);
+    }
+
+    .panel-sub {
+      color: var(--muted);
+      margin: 0 0 22px;
+      font-size: 18px;
+      max-width: 900px;
+    }
+
+    .search-row {
+      display: grid;
+      grid-template-columns: 1fr auto auto;
+      gap: 12px;
+      align-items: center;
+      margin-bottom: 16px;
+    }
+
+    .search-input {
+      width: 100%;
+      border: 1px solid var(--line);
+      background: #090909;
+      color: var(--text);
+      border-radius: 18px;
+      padding: 18px 18px;
+      font-size: 18px;
+      outline: none;
+    }
+
+    .search-input::placeholder { color: #9f9481; }
+    .search-input:focus { border-color: rgba(212,175,55,0.5); }
+
+    .btn {
+      border: 1px solid rgba(212,175,55,0.44);
+      background: linear-gradient(180deg, #c99d2c, #997127);
+      color: #101010;
+      border-radius: 16px;
+      padding: 16px 24px;
+      font-size: 16px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .btn.secondary {
+      background: transparent;
+      color: var(--gold);
+    }
+
+    .helper-text {
+      color: var(--muted);
+      font-size: 15px;
+      margin-bottom: 18px;
+    }
+
+    .letter-filter {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin: 2px 0 16px;
+      padding: 12px;
+      border: 1px solid rgba(212,175,55,0.18);
+      border-radius: 18px;
+      background: rgba(255,255,255,0.018);
+    }
+
+    .letter-chip {
+      border: 1px solid rgba(212,175,55,0.36);
+      background: rgba(255,255,255,0.025);
+      color: var(--text);
+      width: 34px;
+      height: 34px;
+      border-radius: 999px;
+      cursor: pointer;
+      font-size: 13px;
+      font-weight: 800;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      transition: background .2s ease, border-color .2s ease, color .2s ease, transform .2s ease;
+    }
+
+    .letter-chip:hover,
+    .letter-chip.active {
+      background: rgba(212,175,55,0.16);
+      border-color: rgba(212,175,55,0.80);
+      color: var(--gold);
+      transform: translateY(-1px);
+    }
+
+    .letter-chip.all {
+      width: auto;
+      min-width: 58px;
+      padding: 0 14px;
+    }
+
+    .chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 18px;
+    }
+
+    .chip {
+      border: 1px solid var(--line);
+      background: rgba(255,255,255,0.02);
+      color: var(--text);
+      padding: 10px 14px;
+      border-radius: 999px;
+      cursor: pointer;
+      font-size: 14px;
+    }
+
+    .chips-actions {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+      flex-wrap: wrap;
+      margin: -4px 0 18px;
+    }
+
+    .chips-counter {
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.5;
+    }
+
+    .show-more-chip {
+      border: 1px solid rgba(212,175,55,0.44);
+      background: transparent;
+      color: var(--gold);
+      border-radius: 999px;
+      padding: 10px 16px;
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .show-more-chip:disabled {
+      opacity: 0.55;
+      cursor: default;
+      box-shadow: none;
+    }
+
+    .show-more-chip:disabled:hover {
+      border-color: rgba(212,175,55,0.44);
+    }
+
+    .show-more-chip:hover,
+    .chip:hover {
+      border-color: rgba(212,175,55,0.72);
+    }
+
+    .status {
+      min-height: 22px;
+      color: var(--muted);
+      font-size: 15px;
+      margin-bottom: 10px;
+    }
+
+    .empty {
+      border: 1px dashed var(--line);
+      background: rgba(255,255,255,0.02);
+      border-radius: 20px;
+      padding: 26px;
+      text-align: center;
+      color: var(--muted);
+    }
+
+    .result { display: none; margin-top: 16px; }
+    .result.active { display: block; }
+
+    .summary {
+      background: rgba(255,255,255,0.02);
+      border: 1px solid var(--line);
+      border-radius: 24px;
+      padding: 22px;
+      margin-bottom: 18px;
+    }
+
+    .summary h2 {
+      margin: 0 0 8px;
+      font-size: 28px;
+      color: var(--text);
+    }
+
+    .summary p { margin: 0; color: var(--muted); }
+
+    .summary-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      margin-top: 18px;
+    }
+
+    .summary-box {
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      padding: 16px;
+      background: rgba(255,255,255,0.02);
+    }
+
+    .summary-box span {
+      display: block;
+      color: var(--gold);
+      font-size: 13px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 6px;
+    }
+
+    .block {
+      background: rgba(255,255,255,0.02);
+      border: 1px solid var(--line);
+      border-radius: 24px;
+      padding: 22px;
+      margin-bottom: 16px;
+    }
+
+    .block h3 {
+      margin: 0 0 14px;
+      font-size: 30px;
+      color: var(--text);
+    }
+
+    .block h4 {
+      margin: 18px 0 8px;
+      color: var(--gold);
+      font-size: 18px;
+    }
+
+    .block p { margin: 8px 0; }
+    .block ul { margin: 8px 0 0 18px; padding: 0; }
+    .block li { margin-bottom: 8px; }
+
+    .location-card {
+      background: rgba(255,255,255,0.02);
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      padding: 16px;
+      margin-bottom: 12px;
+    }
+
+    .location-card strong {
+      display: block;
+      font-size: 17px;
+      margin-bottom: 8px;
+      color: var(--text);
+    }
+
+    .note {
+      margin-top: 12px;
+      border-left: 3px solid var(--gold);
+      padding: 12px 14px;
+      background: rgba(212,175,55,0.06);
+      border-radius: 10px;
+      color: var(--muted);
+    }
+
+    .official-source-link {
+      color: inherit;
+      text-decoration: underline;
+      text-underline-offset: 3px;
+      font-weight: 700;
+    }
+
+    .official-source-link:hover {
+      color: var(--gold);
+    }
+
+    .info-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
+      margin-top: 14px;
+      margin-bottom: 2px;
+    }
+
+    .update-badge,
+    .sources-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      border-radius: 999px;
+      padding: 8px 12px;
+      font-size: 13px;
+      font-weight: 700;
+      line-height: 1.3;
+    }
+
+    .update-badge {
+      color: #8ff0a4;
+      border: 1px solid rgba(143, 240, 164, 0.42);
+      background: rgba(30, 180, 80, 0.08);
+    }
+
+    .sources-badge {
+      color: #ff7b7b;
+      border: 1px solid rgba(255, 123, 123, 0.42);
+      background: rgba(255, 70, 70, 0.08);
+    }
+
+    .sources-badge span,
+    .update-badge span {
+      color: var(--text);
+      font-weight: 600;
+    }
+
+    .interactive-info-area {
+      display: none;
+      margin-top: 30px;
+      padding: 26px 24px;
+      border: 1px solid rgba(212,175,55,0.30);
+      border-radius: 26px;
+      background:
+      radial-gradient(circle at 50% 0%, rgba(212,175,55,0.08), transparent 34%),
+      linear-gradient(180deg, rgba(255,255,255,0.040), rgba(255,255,255,0.010));
+      box-shadow:
+      inset 0 1px 0 rgba(255,255,255,0.055),
+      0 24px 70px rgba(0,0,0,0.28);
+      backdrop-filter: blur(8px);
+    }
+
+    .interactive-info-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 18px;
+      margin-top: 8px;
+      margin-bottom: 0;
+    }
+
+    .info-action-card {
+      min-height: 150px;
+      border: 1px solid rgba(212,175,55,0.38);
+      background:
+      radial-gradient(circle at 50% 0%, rgba(212,175,55,0.09), transparent 42%),
+      linear-gradient(180deg, rgba(255,255,255,0.05), rgba(255,255,255,0.018));
+      border-radius: 20px;
+      padding: 22px 18px;
+      color: var(--text);
+      cursor: pointer;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      transition: border-color .2s ease, transform .2s ease, background .2s ease, box-shadow .2s ease;
+    }
+
+    .info-action-card:hover {
+      border-color: rgba(212,175,55,0.82);
+      background:
+      radial-gradient(circle at 50% 0%, rgba(212,175,55,0.15), transparent 45%),
+      linear-gradient(180deg, rgba(212,175,55,0.08), rgba(255,255,255,0.018));
+      box-shadow: 0 14px 34px rgba(0,0,0,0.28);
+      transform: translateY(-2px);
+    }
+
+    .info-action-card span {
+      display: block;
+      color: var(--gold);
+      font-weight: 800;
+      text-transform: uppercase;
+      font-size: 13px;
+      letter-spacing: .08em;
+      margin-bottom: 10px;
+    }
+
+    .info-action-card strong {
+      display: block;
+      font-size: 22px;
+      line-height: 1.15;
+      margin-bottom: 8px;
+    }
+
+    .info-action-card small {
+      color: var(--muted);
+      line-height: 1.45;
+      font-size: 13.5px;
+      max-width: 270px;
+    }
+
+    .info-action-card em {
+      display: inline-block;
+      margin-top: 14px;
+      color: var(--gold);
+      font-style: normal;
+      font-weight: 800;
+      font-size: 14px;
+    }
+
+    .detail-modal {
+      display: none;
+      position: fixed;
+      z-index: 9999;
+      inset: 0;
+      background: rgba(0,0,0,0.78);
+      padding: 28px;
+      overflow-y: auto;
+    }
+
+    .detail-modal.is-open {
+      display: flex;
+      align-items: flex-start;
+      justify-content: center;
+    }
+
+    .detail-modal-panel {
+      width: min(920px, 100%);
+      background: rgba(10,10,10,0.98);
+      border: 1px solid rgba(212,175,55,0.45);
+      border-radius: 24px;
+      box-shadow: 0 22px 70px rgba(0,0,0,0.6);
+      padding: 26px;
+      margin: 38px 0;
+      color: var(--text);
+      position: relative;
+    }
+
+    .detail-modal-close {
+      position: absolute;
+      top: 16px;
+      right: 16px;
+      border: 1px solid rgba(212,175,55,0.42);
+      background: rgba(255,255,255,0.04);
+      color: var(--gold);
+      border-radius: 999px;
+      width: 38px;
+      height: 38px;
+      cursor: pointer;
+      font-size: 20px;
+      line-height: 1;
+    }
+
+    .detail-modal-panel h3 {
+      color: var(--gold);
+      font-size: 30px;
+      margin: 0 44px 14px 0;
+    }
+
+    .detail-modal-panel p,
+    .customs-subcard p {
+      color: var(--muted);
+      line-height: 1.65;
+      margin: 10px 0;
+    }
+
+    .detail-modal-panel ul {
+      margin: 14px 0 0;
+      padding-left: 20px;
+      color: var(--muted);
+      line-height: 1.65;
+    }
+
+    .detail-modal-panel li {
+      margin-bottom: 8px;
+    }
+
+    .modal-source {
+      margin-top: 18px;
+      padding-top: 14px;
+      border-top: 1px solid rgba(212,175,55,0.22);
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .modal-source a {
+      color: var(--gold);
+      text-decoration: underline;
+      text-underline-offset: 3px;
+      font-weight: 800;
+    }
+
+    .modal-source a:hover {
+      opacity: 0.86;
+    }
+
+    .customs-subcards {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+      margin-top: 16px;
+    }
+
+    .customs-subcard {
+      border: 1px solid rgba(212,175,55,0.28);
+      background: rgba(255,255,255,0.025);
+      border-radius: 16px;
+      padding: 14px;
+    }
+
+    .customs-subcard strong {
+      color: var(--gold);
+      display: block;
+      margin-bottom: 6px;
+    }
+
+    .modal-intro {
+      font-size: 17px;
+      line-height: 1.75;
+      color: var(--text);
+      margin: 4px 0 18px;
+    }
+
+    .modal-section {
+      border-top: 1px solid rgba(212,175,55,0.18);
+      padding-top: 16px;
+      margin-top: 18px;
+    }
+
+    .modal-section h4 {
+      color: var(--gold);
+      font-size: 19px;
+      margin: 0 0 8px;
+    }
+
+    .modal-section p {
+      margin: 8px 0;
+    }
+
+    .modal-soft-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+      margin-top: 14px;
+    }
+
+    .modal-soft-card {
+      border: 1px solid rgba(212,175,55,0.24);
+      background: rgba(255,255,255,0.025);
+      border-radius: 16px;
+      padding: 14px;
+    }
+
+    .modal-soft-card strong {
+      color: var(--gold);
+      display: block;
+      margin-bottom: 6px;
+    }
+
+    .modal-signature {
+      margin-top: 20px;
+      padding: 14px 16px;
+      border-left: 3px solid var(--gold);
+      border-radius: 12px;
+      background: rgba(212,175,55,0.06);
+      color: var(--text);
+      font-weight: 600;
+      line-height: 1.65;
+    }
+
+    .quick-info-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+      margin: 16px 0;
+    }
+
+    .quick-info-card {
+      border: 1px solid rgba(212,175,55,0.28);
+      background: rgba(255,255,255,0.025);
+      border-radius: 16px;
+      padding: 14px;
+    }
+
+    .quick-info-card span {
+      display: block;
+      color: var(--gold);
+      font-size: 12px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: .06em;
+      margin-bottom: 7px;
+    }
+
+    .quick-info-card strong {
+      display: block;
+      color: var(--text);
+      font-size: 18px;
+      line-height: 1.35;
+      margin-bottom: 4px;
+    }
+
+    .quick-info-card p {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.55;
+    }
+
+    .official-action-link {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      margin-top: 10px;
+      border: 1px solid rgba(212,175,55,0.42);
+      border-radius: 999px;
+      padding: 8px 12px;
+      color: var(--gold);
+      text-decoration: none;
+      font-weight: 800;
+      font-size: 13px;
+    }
+
+    .official-action-link:hover {
+      background: rgba(212,175,55,0.08);
+    }
+
+    .contact-card {
+      border: 1px solid rgba(212,175,55,0.26);
+      background: rgba(255,255,255,0.025);
+      border-radius: 18px;
+      padding: 16px;
+      margin-top: 12px;
+    }
+
+    .contact-card h5 {
+      color: var(--gold);
+      font-size: 18px;
+      margin: 0 0 10px;
+    }
+
+    .contact-card p {
+      margin: 7px 0;
+      line-height: 1.55;
+    }
+
+    .contact-card a,
+    .modal-source a {
+      color: var(--gold);
+      text-decoration: underline;
+      text-underline-offset: 3px;
+      font-weight: 800;
+    }
+
+    @media (max-width: 760px) {
+      .quick-info-grid,
+      .modal-soft-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 760px) {
+      .interactive-info-grid,
+      .customs-subcards {
+        grid-template-columns: 1fr;
+      }
+
+      .detail-modal {
+        padding: 16px;
+      }
+
+      .detail-modal-panel {
+        padding: 22px;
+        margin: 24px 0;
+      }
+    }
+
+    .commercial-card {
+      background: linear-gradient(180deg, rgba(212,175,55,0.10), rgba(255,255,255,0.02));
+      border: 1px solid rgba(212,175,55,0.42);
+      border-radius: 24px;
+      padding: 28px;
+      margin-top: 18px;
+      margin-bottom: 16px;
+    }
+
+    .commercial-card h3 {
+      margin: 0 0 14px;
+      font-size: 30px;
+      color: var(--gold);
+    }
+
+    .commercial-card p {
+      margin: 10px 0;
+      color: var(--text);
+      font-size: 16px;
+    }
+
+    .commercial-actions {
+      margin-top: 18px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .destination-note {
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.55;
+      margin: -4px 0 20px;
+      max-width: 900px;
+    }
+
+    footer{
+      border-top:1px solid rgba(255,255,255,0.08);
+      padding:34px 24px 38px;
+      text-align:center;
+      color:rgba(255,255,255,0.68);
+      font-size:14px;
+      line-height:1.7;
+      margin-top:12px;
+    }
+
+    footer a{
+      color:#1a0dab;
+      text-decoration:underline;
+    }
+
+    footer a:hover{
+      opacity:0.88;
+    }
+
+    .footer-social{
+      display:flex;
+      justify-content:center;
+      align-items:center;
+      gap:12px;
+      margin-top:16px;
+    }
+
+    .footer-social a{
+      width:38px;
+      height:38px;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      border-radius:50%;
+      border:1px solid rgba(212,175,55,0.30);
+      color:#d4af37;
+      background:rgba(255,255,255,0.02);
+      text-decoration:none;
+      transition:transform 0.25s ease, border-color 0.25s ease, background 0.25s ease;
+    }
+
+    .footer-social a:hover{
+      transform:translateY(-2px);
+      border-color:rgba(212,175,55,0.65);
+      background:rgba(212,175,55,0.08);
+      opacity:1;
+    }
+
+    .footer-social svg{
+      width:18px;
+      height:18px;
+      fill:currentColor;
+    }
+
+    @media (max-width: 940px) {
+      .search-row { grid-template-columns: 1fr; }
+      .summary-grid { grid-template-columns: 1fr; }
+      .panel-title { font-size: 30px; }
+      .block h3 { font-size: 24px; }
+      .hero p { font-size: 18px; }
+      .nav { display: none; }
+    }
+
+    .agenda-controls {
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr;
+      gap: 12px;
+      margin: 20px 0}
+    .agenda-controls label {
+      display: block;
+      font-size: 13px;
+      margin-bottom: 7px;
+      color: #d9c78b}
+    .agenda-controls input,.agenda-controls select {
+      width: 100%;
+      background: #151515;
+      color: #fff;
+      border: 1px solid rgba(214,173,50,.4);
+      border-radius: 10px;
+      padding: 13px;
+      font-size: 15px}
+    .agenda-actions {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin: 14px 0}
+    .agenda-status {
+      padding: 16px 0;
+      line-height: 1.6}
+    .agenda-grid {
+      display: grid;
+      gap: 16px;
+      margin-top: 20px}
+    .event-card {
+      display: grid;
+      grid-template-columns: 190px 1fr;
+      gap: 18px;
+      background: rgba(18,18,18,.9);
+      border: 1px solid rgba(214,173,50,.25);
+      border-radius: 14px;
+      overflow: hidden}
+    .event-card img {
+      width: 190px;
+      height: 100%;
+      min-height: 180px;
+      object-fit: cover}
+    .event-info {
+      padding: 18px}
+    .event-info h3 {
+      margin: 0 0 8px}
+    .event-info p {
+      margin: 7px 0}
+    .event-info a {
+      display: inline-block;
+      margin-top: 10px;
+      color: #e8c66c}
+    .event-info details {
+      margin-top: 10px}
+    .agenda-hidden {
+      display: none!important}
+    @media(max-width: 700px) {
+      .agenda-controls {
+        grid-template-columns: 1fr}
+      .event-card {
+        grid-template-columns: 1fr}
+      .event-card img {
+        width: 100%;
+        height: 220px}}
+  </style>
+  </head>
+  <body>
+    <div class="page-bg" aria-hidden="true">
+      <div class="page-bg-layer active" id="pageBgA">
+      </div>
+      <div class="page-bg-layer" id="pageBgB">
+      </div>
+    </div>
+    <header class="site-header">
+      <div class="site-header-inner">
+        <a class="brand" href="/" aria-label="Curadoria Elite Travel">
+          <img src="images/rosa-dos-ventos.png" alt="Rosa dos Ventos">
+          <div class="brand-text">
+            <div class="brand-title">
+              CURADORIA ELITE TRAVEL
+            </div>
+            <div class="brand-sub">
+              O seu mundo, bem indicado.
+            </div>
+          </div>
+        </a>
+        <nav class="nav">
+          <a href="/">
+            Início
+          </a>
+          <a href="/?secao=quem#quem">
+            Quem Somos
+          </a>
+          <a href="/?secao=curadoria#curadoria">
+            Curadoria
+          </a>
+          <a href="/?secao=buscador#buscador">
+            Buscador
+          </a>
+          <span class="nav-sep">
+          </span>
+          <a href="/?cart=1">
+            Carrinho (0)
+          </a>
+          <span class="nav-sep">
+          </span>
+          <a href="/account.html">
+            Minha conta
+          </a>
+          <a href="/login.html">
+            Sair
+          </a>
+        </nav>
+      </div>
+    </header>
+    <section class="hero">
+      <div class="hero-inner">
+        <div class="hero-kicker">
+          curadoria • critério • excelência
+        </div>
+        <h1>
+          Agenda Cultural
+        </h1>
+        <p>
+          Descubra eventos na cidade e no período da sua viagem, com informações e links oficiais.
+        </p>
+      </div>
+    </section>
+    <main class="tool-wrap">
+      <section class="tool-panel">
+        <div class="breadcrumbs">
+          Ferramentas &gt; Agenda Cultural
+        </div>
+        <h2 class="panel-title">
+          Consulta de eventos
+        </h2>
+        <p class="panel-sub">
+          Escolha a cidade, a data e a categoria para consultar os eventos disponíveis na base.
+        </p>
+        <div class="agenda-controls">
+          <div>
+            <label for="city">
+              Cidade
+            </label>
+            <select id="city">
+              <option value="">
+                Selecione uma cidade
+              </option>
+            </select>
+          </div>
+          <div>
+            <label for="date">
+              Data
+            </label>
+            <input type="date" id="date">
+          </div>
+          <div>
+            <label for="category">
+              Categoria
+            </label>
+            <select id="category">
+              <option value="">
+                Todas as categorias
+              </option>
+              <option>
+                Shows
+              </option>
+              <option>
+                Teatro
+              </option>
+              <option>
+                Musicais
+              </option>
+              <option>
+                Cinema
+              </option>
+              <option>
+                Exposições
+              </option>
+              <option>
+                Esportes
+              </option>
+              <option>
+                Festivais
+              </option>
+              <option>
+                Outros
+              </option>
+            </select>
+          </div>
+        </div>
+        <div class="agenda-actions">
+          <button class="btn" type="button" id="search">
+            VER EVENTOS
+          </button>
+          <button class="btn secondary" type="button" id="clear">
+            Limpar
+          </button>
+        </div>
+        <div class="agenda-status" id="status" role="status">
+          Selecione uma cidade para começar.
+        </div>
+        <div class="agenda-grid" id="results">
+        </div>
+        <div id="more" class="agenda-hidden">
+          <p>
+            Existem mais eventos nesta consulta. O acesso aos resultados adicionais dependerá da ativação do serviço.
+          </p>
+        </div>
+      </section>
+    </main>
+    <footer id="siteFooter">
+      Curadoria Elite Travel · O seu mundo, bem indicado.
+      <br>
+      São Paulo - SP ·
+      <a href="contact.html">
+        curadoriaelitetravel@gmail.com
+      </a>
+      <div class="footer-social" aria-label="Redes sociais da Curadoria Elite Travel">
+        <a href="https://www.instagram.com/curadoriaelitetravel/" target="_blank" rel="noopener noreferrer" aria-label="Instagram da Curadoria Elite Travel" title="Instagram">
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M7 2h10a5 5 0 0 1 5 5v10a5 5 0 0 1-5 5H7a5 5 0 0 1-5-5V7a5 5 0 0 1 5-5Zm0 2a3 3 0 0 0-3 3v10a3 3 0 0 0 3 3h10a3 3 0 0 0 3-3V7a3 3 0 0 0-3-3H7Zm5 3.5A4.5 4.5 0 1 1 7.5 12 4.5 4.5 0 0 1 12 7.5Zm0 2A2.5 2.5 0 1 0 14.5 12 2.5 2.5 0 0 0 12 9.5Zm5.25-3.1a1.05 1.05 0 1 1-1.05 1.05 1.05 0 0 1-1.05-1.05Z"/>
+          </svg>
+        </a>
+        <a href="https://www.linkedin.com/company/curadoria-elite-travel" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn da Curadoria Elite Travel" title="LinkedIn">
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M6.5 8.25H3.25V21H6.5V8.25ZM4.88 3A1.88 1.88 0 1 0 4.9 6.75 1.88 1.88 0 0 0 4.88 3ZM21 13.7c0-3.85-2.05-5.64-4.79-5.64a4.14 4.14 0 0 0-3.74 2.05V8.25H9.22V21h3.25v-6.31c0-1.66.32-3.27 2.38-3.27 2.03 0 2.05 1.9 2.05 3.38V21H21v-7.3Z"/>
+          </svg>
+        </a>
+      </div>
+    </footer>
+    <script>
+    'use strict';
+    /* CONTRATO DE DADOS: /data/agenda-cultural.json
+     {"updated_at":"2026-11-13T12:00:00Z","cities":[{"id":"br-sp-sao-paulo","name":"São Paulo","country":"Brasil"}],"events":[{"id":"identificador-estavel","city_id":"br-sp-sao-paulo","title":"Nome oficial","category":"Teatro","starts_at":"2026-11-20T20:00:00-03:00","ends_at":null,"venue":"Nome do local","address":"Endereço completo","price":"R$ 50,00","image_url":"https://...","ticket_url":"https://.../evento-especifico","description":"Texto verificado","source":"Site oficial"}]}
+     Não exibir eventos incompletos, nem inventar disponibilidade. Este arquivo NÃO faz scraping ou consulta IA: requer alimentador verificado separado. */
+    const $ = id => document.getElementById(id);
+    const today = () => { const d = new Date(); return [d.getFullYear(), String(d.getMonth() + 1).padStart(2, '0'), String(d.getDate()).padStart(2, '0')].join('-'); };
+    $('date').value = today();
+    let catalog = null;
+    const norm = s => String(s || '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().trim();
+    const validUrl = s => { try {
+        const u = new URL(s);
+        return u.protocol === 'https:';
+    }
+    catch {
+        return false;
+    } };
+    const validEvent = e => e && e.id && e.city_id && e.title && e.category && e.starts_at && !isNaN(Date.parse(e.starts_at)) && e.venue && e.address && e.price && e.description && validUrl(e.image_url) && validUrl(e.ticket_url);
+    function setStatus(s) { $('status').textContent = s; }
+    function make(tag, cls, txt) { const el = document.createElement(tag); if (cls)
+        el.className = cls; if (txt !== undefined)
+        el.textContent = txt; return el; }
+    function line(parent, label, value) { parent.append(make('p', '', label + ': ' + value)); }
+    function renderEvent(e) { const card = make('article', 'event-card'); const img = make('img'); img.src = e.image_url; img.alt = 'Imagem oficial: ' + e.title; img.loading = 'lazy'; img.referrerPolicy = 'no-referrer'; card.append(img); const info = make('div', 'event-info'); info.append(make('h3', '', e.title)); line(info, 'Data e horário', new Intl.DateTimeFormat('pt-BR', { dateStyle: 'full', timeStyle: 'short', timeZone: undefined }).format(new Date(e.starts_at))); line(info, 'Local', e.venue); line(info, 'Endereço', e.address); line(info, 'Ingressos', e.price); const details = make('details'); details.append(make('summary', '', 'Informações do evento')); details.append(make('p', '', e.description)); line(details, 'Fonte', e.source || 'Organizador oficial'); info.append(details); const link = make('a', '', 'Consultar ingressos'); link.href = e.ticket_url; link.target = '_blank'; link.rel = 'noopener noreferrer'; info.append(link); card.append(info); return card; }
+    async function loadCatalog() { try {
+        const res = await fetch('data/agenda-cultural.json', { cache: 'no-store' });
+        if (!res.ok)
+            throw Error('Sem base');
+        const data = await res.json();
+        if (!Array.isArray(data.cities) || !Array.isArray(data.events))
+            throw Error('Formato inválido');
+        catalog = data;
+        const cities = [...new Map(data.cities.filter(c => c.id && c.name && c.country).map(c => [c.id, c])).values()].sort((a, b) => a.name.localeCompare(b.name, 'pt-BR'));
+        for (const c of cities) {
+            const o = make('option', '', c.name + ' — ' + c.country);
+            o.value = c.id;
+            $('city').append(o);
+        }
+        setStatus(cities.length ? 'Selecione uma cidade e clique em VER EVENTOS.' : 'Nenhuma cidade cadastrada na base.');
+    }
+    catch (err) {
+        setStatus('A Agenda Cultural ainda não tem uma base de eventos conectada. Nenhum resultado será apresentado sem informações oficiais verificadas.');
+    } }
+    function search() { if (!catalog) {
+        setStatus('A base de eventos ainda não está conectada.');
+        return;
+    } const city = $('city').value, date = $('date').value, cat = $('category').value; if (!city || !date) {
+        setStatus('Selecione uma cidade e uma data.');
+        return;
+    } const dedup = new Set(); const items = catalog.events.filter(validEvent).filter(e => e.city_id === city && e.starts_at.slice(0, 10) === date && (!cat || norm(e.category) === norm(cat))).sort((a, b) => Date.parse(a.starts_at) - Date.parse(b.starts_at)).filter(e => { const k = norm(e.title) + '|' + e.starts_at + '|' + norm(e.venue); if (dedup.has(k))
+        return false; dedup.add(k); return true; }); $('results').replaceChildren(...items.slice(0, 5).map(renderEvent)); setStatus(items.length ? `${items.length} evento(s) com informações completas encontrado(s). Exibindo ${Math.min(items.length, 5)}.` : 'Nenhum evento completo foi encontrado na base para esta consulta.'); $('more').classList.toggle('agenda-hidden', items.length <= 5); }
+    $('search').addEventListener('click', search);
+    $('clear').addEventListener('click', () => { $('city').value = ''; $('date').value = today(); $('category').value = ''; $('results').replaceChildren(); $('more').classList.add('agenda-hidden'); setStatus('Selecione uma cidade para começar.'); });
+    loadCatalog();
+  </script>
+  </body>
+</html>
