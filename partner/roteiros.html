@@ -1,63 +1,649 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="pt-BR">
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Roteiros | Operação Partner CET</title>
-<style>
-:root{font-family:Arial,Helvetica,sans-serif;color:#f4f6fa;background:#03060b}*{box-sizing:border-box}body{margin:0;background:radial-gradient(circle at 20% 0%,#192031,#03060b 55%);min-height:100vh}header{display:flex;justify-content:space-between;align-items:center;gap:15px;padding:17px max(22px,calc((100vw - 1200px)/2));background:#050505;border-bottom:1px solid #303036}.brand{font-weight:800;color:#d6ad32;letter-spacing:.5px}.brand small{display:block;color:white;font-size:11px;margin-top:4px}a{color:inherit;text-decoration:none}.back,.btn{display:inline-block;border:1px solid #92701e;border-radius:11px;padding:12px 17px;font-weight:700;background:#0c1523;color:#fff;cursor:pointer}.btn.gold{background:linear-gradient(120deg,#e3bd43,#b88712);color:#070707;border:0}main{max-width:1200px;margin:auto;padding:38px 22px 70px}.eyebrow{font-size:12px;letter-spacing:2px;color:#d6ad32;font-weight:800;text-transform:uppercase}h1{font-size:clamp(29px,4vw,43px);margin:12px 0}p{line-height:1.6;color:#c4cad6}.intro{margin-bottom:25px}.layout{display:grid;grid-template-columns:minmax(0,1fr) 350px;gap:22px}.panel{background:#0b1423;border:1px solid #273447;border-radius:18px;padding:24px;margin-bottom:20px}h2{font-size:20px;margin:0 0 17px}.fields{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}.field{display:flex;flex-direction:column;gap:7px}.full{grid-column:1/-1}label{font-size:13px;font-weight:700}input,select,textarea{width:100%;border:1px solid #344153;border-radius:10px;background:#060c16;color:white;padding:12px;font:inherit}textarea{min-height:95px;resize:vertical}input:focus,select:focus,textarea:focus{outline:2px solid #d6ad32;outline-offset:1px}.hint{font-size:12px;color:#9da9b9;line-height:1.5}.actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:20px}.preview{white-space:pre-wrap;overflow-wrap:anywhere;line-height:1.65;font-size:14px;color:#dce2eb;min-height:150px}.notice{border-left:3px solid #d6ad32;padding-left:12px}.status{font-size:13px;color:#d6ad32}button:disabled{opacity:.5;cursor:not-allowed}.date-options{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:9px}.date-choice{display:flex;align-items:center;gap:8px;padding:10px;border:1px solid #344153;border-radius:10px;background:#060c16;font-size:13px;font-weight:400;cursor:pointer}.date-choice input{width:auto;accent-color:#d6ad32}.date-choice:has(input:checked){border-color:#d6ad32}.date-empty{color:#9da9b9;font-size:13px}.time-mode{display:flex;flex-wrap:wrap;gap:12px;margin:3px 0 4px}.time-mode label{display:inline-flex;align-items:center;gap:7px;font-weight:400;cursor:pointer}.time-mode input{width:auto;accent-color:#d6ad32}.time-detail[hidden]{display:none}.section-note{margin:-5px 0 18px}.field small{color:#9da9b9;line-height:1.4}.date-warning{border:1px solid #92701e;border-radius:11px;background:#201a0c;padding:14px;color:#f4e6bd}.date-warning p{margin:0 0 9px;color:#f4e6bd}.date-warning label{display:flex;align-items:center;gap:9px;font-weight:400;cursor:pointer}.date-warning input{width:auto;accent-color:#d6ad32}.date-warning[hidden]{display:none}@media(max-width:850px){.layout{grid-template-columns:1fr}}@media(max-width:560px){.fields{grid-template-columns:1fr}.date-options{grid-template-columns:repeat(2,minmax(0,1fr))}header{padding:16px}main{padding:25px 15px}.panel{padding:17px}}@media print{header,.form-panel,.actions,.intro .eyebrow,.notice{display:none!important}body,:root{background:white;color:black}main{padding:0}.layout{display:block}.panel{border:0;background:white;color:black}.preview{color:black}}
-</style>
-</head>
-<body>
-<header><div class="brand">✦ CURADORIA ELITE TRAVEL<small>O seu mundo, bem indicado.</small></div><a class="back" href="partner.html">← Voltar à Operação</a></header>
-<main>
-<div class="intro"><div class="eyebrow">Operação Partner · Ferramenta exclusiva</div><h1>Roteiros</h1><p>Reúna as preferências do cliente e prepare as informações para a geração de uma programação personalizada com IA. A empresa poderá revisar o conteúdo antes de encaminhá-lo.</p></div>
-<div class="layout"><section class="form-panel">
-<form id="tripForm">
-<div class="panel"><h2>01 · Cliente e viagem</h2><div class="fields">
-<div class="field"><label for="client">Nome do cliente</label><input id="client" autocomplete="off" placeholder="Nome para personalização"></div>
-<div class="field"><label for="partySize">Quantidade de viajantes *</label><input id="partySize" type="number" min="1" max="50" value="2" required></div>
-<div class="field full"><label for="destination">Destino *</label><input id="destination" required placeholder="Ex.: Paris, França"></div>
-<div class="field"><label for="arrival">Data de chegada ao destino</label><input id="arrival" type="date"></div>
-<div class="field"><label for="departure">Data de retorno</label><input id="departure" type="date"></div>
-<div class="field"><label>Horário de chegada ao destino</label>
-<div class="time-mode" role="group" aria-label="Tipo de horário de chegada"><label><input type="radio" name="arrivalMode" value="period" checked> Período estimado</label><label><input type="radio" name="arrivalMode" value="exact"> Horário conhecido</label></div>
-<div class="time-detail" id="arrivalPeriodWrap"><label for="arrivalPeriod" class="hint">Período</label><select id="arrivalPeriod"><option value="">Não informado</option><option>Manhã</option><option>Tarde</option><option>Noite</option><option>Madrugada</option></select></div>
-<div class="time-detail" id="arrivalTimeWrap" hidden><label for="arrivalTime" class="hint">Horário local no destino</label><input id="arrivalTime" type="time" disabled></div>
-<small>Horário de chegada ao destino, não de saída do voo de origem.</small></div>
-<div class="field"><label>Horário do voo de retorno</label>
-<div class="time-mode" role="group" aria-label="Tipo de horário de retorno"><label><input type="radio" name="departureMode" value="period" checked> Período estimado</label><label><input type="radio" name="departureMode" value="exact"> Horário conhecido</label></div>
-<div class="time-detail" id="departurePeriodWrap"><label for="departurePeriod" class="hint">Período</label><select id="departurePeriod"><option value="">Não informado</option><option>Manhã</option><option>Tarde</option><option>Noite</option><option>Madrugada</option></select></div>
-<div class="time-detail" id="departureTimeWrap" hidden><label for="departureTime" class="hint">Horário local de saída do voo</label><input id="departureTime" type="time" disabled></div>
-<small>Considerar deslocamento ao aeroporto e antecedência para embarque.</small></div>
-<div class="field"><label for="days">Dias de programação *</label><input id="days" type="number" min="1" max="60" value="3" required><small>Quantidade de dias que receberão atividades, não necessariamente todos os dias da viagem.</small></div>
-<div class="field"><label for="budget">Orçamento</label><select id="budget"><option>Intermediário</option><option>Econômico</option><option>Conforto elevado</option><option>Não definido</option></select></div>
-<div class="field full"><label for="hotel">Hospedagem ou ponto de partida</label><input id="hotel" placeholder="Nome do hotel e localização"></div>
-<div class="field full"><label for="unavailable">Dias indisponíveis e compromissos</label><input id="unavailable" placeholder="Ex.: 02/06 — compromissos pessoais"></div>
-<div class="field full date-warning" id="dateWarning" hidden role="group" aria-label="Confirmação de período longo"><p id="dateWarningText"></p><label><input type="checkbox" id="confirmLongDates"> Sim, conferi as datas e o período está correto.</label><small>Viagens longas são permitidas; esta confirmação evita erros de digitação.</small></div>
-<div class="field full"><label>Dias específicos para programação</label><div class="hint">Informe chegada e retorno para selecionar os dias desejados. Se deixar todos desmarcados, a IA deverá propor os dias disponíveis, respeitando as restrições.</div><div class="date-options" id="dateOptions"><span class="date-empty">Informe as datas da viagem para escolher os dias.</span></div><div class="hint" id="dateStatus" aria-live="polite"></div></div>
-</div></div>
-<div class="panel"><h2>02 · Perfil e preferências</h2><div class="fields">
-<div class="field full"><label for="travelers">Viajantes e necessidades específicas</label><textarea id="travelers" placeholder="Ex.: casal, gestante, mobilidade reduzida, pausas frequentes"></textarea></div>
-<div class="field full"><label for="interests">Interesses e experiências desejadas</label><textarea id="interests" placeholder="Ex.: museus, gastronomia, cafés, pontos turísticos, experiências menos óbvias"></textarea></div>
-<div class="field full"><label for="must">Visitas indispensáveis e exclusões</label><textarea id="must" placeholder="Ex.: Musée d’Orsay; evitar Louvre"></textarea></div>
-<div class="field"><label for="intensity">Ritmo das atividades</label><select id="intensity"><option>Equilibrado, com pausas</option><option>Leve, com caminhadas curtas</option><option>Intenso, com muitas atividades</option><option>Personalizar nas observações</option></select></div>
-<div class="field"><label for="dinnerTime">Horário preferencial do jantar</label><input id="dinnerTime" type="time" value="20:30"></div>
-<div class="field full"><label for="transport">Preferências de deslocamento</label><input id="transport" placeholder="Ex.: táxi, poucos trajetos a pé"></div>
-<div class="field full"><label for="dining">Preferências gastronômicas</label><textarea id="dining" placeholder="Ex.: culinária francesa, bistrôs, restaurantes do Guia Michelin (estrelados, Bib Gourmand ou selecionados), locais com reserva online"></textarea></div>
-<div class="field full"><label for="dietary">Restrições alimentares e cuidados nas refeições</label><input id="dietary" placeholder="Ex.: vegetariano, alergias, gestante, evitar álcool"></div>
-<div class="field"><label for="evening">Programação noturna</label><select id="evening"><option>Incluir experiências e jantar</option><option>Priorizar jantar, sem outras atividades</option><option>Alternar noites livres e programadas</option><option>Deixar as noites livres</option></select></div>
-<div class="field"><label for="special">Experiências especiais</label><select id="special"><option>Conforme o perfil do cliente</option><option>Priorizar passeios e experiências</option><option>Considerar bate-voltas</option><option>Evitar excursões longas</option><option>Não incluir experiências adicionais</option></select></div>
-<div class="field full"><label for="civitatis">Preferência por experiências Civitatis</label><select id="civitatis"><option>Considerar quando fizer sentido</option><option>Priorizar uma experiência adequada</option><option>Não incluir Civitatis</option></select><small>A presença no catálogo não confirma disponibilidade na data escolhida.</small></div>
-<div class="field full"><label for="notes">Observações adicionais</label><textarea id="notes" placeholder="Momentos livres, necessidades especiais, ocasiões comemorativas etc."></textarea></div>
-</div></div>
-<div class="panel"><h2>03 · Preparar para IA</h2><p class="hint">A conexão com o serviço de IA ainda não foi implementada. Por enquanto, este botão prepara um briefing estruturado para copiar e utilizar na etapa de integração e testes.</p><div class="actions"><button class="btn gold" type="submit">Preparar briefing</button><button class="btn" type="reset">Limpar campos</button></div></div>
-</form></section>
-<aside><div class="panel"><h2>Prévia do briefing</h2><div class="preview" id="preview">Preencha os campos e selecione “Preparar briefing”.</div><div class="actions"><button class="btn" id="copy" type="button" disabled>Copiar briefing</button></div><p class="status" id="status" role="status"></p></div><div class="panel notice"><h2>Critérios editoriais</h2><p>As sugestões deverão respeitar o perfil dos viajantes, o ritmo de cada atividade, os deslocamentos, as refeições, os períodos de descanso e a programação noturna.</p><p>Restaurantes deverão ser avaliados conforme localização, funcionamento, tipo de refeição, critérios do Guia Michelin quando pertinentes, reservas e dress code. Informações não verificadas deverão ser identificadas.</p><p>Nenhuma reserva é efetuada nesta ferramenta. Disponibilidade e valores podem mudar até a contratação.</p><p class="hint">A geração automática, a edição visual, o PDF final e o vínculo ao pedido serão desenvolvidos nas próximas etapas.</p></div></aside>
-</div>
-</main>
-<script>
-(function(){
+ <head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width,initial-scale=1" name="viewport"/>
+  <title>
+   Roteiros | Operação Partner CET
+  </title>
+  <style>
+   :root {
+  font-family:Arial,Helvetica,sans-serif;
+  color:#f4f6fa;
+  background:#03060b}
+* {
+  box-sizing:border-box}
+body {
+  margin:0;
+  background:radial-gradient(circle at 20% 0%,#192031,#03060b 55%);
+  min-height:100vh}
+header {
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:15px;
+  padding:17px max(22px,calc((100vw - 1200px)/2));
+  background:#050505;
+  border-bottom:1px solid #303036}
+.brand {
+  font-weight:800;
+  color:#d6ad32;
+  letter-spacing:.5px}
+.brand small {
+  display:block;
+  color:white;
+  font-size:11px;
+  margin-top:4px}
+a {
+  color:inherit;
+  text-decoration:none}
+.back,.btn {
+  display:inline-block;
+  border:1px solid #92701e;
+  border-radius:11px;
+  padding:12px 17px;
+  font-weight:700;
+  background:#0c1523;
+  color:#fff;
+  cursor:pointer}
+.btn.gold {
+  background:linear-gradient(120deg,#e3bd43,#b88712);
+  color:#070707;
+  border:0}
+main {
+  max-width:1200px;
+  margin:auto;
+  padding:38px 22px 70px}
+.eyebrow {
+  font-size:12px;
+  letter-spacing:2px;
+  color:#d6ad32;
+  font-weight:800;
+  text-transform:uppercase}
+h1 {
+  font-size:clamp(29px,4vw,43px);
+  margin:12px 0}
+p {
+  line-height:1.6;
+  color:#c4cad6}
+.intro {
+  margin-bottom:25px}
+.layout {
+  display:grid;
+  grid-template-columns:minmax(0,1fr) 350px;
+  gap:22px}
+.panel {
+  background:#0b1423;
+  border:1px solid #273447;
+  border-radius:18px;
+  padding:24px;
+  margin-bottom:20px}
+h2 {
+  font-size:20px;
+  margin:0 0 17px}
+.fields {
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:16px}
+.field {
+  display:flex;
+  flex-direction:column;
+  gap:7px}
+.full {
+  grid-column:1/-1}
+label {
+  font-size:13px;
+  font-weight:700}
+input,select,textarea {
+  width:100%;
+  border:1px solid #344153;
+  border-radius:10px;
+  background:#060c16;
+  color:white;
+  padding:12px;
+  font:inherit}
+textarea {
+  min-height:95px;
+  resize:vertical}
+input:focus,select:focus,textarea:focus {
+  outline:2px solid #d6ad32;
+  outline-offset:1px}
+.hint {
+  font-size:12px;
+  color:#9da9b9;
+  line-height:1.5}
+.actions {
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+  margin-top:20px}
+.preview {
+  white-space:pre-wrap;
+  overflow-wrap:anywhere;
+  line-height:1.65;
+  font-size:14px;
+  color:#dce2eb;
+  min-height:150px}
+.notice {
+  border-left:3px solid #d6ad32;
+  padding-left:12px}
+.status {
+  font-size:13px;
+  color:#d6ad32}
+button:disabled {
+  opacity:.5;
+  cursor:not-allowed}
+.date-options {
+  display:grid;
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:9px}
+.date-choice {
+  display:flex;
+  align-items:center;
+  gap:8px;
+  padding:10px;
+  border:1px solid #344153;
+  border-radius:10px;
+  background:#060c16;
+  font-size:13px;
+  font-weight:400;
+  cursor:pointer}
+.date-choice input {
+  width:auto;
+  accent-color:#d6ad32}
+.date-choice:has(input:checked) {
+  border-color:#d6ad32}
+.date-empty {
+  color:#9da9b9;
+  font-size:13px}
+.time-mode {
+  display:flex;
+  flex-wrap:wrap;
+  gap:12px;
+  margin:3px 0 4px}
+.time-mode label {
+  display:inline-flex;
+  align-items:center;
+  gap:7px;
+  font-weight:400;
+  cursor:pointer}
+.time-mode input {
+  width:auto;
+  accent-color:#d6ad32}
+.time-detail[hidden] {
+  display:none}
+.section-note {
+  margin:-5px 0 18px}
+.field small {
+  color:#9da9b9;
+  line-height:1.4}
+.date-warning {
+  border:1px solid #92701e;
+  border-radius:11px;
+  background:#201a0c;
+  padding:14px;
+  color:#f4e6bd}
+.date-warning p {
+  margin:0 0 9px;
+  color:#f4e6bd}
+.date-warning label {
+  display:flex;
+  align-items:center;
+  gap:9px;
+  font-weight:400;
+  cursor:pointer}
+.date-warning input {
+  width:auto;
+  accent-color:#d6ad32}
+.date-warning[hidden] {
+  display:none}
+@media(max-width:850px) {
+  .layout {
+  grid-template-columns:1fr}
+}
+@media(max-width:560px) {
+  .fields {
+  grid-template-columns:1fr}
+.date-options {
+  grid-template-columns:repeat(2,minmax(0,1fr))}
+header {
+  padding:16px}
+main {
+  padding:25px 15px}
+.panel {
+  padding:17px}
+}
+@media print {
+  header,.form-panel,.actions,.intro .eyebrow,.notice {
+  display:none!important}
+body,:root {
+  background:white;
+  color:black}
+main {
+  padding:0}
+.layout {
+  display:block}
+.panel {
+  border:0;
+  background:white;
+  color:black}
+.preview {
+  color:black}
+}
+  </style>
+ </head>
+ <body>
+  <header>
+   <div class="brand">
+    ✦ CURADORIA ELITE TRAVEL
+    <small>
+     O seu mundo, bem indicado.
+    </small>
+   </div>
+   <a class="back" href="partner.html">
+    ← Voltar à Operação
+   </a>
+  </header>
+  <main>
+   <div class="intro">
+    <div class="eyebrow">
+     Operação Partner · Ferramenta exclusiva
+    </div>
+    <h1>
+     Roteiros
+    </h1>
+    <p>
+     Reúna as preferências do cliente e prepare as informações para a geração de uma programação personalizada com IA. A empresa poderá revisar o conteúdo antes de encaminhá-lo.
+    </p>
+   </div>
+   <div class="layout">
+    <section class="form-panel">
+     <form id="tripForm">
+      <div class="panel">
+       <h2>
+        01 · Cliente e viagem
+       </h2>
+       <div class="fields">
+        <div class="field">
+         <label for="client">
+          Nome do cliente
+         </label>
+         <input autocomplete="off" id="client" placeholder="Nome para personalização"/>
+        </div>
+        <div class="field">
+         <label for="partySize">
+          Quantidade de viajantes *
+         </label>
+         <input id="partySize" max="50" min="1" required="" type="number" value="2"/>
+        </div>
+        <div class="field full">
+         <label for="destination">
+          Destino *
+         </label>
+         <input id="destination" placeholder="Ex.: Paris, França" required=""/>
+        </div>
+        <div class="field">
+         <label for="arrival">
+          Data de chegada ao destino
+         </label>
+         <input id="arrival" type="date"/>
+        </div>
+        <div class="field">
+         <label for="departure">
+          Data de retorno
+         </label>
+         <input id="departure" type="date"/>
+        </div>
+        <div class="field">
+         <label>
+          Horário de chegada ao destino
+         </label>
+         <div aria-label="Tipo de horário de chegada" class="time-mode" role="group">
+          <label>
+           <input checked="" name="arrivalMode" type="radio" value="period"/>
+           Período estimado
+          </label>
+          <label>
+           <input name="arrivalMode" type="radio" value="exact"/>
+           Horário conhecido
+          </label>
+         </div>
+         <div class="time-detail" id="arrivalPeriodWrap">
+          <label class="hint" for="arrivalPeriod">
+           Período
+          </label>
+          <select id="arrivalPeriod">
+           <option value="">
+            Não informado
+           </option>
+           <option>
+            Manhã
+           </option>
+           <option>
+            Tarde
+           </option>
+           <option>
+            Noite
+           </option>
+           <option>
+            Madrugada
+           </option>
+          </select>
+         </div>
+         <div class="time-detail" hidden="" id="arrivalTimeWrap">
+          <label class="hint" for="arrivalTime">
+           Horário local no destino
+          </label>
+          <input disabled="" id="arrivalTime" type="time"/>
+         </div>
+         <small>
+          Horário de chegada ao destino, não de saída do voo de origem.
+         </small>
+        </div>
+        <div class="field">
+         <label>
+          Horário do voo de retorno
+         </label>
+         <div aria-label="Tipo de horário de retorno" class="time-mode" role="group">
+          <label>
+           <input checked="" name="departureMode" type="radio" value="period"/>
+           Período estimado
+          </label>
+          <label>
+           <input name="departureMode" type="radio" value="exact"/>
+           Horário conhecido
+          </label>
+         </div>
+         <div class="time-detail" id="departurePeriodWrap">
+          <label class="hint" for="departurePeriod">
+           Período
+          </label>
+          <select id="departurePeriod">
+           <option value="">
+            Não informado
+           </option>
+           <option>
+            Manhã
+           </option>
+           <option>
+            Tarde
+           </option>
+           <option>
+            Noite
+           </option>
+           <option>
+            Madrugada
+           </option>
+          </select>
+         </div>
+         <div class="time-detail" hidden="" id="departureTimeWrap">
+          <label class="hint" for="departureTime">
+           Horário local de saída do voo
+          </label>
+          <input disabled="" id="departureTime" type="time"/>
+         </div>
+         <small>
+          Considerar deslocamento ao aeroporto e antecedência para embarque.
+         </small>
+        </div>
+        <div class="field">
+         <label for="days">
+          Dias de programação *
+         </label>
+         <input id="days" max="60" min="1" required="" type="number" value="3"/>
+         <small>
+          Quantidade de dias que receberão atividades, não necessariamente todos os dias da viagem.
+         </small>
+        </div>
+        <div class="field">
+         <label for="budget">
+          Orçamento
+         </label>
+         <select id="budget">
+          <option>
+           Intermediário
+          </option>
+          <option>
+           Econômico
+          </option>
+          <option>
+           Conforto elevado
+          </option>
+          <option>
+           Não definido
+          </option>
+         </select>
+        </div>
+        <div class="field full">
+         <label for="hotel">
+          Hospedagem ou ponto de partida
+         </label>
+         <input id="hotel" placeholder="Nome do hotel e localização"/>
+        </div>
+        <div class="field full">
+         <label for="unavailable">
+          Dias indisponíveis e compromissos
+         </label>
+         <input id="unavailable" placeholder="Ex.: 02/06 — compromissos pessoais"/>
+        </div>
+        <div aria-label="Confirmação de período longo" class="field full date-warning" hidden="" id="dateWarning" role="group">
+         <p id="dateWarningText">
+         </p>
+         <label>
+          <input id="confirmLongDates" type="checkbox"/>
+          Sim, conferi as datas e o período está correto.
+         </label>
+         <small>
+          Viagens longas são permitidas; esta confirmação evita erros de digitação.
+         </small>
+        </div>
+        <div class="field full">
+         <label>
+          Dias específicos para programação
+         </label>
+         <div class="hint">
+          Informe chegada e retorno para selecionar os dias desejados. Se deixar todos desmarcados, a IA deverá propor os dias disponíveis, respeitando as restrições.
+         </div>
+         <div class="date-options" id="dateOptions">
+          <span class="date-empty">
+           Informe as datas da viagem para escolher os dias.
+          </span>
+         </div>
+         <div aria-live="polite" class="hint" id="dateStatus">
+         </div>
+        </div>
+       </div>
+      </div>
+      <div class="panel">
+       <h2>
+        02 · Perfil e preferências
+       </h2>
+       <div class="fields">
+        <div class="field full">
+         <label for="travelers">
+          Viajantes e necessidades específicas
+         </label>
+         <textarea id="travelers" placeholder="Ex.: casal, gestante, mobilidade reduzida, pausas frequentes"></textarea>
+        </div>
+        <div class="field full">
+         <label for="interests">
+          Interesses e experiências desejadas
+         </label>
+         <textarea id="interests" placeholder="Ex.: museus, gastronomia, cafés, pontos turísticos, experiências menos óbvias"></textarea>
+        </div>
+        <div class="field full">
+         <label for="must">
+          Visitas indispensáveis e exclusões
+         </label>
+         <textarea id="must" placeholder="Ex.: Musée d’Orsay; evitar Louvre"></textarea>
+        </div>
+        <div class="field">
+         <label for="intensity">
+          Ritmo das atividades
+         </label>
+         <select id="intensity">
+          <option>
+           Equilibrado, com pausas
+          </option>
+          <option>
+           Leve, com caminhadas curtas
+          </option>
+          <option>
+           Intenso, com muitas atividades
+          </option>
+          <option>
+           Personalizar nas observações
+          </option>
+         </select>
+        </div>
+        <div class="field">
+         <label for="dinnerTime">
+          Horário preferencial do jantar
+         </label>
+         <input id="dinnerTime" type="time" value="20:30"/>
+        </div>
+        <div class="field full">
+         <label for="transport">
+          Preferências de deslocamento
+         </label>
+         <input id="transport" placeholder="Ex.: táxi, poucos trajetos a pé"/>
+        </div>
+        <div class="field full">
+         <label for="dining">
+          Preferências gastronômicas
+         </label>
+         <textarea id="dining" placeholder="Ex.: culinária francesa, bistrôs, restaurantes do Guia Michelin (estrelados, Bib Gourmand ou selecionados), locais com reserva online"></textarea>
+        </div>
+        <div class="field full">
+         <label for="dietary">
+          Restrições alimentares e cuidados nas refeições
+         </label>
+         <input id="dietary" placeholder="Ex.: vegetariano, alergias, gestante, evitar álcool"/>
+        </div>
+        <div class="field">
+         <label for="evening">
+          Programação noturna
+         </label>
+         <select id="evening">
+          <option>
+           Incluir experiências e jantar
+          </option>
+          <option>
+           Priorizar jantar, sem outras atividades
+          </option>
+          <option>
+           Alternar noites livres e programadas
+          </option>
+          <option>
+           Deixar as noites livres
+          </option>
+         </select>
+        </div>
+        <div class="field">
+         <label for="special">
+          Experiências especiais
+         </label>
+         <select id="special">
+          <option>
+           Conforme o perfil do cliente
+          </option>
+          <option>
+           Priorizar passeios e experiências
+          </option>
+          <option>
+           Considerar bate-voltas
+          </option>
+          <option>
+           Evitar excursões longas
+          </option>
+          <option>
+           Não incluir experiências adicionais
+          </option>
+         </select>
+        </div>
+        <div class="field full">
+         <label for="civitatis">
+          Preferência por experiências Civitatis
+         </label>
+         <select id="civitatis">
+          <option>
+           Considerar quando fizer sentido
+          </option>
+          <option>
+           Priorizar uma experiência adequada
+          </option>
+          <option>
+           Não incluir Civitatis
+          </option>
+         </select>
+         <small>
+          A presença no catálogo não confirma disponibilidade na data escolhida.
+         </small>
+        </div>
+        <div class="field full">
+         <label for="notes">
+          Observações adicionais
+         </label>
+         <textarea id="notes" placeholder="Momentos livres, necessidades especiais, ocasiões comemorativas etc."></textarea>
+        </div>
+       </div>
+      </div>
+      <div class="panel">
+       <h2>
+        03 · Preparar para IA
+       </h2>
+       <p class="hint">
+        A conexão com o serviço de IA ainda não foi implementada. Por enquanto, este botão prepara um briefing estruturado para copiar e utilizar na etapa de integração e testes.
+       </p>
+       <div class="actions">
+        <button class="btn gold" type="submit">
+         Preparar briefing
+        </button>
+        <button class="btn" type="reset">
+         Limpar campos
+        </button>
+       </div>
+      </div>
+     </form>
+    </section>
+    <aside>
+     <div class="panel">
+      <h2>
+       Prévia do briefing
+      </h2>
+      <div class="preview" id="preview">
+       Preencha os campos e selecione “Preparar briefing”.
+      </div>
+      <div class="actions">
+       <button class="btn" disabled="" id="copy" type="button">
+        Copiar briefing
+       </button>
+      </div>
+      <p class="status" id="status" role="status">
+      </p>
+     </div>
+     <div class="panel notice">
+      <h2>
+       Critérios editoriais
+      </h2>
+      <p>
+       As sugestões deverão respeitar o perfil dos viajantes, o ritmo de cada atividade, os deslocamentos, as refeições, os períodos de descanso e a programação noturna.
+      </p>
+      <p>
+       Restaurantes deverão ser avaliados conforme localização, funcionamento, tipo de refeição, critérios do Guia Michelin quando pertinentes, reservas e dress code. Informações não verificadas deverão ser identificadas.
+      </p>
+      <p>
+       Nenhuma reserva é efetuada nesta ferramenta. Disponibilidade e valores podem mudar até a contratação.
+      </p>
+      <p class="hint">
+       A geração automática, a edição visual, o PDF final e o vínculo ao pedido serão desenvolvidos nas próximas etapas.
+      </p>
+     </div>
+    </aside>
+   </div>
+  </main>
+  <script>
+   (function(){
 'use strict';
 const form=document.getElementById('tripForm');
 const preview=document.getElementById('preview');
@@ -146,6 +732,7 @@ lines.splice(5,0,'Horário de chegada ao destino: '+timeBriefing('arrival'),'Hor
 lines.push('Período longo conferido pela empresa: '+(!dateWarning.hidden&&confirmLongDates.checked?'Sim':'Não se aplica'));
 lines.push('Datas escolhidas para programação: '+(selected.length?selected.map(formatDate).join('; '):'Não definidas; propor os dias adequados conforme a viagem e os compromissos'));
 preview.textContent='BRIEFING — ROTEIROS PARTNER\n\n'+lines.join('\n')+'\n\nINSTRUÇÕES PARA A IA\n'+[
+  // 01 · Objetivo, perfil e estrutura da programação
 "OBJETIVO: produzir uma programação de viagem personalizada, completa, prática e adequada ao perfil, orçamento e interesses informados. O conteúdo é uma proposta para revisão da empresa Partner, nunca uma reserva ou contratação realizada.",
 "RESTRIÇÕES OBRIGATÓRIAS: respeitar destino, número de viajantes, datas escolhidas, quantidade de dias, dias indisponíveis, visitas indispensáveis, exclusões, ritmo, necessidades específicas, alimentação, transporte e preferências do briefing. Não incluir locais expressamente excluídos.",
 "DATAS E VOOS: diferenciar horário exato de período estimado; não inventar horários de voos. Na chegada, reservar tempo plausível para desembarque, imigração quando aplicável, bagagem, deslocamento e check-in. No retorno, considerar check-out, aeroporto e antecedência adequada, ajustável ao aeroporto e ao tipo de voo.",
@@ -154,20 +741,26 @@ preview.textContent='BRIEFING — ROTEIROS PARTNER\n\n'+lines.join('\n')+'\n\nIN
 "TEMPO LIVRE INTENCIONAL: não preencher cada hora disponível. Distribuir pausas e momentos livres para descobertas espontâneas, compras, descanso e experiências sem pressa; adaptar a intensidade ao perfil, mesmo quando o viajante desejar aproveitar os dias de chegada e retorno.",
 "CADA DIA: indicar sequência com horários aproximados de início e fim, manhã, almoço, tarde, descanso ou tempo livre quando pertinente, noite e jantar conforme as preferências. Quando uma excursão ou experiência ocupar grande parte do dia, não forçar atividades adicionais.",
 "CADA LOCAL INDICADO, SEM EXCEÇÃO: apresentar nome, descrição objetiva do que é e por que foi escolhido, endereço completo ou ponto de encontro quando aplicável, duração estimada, horário sugerido, custo ou gratuidade, e link oficial ou de contratação apenas quando efetivamente verificado. Se algum dado não puder ser confirmado, identificá-lo explicitamente.",
+  // 02 · Deslocamentos e logística
 "DESLOCAMENTOS: indicar a ligação entre as paradas, meio de transporte coerente com as preferências, duração estimada e distância aproximada quando possível; diferenciar estimativa de informação verificada. Considerar margens para filas, trânsito, embarque e descanso; não inventar métricas exatas.",
+  // 03 · Gastronomia e funcionamento
 "RESTAURANTES, CAFETERIAS E BARES: em cada indicação apresentar descrição, endereço, ocasião da visita, tempo previsto, média NUMÉRICA de consumo por pessoa e valor para TODO O GRUPO, na moeda local, explicitando a base estimada (por exemplo prato principal + bebida; café + doce; um coquetel). Não usar somente expressões como econômico, intermediário, caro ou valor sob consulta.",
 "PREÇOS GASTRONÔMICOS: pesquisar primeiro o cardápio atual e os menus oficiais do restaurante, com valores em moeda local e base de consumo. Informar o preço publicado, a fonte e se é menu de almoço, jantar ou à la carte. Somente se não houver preço público acessível, usar faixa plausível identificada como PREVISÃO DE GASTOS PARA PLANEJAMENTO (NÃO É PREÇO DO CARDÁPIO), sem repetir rótulos vagos a cada item. Não inventar preços nem apresentar previsão como cotação oficial. Se não houver base confiável, indicar preço a consultar diretamente com o estabelecimento.",
+  // 04 · Atrações e experiências
 "ATRAÇÕES E EXPERIÊNCIAS: pesquisar modalidade específica, preços oficiais atuais por pessoa e grupo, data, horário, duração, inclusões/exclusões e link DIRETO de compra online oficial ou operador identificado; explicar quando a venda é apenas presencial ou por telefone e se a reserva antecipada é exigida. Para mirantes com níveis de visita, priorizar a experiência completa ou topo quando for o interesse do viajante; na Torre Eiffel, pesquisar PRIMEIRO ingresso de elevador até o TOPO, não substituí-lo automaticamente por segundo andar. Se não houver vaga ao topo, mostrar indisponibilidade da modalidade e alternativas distintas sem fingir equivalência. Não fixar horário não consultado. Distinguir preço publicado de preço pendente; informar gratuidade quando aplicável.",
 "GASTRONOMIA: selecionar estabelecimentos compatíveis com orçamento, localização, ocasião e perfil. Considerar opções do Guia Michelin (estrelados, Bib Gourmand ou selecionados) quando pertinentes, sem tratar todos como estrelados e sem sacrificar a viabilidade do orçamento.",
 "DRESS CODE: para cada restaurante e experiência que o exija, indicar a regra oficial somente quando confirmada por fonte confiável; caso contrário informar que o dress code oficial não foi confirmado e, se útil, sugerir vestimenta apropriada sem atribuí-la ao estabelecimento.",
 "FUNCIONAMENTO E RESERVAS: pesquisar em fonte oficial se cada local funciona na data e no horário proposto; verificar eventuais fechamentos, dias especiais e horário de cozinha. Classificar a política de atendimento do restaurante como RESERVA OBRIGATÓRIA, RESERVA RECOMENDADA COM WALK-IN ACEITO, WALK-IN ONLY, SISTEMA MISTO ou POLÍTICA NÃO IDENTIFICADA, somente quando houver evidência. Não deduzir política a partir da existência ou ausência de botão de reserva. Para reserva online, fornecer LINK DIRETO do canal oficial ou autorizado; para reserva por telefone, fornecer número oficial com código do país; para walk-in, orientar chegada e possível espera, sem afirmar que haverá mesa. Quando a reserva for possível, consultar disponibilidade para a data, 20h30 quando solicitado e quantidade de viajantes; diferenciar canal existente de vaga disponível. Jamais afirmar reserva ou compra realizada.",
 "JANTAR E NOITE: respeitar o horário preferencial do jantar, adequar deslocamentos e duração de bares ou experiências anteriores e justificar exceções. Não sugerir sequências impossíveis ou sobrepostas.",
+  // 05 · Civitatis
 "CIVITATIS: se a preferência no briefing for Não incluir Civitatis, não sugerir seus produtos. Nas demais opções, pesquisar e avaliar obrigatoriamente experiências da Civitatis compatíveis com destino, datas, interesses, orçamento e logística; quando a preferência for Priorizar uma experiência adequada, dar prioridade editorial a pelo menos uma opção realmente pertinente.",
 "CIVITATIS — DADOS: para cada opção efetivamente encontrada e recomendada, informar nome do passeio, descrição, duração, ponto de encontro, idioma, inclusões e exclusões, preço por pessoa e pelo grupo, data pretendida, situação da disponibilidade e link de contratação verificado. Usar o link de afiliado da CET com aid=114979 apenas se o formato e o destino do link forem válidos e verificados; nunca inventar URL ou afirmar comissão.",
 "CIVITATIS — AUSÊNCIA OU LIMITAÇÃO: se não houver acesso a pesquisa atual, não fingir que consultou o catálogo; sinalizar pesquisa pendente e quais experiências devem ser verificadas. Se nenhuma opção for adequada, explicar o motivo. Não trocar uma experiência solicitada (por exemplo almoço-cruzeiro) por outra de natureza diferente sem informar claramente a diferença.",
 "EXPERIÊNCIAS ESPECIAIS: respeitar pedidos distintos como almoço-cruzeiro e jantar-cruzeiro, atrações indispensáveis e bate-voltas. Não substituir silenciosamente um item por outro; avaliar deslocamentos, esforço, tempo de visita e custo realista.",
+  // 06 · Orçamento
 "ORÇAMENTO DIÁRIO: ao final de cada dia, somar numericamente os custos das atividades e refeições efetivamente propostas para o grupo, sem duplicar itens incluídos em pacotes; discriminar custos opcionais e alternativas, e informar quando valores forem estimativas.",
 "ORÇAMENTO GERAL: apresentar total estimado para todo o grupo e, quando útil, por pessoa, com separação entre alimentação, ingressos/passeios e transportes. Explicitar exclusões como passagens aéreas, hospedagem, compras, refeições não programadas, taxas e traslados sem estimativa. Não somar opções mutuamente exclusivas como se ambas fossem contratadas.",
+  // 07 · Verificação e qualidade
 "FONTES E CONFIABILIDADE: identificar informações verificadas, estimativas e pendências; fornecer links somente quando conhecidos e validados. Não inventar endereço, funcionamento, preço oficial, promoção, disponibilidade, classificação Michelin, tempo de viagem ou condições de contratação.",
 "COERÊNCIA: revisar a programação quanto a datas e dias da semana, deslocamentos entre locais, horários de funcionamento, duração, descanso, restrições, custo compatível com orçamento e ausência de sobreposição. Se houver conflito, reorganizar antes de apresentar.",
 "CONFERÊNCIA DE COMPLETUDE: antes de finalizar, revisar TODOS os locais e garantir descrição, endereço/ponto de encontro, duração, horário, deslocamento, preço numérico por pessoa e grupo quando houver consumo ou ingresso, e status de verificação. Revisar também Civitatis conforme a preferência, dress code, reservas, subtotais e total geral. Não considerar a entrega completa se houver omissões silenciosas.",
@@ -184,6 +777,13 @@ preview.textContent='BRIEFING — ROTEIROS PARTNER\n\n'+lines.join('\n')+'\n\nIN
 "BILHETERIA — FICHA OPERACIONAL: para TODA atração com ingresso, informar modalidade recomendada, canal de compra direto, se exige horário marcado, preço por pessoa e grupo, disponibilidade consultada na data e modalidade ou motivo exato da impossibilidade de consultar. Quando o ingresso desejado não estiver disponível, não recomendar modalidade inferior sem explicar claramente a diferença e pedir escolha do Partner. Ingressos de topo e de níveis inferiores são produtos distintos.",
 "QUALIDADE ANTES DA ENTREGA: não substituir pesquisa por repetições de 'estimativa não verificada' ou 'reserva pendente'. Identificar a pergunta operacional que o viajante precisa resolver: precisa reservar, como, onde, por qual valor, para qual modalidade e data? Exibir a resposta verificada ou a limitação específica. Entregar os dias completos mesmo com pendências identificadas; não encerrar a tarefa com mero resumo ou declarar aprovação do teste. A aprovação compete exclusivamente à empresa Partner.",
 "SAÍDA E APROVAÇÃO: separar PROGRAMAÇÃO COM VIABILIDADE CONSULTADA de OPÇÕES PENDENTES/ALTERNATIVAS. Não publicar uma programação aparentemente fechada com sobreposição ou indisponibilidade conhecida. Se houver itens indispensáveis sem vagas verificadas, informar explicitamente que a proposta permanece PRELIMINAR PARA REVISÃO PARTNER. Disponibilidade deve ser reconfirmada no momento da compra, mesmo após consulta anterior.",
+  // 08 · Seleção de bate-voltas por interesse
+"BATE-VOLTAS — ESCOLHA ORIENTADA PELO PERFIL: NÃO selecionar uma cidade por fama, proximidade, hábito ou por já ter sido usada em outro roteiro. Primeiro identificar interesses, preferências e exclusões do cliente; depois pesquisar cidades e EXPERIÊNCIAS CONCRETAS relacionadas a esses interesses. Exemplo de lógica, não de indicação automática: para interesse em cerveja, investigar experiências cervejeiras; para vinho ou champanhe, investigar vinícolas, caves e degustações. Não recomendar Reims ou qualquer outra cidade se sua principal experiência não corresponder ao perfil.",
+"BATE-VOLTAS — JUSTIFICATIVA E COMPARAÇÃO: antes de incluir uma cidade, comparar opções candidatas por pertinência da experiência principal, qualidade e especificidade do passeio, duração, distância, custo total, idioma, disponibilidade na data e logística. Explicar em linguagem objetiva POR QUE aquela cidade foi escolhida para aquele cliente, o que há de especial para fazer lá e por que vale o tempo fora do destino-base. A cidade não é o produto; a experiência relevante justifica a visita.",
+"BATE-VOLTAS — EXPERIÊNCIA EXECUTÁVEL: indicar produto ou estabelecimento real para a atividade que justifica o bate-volta, com nome, endereço ou encontro, duração, funcionamento, preço por pessoa e grupo, idioma, inclusões, modalidade de reserva e link direto verificado. Consultar a data e vagas quando a experiência exigir reserva. Se a experiência principal estiver indisponível ou não puder ser operacionalmente sustentada, buscar outra experiência adequada ou outra cidade; NÃO preencher o dia com atrações genéricas para justificar a cidade já escolhida.",
+"BATE-VOLTAS — CIVITATIS E TRANSPORTE: quando Civitatis for permitida, pesquisar também passeios individuais de bate-volta que partam do destino-base e experiências que comecem na cidade visitada. Comparar com visita independente de carro conforme o briefing. Se um produto Civitatis incluir ônibus, trem ou outro transporte diferente do preferido, apresentar como ALTERNATIVA explícita, com benefícios, limitações e transporte incluído; nunca trocar a preferência silenciosamente. Uma excursão Civitatis de Champagne não deve ser apresentada como passeio independente de carro, nem vice-versa.",
+"BATE-VOLTAS — FILTRO FINAL: não inserir cidade sem justificativa ligada ao interesse do cliente e sem pelo menos uma experiência principal específica pesquisada. Evitar destinos que dependam de uma atividade fechada, sem vagas ou incompatível com a data. Quando nenhuma cidade tiver experiência viável, não inventar bate-volta: redistribuir o dia para atividades relevantes no destino-base e explicar a escolha ao Partner. Não usar uma cidade como solução padrão para qualquer perfil.",
+  // 09 · Entrega e revisão Partner
 "ENTREGA: linguagem clara, profissional e útil ao viajante, sem prometer reservas, disponibilidade ou preços garantidos. O material deve ser editável e revisado pela empresa Partner antes do envio ao cliente."
 ].map((line,i)=>(i+1)+'. '+line).join('\n');
 copy.disabled=false;status.textContent='Briefing preparado. A geração automática por IA ainda depende de integração.';
@@ -192,6 +792,6 @@ copy.addEventListener('click',async function(){try{await navigator.clipboard.wri
 form.addEventListener('reset',function(){setTimeout(function(){confirmLongDates.checked=false;updateTimeMode('arrival');updateTimeMode('departure');updateDates();preview.textContent='Preencha os campos e selecione “Preparar briefing”.';copy.disabled=true;status.textContent='';},0);});
 updateTimeMode('arrival');updateTimeMode('departure');updateDates();
 })();
-</script>
-</body>
+  </script>
+ </body>
 </html>
