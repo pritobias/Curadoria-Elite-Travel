@@ -110,12 +110,13 @@
     .hero {
       position: relative;
       isolation: isolate;
-      min-height: 690px;
-      min-height: min(82svh, 820px);
+      min-height: 720px;
       display: flex;
+      flex-direction: column;
       align-items: center;
       justify-content: center;
-      padding: 140px 24px 150px;
+      gap: 36px;
+      padding: 105px 24px 80px;
       text-align: center;
       overflow: hidden;
       background: #111;
@@ -162,7 +163,9 @@
     .hero-inner {
       max-width: 980px;
       margin: 0 auto;
-      padding-top: 20px;
+      padding-top: 0;
+      position: relative;
+      z-index: 1;
     }
 
     .hero-kicker {
@@ -192,12 +195,13 @@
       position: relative;
       z-index: 2;
       max-width: var(--max);
-      margin: 44px auto 0;
-      padding: 0 20px 60px;
+      width: 100%;
+      margin: 0 auto;
+      padding: 0 20px 20px;
     }
 
     .tool-panel {
-      background: rgba(8,8,8,0.92);
+      background: rgba(8, 8, 8, 0.82);
       border: 1px solid var(--line);
       border-radius: 28px;
       box-shadow: var(--shadow);
@@ -962,12 +966,12 @@
       fill:currentColor;
     }
 
-    /* Em telas menores, o hero continua alto e separado do formulário. */
+    /* Em telas menores, a pesquisa permanece sobre o fundo cinematográfico. */
     @media (max-width: 700px) {
       .hero {
-        min-height: 560px;
-        min-height: 75svh;
-        padding: 110px 20px 105px;
+        min-height: 100svh;
+        padding: 105px 12px 55px;
+        gap: 26px;
       }
 
       .hero-inner {
@@ -975,8 +979,8 @@
       }
 
       .tool-wrap {
-        margin-top: 28px;
-        padding-inline: 14px;
+        margin-top: 0;
+        padding-inline: 6px;
       }
     }
 
@@ -1126,8 +1130,7 @@
           Descubra eventos na cidade e no período da sua viagem, com informações e links oficiais.
         </p>
       </div>
-    </section>
-    <main class="tool-wrap">
+      <main class="tool-wrap">
       <section class="tool-panel">
         <div class="breadcrumbs">
           Ferramentas &gt; Agenda Cultural
@@ -1210,7 +1213,8 @@
           </p>
         </div>
       </section>
-    </main>
+      </main>
+    </section>
     <footer id="siteFooter">
       Curadoria Elite Travel · O seu mundo, bem indicado.
       <br>
