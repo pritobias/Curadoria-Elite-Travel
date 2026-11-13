@@ -1060,8 +1060,39 @@
       display: inline-block;
       margin-top: 10px;
       color: #e8c66c}
-    .event-info details {
-      margin-top: 10px}
+    /* Sinopse visível e botão de detalhes em destaque. */
+    .event-info .event-synopsis {
+      margin: 12px 0 16px;
+      max-width: 74ch;
+      font-size: 15px;
+      line-height: 1.65;
+      color: #e3ded4;
+      text-align: left;
+    }
+    .event-info details { margin-top: 16px; }
+    .event-info details > summary {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+      width: fit-content;
+      min-width: 260px;
+      padding: 13px 18px;
+      border: 1px solid #d4af37;
+      border-radius: 10px;
+      color: #f3d47c;
+      background: rgba(212,175,55,.10);
+      font-size: 16px;
+      font-weight: 700;
+      cursor: pointer;
+      list-style: none;
+    }
+    .event-info details > summary::-webkit-details-marker { display: none; }
+    .event-info details > summary::before { content: 'ⓘ'; font-size: 20px; }
+    .event-info details > summary::after { content: '⌄'; font-size: 23px; }
+    .event-info details[open] > summary::after { content: '⌃'; }
+    .event-info details > summary:hover { background: rgba(212,175,55,.20); }
+    .event-info .event-extra { padding: 12px 2px; font-size: 14px; color: #d5cfc4; }
     .agenda-hidden {
       display: none!important}
     @media(max-width: 700px) {
@@ -1351,7 +1382,8 @@
         price: 'Preço fictício — não disponível para compra',
         image_url: '',
         ticket_url: '',
-        description: 'Este é um evento fictício criado exclusivamente para testar os filtros, a ordenação e a apresentação dos cards. Não corresponde a um evento anunciado nem possui ingressos à venda.',
+        description: 'Esta apresentação é uma simulação de agenda cultural, sem programação real ou venda de ingressos. A sinopse de um evento verdadeiro será extraída de sua descrição oficial e exibida neste espaço, em aproximadamente 200 caracteres.',
+        extra_details: 'Evento fictício criado apenas para verificar a apresentação, os filtros e a ordenação. Não existe programação, endereço, preço ou bilheteria oficial para este exemplo.',
         source: 'Dados de demonstração'
       })));
       return { cities, events };
@@ -1397,6 +1429,8 @@
       }
       const info = make('div', 'event-info');
       info.append(make('h3', '', e.title));
+      const synopsis = String(e.description || '').trim();
+      info.append(make('p', 'event-synopsis', synopsis.length > 210 ? synopsis.slice(0, 207).trimEnd() + '…' : synopsis));
       line(info, 'Data e horário', new Intl.DateTimeFormat('pt-BR', {
         dateStyle: 'full', timeStyle: 'short'
       }).format(new Date(e.starts_at)));
@@ -1405,8 +1439,10 @@
       line(info, 'Ingressos', e.price);
       const details = make('details');
       details.append(make('summary', '', 'Informações do evento'));
-      details.append(make('p', '', e.description));
-      line(details, 'Fonte', e.source || 'Organizador oficial');
+      const extra = make('div', 'event-extra');
+      extra.append(make('p', '', e.extra_details || 'Consulte as informações complementares na página oficial do evento.'));
+      line(extra, 'Fonte', e.source || 'Organizador oficial');
+      details.append(extra);
       info.append(details);
       if (!demoMode) {
         const link = make('a', '', 'Consultar ingressos');
