@@ -1,205 +1,1670 @@
-#!/usr/bin/env python3
-# Agenda Cultural CET — teste independente de scraping (sem APIs)
-# Dependências: pip install requests beautifulsoup4
-# Exemplo: python agenda-cultural-scraping-teste.py --cidade "São Paulo" --data 2026-11-20 --categoria Teatro
-# NÃO publica resultados, NÃO modifica o site e NÃO garante cobertura de todas as bilheterias.
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>
+      Agenda Cultural | Curadoria Elite Travel
+    </title>
+    <meta name="description" content="Consulte eventos culturais por cidade, data e categoria, com acesso às páginas oficiais de ingressos.">
+    <style>
+    :root {
+      --bg: #050505;
+      --panel: #0b0b0b;
+      --panel-2: #101010;
+      --line: rgba(201, 157, 44, 0.26);
+      --gold: #d4af37;
+      --gold-soft: #b78f2d;
+      --text: #f5f1e8;
+      --muted: #cfc6b6;
+      --shadow: 0 12px 34px rgba(0,0,0,0.28);
+      --radius: 22px;
+      --max: 1180px;
+    }
 
-import argparse
-import json
-import re
-import sys
-import time
-from datetime import datetime
-from urllib.parse import quote, urlparse
-from xml.etree import ElementTree
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      font-family: Arial, Helvetica, sans-serif;
+      background: #050505;
+      color: var(--text);
+      line-height: 1.6;
+    }
 
-import requests
-from bs4 import BeautifulSoup
+    a { color: inherit; text-decoration: none; }
 
-HEADERS = {"User-Agent": "Mozilla/5.0 (compatible; CETAgendaResearchTest/0.1)"}
-TIMEOUT = 12
-MAX_LINKS = 15
+    .site-header {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      background: rgba(8,8,8,0.88);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid rgba(212,175,55,0.16);
+    }
 
+    .site-header-inner {
+      width: 100%;
+      margin: 0;
+      padding: 12px 30px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+    }
 
-def request_text(url):
-    """Acessa somente HTTP(S) público; respeita erros e bloqueios do site."""
-    if urlparse(url).scheme not in ("http", "https"):
-        return None
-    try:
-        response = requests.get(url, headers=HEADERS, timeout=TIMEOUT,
-                                allow_redirects=True)
-        response.raise_for_status()
-        if len(response.content) > 3_000_000:
-            return None
-        return response.text
-    except requests.RequestException:
-        return None
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      min-width: 260px;
+    }
 
+    .brand img {
+      width: 34px;
+      height: 34px;
+      object-fit: contain;
+      opacity: 0.92;
+    }
 
-def search_public_pages(city, date, category):
-    """Busca links em RSS público do Bing; não usa API nem lista de eventos."""
-    terms = f'"{city}" "{date}" {category} evento ingressos programação'
-    url = 'https://www.bing.com/search?format=rss&q=' + quote(terms)
-    xml = request_text(url)
-    if not xml:
-        return []
-    try:
-        root = ElementTree.fromstring(xml)
-    except ElementTree.ParseError:
-        return []
-    links = []
-    for item in root.findall('.//item'):
-        link = item.findtext('link', '').strip()
-        if link.startswith('https://') and link not in links:
-            links.append(link)
-    return links[:MAX_LINKS]
+    .brand-text {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
 
+    .brand-title {
+      color: var(--gold);
+      font-family: Georgia, 'Times New Roman', serif;
+      font-weight: 700;
+      letter-spacing: 0.03em;
+      font-size: 22px;
+      line-height: 1.05;
+    }
 
-def flatten_jsonld(value):
-    if isinstance(value, list):
-        for child in value:
-            yield from flatten_jsonld(child)
-    elif isinstance(value, dict):
-        if '@graph' in value:
-            yield from flatten_jsonld(value['@graph'])
-        yield value
+    .brand-sub {
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.2;
+    }
 
+    .nav {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+      align-items: center;
+      gap: 16px;
+      color: var(--gold);
+      font-weight: 700;
+      font-size: 15px;
+    }
 
-def is_event(node):
-    kind = node.get('@type', [])
-    if isinstance(kind, str):
-        kind = [kind]
-    return any(str(x).lower().endswith('event') for x in kind)
+    .nav-sep {
+      width: 1px;
+      height: 16px;
+      background: rgba(255,255,255,0.14);
+      display: inline-block;
+    }
 
+    /* HERO CINEMATOGRÁFICO — altere as imagens no array HERO_IMAGES (JS). */
+    .hero {
+      position: relative;
+      isolation: isolate;
+      min-height: 720px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 36px;
+      padding: 105px 24px 80px;
+      text-align: center;
+      overflow: hidden;
+      background: #111;
+    }
 
-def text_value(value):
-    if isinstance(value, dict):
-        return str(value.get('name') or value.get('value') or '').strip()
-    return str(value or '').strip()
+    .hero-slides,
+    .hero-shade {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+    }
 
+    .hero-slides { z-index: -2; }
 
-def extract_address(location):
-    if isinstance(location, list):
-        location = location[0] if location else {}
-    if not isinstance(location, dict):
-        return '', ''
-    venue = text_value(location.get('name'))
-    address = location.get('address') or {}
-    if isinstance(address, str):
-        return venue, address
-    if not isinstance(address, dict):
-        return venue, ''
-    parts = [address.get(k) for k in ('streetAddress', 'addressLocality',
-                                     'addressRegion', 'postalCode', 'addressCountry')]
-    return venue, ', '.join(str(p) for p in parts if p)
+    .hero-slide {
+      position: absolute;
+      inset: 0;
+      background-position: center;
+      background-size: cover;
+      opacity: 0;
+      transform: scale(1.035);
+      transition: opacity 1.7s ease-in-out, transform 7s linear;
+    }
 
+    .hero-slide.is-active {
+      opacity: 1;
+      transform: scale(1);
+    }
 
-def extract_offer(offers):
-    if isinstance(offers, list):
-        offers = offers[0] if offers else {}
-    if not isinstance(offers, dict):
-        return None, None, None
-    price = offers.get('price')
-    currency = offers.get('priceCurrency')
-    availability = offers.get('availability')
-    if price is None or not currency:
-        price_label = None
-    else:
-        price_label = f'{price} {currency}'
-    return price_label, availability, offers.get('url')
+    .hero-shade {
+      z-index: -1;
+      background: linear-gradient(
+        180deg,
+        rgba(0, 0, 0, 0.46) 0%,
+        rgba(0, 0, 0, 0.30) 45%,
+        rgba(0, 0, 0, 0.75) 100%
+      );
+    }
 
+    @media (prefers-reduced-motion: reduce) {
+      .hero-slide { transition: none; transform: none; }
+    }
 
-def parse_events(html, page_url):
-    soup = BeautifulSoup(html, 'html.parser')
-    found = []
-    for script in soup.select('script[type="application/ld+json"]'):
-        try:
-            payload = json.loads(script.string or script.get_text())
-        except (json.JSONDecodeError, TypeError):
-            continue
-        for node in flatten_jsonld(payload):
-            if not is_event(node):
-                continue
-            title = text_value(node.get('name'))
-            start = text_value(node.get('startDate'))
-            if not title or not start:
-                continue
-            venue, address = extract_address(node.get('location'))
-            price, availability, offer_url = extract_offer(node.get('offers'))
-            image = node.get('image')
-            if isinstance(image, list):
-                image = image[0] if image else None
-            if isinstance(image, dict):
-                image = image.get('url')
-            ticket_url = offer_url if isinstance(offer_url, str) and offer_url.startswith('https://') else None
-            found.append({
-                'titulo': title,
-                'inicio': start,
-                'local': venue or None,
-                'endereco': address or None,
-                'sinopse': BeautifulSoup(text_value(node.get('description')), 'html.parser').get_text(' ', strip=True) or None,
-                'imagem': image if isinstance(image, str) and image.startswith('https://') else None,
-                'preco_confirmado_na_pagina': price,
-                'disponibilidade_informada_na_pagina': availability,
-                'link_de_ingressos_informado_na_pagina': ticket_url,
-                'fonte': page_url,
-                'aviso': 'Dados extraídos da página pública; preço e disponibilidade exigem conferência na bilheteria.'
-            })
-    return found
+    .hero-inner {
+      max-width: 980px;
+      margin: 0 auto;
+      padding-top: 0;
+      position: relative;
+      z-index: 1;
+    }
 
+    .hero-kicker {
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+      font-size: 14px;
+      margin-bottom: 14px;
+    }
 
-def matches_date(event, date):
-    return event['inicio'][:10] == date
+    .hero h1 {
+      margin: 0 0 20px;
+      font-size: clamp(36px, 6vw, 74px);
+      line-height: 1.04;
+      color: var(--gold);
+      font-weight: 700;
+    }
 
+    .hero p {
+      margin: 0 auto 26px;
+      max-width: 860px;
+      color: var(--text);
+      font-size: 22px;
+    }
 
-def matches_city(event, city):
-    import unicodedata
-    def normalize(s):
-        return ''.join(c for c in unicodedata.normalize('NFKD', s.lower()) if not unicodedata.combining(c))
-    place = f"{event.get('local') or ''} {event.get('endereco') or ''}"
-    return normalize(city) in normalize(place)
+    .tool-wrap {
+      position: relative;
+      z-index: 2;
+      max-width: var(--max);
+      width: 100%;
+      margin: 0 auto;
+      padding: 0 20px 20px;
+    }
 
+    .tool-panel {
+      background: rgba(8, 8, 8, 0.82);
+      border: 1px solid var(--line);
+      border-radius: 28px;
+      box-shadow: var(--shadow);
+      padding: 28px;
+    }
 
-def main():
-    parser = argparse.ArgumentParser(description='Teste de scraping da Agenda Cultural CET, sem API.')
-    parser.add_argument('--cidade', required=True)
-    parser.add_argument('--data', required=True, help='AAAA-MM-DD')
-    parser.add_argument('--categoria', default='eventos')
-    args = parser.parse_args()
-    try:
-        datetime.strptime(args.data, '%Y-%m-%d')
-    except ValueError:
-        parser.error('Data inválida. Use AAAA-MM-DD.')
+    .breadcrumbs {
+      color: var(--muted);
+      font-size: 14px;
+      margin-bottom: 8px;
+    }
 
-    links = search_public_pages(args.cidade, args.data, args.categoria)
-    events = []
-    seen = set()
-    for link in links:
-        html = request_text(link)
-        if not html:
-            continue
-        for event in parse_events(html, link):
-            if not matches_date(event, args.data) or not matches_city(event, args.cidade):
-                continue
-            key = (event['titulo'].casefold(), event['inicio'], event.get('local'))
-            if key not in seen:
-                seen.add(key)
-                events.append(event)
-        if len(events) >= 5:
-            break
-        time.sleep(0.5)
+    .panel-title {
+      font-size: 36px;
+      margin: 0 0 8px;
+      color: var(--gold);
+    }
 
-    print(json.dumps({
-        'cidade': args.cidade,
-        'data': args.data,
-        'categoria_pesquisada': args.categoria,
-        'paginas_encontradas_na_busca': len(links),
-        'eventos_extraidos': events[:5],
-        'observacao': ('Nenhum resultado não significa ausência de eventos. '
-                       'Sites podem bloquear coleta ou não publicar dados estruturados. '
-                       'A categoria orienta a busca, mas não é validada automaticamente.')
-    }, ensure_ascii=False, indent=2))
+    .panel-sub {
+      color: var(--muted);
+      margin: 0 0 22px;
+      font-size: 18px;
+      max-width: 900px;
+    }
 
+    .search-row {
+      display: grid;
+      grid-template-columns: 1fr auto auto;
+      gap: 12px;
+      align-items: center;
+      margin-bottom: 16px;
+    }
 
-if __name__ == '__main__':
-    main()
+    .search-input {
+      width: 100%;
+      border: 1px solid var(--line);
+      background: #090909;
+      color: var(--text);
+      border-radius: 18px;
+      padding: 18px 18px;
+      font-size: 18px;
+      outline: none;
+    }
+
+    .search-input::placeholder { color: #9f9481; }
+    .search-input:focus { border-color: rgba(212,175,55,0.5); }
+
+    .btn {
+      border: 1px solid rgba(212,175,55,0.44);
+      background: linear-gradient(180deg, #c99d2c, #997127);
+      color: #101010;
+      border-radius: 16px;
+      padding: 16px 24px;
+      font-size: 16px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .btn.secondary {
+      background: transparent;
+      color: var(--gold);
+    }
+
+    .helper-text {
+      color: var(--muted);
+      font-size: 15px;
+      margin-bottom: 18px;
+    }
+
+    .letter-filter {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin: 2px 0 16px;
+      padding: 12px;
+      border: 1px solid rgba(212,175,55,0.18);
+      border-radius: 18px;
+      background: rgba(255,255,255,0.018);
+    }
+
+    .letter-chip {
+      border: 1px solid rgba(212,175,55,0.36);
+      background: rgba(255,255,255,0.025);
+      color: var(--text);
+      width: 34px;
+      height: 34px;
+      border-radius: 999px;
+      cursor: pointer;
+      font-size: 13px;
+      font-weight: 800;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      transition: background .2s ease, border-color .2s ease, color .2s ease, transform .2s ease;
+    }
+
+    .letter-chip:hover,
+    .letter-chip.active {
+      background: rgba(212,175,55,0.16);
+      border-color: rgba(212,175,55,0.80);
+      color: var(--gold);
+      transform: translateY(-1px);
+    }
+
+    .letter-chip.all {
+      width: auto;
+      min-width: 58px;
+      padding: 0 14px;
+    }
+
+    .chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 18px;
+    }
+
+    .chip {
+      border: 1px solid var(--line);
+      background: rgba(255,255,255,0.02);
+      color: var(--text);
+      padding: 10px 14px;
+      border-radius: 999px;
+      cursor: pointer;
+      font-size: 14px;
+    }
+
+    .chips-actions {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+      flex-wrap: wrap;
+      margin: -4px 0 18px;
+    }
+
+    .chips-counter {
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.5;
+    }
+
+    .show-more-chip {
+      border: 1px solid rgba(212,175,55,0.44);
+      background: transparent;
+      color: var(--gold);
+      border-radius: 999px;
+      padding: 10px 16px;
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .show-more-chip:disabled {
+      opacity: 0.55;
+      cursor: default;
+      box-shadow: none;
+    }
+
+    .show-more-chip:disabled:hover {
+      border-color: rgba(212,175,55,0.44);
+    }
+
+    .show-more-chip:hover,
+    .chip:hover {
+      border-color: rgba(212,175,55,0.72);
+    }
+
+    .status {
+      min-height: 22px;
+      color: var(--muted);
+      font-size: 15px;
+      margin-bottom: 10px;
+    }
+
+    .empty {
+      border: 1px dashed var(--line);
+      background: rgba(255,255,255,0.02);
+      border-radius: 20px;
+      padding: 26px;
+      text-align: center;
+      color: var(--muted);
+    }
+
+    .result { display: none; margin-top: 16px; }
+    .result.active { display: block; }
+
+    .summary {
+      background: rgba(255,255,255,0.02);
+      border: 1px solid var(--line);
+      border-radius: 24px;
+      padding: 22px;
+      margin-bottom: 18px;
+    }
+
+    .summary h2 {
+      margin: 0 0 8px;
+      font-size: 28px;
+      color: var(--text);
+    }
+
+    .summary p { margin: 0; color: var(--muted); }
+
+    .summary-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      margin-top: 18px;
+    }
+
+    .summary-box {
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      padding: 16px;
+      background: rgba(255,255,255,0.02);
+    }
+
+    .summary-box span {
+      display: block;
+      color: var(--gold);
+      font-size: 13px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 6px;
+    }
+
+    .block {
+      background: rgba(255,255,255,0.02);
+      border: 1px solid var(--line);
+      border-radius: 24px;
+      padding: 22px;
+      margin-bottom: 16px;
+    }
+
+    .block h3 {
+      margin: 0 0 14px;
+      font-size: 30px;
+      color: var(--text);
+    }
+
+    .block h4 {
+      margin: 18px 0 8px;
+      color: var(--gold);
+      font-size: 18px;
+    }
+
+    .block p { margin: 8px 0; }
+    .block ul { margin: 8px 0 0 18px; padding: 0; }
+    .block li { margin-bottom: 8px; }
+
+    .location-card {
+      background: rgba(255,255,255,0.02);
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      padding: 16px;
+      margin-bottom: 12px;
+    }
+
+    .location-card strong {
+      display: block;
+      font-size: 17px;
+      margin-bottom: 8px;
+      color: var(--text);
+    }
+
+    .note {
+      margin-top: 12px;
+      border-left: 3px solid var(--gold);
+      padding: 12px 14px;
+      background: rgba(212,175,55,0.06);
+      border-radius: 10px;
+      color: var(--muted);
+    }
+
+    .official-source-link {
+      color: inherit;
+      text-decoration: underline;
+      text-underline-offset: 3px;
+      font-weight: 700;
+    }
+
+    .official-source-link:hover {
+      color: var(--gold);
+    }
+
+    .info-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
+      margin-top: 14px;
+      margin-bottom: 2px;
+    }
+
+    .update-badge,
+    .sources-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      border-radius: 999px;
+      padding: 8px 12px;
+      font-size: 13px;
+      font-weight: 700;
+      line-height: 1.3;
+    }
+
+    .update-badge {
+      color: #8ff0a4;
+      border: 1px solid rgba(143, 240, 164, 0.42);
+      background: rgba(30, 180, 80, 0.08);
+    }
+
+    .sources-badge {
+      color: #ff7b7b;
+      border: 1px solid rgba(255, 123, 123, 0.42);
+      background: rgba(255, 70, 70, 0.08);
+    }
+
+    .sources-badge span,
+    .update-badge span {
+      color: var(--text);
+      font-weight: 600;
+    }
+
+    .interactive-info-area {
+      display: none;
+      margin-top: 30px;
+      padding: 26px 24px;
+      border: 1px solid rgba(212,175,55,0.30);
+      border-radius: 26px;
+      background:
+      radial-gradient(circle at 50% 0%, rgba(212,175,55,0.08), transparent 34%),
+      linear-gradient(180deg, rgba(255,255,255,0.040), rgba(255,255,255,0.010));
+      box-shadow:
+      inset 0 1px 0 rgba(255,255,255,0.055),
+      0 24px 70px rgba(0,0,0,0.28);
+      backdrop-filter: blur(8px);
+    }
+
+    .interactive-info-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 18px;
+      margin-top: 8px;
+      margin-bottom: 0;
+    }
+
+    .info-action-card {
+      min-height: 150px;
+      border: 1px solid rgba(212,175,55,0.38);
+      background:
+      radial-gradient(circle at 50% 0%, rgba(212,175,55,0.09), transparent 42%),
+      linear-gradient(180deg, rgba(255,255,255,0.05), rgba(255,255,255,0.018));
+      border-radius: 20px;
+      padding: 22px 18px;
+      color: var(--text);
+      cursor: pointer;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      transition: border-color .2s ease, transform .2s ease, background .2s ease, box-shadow .2s ease;
+    }
+
+    .info-action-card:hover {
+      border-color: rgba(212,175,55,0.82);
+      background:
+      radial-gradient(circle at 50% 0%, rgba(212,175,55,0.15), transparent 45%),
+      linear-gradient(180deg, rgba(212,175,55,0.08), rgba(255,255,255,0.018));
+      box-shadow: 0 14px 34px rgba(0,0,0,0.28);
+      transform: translateY(-2px);
+    }
+
+    .info-action-card span {
+      display: block;
+      color: var(--gold);
+      font-weight: 800;
+      text-transform: uppercase;
+      font-size: 13px;
+      letter-spacing: .08em;
+      margin-bottom: 10px;
+    }
+
+    .info-action-card strong {
+      display: block;
+      font-size: 22px;
+      line-height: 1.15;
+      margin-bottom: 8px;
+    }
+
+    .info-action-card small {
+      color: var(--muted);
+      line-height: 1.45;
+      font-size: 13.5px;
+      max-width: 270px;
+    }
+
+    .info-action-card em {
+      display: inline-block;
+      margin-top: 14px;
+      color: var(--gold);
+      font-style: normal;
+      font-weight: 800;
+      font-size: 14px;
+    }
+
+    .detail-modal {
+      display: none;
+      position: fixed;
+      z-index: 9999;
+      inset: 0;
+      background: rgba(0,0,0,0.78);
+      padding: 28px;
+      overflow-y: auto;
+    }
+
+    .detail-modal.is-open {
+      display: flex;
+      align-items: flex-start;
+      justify-content: center;
+    }
+
+    .detail-modal-panel {
+      width: min(920px, 100%);
+      background: rgba(10,10,10,0.98);
+      border: 1px solid rgba(212,175,55,0.45);
+      border-radius: 24px;
+      box-shadow: 0 22px 70px rgba(0,0,0,0.6);
+      padding: 26px;
+      margin: 38px 0;
+      color: var(--text);
+      position: relative;
+    }
+
+    .detail-modal-close {
+      position: absolute;
+      top: 16px;
+      right: 16px;
+      border: 1px solid rgba(212,175,55,0.42);
+      background: rgba(255,255,255,0.04);
+      color: var(--gold);
+      border-radius: 999px;
+      width: 38px;
+      height: 38px;
+      cursor: pointer;
+      font-size: 20px;
+      line-height: 1;
+    }
+
+    .detail-modal-panel h3 {
+      color: var(--gold);
+      font-size: 30px;
+      margin: 0 44px 14px 0;
+    }
+
+    .detail-modal-panel p,
+    .customs-subcard p {
+      color: var(--muted);
+      line-height: 1.65;
+      margin: 10px 0;
+    }
+
+    .detail-modal-panel ul {
+      margin: 14px 0 0;
+      padding-left: 20px;
+      color: var(--muted);
+      line-height: 1.65;
+    }
+
+    .detail-modal-panel li {
+      margin-bottom: 8px;
+    }
+
+    .modal-source {
+      margin-top: 18px;
+      padding-top: 14px;
+      border-top: 1px solid rgba(212,175,55,0.22);
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .modal-source a {
+      color: var(--gold);
+      text-decoration: underline;
+      text-underline-offset: 3px;
+      font-weight: 800;
+    }
+
+    .modal-source a:hover {
+      opacity: 0.86;
+    }
+
+    .customs-subcards {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+      margin-top: 16px;
+    }
+
+    .customs-subcard {
+      border: 1px solid rgba(212,175,55,0.28);
+      background: rgba(255,255,255,0.025);
+      border-radius: 16px;
+      padding: 14px;
+    }
+
+    .customs-subcard strong {
+      color: var(--gold);
+      display: block;
+      margin-bottom: 6px;
+    }
+
+    .modal-intro {
+      font-size: 17px;
+      line-height: 1.75;
+      color: var(--text);
+      margin: 4px 0 18px;
+    }
+
+    .modal-section {
+      border-top: 1px solid rgba(212,175,55,0.18);
+      padding-top: 16px;
+      margin-top: 18px;
+    }
+
+    .modal-section h4 {
+      color: var(--gold);
+      font-size: 19px;
+      margin: 0 0 8px;
+    }
+
+    .modal-section p {
+      margin: 8px 0;
+    }
+
+    .modal-soft-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+      margin-top: 14px;
+    }
+
+    .modal-soft-card {
+      border: 1px solid rgba(212,175,55,0.24);
+      background: rgba(255,255,255,0.025);
+      border-radius: 16px;
+      padding: 14px;
+    }
+
+    .modal-soft-card strong {
+      color: var(--gold);
+      display: block;
+      margin-bottom: 6px;
+    }
+
+    .modal-signature {
+      margin-top: 20px;
+      padding: 14px 16px;
+      border-left: 3px solid var(--gold);
+      border-radius: 12px;
+      background: rgba(212,175,55,0.06);
+      color: var(--text);
+      font-weight: 600;
+      line-height: 1.65;
+    }
+
+    .quick-info-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+      margin: 16px 0;
+    }
+
+    .quick-info-card {
+      border: 1px solid rgba(212,175,55,0.28);
+      background: rgba(255,255,255,0.025);
+      border-radius: 16px;
+      padding: 14px;
+    }
+
+    .quick-info-card span {
+      display: block;
+      color: var(--gold);
+      font-size: 12px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: .06em;
+      margin-bottom: 7px;
+    }
+
+    .quick-info-card strong {
+      display: block;
+      color: var(--text);
+      font-size: 18px;
+      line-height: 1.35;
+      margin-bottom: 4px;
+    }
+
+    .quick-info-card p {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.55;
+    }
+
+    .official-action-link {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      margin-top: 10px;
+      border: 1px solid rgba(212,175,55,0.42);
+      border-radius: 999px;
+      padding: 8px 12px;
+      color: var(--gold);
+      text-decoration: none;
+      font-weight: 800;
+      font-size: 13px;
+    }
+
+    .official-action-link:hover {
+      background: rgba(212,175,55,0.08);
+    }
+
+    .contact-card {
+      border: 1px solid rgba(212,175,55,0.26);
+      background: rgba(255,255,255,0.025);
+      border-radius: 18px;
+      padding: 16px;
+      margin-top: 12px;
+    }
+
+    .contact-card h5 {
+      color: var(--gold);
+      font-size: 18px;
+      margin: 0 0 10px;
+    }
+
+    .contact-card p {
+      margin: 7px 0;
+      line-height: 1.55;
+    }
+
+    .contact-card a,
+    .modal-source a {
+      color: var(--gold);
+      text-decoration: underline;
+      text-underline-offset: 3px;
+      font-weight: 800;
+    }
+
+    @media (max-width: 760px) {
+      .quick-info-grid,
+      .modal-soft-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 760px) {
+      .interactive-info-grid,
+      .customs-subcards {
+        grid-template-columns: 1fr;
+      }
+
+      .detail-modal {
+        padding: 16px;
+      }
+
+      .detail-modal-panel {
+        padding: 22px;
+        margin: 24px 0;
+      }
+    }
+
+    .commercial-card {
+      background: linear-gradient(180deg, rgba(212,175,55,0.10), rgba(255,255,255,0.02));
+      border: 1px solid rgba(212,175,55,0.42);
+      border-radius: 24px;
+      padding: 28px;
+      margin-top: 18px;
+      margin-bottom: 16px;
+    }
+
+    .commercial-card h3 {
+      margin: 0 0 14px;
+      font-size: 30px;
+      color: var(--gold);
+    }
+
+    .commercial-card p {
+      margin: 10px 0;
+      color: var(--text);
+      font-size: 16px;
+    }
+
+    .commercial-actions {
+      margin-top: 18px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .destination-note {
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.55;
+      margin: -4px 0 20px;
+      max-width: 900px;
+    }
+
+    footer{
+      border-top:1px solid rgba(255,255,255,0.08);
+      padding:34px 24px 38px;
+      text-align:center;
+      color:rgba(255,255,255,0.68);
+      font-size:14px;
+      line-height:1.7;
+      margin-top:12px;
+    }
+
+    footer a{
+      color:#1a0dab;
+      text-decoration:underline;
+    }
+
+    footer a:hover{
+      opacity:0.88;
+    }
+
+    .footer-social{
+      display:flex;
+      justify-content:center;
+      align-items:center;
+      gap:12px;
+      margin-top:16px;
+    }
+
+    .footer-social a{
+      width:38px;
+      height:38px;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      border-radius:50%;
+      border:1px solid rgba(212,175,55,0.30);
+      color:#d4af37;
+      background:rgba(255,255,255,0.02);
+      text-decoration:none;
+      transition:transform 0.25s ease, border-color 0.25s ease, background 0.25s ease;
+    }
+
+    .footer-social a:hover{
+      transform:translateY(-2px);
+      border-color:rgba(212,175,55,0.65);
+      background:rgba(212,175,55,0.08);
+      opacity:1;
+    }
+
+    .footer-social svg{
+      width:18px;
+      height:18px;
+      fill:currentColor;
+    }
+
+    /* Em telas menores, a pesquisa permanece sobre o fundo cinematográfico. */
+    @media (max-width: 700px) {
+      .hero {
+        min-height: 100svh;
+        padding: 105px 12px 55px;
+        gap: 26px;
+      }
+
+      .hero-inner {
+        padding-top: 0;
+      }
+
+      .tool-wrap {
+        margin-top: 0;
+        padding-inline: 6px;
+      }
+    }
+
+    @media (max-width: 940px) {
+      .search-row { grid-template-columns: 1fr; }
+      .summary-grid { grid-template-columns: 1fr; }
+      .panel-title { font-size: 30px; }
+      .block h3 { font-size: 24px; }
+      .hero p { font-size: 18px; }
+      .nav { display: none; }
+    }
+
+    .agenda-controls {
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr;
+      gap: 12px;
+      margin: 20px 0}
+    .agenda-controls label {
+      display: block;
+      font-size: 13px;
+      margin-bottom: 7px;
+      color: #d9c78b}
+    .agenda-controls input,.agenda-controls select {
+      width: 100%;
+      background: #151515;
+      color: #fff;
+      border: 1px solid rgba(214,173,50,.4);
+      border-radius: 10px;
+      padding: 13px;
+      font-size: 15px}
+    .agenda-actions {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin: 14px 0}
+    /* CONTROLE DE CONSULTAS — separado do layout cinematográfico */
+    .search-access {
+      margin: 16px 0;
+      padding: 15px 18px;
+      border: 1px solid rgba(214,173,50,.45);
+      border-radius: 12px;
+      background: rgba(12,12,12,.78);
+      color: #f4ead0;
+      line-height: 1.6;
+    }
+    .search-access strong { color: #e8c66c; }
+    .search-access p { margin: 4px 0; }
+    .search-access small { color: #c6c0b4; }
+    .search-access[hidden] { display: none; }
+    .agenda-status {
+      padding: 16px 0;
+      line-height: 1.6}
+    .agenda-grid {
+      display: grid;
+      gap: 16px;
+      margin-top: 20px}
+    .event-card {
+      display: grid;
+      grid-template-columns: 190px 1fr;
+      gap: 18px;
+      background: rgba(18,18,18,.9);
+      border: 1px solid rgba(214,173,50,.25);
+      border-radius: 14px;
+      overflow: hidden}
+    .event-card img {
+      width: 190px;
+      height: 100%;
+      min-height: 180px;
+      object-fit: cover}
+    .event-info {
+      padding: 18px}
+    .event-info h3 {
+      margin: 0 0 8px}
+    .event-info p {
+      margin: 7px 0}
+    .event-info a {
+      display: inline-block;
+      margin-top: 10px;
+      color: #e8c66c}
+    /* Ações de ingressos: apenas destinos oficiais confirmados. */
+    .ticket-actions { display:flex; flex-wrap:wrap; gap:10px; margin-top:18px; }
+    .event-info a.ticket-button, .event-info .ticket-button-disabled {
+      display:inline-flex; align-items:center; justify-content:center;
+      padding:13px 18px; min-height:46px; border:1px solid #d4af37;
+      border-radius:10px; background:rgba(212,175,55,.12); color:#f3d47c;
+      font-weight:750; text-decoration:none; margin:0; text-align:center;
+    }
+    .event-info a.ticket-button:hover { background:rgba(212,175,55,.25); }
+    .event-info .ticket-button-disabled { opacity:.58; cursor:not-allowed; }
+    .ticket-note { color:#cfc5b2; font-size:13px; margin-top:9px; }
+    /* Sinopse visível e detalhes complementares, quando disponíveis. */
+    .event-info .event-synopsis {
+      margin: 12px 0 16px;
+      max-width: 74ch;
+      font-size: 15px;
+      line-height: 1.65;
+      color: #e3ded4;
+      text-align: left;
+    }
+    .event-info details { margin-top: 16px; }
+    .event-info details > summary {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+      width: fit-content;
+      min-width: 260px;
+      padding: 13px 18px;
+      border: 1px solid #d4af37;
+      border-radius: 10px;
+      color: #f3d47c;
+      background: rgba(212,175,55,.10);
+      font-size: 16px;
+      font-weight: 700;
+      cursor: pointer;
+      list-style: none;
+    }
+    .event-info details > summary::-webkit-details-marker { display: none; }
+    .event-info details > summary::before { content: 'ⓘ'; font-size: 20px; }
+    .event-info details > summary::after { content: '⌄'; font-size: 23px; }
+    .event-info details[open] > summary::after { content: '⌃'; }
+    .event-info details > summary:hover { background: rgba(212,175,55,.20); }
+    .event-info .event-extra { padding: 12px 2px; font-size: 14px; color: #d5cfc4; }
+    .agenda-hidden {
+      display: none!important}
+    @media(max-width: 700px) {
+      .agenda-controls {
+        grid-template-columns: 1fr}
+      .event-card {
+        grid-template-columns: 1fr}
+      .event-card img {
+        width: 100%;
+        height: 220px}}
+    /* Ícone de contingência apenas para testes fora da estrutura do site. */
+    .demo-banner {
+      border: 1px solid #d4af37;
+      border-radius: 12px;
+      padding: 12px 16px;
+      margin: 14px 0;
+      color: #f5e6b0;
+      background: #1b1609;
+    }
+    .demo-banner[hidden] { display: none; }
+  </style>
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="site-header-inner">
+        <a class="brand" href="/" aria-label="Curadoria Elite Travel">
+          <img src="/images/rosa-dos-ventos.png" alt="Rosa dos Ventos — Curadoria Elite Travel">
+          <div class="brand-text">
+            <div class="brand-title">
+              CURADORIA ELITE TRAVEL
+            </div>
+            <div class="brand-sub">
+              O seu mundo, bem indicado.
+            </div>
+          </div>
+        </a>
+        <nav class="nav">
+          <a href="/">
+            Início
+          </a>
+          <a href="/?secao=quem#quem">
+            Quem Somos
+          </a>
+          <a href="/?secao=curadoria#curadoria">
+            Curadoria
+          </a>
+          <a href="/?secao=buscador#buscador">
+            Buscador
+          </a>
+          <span class="nav-sep">
+          </span>
+          <a href="/?cart=1">
+            Carrinho (0)
+          </a>
+          <span class="nav-sep">
+          </span>
+          <a href="/account.html">
+            Minha conta
+          </a>
+          <a href="/login.html">
+            Sair
+          </a>
+        </nav>
+      </div>
+    </header>
+    <section class="hero" aria-labelledby="agenda-title">
+      <div class="hero-slides" aria-hidden="true">
+        <div class="hero-slide is-active" id="heroSlideA"></div>
+        <div class="hero-slide" id="heroSlideB"></div>
+      </div>
+      <div class="hero-shade" aria-hidden="true"></div>
+      <div class="hero-inner">
+        <div class="hero-kicker">
+          curadoria • critério • excelência
+        </div>
+        <h1 id="agenda-title">
+          Agenda Cultural
+        </h1>
+        <p>
+          Descubra eventos na cidade e no período da sua viagem, com informações e links oficiais.
+        </p>
+      </div>
+      <main class="tool-wrap">
+      <section class="tool-panel">
+        <div class="breadcrumbs">
+          Ferramentas &gt; Agenda Cultural
+        </div>
+        <h2 class="panel-title">
+          Consulta de eventos
+        </h2>
+        <p class="panel-sub">
+          Escolha a cidade, a data e a categoria para consultar os eventos disponíveis na base.
+        </p>
+        <div class="agenda-controls">
+          <div>
+            <label for="city">
+              Cidade
+            </label>
+            <select id="city">
+              <option value="">
+                Selecione uma cidade
+              </option>
+            </select>
+          </div>
+          <div>
+            <label for="date">
+              Data
+            </label>
+            <input type="date" id="date">
+          </div>
+          <div>
+            <label for="category">
+              Categoria
+            </label>
+            <select id="category">
+              <option value="">
+                Todas as categorias
+              </option>
+              <option>
+                Shows
+              </option>
+              <option>
+                Teatro
+              </option>
+              <option>
+                Musicais
+              </option>
+              <option>
+                Cinema
+              </option>
+              <option>
+                Exposições
+              </option>
+              <option>
+                Esportes
+              </option>
+              <option>
+                Festivais
+              </option>
+              <option>
+                Outros
+              </option>
+            </select>
+          </div>
+        </div>
+        <div class="agenda-actions">
+          <button class="btn" type="button" id="search">
+            VER EVENTOS
+          </button>
+          <button class="btn secondary" type="button" id="clear">
+            Limpar
+          </button>
+        </div>
+        <section class="search-access" id="searchAccess" aria-live="polite">
+          <strong>Consulta gratuita</strong>
+          <p id="searchAllowance">Uma pesquisa gratuita a cada 24 horas, com até cinco eventos completos.</p>
+          <p id="searchCountdown" hidden></p>
+          <small id="searchAccessNote">A verificação de e-mail e o bloqueio definitivo exigem integração com a conta do cliente.</small>
+        </section>
+        <div class="demo-banner" id="demoBanner" hidden>AMBIENTE DE TESTE — Eventos fictícios, sem ingressos à venda. Os resultados abaixo servem apenas para conferir a interface e os filtros.</div>
+        <div class="agenda-status" id="status" role="status">
+          Selecione uma cidade para começar.
+        </div>
+        <div class="agenda-grid" id="results">
+        </div>
+        <div id="more" class="agenda-hidden">
+          <p>
+            Existem mais eventos nesta consulta. O acesso aos resultados adicionais dependerá da ativação do serviço.
+          </p>
+        </div>
+      </section>
+      </main>
+    </section>
+    <footer id="siteFooter">
+      Curadoria Elite Travel · O seu mundo, bem indicado.
+      <br>
+      São Paulo - SP ·
+      <a href="contact.html">
+        curadoriaelitetravel@gmail.com
+      </a>
+      <div class="footer-social" aria-label="Redes sociais da Curadoria Elite Travel">
+        <a href="https://www.instagram.com/curadoriaelitetravel/" target="_blank" rel="noopener noreferrer" aria-label="Instagram da Curadoria Elite Travel" title="Instagram">
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M7 2h10a5 5 0 0 1 5 5v10a5 5 0 0 1-5 5H7a5 5 0 0 1-5-5V7a5 5 0 0 1 5-5Zm0 2a3 3 0 0 0-3 3v10a3 3 0 0 0 3 3h10a3 3 0 0 0 3-3V7a3 3 0 0 0-3-3H7Zm5 3.5A4.5 4.5 0 1 1 7.5 12 4.5 4.5 0 0 1 12 7.5Zm0 2A2.5 2.5 0 1 0 14.5 12 2.5 2.5 0 0 0 12 9.5Zm5.25-3.1a1.05 1.05 0 1 1-1.05 1.05 1.05 0 0 1-1.05-1.05Z"/>
+          </svg>
+        </a>
+        <a href="https://www.linkedin.com/company/curadoria-elite-travel" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn da Curadoria Elite Travel" title="LinkedIn">
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M6.5 8.25H3.25V21H6.5V8.25ZM4.88 3A1.88 1.88 0 1 0 4.9 6.75 1.88 1.88 0 0 0 4.88 3ZM21 13.7c0-3.85-2.05-5.64-4.79-5.64a4.14 4.14 0 0 0-3.74 2.05V8.25H9.22V21h3.25v-6.31c0-1.66.32-3.27 2.38-3.27 2.03 0 2.05 1.9 2.05 3.38V21H21v-7.3Z"/>
+          </svg>
+        </a>
+      </div>
+    </footer>
+    <script>
+    'use strict';
+
+    /* ================================================================
+       HERO CINEMATOGRÁFICO
+       Para trocar fotos: altere apenas os quatro endereços abaixo.
+       Fotos remotas exigem conexão à internet. O fundo escuro permanece
+       legível mesmo se uma fotografia não carregar.
+       ================================================================ */
+    const HERO_IMAGES = [
+      // Teatro e espetáculos
+      'https://images.unsplash.com/photo-1507676184212-d03ab07a01bf?auto=format&fit=crop&w=2000&q=85',
+      // Shows e festivais
+      'https://images.unsplash.com/photo-1470225620780-dba8ba36b745?auto=format&fit=crop&w=2000&q=85',
+      // Arte e exposições
+      'https://images.unsplash.com/photo-1579783902614-a3fb3927b6a5?auto=format&fit=crop&w=2000&q=85',
+      // Cinema e cultura
+      'https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?auto=format&fit=crop&w=2000&q=85'
+    ];
+    const HERO_INTERVAL_MS = 6000;
+
+    function initCinematicHero() {
+      const slides = [
+        document.getElementById('heroSlideA'),
+        document.getElementById('heroSlideB')
+      ];
+      let visible = 0;
+      let nextImageIndex = 1;
+
+      function preload(url) {
+        return new Promise(resolve => {
+          const img = new Image();
+          img.onload = () => resolve(true);
+          img.onerror = () => resolve(false);
+          img.src = url;
+        });
+      }
+
+      async function advance() {
+        // Tenta as próximas imagens; nunca mostra uma imagem quebrada.
+        for (let attempt = 0; attempt < HERO_IMAGES.length; attempt++) {
+          const url = HERO_IMAGES[nextImageIndex];
+          nextImageIndex = (nextImageIndex + 1) % HERO_IMAGES.length;
+          if (!(await preload(url))) continue;
+
+          const hidden = 1 - visible;
+          slides[hidden].style.backgroundImage = `url("${url}")`;
+          slides[hidden].classList.add('is-active');
+          slides[visible].classList.remove('is-active');
+          visible = hidden;
+          return;
+        }
+      }
+
+      preload(HERO_IMAGES[0]).then(ok => {
+        if (ok) slides[0].style.backgroundImage = `url("${HERO_IMAGES[0]}")`;
+      });
+
+      if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        window.setInterval(() => {
+          if (!document.hidden) advance();
+        }, HERO_INTERVAL_MS);
+      }
+    }
+
+    initCinematicHero();
+    /* CONTRATO DE DADOS: /data/agenda-cultural.json
+     {"updated_at":"2026-11-13T12:00:00Z","cities":[{"id":"br-sp-sao-paulo","name":"São Paulo","country":"Brasil"}],"events":[{"id":"identificador-estavel","city_id":"br-sp-sao-paulo","title":"Nome oficial","category":"Teatro","starts_at":"2026-11-20T20:00:00-03:00","ends_at":null,"venue":"Nome do local","address":"Endereço completo","price":"R$ 50,00","image_url":"https://...","ticket_url":"https://.../evento-especifico","sport_type":"futebol (quando aplicável)","ticket_options":[{"label":"Torcida A","url":"https://.../venda-oficial-especifica","verified":true}],"description":"Texto verificado","source":"Site oficial"}]}
+     Não exibir eventos incompletos, nem inventar disponibilidade. Este arquivo NÃO faz scraping ou consulta IA: requer alimentador verificado separado. */
+    const $ = id => document.getElementById(id);
+    const today = () => { const d = new Date(); return [d.getFullYear(), String(d.getMonth() + 1).padStart(2, '0'), String(d.getDate()).padStart(2, '0')].join('-'); };
+    $('date').value = today();
+    let catalog = null;
+    let demoMode = false;
+
+    // Dados exclusivamente fictícios para testar a interface, sem links de compra.
+    // A aplicação usa dados oficiais quando data/agenda-cultural.json estiver disponível.
+    function buildDemoCatalog() {
+      const date = $('date').value || today();
+      const cities = [
+        { id: 'demo-sp', name: 'São Paulo', country: 'Brasil' },
+        { id: 'demo-rj', name: 'Rio de Janeiro', country: 'Brasil' },
+        { id: 'demo-paris', name: 'Paris', country: 'França' }
+      ];
+      const categories = ['Esportes', 'Teatro', 'Shows', 'Exposições', 'Musicais', 'Cinema', 'Festivais'];
+      const events = cities.flatMap(city => categories.map((category, i) => ({
+        id: `${city.id}-${i}`,
+        city_id: city.id,
+        title: category === 'Esportes' ? '[TESTE] Equipe A x Equipe B — futebol' : `[TESTE] Evento demonstrativo de ${category.toLowerCase()} ${i + 1}`,
+        category,
+        starts_at: `${date}T${String(14 + i).padStart(2, '0')}:00:00`,
+        venue: 'Local fictício — demonstração',
+        address: `Endereço de demonstração, ${city.name} — não é um local real`,
+        price: 'Preço fictício — não disponível para compra',
+        image_url: '',
+        ticket_url: '',
+        sport_type: category === 'Esportes' ? 'futebol' : null,
+        ticket_options: [], // Em jogos reais: opções oficiais por torcida, quando autorizadas.
+        description: 'Esta apresentação é uma simulação de agenda cultural, sem programação real ou venda de ingressos. A sinopse de um evento verdadeiro será extraída de sua descrição oficial e exibida neste espaço, em aproximadamente 200 caracteres.',
+        extra_details: 'Evento fictício criado apenas para verificar a apresentação, os filtros e a ordenação. Não existe programação, endereço, preço ou bilheteria oficial para este exemplo.',
+        source: 'Dados de demonstração'
+      })));
+      return { cities, events };
+    }
+
+    function populateCities(data) {
+      const select = $('city');
+      select.replaceChildren(make('option', '', 'Selecione uma cidade'));
+      const cities = [...new Map(data.cities.filter(c => c.id && c.name && c.country).map(c => [c.id, c])).values()]
+        .sort((a, b) => a.name.localeCompare(b.name, 'pt-BR'));
+      for (const city of cities) {
+        const option = make('option', '', `${city.name} — ${city.country}`);
+        option.value = city.id;
+        select.append(option);
+      }
+    }
+    const norm = s => String(s || '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().trim();
+    const validUrl = s => { try {
+        const u = new URL(s);
+        return u.protocol === 'https:';
+    }
+    catch {
+        return false;
+    } };
+    // Eventos comuns: uma página de compra específica. Futebol: opções verificadas
+    // por torcida, ou uma única opção quando a regra da partida assim determinar.
+    const officialOptions = e => Array.isArray(e.ticket_options)
+      ? e.ticket_options.filter(o => o && o.label && validUrl(o.url) && o.verified === true)
+      : [];
+    const validEvent = e => e && e.id && e.city_id && e.title && e.category && e.starts_at
+      && !isNaN(Date.parse(e.starts_at)) && e.venue && e.address && e.price
+      && e.description && validUrl(e.image_url)
+      && (validUrl(e.ticket_url) || officialOptions(e).length > 0);
+    function setStatus(s) { $('status').textContent = s; }
+    function make(tag, cls, txt) { const el = document.createElement(tag); if (cls)
+        el.className = cls; if (txt !== undefined)
+        el.textContent = txt; return el; }
+    function line(parent, label, value) { parent.append(make('p', '', label + ': ' + value)); }
+    function renderEvent(e) {
+      const card = make('article', 'event-card');
+      if (demoMode) {
+        const placeholder = make('div', 'demo-placeholder', 'EVENTO FICTÍCIO\nSEM IMAGEM OFICIAL');
+        placeholder.style.cssText = 'min-height:200px;display:flex;align-items:center;justify-content:center;padding:18px;text-align:center;white-space:pre-line;background:#191919;color:#d4af37;border-radius:12px;';
+        card.append(placeholder);
+      } else {
+        const img = make('img');
+        img.src = e.image_url;
+        img.alt = 'Imagem oficial: ' + e.title;
+        img.loading = 'lazy';
+        card.append(img);
+      }
+      const info = make('div', 'event-info');
+      info.append(make('h3', '', e.title));
+      const synopsis = String(e.description || '').trim();
+      info.append(make('p', 'event-synopsis', synopsis.length > 210 ? synopsis.slice(0, 207).trimEnd() + '…' : synopsis));
+      line(info, 'Data e horário', new Intl.DateTimeFormat('pt-BR', {
+        dateStyle: 'full', timeStyle: 'short'
+      }).format(new Date(e.starts_at)));
+      line(info, 'Local', e.venue);
+      line(info, 'Endereço', e.address);
+      line(info, 'Ingressos', e.price);
+      // Informações extras só aparecem quando o fornecedor informou conteúdo real.
+      if (e.extra_details && !demoMode) {
+        const details = make('details');
+        details.append(make('summary', '', 'Detalhes adicionais'));
+        const extra = make('div', 'event-extra');
+        extra.append(make('p', '', e.extra_details));
+        details.append(extra);
+        info.append(details);
+      }
+
+      const actions = make('div', 'ticket-actions');
+      const isFootball = norm(e.sport_type) === 'futebol';
+      const options = officialOptions(e);
+      if (demoMode) {
+        actions.append(make('span', 'ticket-button-disabled', 'ADQUIRIR INGRESSOS — DEMONSTRAÇÃO'));
+      } else if (isFootball && options.length) {
+        // Cada opção deve apontar à venda AUTORIZADA para aquela torcida.
+        // Torcida única: o alimentador deve fornecer somente a opção permitida.
+        for (const option of options) {
+          const link = make('a', 'ticket-button', `ADQUIRIR INGRESSOS — ${option.label}`);
+          link.href = option.url;
+          link.target = '_blank';
+          link.rel = 'noopener noreferrer';
+          actions.append(link);
+        }
+      } else if (!isFootball && validUrl(e.ticket_url)) {
+        // Basquete, NFL, tênis, F1 e demais eventos: bilheteria oficial do evento.
+        const link = make('a', 'ticket-button', 'ADQUIRIR INGRESSOS');
+        link.href = e.ticket_url;
+        link.target = '_blank';
+        link.rel = 'noopener noreferrer';
+        actions.append(link);
+      } else {
+        actions.append(make('span', 'ticket-button-disabled', 'INGRESSOS NÃO CONFIRMADOS'));
+      }
+      info.append(actions);
+      if (isFootball && !demoMode) {
+        info.append(make('p', 'ticket-note',
+          'As opções de compra dependem da torcida e das regras oficiais desta partida.'));
+      }
+      card.append(info);
+      return card;
+    }
+
+    async function loadCatalog() {
+      try {
+        const response = await fetch('data/agenda-cultural.json', { cache: 'no-store' });
+        if (!response.ok) throw new Error('Base oficial não encontrada');
+        const data = await response.json();
+        if (!Array.isArray(data.cities) || !Array.isArray(data.events)) {
+          throw new Error('Formato da base inválido');
+        }
+        catalog = data;
+        demoMode = false;
+        populateCities(data);
+        setStatus('Selecione uma cidade e clique em VER EVENTOS.');
+        updateSearchAllowance();
+      } catch (error) {
+        // Falha de rede ou ausência da base: demonstração visual explícita.
+        catalog = buildDemoCatalog();
+        demoMode = true;
+        $('demoBanner').hidden = false;
+        populateCities(catalog);
+        setStatus('Modo de demonstração ativado. Selecione uma cidade para testar.');
+        updateSearchAllowance();
+      }
+    }
+
+    /* ================================================================
+       CONSULTAS GRATUITAS — PROTÓTIPO DE INTERFACE
+       Regra de produto: 1 consulta / e-mail verificado / 24 horas.
+       O servidor deverá validar identidade, prazo e consumo de cota.
+       sessionStorage abaixo serve APENAS para simular a experiência
+       neste navegador. Não é controle seguro nem verifica e-mail.
+       ================================================================ */
+    const FREE_WINDOW_MS = 24 * 60 * 60 * 1000;
+    const FREE_LIMIT = 5;
+    const DEMO_STORAGE_KEY = 'cet_agenda_consulta_demo_v1';
+
+    function readDemoConsultation() {
+      try {
+        const saved = JSON.parse(sessionStorage.getItem(DEMO_STORAGE_KEY) || 'null');
+        if (!saved || !saved.createdAt || !saved.city || !saved.date) return null;
+        if (Date.now() - saved.createdAt >= FREE_WINDOW_MS) {
+          sessionStorage.removeItem(DEMO_STORAGE_KEY);
+          return null;
+        }
+        return saved;
+      } catch {
+        return null;
+      }
+    }
+
+    function saveDemoConsultation(city, date, eventIds) {
+      const saved = { createdAt: Date.now(), city, date, eventIds };
+      try { sessionStorage.setItem(DEMO_STORAGE_KEY, JSON.stringify(saved)); } catch { /* navegação privada */ }
+      return saved;
+    }
+
+    function formatRemaining(ms) {
+      const totalMinutes = Math.ceil(Math.max(0, ms) / 60000);
+      const hours = Math.floor(totalMinutes / 60);
+      const minutes = totalMinutes % 60;
+      return `${hours}h ${String(minutes).padStart(2, '0')}min`;
+    }
+
+    function updateSearchAllowance() {
+      const saved = readDemoConsultation();
+      const allowance = $('searchAllowance');
+      const countdown = $('searchCountdown');
+      if (!saved) {
+        allowance.textContent = 'Uma pesquisa gratuita a cada 24 horas, com até cinco eventos completos.';
+        countdown.hidden = true;
+      } else {
+        allowance.textContent = 'Consulta de demonstração já utilizada. Você pode rever os cinco eventos e alterar a categoria sem consumir outra consulta.';
+        countdown.hidden = false;
+        countdown.textContent = `Nova consulta gratuita em ${formatRemaining(FREE_WINDOW_MS - (Date.now() - saved.createdAt))}.`;
+      }
+      $('searchAccessNote').textContent = demoMode
+        ? 'SIMULAÇÃO NESTE NAVEGADOR: ainda não há verificação de e-mail ou bloqueio por conta.'
+        : 'Prévia da regra. Para aplicar o limite por e-mail verificado, falta conectar a autenticação e a validação no servidor.';
+    }
+
+    function findEvents(city, date, category) {
+      const dedup = new Set();
+      return catalog.events
+        .filter(e => demoMode || validEvent(e))
+        .filter(e => e.city_id === city && e.starts_at.slice(0, 10) === date)
+        .filter(e => !category || norm(e.category) === norm(category))
+        .sort((a, b) => Date.parse(a.starts_at) - Date.parse(b.starts_at))
+        .filter(e => {
+          const key = `${norm(e.title)}|${e.starts_at}|${norm(e.venue)}`;
+          if (dedup.has(key)) return false;
+          dedup.add(key);
+          return true;
+        });
+    }
+
+    function search() {
+      if (!catalog) {
+        setStatus('A base de eventos ainda não está conectada.');
+        return;
+      }
+      const city = $('city').value;
+      const date = $('date').value;
+      const category = $('category').value;
+      if (!city || !date) {
+        setStatus('Selecione uma cidade e uma data.');
+        return;
+      }
+
+      const existing = readDemoConsultation();
+      let permittedIds;
+      if (existing) {
+        if (existing.city !== city || existing.date !== date) {
+          $('results').replaceChildren();
+          $('more').classList.add('agenda-hidden');
+          setStatus('Sua consulta de demonstração já foi utilizada para outra cidade ou data. Você pode retornar à consulta anterior ou aguardar o prazo indicado.');
+          updateSearchAllowance();
+          return;
+        }
+        permittedIds = existing.eventIds;
+      } else {
+        // A categoria NÃO limita o conjunto inicial: os filtros atuam
+        // sobre os mesmos cinco eventos, sem nova cobrança.
+        const completeList = findEvents(city, date, '');
+        permittedIds = completeList.slice(0, FREE_LIMIT).map(event => event.id);
+        // Uma busca sem resultados não consome a consulta.
+        if (permittedIds.length) saveDemoConsultation(city, date, permittedIds);
+      }
+
+      const allowed = new Set(permittedIds);
+      const items = findEvents(city, date, category).filter(event => allowed.has(event.id));
+      $('results').replaceChildren(...items.map(renderEvent));
+      const allCount = findEvents(city, date, '').length;
+      if (items.length) {
+        setStatus(`${allCount} evento(s) encontrado(s) na consulta. Exibindo ${items.length} dos até ${FREE_LIMIT} resultados liberados${category ? ' nesta categoria' : ''}.`);
+      } else {
+        setStatus('Nenhum dos eventos liberados corresponde a este filtro. Experimente outra categoria.');
+      }
+      $('more').classList.toggle('agenda-hidden', allCount <= FREE_LIMIT);
+      updateSearchAllowance();
+    }
+
+    $('search').addEventListener('click', () => {
+      if (demoMode) {
+        const selectedCity = $('city').value;
+        catalog = buildDemoCatalog();
+        populateCities(catalog);
+        $('city').value = selectedCity;
+      }
+      search();
+    });
+
+    $('clear').addEventListener('click', () => {
+      $('city').value = '';
+      $('date').value = today();
+      $('category').value = '';
+      $('results').replaceChildren();
+      $('more').classList.add('agenda-hidden');
+      setStatus('Selecione uma cidade para começar. Limpar os filtros não reinicia a cota de 24 horas.');
+      updateSearchAllowance();
+    });
+
+    window.setInterval(updateSearchAllowance, 60000);
+    updateSearchAllowance();
+    loadCatalog();
+  </script>
+  </body>
+</html>
