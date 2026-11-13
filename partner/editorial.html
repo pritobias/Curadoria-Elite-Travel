@@ -7,6 +7,10 @@
    Estúdio Editorial | Curadoria Elite Travel
   </title>
   <style>
+   /* ============================================================
+      ESTÚDIO EDITORIAL — ESTILOS (CSS)
+      Alterações de aparência e impressão ficam nesta seção.
+      ============================================================ */
    :root {
   --black:#171717;
   --gold:#c6a35c;
@@ -1095,7 +1099,17 @@ textarea {
   white-space: nowrap;
 }
 
-.tourism-cover .cover-city { color: #d96d5a; }
+/* CAPA — cidade dinâmica com a MESMA cor do restante da frase.
+   Regra compartilhada entre todas as categorias: alterar aqui se necessário. */
+.tourism-cover .cover-city {
+  color: inherit;
+  font: inherit;
+  border: 0;
+  outline: 0;
+  box-shadow: none;
+  background: transparent;
+  padding: 0;
+}
 
 .tourism-cover .cover-photo,
 .tourism-cover .cover-photo-pending {
@@ -1540,6 +1554,7 @@ textarea {
 </style>
  </head>
  <body>
+  <!-- ESTÚDIO EDITORIAL — INTERFACE E PAINÉIS -->
   <header>
    <div class="brand">
     <img alt="Rosa dos Ventos" onerror="this.style.display='none';this.nextElementSibling.style.display='inline'" src="../images/rosa-dos-ventos.png"/>
@@ -1872,12 +1887,25 @@ textarea {
    </div>
   </div>
   <script>
+   /* ============================================================
+      ESTÚDIO EDITORIAL — LÓGICA (JAVASCRIPT)
+      Projetos, categorias, páginas, edição, exportação.
+      Manter este script no editorial.html (arquivo único).
+      ============================================================ */
    (()=>{'use strict';
 const $=id=>document.getElementById(id), key='cet_editorial_v2_projects', limit='O principal cartão-postal da Avenida Paulista é famoso por seu vão livre e acervo europeu. Com seus cavaletes de cristal, o museu oferece uma forma inovadora de apreciar arte, sendo um símbolo mundial da arquitetura moderna de Lina Bo Bardi.'.length;
+
+// ===== ESTRUTURA DAS 11 PÁGINAS =====
 const types=['Capa','Introdução','Nosso trabalho','Tips','Abertura turística','Atrações 1–3','Atrações 4–6','Atrações 7–9','Atrações 10–12','Encerramento','Contracapa'];
+
+// ===== DADOS INICIAIS — ATRAÇÕES TURÍSTICAS =====
 const defaults=[{name:'MASP',description:'O principal cartão-postal da Avenida Paulista é famoso por seu vão livre e acervo europeu. Com seus cavaletes de cristal, o museu oferece uma forma inovadora de apreciar arte, sendo um símbolo mundial da arquitetura moderna de Lina Bo Bardi.',address:'Avenida Paulista, 1578 - Bela Vista',site:'masp.org.br',ticket:'A verificar',photo:''},{name:'CATEDRAL DA SÉ',description:'Localizada no coração geográfico da capital, esta catedral em estilo neogótico impressiona por suas torres e cúpula renascentista. O interior abriga um dos maiores órgãos do mundo e uma cripta vasta, sendo um marco da fé e da história de SP.',address:'Praça da Sé, s/n - Centro Histórico',site:'A verificar',ticket:'Gratuita',photo:''},{name:'FAROL SANTANDER',description:'Inspirado no Empire State, este icônico arranha-céu oferece uma das vistas mais deslumbrantes do centro.',address:'A verificar',site:'A verificar',ticket:'A verificar',photo:''}];
 const blank=()=>({name:'',description:'',address:'',site:'',ticket:'A verificar',photo:''});
+
+// ===== CAMPOS DOS RESTAURANTES — GASTRONOMIA =====
 const blankRestaurant=()=>({name:'',description:'',address:'',site:'',phone:'',cuisine:'',michelin:'',price:'',photo:''});
+
+// ===== EXEMPLO INICIAL — GASTRONOMIA =====
 const domRestaurant=()=>({name:'D.O.M.',description:'O D.O.M. convida você a redescobrir a alma da gastronomia brasileira através de sabores autênticos e uma experiência sensorial única, onde cada prato conta uma história de inovação e respeito pelos ingredientes do Brasil.',address:'Rua Barão de Capanema 549, São Paulo',site:'https://domrestaurante.com.br/',phone:'+55 (11) 96918-9947',cuisine:'CRIATIVA',michelin:'2 ESTRELAS',price:'R$ 600 a R$ 1.000',photo:''});
 function restaurants(p){if(!Array.isArray(p.gastroRestaurants)){p.gastroRestaurants=Array.from({length:12},()=>blankRestaurant());if(p.city.trim().toLowerCase()==='são paulo'){p.gastroRestaurants[0]=domRestaurant();for(let i=3;i<12;i++)p.gastroRestaurants[i]=domRestaurant()}}if(p.city.trim().toLowerCase()==='são paulo')for(let i=6;i<12;i++){const a=p.gastroRestaurants[i];if(a&&!a.name&&!a.description&&!a.address&&!a.site&&!a.phone&&!a.cuisine&&!a.michelin&&!a.price&&!a.photo)p.gastroRestaurants[i]=domRestaurant()}return p.gastroRestaurants}
 
