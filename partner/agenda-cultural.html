@@ -1016,6 +1016,20 @@
       gap: 12px;
       flex-wrap: wrap;
       margin: 14px 0}
+    /* CONTROLE DE CONSULTAS — separado do layout cinematográfico */
+    .search-access {
+      margin: 16px 0;
+      padding: 15px 18px;
+      border: 1px solid rgba(214,173,50,.45);
+      border-radius: 12px;
+      background: rgba(12,12,12,.78);
+      color: #f4ead0;
+      line-height: 1.6;
+    }
+    .search-access strong { color: #e8c66c; }
+    .search-access p { margin: 4px 0; }
+    .search-access small { color: #c6c0b4; }
+    .search-access[hidden] { display: none; }
     .agenda-status {
       padding: 16px 0;
       line-height: 1.6}
@@ -1201,6 +1215,12 @@
             Limpar
           </button>
         </div>
+        <section class="search-access" id="searchAccess" aria-live="polite">
+          <strong>Consulta gratuita</strong>
+          <p id="searchAllowance">Uma pesquisa gratuita a cada 24 horas, com até cinco eventos completos.</p>
+          <p id="searchCountdown" hidden></p>
+          <small id="searchAccessNote">A verificação de e-mail e o bloqueio definitivo exigem integração com a conta do cliente.</small>
+        </section>
         <div class="demo-banner" id="demoBanner" hidden>AMBIENTE DE TESTE — Eventos fictícios, sem ingressos à venda. Os resultados abaixo servem apenas para conferir a interface e os filtros.</div>
         <div class="agenda-status" id="status" role="status">
           Selecione uma cidade para começar.
@@ -1411,6 +1431,7 @@
         demoMode = false;
         populateCities(data);
         setStatus('Selecione uma cidade e clique em VER EVENTOS.');
+        updateSearchAllowance();
       } catch (error) {
         // Falha de rede ou ausência da base: demonstração visual explícita.
         catalog = buildDemoCatalog();
@@ -1418,20 +1439,128 @@
         $('demoBanner').hidden = false;
         populateCities(catalog);
         setStatus('Modo de demonstração ativado. Selecione uma cidade para testar.');
+        updateSearchAllowance();
       }
     }
 
-    function search() { if (!catalog) {
+    /* ================================================================
+       CONSULTAS GRATUITAS — PROTÓTIPO DE INTERFACE
+       Regra de produto: 1 consulta / e-mail verificado / 24 horas.
+       O servidor deverá validar identidade, prazo e consumo de cota.
+       sessionStorage abaixo serve APENAS para simular a experiência
+       neste navegador. Não é controle seguro nem verifica e-mail.
+       ================================================================ */
+    const FREE_WINDOW_MS = 24 * 60 * 60 * 1000;
+    const FREE_LIMIT = 5;
+    const DEMO_STORAGE_KEY = 'cet_agenda_consulta_demo_v1';
+
+    function readDemoConsultation() {
+      try {
+        const saved = JSON.parse(sessionStorage.getItem(DEMO_STORAGE_KEY) || 'null');
+        if (!saved || !saved.createdAt || !saved.city || !saved.date) return null;
+        if (Date.now() - saved.createdAt >= FREE_WINDOW_MS) {
+          sessionStorage.removeItem(DEMO_STORAGE_KEY);
+          return null;
+        }
+        return saved;
+      } catch {
+        return null;
+      }
+    }
+
+    function saveDemoConsultation(city, date, eventIds) {
+      const saved = { createdAt: Date.now(), city, date, eventIds };
+      try { sessionStorage.setItem(DEMO_STORAGE_KEY, JSON.stringify(saved)); } catch { /* navegação privada */ }
+      return saved;
+    }
+
+    function formatRemaining(ms) {
+      const totalMinutes = Math.ceil(Math.max(0, ms) / 60000);
+      const hours = Math.floor(totalMinutes / 60);
+      const minutes = totalMinutes % 60;
+      return `${hours}h ${String(minutes).padStart(2, '0')}min`;
+    }
+
+    function updateSearchAllowance() {
+      const saved = readDemoConsultation();
+      const allowance = $('searchAllowance');
+      const countdown = $('searchCountdown');
+      if (!saved) {
+        allowance.textContent = 'Uma pesquisa gratuita a cada 24 horas, com até cinco eventos completos.';
+        countdown.hidden = true;
+      } else {
+        allowance.textContent = 'Consulta de demonstração já utilizada. Você pode rever os cinco eventos e alterar a categoria sem consumir outra consulta.';
+        countdown.hidden = false;
+        countdown.textContent = `Nova consulta gratuita em ${formatRemaining(FREE_WINDOW_MS - (Date.now() - saved.createdAt))}.`;
+      }
+      $('searchAccessNote').textContent = demoMode
+        ? 'SIMULAÇÃO NESTE NAVEGADOR: ainda não há verificação de e-mail ou bloqueio por conta.'
+        : 'Prévia da regra. Para aplicar o limite por e-mail verificado, falta conectar a autenticação e a validação no servidor.';
+    }
+
+    function findEvents(city, date, category) {
+      const dedup = new Set();
+      return catalog.events
+        .filter(e => demoMode || validEvent(e))
+        .filter(e => e.city_id === city && e.starts_at.slice(0, 10) === date)
+        .filter(e => !category || norm(e.category) === norm(category))
+        .sort((a, b) => Date.parse(a.starts_at) - Date.parse(b.starts_at))
+        .filter(e => {
+          const key = `${norm(e.title)}|${e.starts_at}|${norm(e.venue)}`;
+          if (dedup.has(key)) return false;
+          dedup.add(key);
+          return true;
+        });
+    }
+
+    function search() {
+      if (!catalog) {
         setStatus('A base de eventos ainda não está conectada.');
         return;
-    } const city = $('city').value, date = $('date').value, cat = $('category').value; if (!city || !date) {
+      }
+      const city = $('city').value;
+      const date = $('date').value;
+      const category = $('category').value;
+      if (!city || !date) {
         setStatus('Selecione uma cidade e uma data.');
         return;
-    } const dedup = new Set(); const items = catalog.events.filter(e => demoMode ? true : validEvent(e)).filter(e => e.city_id === city && e.starts_at.slice(0, 10) === date && (!cat || norm(e.category) === norm(cat))).sort((a, b) => Date.parse(a.starts_at) - Date.parse(b.starts_at)).filter(e => { const k = norm(e.title) + '|' + e.starts_at + '|' + norm(e.venue); if (dedup.has(k))
-        return false; dedup.add(k); return true; }); $('results').replaceChildren(...items.slice(0, 5).map(renderEvent)); setStatus(items.length ? `${items.length} evento(s) com informações completas encontrado(s). Exibindo ${Math.min(items.length, 5)}.` : 'Nenhum evento encontrado para esta consulta.'); $('more').classList.toggle('agenda-hidden', items.length <= 5); }
+      }
+
+      const existing = readDemoConsultation();
+      let permittedIds;
+      if (existing) {
+        if (existing.city !== city || existing.date !== date) {
+          $('results').replaceChildren();
+          $('more').classList.add('agenda-hidden');
+          setStatus('Sua consulta de demonstração já foi utilizada para outra cidade ou data. Você pode retornar à consulta anterior ou aguardar o prazo indicado.');
+          updateSearchAllowance();
+          return;
+        }
+        permittedIds = existing.eventIds;
+      } else {
+        // A categoria NÃO limita o conjunto inicial: os filtros atuam
+        // sobre os mesmos cinco eventos, sem nova cobrança.
+        const completeList = findEvents(city, date, '');
+        permittedIds = completeList.slice(0, FREE_LIMIT).map(event => event.id);
+        // Uma busca sem resultados não consome a consulta.
+        if (permittedIds.length) saveDemoConsultation(city, date, permittedIds);
+      }
+
+      const allowed = new Set(permittedIds);
+      const items = findEvents(city, date, category).filter(event => allowed.has(event.id));
+      $('results').replaceChildren(...items.map(renderEvent));
+      const allCount = findEvents(city, date, '').length;
+      if (items.length) {
+        setStatus(`${allCount} evento(s) encontrado(s) na consulta. Exibindo ${items.length} dos até ${FREE_LIMIT} resultados liberados${category ? ' nesta categoria' : ''}.`);
+      } else {
+        setStatus('Nenhum dos eventos liberados corresponde a este filtro. Experimente outra categoria.');
+      }
+      $('more').classList.toggle('agenda-hidden', allCount <= FREE_LIMIT);
+      updateSearchAllowance();
+    }
+
     $('search').addEventListener('click', () => {
       if (demoMode) {
-        // Atualiza as datas fictícias conforme a data escolhida no filtro.
         const selectedCity = $('city').value;
         catalog = buildDemoCatalog();
         populateCities(catalog);
@@ -1439,7 +1568,19 @@
       }
       search();
     });
-    $('clear').addEventListener('click', () => { $('city').value = ''; $('date').value = today(); $('category').value = ''; $('results').replaceChildren(); $('more').classList.add('agenda-hidden'); setStatus('Selecione uma cidade para começar.'); });
+
+    $('clear').addEventListener('click', () => {
+      $('city').value = '';
+      $('date').value = today();
+      $('category').value = '';
+      $('results').replaceChildren();
+      $('more').classList.add('agenda-hidden');
+      setStatus('Selecione uma cidade para começar. Limpar os filtros não reinicia a cota de 24 horas.');
+      updateSearchAllowance();
+    });
+
+    window.setInterval(updateSearchAllowance, 60000);
+    updateSearchAllowance();
     loadCatalog();
   </script>
   </body>
