@@ -1060,7 +1060,18 @@
       display: inline-block;
       margin-top: 10px;
       color: #e8c66c}
-    /* Sinopse visível e botão de detalhes em destaque. */
+    /* Ações de ingressos: apenas destinos oficiais confirmados. */
+    .ticket-actions { display:flex; flex-wrap:wrap; gap:10px; margin-top:18px; }
+    .event-info a.ticket-button, .event-info .ticket-button-disabled {
+      display:inline-flex; align-items:center; justify-content:center;
+      padding:13px 18px; min-height:46px; border:1px solid #d4af37;
+      border-radius:10px; background:rgba(212,175,55,.12); color:#f3d47c;
+      font-weight:750; text-decoration:none; margin:0; text-align:center;
+    }
+    .event-info a.ticket-button:hover { background:rgba(212,175,55,.25); }
+    .event-info .ticket-button-disabled { opacity:.58; cursor:not-allowed; }
+    .ticket-note { color:#cfc5b2; font-size:13px; margin-top:9px; }
+    /* Sinopse visível e detalhes complementares, quando disponíveis. */
     .event-info .event-synopsis {
       margin: 12px 0 16px;
       max-width: 74ch;
@@ -1353,7 +1364,7 @@
 
     initCinematicHero();
     /* CONTRATO DE DADOS: /data/agenda-cultural.json
-     {"updated_at":"2026-11-13T12:00:00Z","cities":[{"id":"br-sp-sao-paulo","name":"São Paulo","country":"Brasil"}],"events":[{"id":"identificador-estavel","city_id":"br-sp-sao-paulo","title":"Nome oficial","category":"Teatro","starts_at":"2026-11-20T20:00:00-03:00","ends_at":null,"venue":"Nome do local","address":"Endereço completo","price":"R$ 50,00","image_url":"https://...","ticket_url":"https://.../evento-especifico","description":"Texto verificado","source":"Site oficial"}]}
+     {"updated_at":"2026-11-13T12:00:00Z","cities":[{"id":"br-sp-sao-paulo","name":"São Paulo","country":"Brasil"}],"events":[{"id":"identificador-estavel","city_id":"br-sp-sao-paulo","title":"Nome oficial","category":"Teatro","starts_at":"2026-11-20T20:00:00-03:00","ends_at":null,"venue":"Nome do local","address":"Endereço completo","price":"R$ 50,00","image_url":"https://...","ticket_url":"https://.../evento-especifico","sport_type":"futebol (quando aplicável)","ticket_options":[{"label":"Torcida A","url":"https://.../venda-oficial-especifica","verified":true}],"description":"Texto verificado","source":"Site oficial"}]}
      Não exibir eventos incompletos, nem inventar disponibilidade. Este arquivo NÃO faz scraping ou consulta IA: requer alimentador verificado separado. */
     const $ = id => document.getElementById(id);
     const today = () => { const d = new Date(); return [d.getFullYear(), String(d.getMonth() + 1).padStart(2, '0'), String(d.getDate()).padStart(2, '0')].join('-'); };
@@ -1370,11 +1381,11 @@
         { id: 'demo-rj', name: 'Rio de Janeiro', country: 'Brasil' },
         { id: 'demo-paris', name: 'Paris', country: 'França' }
       ];
-      const categories = ['Teatro', 'Shows', 'Exposições', 'Musicais', 'Cinema', 'Festivais'];
+      const categories = ['Esportes', 'Teatro', 'Shows', 'Exposições', 'Musicais', 'Cinema', 'Festivais'];
       const events = cities.flatMap(city => categories.map((category, i) => ({
         id: `${city.id}-${i}`,
         city_id: city.id,
-        title: `[TESTE] Evento demonstrativo de ${category.toLowerCase()} ${i + 1}`,
+        title: category === 'Esportes' ? '[TESTE] Equipe A x Equipe B — futebol' : `[TESTE] Evento demonstrativo de ${category.toLowerCase()} ${i + 1}`,
         category,
         starts_at: `${date}T${String(14 + i).padStart(2, '0')}:00:00`,
         venue: 'Local fictício — demonstração',
@@ -1382,6 +1393,8 @@
         price: 'Preço fictício — não disponível para compra',
         image_url: '',
         ticket_url: '',
+        sport_type: category === 'Esportes' ? 'futebol' : null,
+        ticket_options: [], // Em jogos reais: opções oficiais por torcida, quando autorizadas.
         description: 'Esta apresentação é uma simulação de agenda cultural, sem programação real ou venda de ingressos. A sinopse de um evento verdadeiro será extraída de sua descrição oficial e exibida neste espaço, em aproximadamente 200 caracteres.',
         extra_details: 'Evento fictício criado apenas para verificar a apresentação, os filtros e a ordenação. Não existe programação, endereço, preço ou bilheteria oficial para este exemplo.',
         source: 'Dados de demonstração'
@@ -1408,7 +1421,15 @@
     catch {
         return false;
     } };
-    const validEvent = e => e && e.id && e.city_id && e.title && e.category && e.starts_at && !isNaN(Date.parse(e.starts_at)) && e.venue && e.address && e.price && e.description && validUrl(e.image_url) && validUrl(e.ticket_url);
+    // Eventos comuns: uma página de compra específica. Futebol: opções verificadas
+    // por torcida, ou uma única opção quando a regra da partida assim determinar.
+    const officialOptions = e => Array.isArray(e.ticket_options)
+      ? e.ticket_options.filter(o => o && o.label && validUrl(o.url) && o.verified === true)
+      : [];
+    const validEvent = e => e && e.id && e.city_id && e.title && e.category && e.starts_at
+      && !isNaN(Date.parse(e.starts_at)) && e.venue && e.address && e.price
+      && e.description && validUrl(e.image_url)
+      && (validUrl(e.ticket_url) || officialOptions(e).length > 0);
     function setStatus(s) { $('status').textContent = s; }
     function make(tag, cls, txt) { const el = document.createElement(tag); if (cls)
         el.className = cls; if (txt !== undefined)
@@ -1437,19 +1458,45 @@
       line(info, 'Local', e.venue);
       line(info, 'Endereço', e.address);
       line(info, 'Ingressos', e.price);
-      const details = make('details');
-      details.append(make('summary', '', 'Informações do evento'));
-      const extra = make('div', 'event-extra');
-      extra.append(make('p', '', e.extra_details || 'Consulte as informações complementares na página oficial do evento.'));
-      line(extra, 'Fonte', e.source || 'Organizador oficial');
-      details.append(extra);
-      info.append(details);
-      if (!demoMode) {
-        const link = make('a', '', 'Consultar ingressos');
+      // Informações extras só aparecem quando o fornecedor informou conteúdo real.
+      if (e.extra_details && !demoMode) {
+        const details = make('details');
+        details.append(make('summary', '', 'Detalhes adicionais'));
+        const extra = make('div', 'event-extra');
+        extra.append(make('p', '', e.extra_details));
+        details.append(extra);
+        info.append(details);
+      }
+
+      const actions = make('div', 'ticket-actions');
+      const isFootball = norm(e.sport_type) === 'futebol';
+      const options = officialOptions(e);
+      if (demoMode) {
+        actions.append(make('span', 'ticket-button-disabled', 'ADQUIRIR INGRESSOS — DEMONSTRAÇÃO'));
+      } else if (isFootball && options.length) {
+        // Cada opção deve apontar à venda AUTORIZADA para aquela torcida.
+        // Torcida única: o alimentador deve fornecer somente a opção permitida.
+        for (const option of options) {
+          const link = make('a', 'ticket-button', `ADQUIRIR INGRESSOS — ${option.label}`);
+          link.href = option.url;
+          link.target = '_blank';
+          link.rel = 'noopener noreferrer';
+          actions.append(link);
+        }
+      } else if (!isFootball && validUrl(e.ticket_url)) {
+        // Basquete, NFL, tênis, F1 e demais eventos: bilheteria oficial do evento.
+        const link = make('a', 'ticket-button', 'ADQUIRIR INGRESSOS');
         link.href = e.ticket_url;
         link.target = '_blank';
         link.rel = 'noopener noreferrer';
-        info.append(link);
+        actions.append(link);
+      } else {
+        actions.append(make('span', 'ticket-button-disabled', 'INGRESSOS NÃO CONFIRMADOS'));
+      }
+      info.append(actions);
+      if (isFootball && !demoMode) {
+        info.append(make('p', 'ticket-note',
+          'As opções de compra dependem da torcida e das regras oficiais desta partida.'));
       }
       card.append(info);
       return card;
