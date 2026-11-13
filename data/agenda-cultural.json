@@ -1,0 +1,110 @@
+{
+  "updated_at": "2026-11-13T00:00:00Z",
+  "cities": [
+    {
+      "id": "br-sp-sao-paulo",
+      "name": "São Paulo",
+      "country": "Brasil"
+    },
+    {
+      "id": "br-rj-rio-de-janeiro",
+      "name": "Rio de Janeiro",
+      "country": "Brasil"
+    },
+    {
+      "id": "fr-paris",
+      "name": "Paris",
+      "country": "França"
+    },
+    {
+      "id": "es-madrid",
+      "name": "Madrid",
+      "country": "Espanha"
+    },
+    {
+      "id": "es-barcelona",
+      "name": "Barcelona",
+      "country": "Espanha"
+    },
+    {
+      "id": "us-ny-new-york",
+      "name": "Nova York",
+      "country": "Estados Unidos"
+    }
+  ],
+  "events": [],
+  "sources": [
+    {
+      "name": "Ticketmaster EUA",
+      "url": "https://www.ticketmaster.com/",
+      "type": "bilheteria"
+    },
+    {
+      "name": "Ticketmaster França",
+      "url": "https://www.ticketmaster.fr/",
+      "type": "bilheteria"
+    },
+    {
+      "name": "Sympla",
+      "url": "https://www.sympla.com.br/",
+      "type": "bilheteria"
+    },
+    {
+      "name": "Fiel Torcedor",
+      "url": "https://www.fieltorcedor.com.br/",
+      "type": "futebol"
+    },
+    {
+      "name": "SPFC Ticket",
+      "url": "https://www.spfcticket.net/",
+      "type": "futebol"
+    },
+    {
+      "name": "Palmeiras Ingressos",
+      "url": "https://www.palmeiras.com.br/ingressos/",
+      "type": "futebol"
+    },
+    {
+      "name": "Santos FC Ingressos",
+      "url": "https://ingressos.santosfc.com.br/",
+      "type": "futebol"
+    },
+    {
+      "name": "Tickets For Fun",
+      "url": "https://www.ticketsforfun.com.br/",
+      "type": "bilheteria"
+    },
+    {
+      "name": "Ticket360",
+      "url": "https://www.ticket360.com.br/",
+      "type": "bilheteria"
+    },
+    {
+      "name": "Eventim",
+      "url": "https://www.eventim.com.br/",
+      "type": "bilheteria"
+    },
+    {
+      "name": "Real Madrid",
+      "url": "https://www.realmadrid.com/pt-PT/bilhetes",
+      "type": "futebol"
+    },
+    {
+      "name": "FC Barcelona",
+      "url": "https://www.fcbarcelona.com/en/tickets/things-to-do-in-barcelona",
+      "type": "futebol"
+    },
+    {
+      "name": "Cinemark",
+      "url": "https://www.cinemark.com.br/",
+      "type": "cinema"
+    }
+  ],
+  "data_policy": {
+    "event_data": "Apenas eventos verificados individualmente; nenhum evento foi inserido sem confirmação de imagem, preço e link específico.",
+    "ticket_price": "Valor oficial publicado; sem estimativas.",
+    "currency_conversion": "PTAX BCB apenas para referência aproximada em BRL para ingressos internacionais.",
+    "availability": "Somente declarar disponibilidade ou últimos ingressos quando a fonte confirmar.",
+    "refresh": "Este arquivo é estático; requer atualização por processo externo de pesquisa e validação."
+  }
+}
