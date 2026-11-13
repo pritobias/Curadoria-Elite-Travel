@@ -1017,6 +1017,24 @@
       .event-card img {
         width: 100%;
         height: 220px}}
+    /* Ícone de contingência apenas para testes fora da estrutura do site. */
+    .brand-compass {
+      color: #d4af37;
+      font-size: 34px;
+      line-height: 1;
+      width: 36px;
+      text-align: center;
+      flex-shrink: 0;
+    }
+    .demo-banner {
+      border: 1px solid #d4af37;
+      border-radius: 12px;
+      padding: 12px 16px;
+      margin: 14px 0;
+      color: #f5e6b0;
+      background: #1b1609;
+    }
+    .demo-banner[hidden] { display: none; }
   </style>
   </head>
   <body>
@@ -1029,7 +1047,8 @@
     <header class="site-header">
       <div class="site-header-inner">
         <a class="brand" href="/" aria-label="Curadoria Elite Travel">
-          <img src="images/rosa-dos-ventos.png" alt="Rosa dos Ventos">
+          <img src="images/rosa-dos-ventos.png" alt="Rosa dos Ventos" onerror="this.hidden=true; this.nextElementSibling.hidden=false;">
+          <span class="brand-compass" hidden aria-label="Rosa dos Ventos">✧</span>
           <div class="brand-text">
             <div class="brand-title">
               CURADORIA ELITE TRAVEL
@@ -1152,6 +1171,7 @@
             Limpar
           </button>
         </div>
+        <div class="demo-banner" id="demoBanner" hidden>AMBIENTE DE TESTE — Eventos fictícios, sem ingressos à venda. Os resultados abaixo servem apenas para conferir a interface e os filtros.</div>
         <div class="agenda-status" id="status" role="status">
           Selecione uma cidade para começar.
         </div>
@@ -1193,6 +1213,46 @@
     const today = () => { const d = new Date(); return [d.getFullYear(), String(d.getMonth() + 1).padStart(2, '0'), String(d.getDate()).padStart(2, '0')].join('-'); };
     $('date').value = today();
     let catalog = null;
+    let demoMode = false;
+
+    // Dados exclusivamente fictícios para testar a interface, sem links de compra.
+    // A aplicação usa dados oficiais quando data/agenda-cultural.json estiver disponível.
+    function buildDemoCatalog() {
+      const date = $('date').value || today();
+      const cities = [
+        { id: 'demo-sp', name: 'São Paulo', country: 'Brasil' },
+        { id: 'demo-rj', name: 'Rio de Janeiro', country: 'Brasil' },
+        { id: 'demo-paris', name: 'Paris', country: 'França' }
+      ];
+      const categories = ['Teatro', 'Shows', 'Exposições', 'Musicais', 'Cinema', 'Festivais'];
+      const events = cities.flatMap(city => categories.map((category, i) => ({
+        id: `${city.id}-${i}`,
+        city_id: city.id,
+        title: `[TESTE] Evento demonstrativo de ${category.toLowerCase()} ${i + 1}`,
+        category,
+        starts_at: `${date}T${String(14 + i).padStart(2, '0')}:00:00`,
+        venue: 'Local fictício — demonstração',
+        address: `Endereço de demonstração, ${city.name} — não é um local real`,
+        price: 'Preço fictício — não disponível para compra',
+        image_url: '',
+        ticket_url: '',
+        description: 'Este é um evento fictício criado exclusivamente para testar os filtros, a ordenação e a apresentação dos cards. Não corresponde a um evento anunciado nem possui ingressos à venda.',
+        source: 'Dados de demonstração'
+      })));
+      return { cities, events };
+    }
+
+    function populateCities(data) {
+      const select = $('city');
+      select.replaceChildren(make('option', '', 'Selecione uma cidade'));
+      const cities = [...new Map(data.cities.filter(c => c.id && c.name && c.country).map(c => [c.id, c])).values()]
+        .sort((a, b) => a.name.localeCompare(b.name, 'pt-BR'));
+      for (const city of cities) {
+        const option = make('option', '', `${city.name} — ${city.country}`);
+        option.value = city.id;
+        select.append(option);
+      }
+    }
     const norm = s => String(s || '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().trim();
     const validUrl = s => { try {
         const u = new URL(s);
@@ -1207,35 +1267,83 @@
         el.className = cls; if (txt !== undefined)
         el.textContent = txt; return el; }
     function line(parent, label, value) { parent.append(make('p', '', label + ': ' + value)); }
-    function renderEvent(e) { const card = make('article', 'event-card'); const img = make('img'); img.src = e.image_url; img.alt = 'Imagem oficial: ' + e.title; img.loading = 'lazy'; img.referrerPolicy = 'no-referrer'; card.append(img); const info = make('div', 'event-info'); info.append(make('h3', '', e.title)); line(info, 'Data e horário', new Intl.DateTimeFormat('pt-BR', { dateStyle: 'full', timeStyle: 'short', timeZone: undefined }).format(new Date(e.starts_at))); line(info, 'Local', e.venue); line(info, 'Endereço', e.address); line(info, 'Ingressos', e.price); const details = make('details'); details.append(make('summary', '', 'Informações do evento')); details.append(make('p', '', e.description)); line(details, 'Fonte', e.source || 'Organizador oficial'); info.append(details); const link = make('a', '', 'Consultar ingressos'); link.href = e.ticket_url; link.target = '_blank'; link.rel = 'noopener noreferrer'; info.append(link); card.append(info); return card; }
-    async function loadCatalog() { try {
-        const res = await fetch('data/agenda-cultural.json', { cache: 'no-store' });
-        if (!res.ok)
-            throw Error('Sem base');
-        const data = await res.json();
-        if (!Array.isArray(data.cities) || !Array.isArray(data.events))
-            throw Error('Formato inválido');
-        catalog = data;
-        const cities = [...new Map(data.cities.filter(c => c.id && c.name && c.country).map(c => [c.id, c])).values()].sort((a, b) => a.name.localeCompare(b.name, 'pt-BR'));
-        for (const c of cities) {
-            const o = make('option', '', c.name + ' — ' + c.country);
-            o.value = c.id;
-            $('city').append(o);
-        }
-        setStatus(cities.length ? 'Selecione uma cidade e clique em VER EVENTOS.' : 'Nenhuma cidade cadastrada na base.');
+    function renderEvent(e) {
+      const card = make('article', 'event-card');
+      if (demoMode) {
+        const placeholder = make('div', 'demo-placeholder', 'EVENTO FICTÍCIO\nSEM IMAGEM OFICIAL');
+        placeholder.style.cssText = 'min-height:200px;display:flex;align-items:center;justify-content:center;padding:18px;text-align:center;white-space:pre-line;background:#191919;color:#d4af37;border-radius:12px;';
+        card.append(placeholder);
+      } else {
+        const img = make('img');
+        img.src = e.image_url;
+        img.alt = 'Imagem oficial: ' + e.title;
+        img.loading = 'lazy';
+        card.append(img);
+      }
+      const info = make('div', 'event-info');
+      info.append(make('h3', '', e.title));
+      line(info, 'Data e horário', new Intl.DateTimeFormat('pt-BR', {
+        dateStyle: 'full', timeStyle: 'short'
+      }).format(new Date(e.starts_at)));
+      line(info, 'Local', e.venue);
+      line(info, 'Endereço', e.address);
+      line(info, 'Ingressos', e.price);
+      const details = make('details');
+      details.append(make('summary', '', 'Informações do evento'));
+      details.append(make('p', '', e.description));
+      line(details, 'Fonte', e.source || 'Organizador oficial');
+      info.append(details);
+      if (!demoMode) {
+        const link = make('a', '', 'Consultar ingressos');
+        link.href = e.ticket_url;
+        link.target = '_blank';
+        link.rel = 'noopener noreferrer';
+        info.append(link);
+      }
+      card.append(info);
+      return card;
     }
-    catch (err) {
-        setStatus('A Agenda Cultural ainda não tem uma base de eventos conectada. Nenhum resultado será apresentado sem informações oficiais verificadas.');
-    } }
+
+    async function loadCatalog() {
+      try {
+        const response = await fetch('data/agenda-cultural.json', { cache: 'no-store' });
+        if (!response.ok) throw new Error('Base oficial não encontrada');
+        const data = await response.json();
+        if (!Array.isArray(data.cities) || !Array.isArray(data.events)) {
+          throw new Error('Formato da base inválido');
+        }
+        catalog = data;
+        demoMode = false;
+        populateCities(data);
+        setStatus('Selecione uma cidade e clique em VER EVENTOS.');
+      } catch (error) {
+        // Falha de rede ou ausência da base: demonstração visual explícita.
+        catalog = buildDemoCatalog();
+        demoMode = true;
+        $('demoBanner').hidden = false;
+        populateCities(catalog);
+        setStatus('Modo de demonstração ativado. Selecione uma cidade para testar.');
+      }
+    }
+
     function search() { if (!catalog) {
         setStatus('A base de eventos ainda não está conectada.');
         return;
     } const city = $('city').value, date = $('date').value, cat = $('category').value; if (!city || !date) {
         setStatus('Selecione uma cidade e uma data.');
         return;
-    } const dedup = new Set(); const items = catalog.events.filter(validEvent).filter(e => e.city_id === city && e.starts_at.slice(0, 10) === date && (!cat || norm(e.category) === norm(cat))).sort((a, b) => Date.parse(a.starts_at) - Date.parse(b.starts_at)).filter(e => { const k = norm(e.title) + '|' + e.starts_at + '|' + norm(e.venue); if (dedup.has(k))
-        return false; dedup.add(k); return true; }); $('results').replaceChildren(...items.slice(0, 5).map(renderEvent)); setStatus(items.length ? `${items.length} evento(s) com informações completas encontrado(s). Exibindo ${Math.min(items.length, 5)}.` : 'Nenhum evento completo foi encontrado na base para esta consulta.'); $('more').classList.toggle('agenda-hidden', items.length <= 5); }
-    $('search').addEventListener('click', search);
+    } const dedup = new Set(); const items = catalog.events.filter(e => demoMode ? true : validEvent(e)).filter(e => e.city_id === city && e.starts_at.slice(0, 10) === date && (!cat || norm(e.category) === norm(cat))).sort((a, b) => Date.parse(a.starts_at) - Date.parse(b.starts_at)).filter(e => { const k = norm(e.title) + '|' + e.starts_at + '|' + norm(e.venue); if (dedup.has(k))
+        return false; dedup.add(k); return true; }); $('results').replaceChildren(...items.slice(0, 5).map(renderEvent)); setStatus(items.length ? `${items.length} evento(s) com informações completas encontrado(s). Exibindo ${Math.min(items.length, 5)}.` : 'Nenhum evento encontrado para esta consulta.'); $('more').classList.toggle('agenda-hidden', items.length <= 5); }
+    $('search').addEventListener('click', () => {
+      if (demoMode) {
+        // Atualiza as datas fictícias conforme a data escolhida no filtro.
+        const selectedCity = $('city').value;
+        catalog = buildDemoCatalog();
+        populateCities(catalog);
+        $('city').value = selectedCity;
+      }
+      search();
+    });
     $('clear').addEventListener('click', () => { $('city').value = ''; $('date').value = today(); $('category').value = ''; $('results').replaceChildren(); $('more').classList.add('agenda-hidden'); setStatus('Selecione uma cidade para começar.'); });
     loadCatalog();
   </script>
