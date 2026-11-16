@@ -1,239 +1,245 @@
 /**
- * Curadoria Elite Travel — Agenda Cultural.
- * Arquivo: middleware.js na raiz do repositório.
- * Middleware Edge para evitar acrescentar uma função Node.js ao limite Hobby.
- * Pesquisa experimental de eventos públicos; não altera arquivos api/.
- * Ainda não integra o HTML nem controla pesquisas por e-mail no Supabase.
+ * Curadoria Elite Travel — Agenda Cultural
+ * middleware.js (raiz do projeto) — Edge Middleware
+ * Pesquisa experimental em páginas públicas: Sympla (Brasil) e Ticketmaster (internacional).
+ * Sem API externa, sem funções em api/, sem catálogo fixo de cidades.
+ * IMPORTANTE: extração pública depende de acesso HTTP e de JSON-LD nas páginas.
+ * Não garante cobertura integral da Ticketmaster ou da Sympla.
  */
+export const config = { matcher: ['/agenda-cultural/pesquisar'] };
 
-export const config = {
-  matcher: ['/agenda-cultural/pesquisar'],
-};
+const LIMITE = 5;
+const TIMEOUT = 5500;
+const MAX_HTML = 1400000;
 
-const MAX_RESULTS = 5;
-const SEARCH_TIMEOUT_MS = 4500;
-const PAGE_TIMEOUT_MS = 3500;
-const USER_AGENT = 'Mozilla/5.0 (compatible; CuradoriaEliteTravelResearch/0.1)';
-
-function respostaJSON(dados, status = 200) {
-  return new Response(JSON.stringify(dados), {
+function resposta(payload, status = 200) {
+  return new Response(JSON.stringify(payload), {
     status,
-    headers: {
-      'Content-Type': 'application/json; charset=utf-8',
-      'Cache-Control': 'no-store',
-      'X-Content-Type-Options': 'nosniff',
-    },
+    headers: { 'content-type': 'application/json; charset=utf-8',
+      'cache-control': 'no-store', 'x-content-type-options': 'nosniff' },
   });
 }
 
-function texto(value) {
-  return String(value ?? '').replace(/<[^>]*>/g, ' ')
+function limpar(value) {
+  return String(value ?? '').replace(/<[^>]+>/g, ' ')
     .replace(/&amp;/g, '&').replace(/&quot;/g, '"')
-    .replace(/&#39;/g, "'").replace(/\s+/g, ' ').trim();
+    .replace(/&#39;/g, "'").replace(/&nbsp;/g, ' ')
+    .replace(/\s+/g, ' ').trim();
 }
 
-function urlPublica(value) {
+function normalizar(value) {
+  return limpar(value).normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
+}
+
+function urlSegura(value, allowedHosts) {
   try {
-    const url = new URL(value);
-    if (url.protocol !== 'https:') return null;
-    if (url.username || url.password) return null;
-    const host = url.hostname.toLowerCase();
-    if (host === 'localhost' || host.endsWith('.localhost') ||
-        host.endsWith('.local') || host.endsWith('.internal') ||
-        host === '0.0.0.0' || host === '[::1]' ||
-        /^\d+\.\d+\.\d+\.\d+$/.test(host) ||
-        host.includes(':') || !host.includes('.')) return null;
-    return url;
-  } catch {
-    return null;
-  }
+    const u = new URL(value);
+    if (u.protocol !== 'https:' || u.username || u.password) return null;
+    const host = u.hostname.toLowerCase();
+    if (!allowedHosts.some(h => host === h || host.endsWith('.' + h))) return null;
+    return u;
+  } catch { return null; }
 }
 
-async function buscarHTML(url, timeoutMs) {
-  const parsed = urlPublica(url);
-  if (!parsed) throw new Error('URL não permitida');
-  const response = await fetch(parsed.href, {
-    redirect: 'manual',
-    signal: AbortSignal.timeout(timeoutMs),
-    headers: {
-      'Accept': 'text/html,application/xhtml+xml',
-      'User-Agent': USER_AGENT,
-    },
+async function htmlPublico(url, allowedHosts) {
+  const u = urlSegura(url, allowedHosts);
+  if (!u) throw new Error('Domínio não autorizado');
+  const response = await fetch(u.href, {
+    redirect: 'follow', signal: AbortSignal.timeout(TIMEOUT),
+    headers: { accept: 'text/html,application/xhtml+xml',
+      'user-agent': 'Mozilla/5.0 (compatible; CuradoriaEliteTravel/1.0)' },
   });
-  if (!response.ok) throw new Error(`HTTP ${response.status}`);
-  const tipo = response.headers.get('content-type') || '';
-  if (!/html|xml/i.test(tipo)) throw new Error('Resposta não HTML');
+  if (!response.ok) throw new Error('HTTP ' + response.status);
+  const final = urlSegura(response.url, allowedHosts);
+  if (!final) throw new Error('Redirecionamento para domínio não autorizado');
+  if (!/html/i.test(response.headers.get('content-type') || '')) throw new Error('Conteúdo não HTML');
   const tamanho = Number(response.headers.get('content-length') || 0);
-  if (tamanho > 1_500_000) throw new Error('Página muito grande');
-  return (await response.text()).slice(0, 1_500_000);
+  if (tamanho > MAX_HTML) throw new Error('Página muito grande');
+  return { html: (await response.text()).slice(0, MAX_HTML), url: final.href };
 }
 
-function decodificar(text) {
-  return text.replace(/&amp;/g, '&').replace(/&quot;/g, '"')
-    .replace(/&#(?:x([\da-f]+)|(\d+));/gi, (_, hex, dec) => {
-      try { return String.fromCodePoint(parseInt(hex || dec, hex ? 16 : 10)); }
-      catch { return ''; }
-    });
-}
-
-function linksDaPesquisa(html) {
-  const links = [];
-  const blocos = html.match(/<li\b[^>]*class=["'][^"']*\bb_algo\b[^"']*["'][\s\S]*?<\/li>/gi) || [];
-  for (const bloco of blocos) {
-    const match = bloco.match(/<h2\b[^>]*>[\s\S]*?<a\b[^>]*href=["']([^"']+)["']/i);
-    if (!match) continue;
-    const url = urlPublica(decodificar(match[1]));
-    if (url && !url.hostname.endsWith('bing.com') && !links.includes(url.href)) {
-      links.push(url.href);
-    }
+function jsonLd(html) {
+  const eventos = [];
+  const re = /<script\b[^>]*type\s*=\s*["']application\/ld\+json["'][^>]*>([\s\S]*?)<\/script>/gi;
+  for (const match of html.matchAll(re)) {
+    try { coletar(JSON.parse(match[1]), eventos); } catch { /* dados não estruturados */ }
   }
-  return links.slice(0, 8);
+  return eventos;
 }
 
-function coletarEventos(node, output = []) {
-  if (!node || typeof node !== 'object') return output;
+function coletar(node, eventos, depth = 0) {
+  if (!node || typeof node !== 'object' || depth > 8) return;
   if (Array.isArray(node)) {
-    for (const item of node) coletarEventos(item, output);
-    return output;
+    for (const item of node) coletar(item, eventos, depth + 1);
+    return;
   }
-  const tipo = node['@type'];
-  const tipos = Array.isArray(tipo) ? tipo : [tipo];
-  if (tipos.some(item => typeof item === 'string' && /Event$/i.test(item))) {
-    output.push(node);
+  const types = Array.isArray(node['@type']) ? node['@type'] : [node['@type']];
+  if (types.some(t => typeof t === 'string' && /Event$/i.test(t))) eventos.push(node);
+  for (const field of ['@graph', 'mainEntity', 'itemListElement', 'item']) {
+    if (node[field]) coletar(node[field], eventos, depth + 1);
   }
-  if (node['@graph']) coletarEventos(node['@graph'], output);
-  if (node.mainEntity) coletarEventos(node.mainEntity, output);
-  if (node.itemListElement) coletarEventos(node.itemListElement, output);
-  return output;
 }
 
-function eventosEstruturados(html) {
-  const encontrados = [];
-  const scripts = html.matchAll(/<script\b[^>]*type=["']application\/ld\+json["'][^>]*>([\s\S]*?)<\/script>/gi);
-  for (const script of scripts) {
-    try { coletarEventos(JSON.parse(script[1].trim()), encontrados); }
-    catch { /* ignorar dados inválidos */ }
-  }
-  return encontrados;
-}
+function primeiro(v) { return Array.isArray(v) ? v[0] : v; }
+function valor(v) { return typeof v === 'string' ? v : (v?.name || v?.text || ''); }
+function href(v) { return typeof v === 'string' ? v : (v?.url || v?.contentUrl || ''); }
 
-function textoCampo(value) {
-  if (typeof value === 'string') return texto(value);
-  if (value && typeof value === 'object') return texto(value.name || value.text || '');
-  return '';
-}
-
-function enderecoURL(value) {
-  const item = Array.isArray(value) ? value[0] : value;
-  return typeof item === 'string' ? item : item?.url || item?.contentUrl || '';
-}
-
-function normalizarEvento(evento, pagina, cidade, data, categoria) {
-  const inicio = String(evento.startDate || '');
+function eventoNormalizado(raw, sourceUrl, cidade, data, fonte) {
+  const inicio = String(raw.startDate || '');
   if (inicio.slice(0, 10) !== data) return null;
-  const nome = textoCampo(evento.name);
+  const nome = limpar(valor(raw.name));
   if (!nome) return null;
-  const local = Array.isArray(evento.location) ? evento.location[0] : evento.location;
-  const estabelecimento = textoCampo(local);
-  const enderecoBruto = local?.address;
-  const endereco = typeof enderecoBruto === 'string' ? texto(enderecoBruto) :
-    [enderecoBruto?.streetAddress, enderecoBruto?.addressLocality,
-      enderecoBruto?.addressRegion, enderecoBruto?.addressCountry]
-      .filter(Boolean).map(texto).join(', ');
-  const localizacao = `${estabelecimento} ${endereco}`.toLocaleLowerCase();
-  if (!localizacao.includes(cidade.toLocaleLowerCase())) return null;
-  const oferta = Array.isArray(evento.offers) ? evento.offers[0] : evento.offers;
-  const preco = oferta?.price ?? oferta?.lowPrice ?? null;
+  const local = primeiro(raw.location);
+  const enderecoObj = local?.address;
+  const endereco = typeof enderecoObj === 'string' ? limpar(enderecoObj) :
+    [enderecoObj?.streetAddress, enderecoObj?.addressLocality, enderecoObj?.addressRegion,
+      enderecoObj?.addressCountry].filter(Boolean).map(limpar).join(', ');
+  const estabelecimento = limpar(valor(local));
+  // A cidade precisa constar nos dados do evento, não apenas no parâmetro de pesquisa.
+  if (!normalizar(estabelecimento + ' ' + endereco).includes(normalizar(cidade))) return null;
+  const oferta = primeiro(raw.offers);
+  const hostFonte = fonte === 'sympla' ? ['sympla.com.br'] : ['ticketmaster.com', 'ticketmaster.fr',
+    'ticketmaster.es', 'ticketmaster.co.uk', 'ticketmaster.de', 'ticketmaster.it',
+    'ticketmaster.nl', 'ticketmaster.be', 'ticketmaster.ie', 'ticketmaster.ca',
+    'ticketmaster.com.mx', 'ticketmaster.com.au', 'ticketmaster.co.nz',
+    'ticketmaster.se', 'ticketmaster.no', 'ticketmaster.dk', 'ticketmaster.fi',
+    'ticketmaster.pl', 'ticketmaster.ch', 'ticketmaster.at', 'ticketmaster.cz'];
+  const urlEvento = urlSegura(href(raw.url), hostFonte)?.href || sourceUrl;
+  const urlIngresso = urlSegura(href(oferta?.url), hostFonte)?.href || urlEvento;
+  const imagem = href(primeiro(raw.image));
+  const imagemSegura = (() => { try { const u = new URL(imagem); return u.protocol === 'https:' ? u.href : null; } catch { return null; } })();
   return {
-    id: `${nome}|${inicio}|${estabelecimento}`.toLocaleLowerCase(),
-    title: nome,
-    starts_at: inicio,
-    city: cidade,
-    category_requested: categoria || 'todos',
-    description: textoCampo(evento.description).slice(0, 260) || null,
-    venue: estabelecimento || null,
-    address: endereco || null,
-    image_url: urlPublica(enderecoURL(evento.image))?.href || null,
-    event_url: urlPublica(enderecoURL(evento.url))?.href || pagina,
-    ticket_url: urlPublica(enderecoURL(oferta?.url))?.href || null,
-    price: preco === null ? null : String(preco),
-    currency: typeof oferta?.priceCurrency === 'string' ? oferta.priceCurrency : null,
-    half_price: null,
-    availability: null,
-    event_type: Array.isArray(evento['@type']) ? evento['@type'].join(', ') : String(evento['@type'] || ''),
-    source_url: pagina,
-    verification: 'Dados estruturados públicos; preços e ingressos não confirmados com a bilheteria',
+    id: [nome, inicio, estabelecimento].map(normalizar).join('|'),
+    title: nome, starts_at: inicio, city: cidade, venue: estabelecimento || null,
+    address: endereco || null, description: limpar(valor(raw.description)).slice(0, 260) || null,
+    image_url: imagemSegura, event_url: urlEvento, ticket_url: urlIngresso,
+    price: oferta?.price == null ? null : String(oferta.price),
+    currency: oferta?.priceCurrency || null, half_price: null, availability: null,
+    source: fonte, source_url: sourceUrl,
+    verification: 'Informações extraídas de dados estruturados públicos; disponibilidade não confirmada',
   };
 }
 
-async function pesquisarEventos({ cidade, data, categoria }) {
-  const consulta = [categoria || 'eventos', 'em', cidade, data, 'ingressos'].join(' ');
-  const busca = `https://www.bing.com/search?q=${encodeURIComponent(consulta)}&count=20`;
-  const avisos = [];
-  let links = [];
-  try { links = linksDaPesquisa(await buscarHTML(busca, SEARCH_TIMEOUT_MS)); }
-  catch (erro) { avisos.push(`Busca pública indisponível: ${erro.message}`); }
-  if (!links.length) avisos.push('Nenhum link recuperado; o buscador pode bloquear consultas automatizadas.');
-  const candidatos = await Promise.all(links.slice(0, 5).map(async link => {
-    try {
-      const html = await buscarHTML(link, PAGE_TIMEOUT_MS);
-      return eventosEstruturados(html)
-        .map(item => normalizarEvento(item, link, cidade, data, categoria))
-        .filter(Boolean);
-    } catch { return []; }
-  }));
-  const eventos = [];
-  for (const item of candidatos.flat()) {
-    if (!eventos.some(outro => outro.id === item.id)) eventos.push(item);
-    if (eventos.length >= MAX_RESULTS) break;
+// Sites de cada mercado; nenhuma cidade é cadastrada previamente.
+// País não atendido por este mapa retorna aviso explícito, não uma busca falsa.
+const MERCADOS = Object.freeze({
+  US: 'www.ticketmaster.com', CA: 'www.ticketmaster.ca', MX: 'www.ticketmaster.com.mx',
+  FR: 'www.ticketmaster.fr', ES: 'www.ticketmaster.es', GB: 'www.ticketmaster.co.uk',
+  UK: 'www.ticketmaster.co.uk', DE: 'www.ticketmaster.de', IT: 'www.ticketmaster.it',
+  NL: 'www.ticketmaster.nl', BE: 'www.ticketmaster.be', IE: 'www.ticketmaster.ie',
+  AU: 'www.ticketmaster.com.au', NZ: 'www.ticketmaster.co.nz',
+  SE: 'www.ticketmaster.se', NO: 'www.ticketmaster.no', DK: 'www.ticketmaster.dk',
+  FI: 'www.ticketmaster.fi', PL: 'www.ticketmaster.pl', CH: 'www.ticketmaster.ch',
+  AT: 'www.ticketmaster.at', CZ: 'www.ticketmaster.cz',
+});
+const PAISES = Object.freeze({
+  BR: ['br', 'brasil', 'brazil'], US: ['us', 'usa', 'estados unidos', 'united states'],
+  CA: ['ca', 'canada'], MX: ['mx', 'mexico'], FR: ['fr', 'franca', 'france'],
+  ES: ['es', 'espanha', 'spain'], GB: ['gb', 'uk', 'reino unido', 'united kingdom'],
+  DE: ['de', 'alemanha', 'germany'], IT: ['it', 'italia', 'italy'],
+  NL: ['nl', 'paises baixos', 'netherlands', 'holanda'], BE: ['be', 'belgica', 'belgium'],
+  IE: ['ie', 'irlanda', 'ireland'], AU: ['au', 'australia'], NZ: ['nz', 'nova zelandia', 'new zealand'],
+  SE: ['se', 'suecia', 'sweden'], NO: ['no', 'noruega', 'norway'],
+  DK: ['dk', 'dinamarca', 'denmark'], FI: ['fi', 'finlandia', 'finland'],
+  PL: ['pl', 'polonia', 'poland'], CH: ['ch', 'suica', 'switzerland'],
+  AT: ['at', 'austria'], CZ: ['cz', 'republica tcheca', 'czechia'],
+});
+function codigoPais(pais) {
+  const p = normalizar(pais);
+  for (const [codigo, nomes] of Object.entries(PAISES)) {
+    if (nomes.includes(p)) return codigo;
   }
+  return null;
+}
+
+function linksEventos(html, base, allowedHosts) {
+  const encontrados = new Set();
+  const re = /<a\b[^>]*\bhref\s*=\s*["']([^"']+)["'][^>]*>/gi;
+  for (const m of html.matchAll(re)) {
+    const raw = m[1].replace(/&amp;/g, '&');
+    let url;
+    try { url = new URL(raw, base); } catch { continue; }
+    if (!urlSegura(url.href, allowedHosts)) continue;
+    // Somente caminhos de detalhe de evento; evita páginas genéricas.
+    if (!/(\/event\/|\/evento\/|\/eventos\/[^/?]+|\/manifestation\/|\/event\/[^/?]+\/)/i.test(url.pathname)) continue;
+    url.hash = '';
+    encontrados.add(url.href);
+    if (encontrados.size >= 12) break;
+  }
+  return [...encontrados];
+}
+
+async function pesquisar({ cidade, pais, data, categoria }) {
+  const codigo = codigoPais(pais);
+  if (!codigo) return { ok: false, erro: 'País não identificado. Informe o país por nome ou código ISO.', events: [] };
+  const brasileiro = codigo === 'BR';
+  const host = brasileiro ? 'www.sympla.com.br' : MERCADOS[codigo];
+  if (!host) return { ok: false, erro: 'Mercado Ticketmaster ainda não configurado para este país.', events: [] };
+  const fonte = brasileiro ? 'sympla' : 'ticketmaster';
+  const hosts = brasileiro ? ['sympla.com.br'] : [host.replace(/^www\./, '')];
+  const termo = [cidade, categoria && normalizar(categoria) !== 'todos' ? categoria : ''].filter(Boolean).join(' ');
+  // URLs públicas de busca: o HTML pode variar entre mercados e bloquear robôs.
+  const urlBusca = brasileiro
+    ? `https://${host}/eventos?search=${encodeURIComponent(termo)}`
+    : `https://${host}/search?q=${encodeURIComponent(termo)}`;
+  const warnings = [];
+  let pagina;
+  try { pagina = await htmlPublico(urlBusca, hosts); }
+  catch (e) {
+    return { ok: false, source: fonte, source_search_url: urlBusca, events: [],
+      warnings: [`A plataforma não permitiu a leitura da pesquisa: ${e.message}`],
+      note: 'Sem resultados verificáveis; não significa ausência de eventos.' };
+  }
+  const eventos = [];
+  const vistos = new Set();
+  function adicionar(raw, origem) {
+    const evento = eventoNormalizado(raw, origem, cidade, data, fonte);
+    if (evento && !vistos.has(evento.id)) { vistos.add(evento.id); eventos.push(evento); }
+  }
+  for (const item of jsonLd(pagina.html)) adicionar(item, pagina.url);
+  const links = linksEventos(pagina.html, pagina.url, hosts);
+  const lotes = await Promise.all(links.slice(0, 8).map(async link => {
+    try { const page = await htmlPublico(link, hosts); return { page, items: jsonLd(page.html) }; }
+    catch { return null; }
+  }));
+  for (const lote of lotes) {
+    if (!lote) continue;
+    for (const item of lote.items) adicionar(item, lote.page.url);
+  }
+  if (!eventos.length) warnings.push('Nenhum evento pôde ser verificado nos dados públicos acessíveis. A plataforma pode carregar resultados por JavaScript ou bloquear a leitura automatizada.');
   return {
-    ok: true,
-    query: { city: cidade, date: data, category: categoria },
-    count: eventos.length,
-    events: eventos,
-    warnings: avisos,
-    experimental: true,
-    note: 'Pesquisa experimental; a ausência de resultados não comprova ausência de eventos.',
+    ok: true, source: fonte, source_search_url: urlBusca,
+    count: Math.min(eventos.length, LIMITE), events: eventos.slice(0, LIMITE),
+    warnings, experimental: true,
+    note: 'Pesquisa experimental; resultados não representam cobertura integral da plataforma.',
   };
 }
 
 export default async function middleware(request) {
-  const url = new URL(request.url);
-  if (url.pathname !== '/agenda-cultural/pesquisar') {
-    return respostaJSON({ ok: false, erro: 'Endereço não reconhecido.' }, 404);
-  }
-  if (request.method !== 'GET') {
-    return respostaJSON({ ok: false, erro: 'Método não permitido.' }, 405);
-  }
-  const cidade = (url.searchParams.get('cidade') || '').trim();
-  const data = (url.searchParams.get('data') || '').trim();
-  const categoria = (url.searchParams.get('categoria') || '').trim();
-  if (!cidade && !data && !categoria) {
-    return respostaJSON({
-      ok: true,
-      ferramenta: 'Agenda Cultural CET',
-      etapa: 'pesquisa-experimental-edge',
-      mensagem: 'Conexão ativa. Informe cidade e data para pesquisar.',
-      pesquisa_ativa: true,
-    });
-  }
-  if (!cidade || cidade.length > 90 || categoria.length > 60 ||
+  if (request.method !== 'GET') return resposta({ ok: false, erro: 'Método não permitido' }, 405);
+  const u = new URL(request.url);
+  const cidade = (u.searchParams.get('cidade') || '').trim();
+  const pais = (u.searchParams.get('pais') || '').trim();
+  const data = (u.searchParams.get('data') || '').trim();
+  const categoria = (u.searchParams.get('categoria') || 'todos').trim();
+  if (!cidade && !pais && !data) return resposta({ ok: true, ferramenta: 'Agenda Cultural CET',
+    mensagem: 'Informe cidade, país e data.', pesquisa_ativa: true,
+    sources: ['Ticketmaster internacional', 'Sympla Brasil'] });
+  if (!cidade || cidade.length > 90 || !pais || pais.length > 80 || categoria.length > 60 ||
       !/^\d{4}-\d{2}-\d{2}$/.test(data)) {
-    return respostaJSON({ ok: false, erro: 'Informe cidade, data AAAA-MM-DD e categoria opcional.' }, 400);
+    return resposta({ ok: false, erro: 'Informe cidade, país, data AAAA-MM-DD e categoria opcional.' }, 400);
   }
   const [ano, mes, dia] = data.split('-').map(Number);
-  const verificada = new Date(Date.UTC(ano, mes - 1, dia));
-  if (verificada.getUTCFullYear() !== ano || verificada.getUTCMonth() !== mes - 1 ||
-      verificada.getUTCDate() !== dia) {
-    return respostaJSON({ ok: false, erro: 'Data inválida.' }, 400);
+  const dt = new Date(Date.UTC(ano, mes - 1, dia));
+  if (dt.getUTCFullYear() !== ano || dt.getUTCMonth() !== mes - 1 || dt.getUTCDate() !== dia) {
+    return resposta({ ok: false, erro: 'Data inválida.' }, 400);
   }
   try {
-    const resultado = await pesquisarEventos({ cidade, data, categoria });
-    return respostaJSON({ ferramenta: 'Agenda Cultural CET',
-      etapa: 'pesquisa-experimental-edge', pesquisa_ativa: true, ...resultado });
-  } catch (erro) {
-    return respostaJSON({ ok: false, erro: 'Não foi possível concluir a pesquisa.',
-      detalhe: String(erro?.message || 'Falha desconhecida').slice(0, 120) }, 503);
+    const resultado = await pesquisar({ cidade, pais, data, categoria });
+    return resposta({ ferramenta: 'Agenda Cultural CET',
+      query: { city: cidade, country: pais, date: data, category: categoria }, ...resultado },
+      resultado.ok ? 200 : 422);
+  } catch {
+    return resposta({ ok: false, erro: 'Não foi possível concluir a pesquisa.' }, 503);
   }
 }
