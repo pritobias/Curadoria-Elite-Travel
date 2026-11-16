@@ -148,6 +148,9 @@ button:disabled {
   font-size:13px;
   font-weight:400;
   cursor:pointer}
+.special-options {
+  grid-template-columns:repeat(auto-fit,minmax(190px,1fr));
+}
 .date-choice input {
   width:auto;
   accent-color:#d6ad32}
@@ -539,40 +542,15 @@ main {
           </option>
          </select>
         </div>
-        <div class="field">
-         <label for="special">
-          Experiências especiais
-         </label>
-         <select id="special">
-          <option>
-           Conforme o perfil do cliente
-          </option>
-          <option>
-           Priorizar passeios e experiências
-          </option>
-          <option>
-           Considerar bate-voltas
-          </option>
-          <option>
-           Evitar excursões longas
-          </option>
-          <option>
-           Não incluir experiências adicionais
-          </option>
-         </select>
-        </div>
         <div class="field full">
-         <label for="civitatis">
-          Pesquisa Civitatis — obrigatória em todos os destinos
-         </label>
-         <select id="civitatis">
-          <option>
-           Pesquisar todos os passeios e experiências na Civitatis CET
-          </option>
-         </select>
-         <small>
-          Pesquisa obrigatória pelo acesso CET: https://www.civitatis.com/pt?aid=114979. Preço publicado e disponibilidade da data devem ser diferenciados.
-         </small>
+         <label id="specialLabel">Preferências de passeios e experiências</label>
+         <div class="date-options special-options" role="group" aria-labelledby="specialLabel">
+          <label class="date-choice"><input type="checkbox" name="special" value="Priorizar passeios e experiências"/><span>Priorizar passeios e experiências</span></label>
+          <label class="date-choice"><input type="checkbox" name="special" value="Considerar bate-voltas"/><span>Considerar bate-voltas</span></label>
+          <label class="date-choice"><input type="checkbox" name="special" value="Experiências especiais e privativas"/><span>Experiências especiais e privativas</span></label>
+          <label class="date-choice"><input type="checkbox" name="special" value="Evitar excursões longas"/><span>Evitar excursões longas</span></label>
+         </div>
+         <small>Selecione quantas opções desejar. Sem seleção, as experiências serão sugeridas conforme o perfil do cliente. A pesquisa na Civitatis CET é obrigatória em todos os casos.</small>
         </div>
         <div class="field full">
          <label for="notes">
@@ -659,7 +637,7 @@ const fields=[
 ['intensity','Ritmo das atividades'],['dinnerTime','Horário preferencial do jantar'],
 ['transport','Transporte'],['dining','Preferências gastronômicas'],
 ['dietary','Restrições alimentares'],['evening','Programação noturna'],
-['special','Experiências especiais'],['civitatis','Civitatis'],['notes','Observações']
+['notes','Observações']
 ];
 function updateTimeMode(prefix){
 const mode=form.querySelector('input[name="'+prefix+'Mode"]:checked').value;
@@ -722,6 +700,9 @@ const selected=selectedDates(),requested=Number(days.value);
 if(selected.length&&selected.length!==requested){status.textContent='Selecione exatamente '+requested+' dia(s) ou desmarque todos para deixar a escolha em aberto.';return;}
 if(start&&end&&requested>Math.round((end-start)/86400000)+1){status.textContent='Os dias de programação ultrapassam o período informado.';return;}
 const lines=fields.map(([id,label])=>label+': '+(document.getElementById(id).value.trim()||'Não informado'));
+const specialChoices=[...form.querySelectorAll('input[name="special"]:checked')].map(input=>input.value);
+lines.splice(lines.length-1,0,'Preferências de passeios e experiências: '+(specialChoices.length?specialChoices.join('; '):'Conforme o perfil do cliente'));
+lines.splice(lines.length-1,0,'Civitatis CET — regra comercial obrigatória: pesquisar TODAS as experiências e passeios de TODAS as cidades primeiro em https://www.civitatis.com/pt?aid=114979; apresentar links individuais com aid=114979 e preços por pessoa e grupo quando publicados.');
 lines.splice(5,0,'Horário de chegada ao destino: '+timeBriefing('arrival'),'Horário do voo de retorno: '+timeBriefing('departure'));
 lines.push('Período longo conferido pela empresa: '+(!dateWarning.hidden&&confirmLongDates.checked?'Sim':'Não se aplica'));
 lines.push('Datas escolhidas para programação: '+(selected.length?selected.map(formatDate).join('; '):'Não definidas; propor os dias adequados conforme a viagem e os compromissos'));
@@ -746,12 +727,12 @@ preview.textContent='BRIEFING — ROTEIROS PARTNER\n\n'+lines.join('\n')+'\n\nIN
   "CIVITATIS: pesquisar e avaliar obrigatoriamente experiências da Civitatis compatíveis com destino, datas, interesses, orçamento e logística, para todas as cidades visitadas e para cada passeio ou experiência, sem limitar a uma única opção. Priorizar experiências concretas com produto individual identificável, não passeios genéricos ou fornecedores \"a definir\". PONTO DE PARTIDA OBRIGATÓRIO: https://www.civitatis.com/pt?aid=114979 . Iniciar a pesquisa pelo ambiente de afiliada CET, procurar a atividade específica e abrir sua página individual. Não substituir pesquisa na Civitatis por busca genérica de operadoras. REGRA COMERCIAL ABSOLUTA EM TODAS AS CIDADES E PAÍSES: pesquisar PRIMEIRO https://www.civitatis.com/pt?aid=114979 para TODO passeio, visita guiada, experiência, atividade, excursão e bate-volta, seja em Paris, Itália ou qualquer destino coberto. Não é escolha opcional do cliente ou do modelo. Para CADA atividade da programação, procurar produto correspondente e adequado no catálogo; quando existir, apresentar produto individual Civitatis com preço e link com aid=114979. Não limitar a uma experiência por viagem. Quando não existir opção correspondente ou for incompatível, registrar pesquisa e motivo e então considerar visita independente ou outro fornecedor. A preferência por transporte do cliente continua obrigatória; passeio em ônibus é alternativa identificada, não substituição silenciosa.",
   "CIVITATIS — DADOS: para cada opção efetivamente encontrada e recomendada, informar nome do passeio, descrição, duração, ponto de encontro, idioma, inclusões e exclusões, preço por pessoa e pelo grupo, data pretendida, situação da disponibilidade e link de contratação verificado. Usar o link de afiliado da CET com aid=114979 apenas se o formato e o destino do link forem válidos e verificados; nunca inventar URL ou afirmar comissão. Para a CET, o identificador de afiliada é aid=114979. Só apresentar um link como afiliado se a URL de contratação efetivamente contiver o identificador válido e a atribuição puder ser verificada; parâmetros como utm_source=chatgpt.com não comprovam afiliação. Se não for possível validar, informar LINK DE AFILIADA PENDENTE e não rotular um link comum como afiliado. Ao compartilhar produto individual, manter aid=114979 em URL válida e verificar se leva ao produto correto. A página inicial de afiliada não substitui link direto de produto. Se não houver prova de atribuição, declarar pendência sem inventar validação; oferecer o link inicial oficial de afiliada como referência separada. PREÇO NUMÉRICO É OBRIGATÓRIO quando houver tarifa pública: informar preço inicial publicado por pessoa, multiplicação para o grupo, moeda, fonte e data, distinguindo claramente de preço e disponibilidade para a data escolhida. Nunca escrever apenas PREÇO PENDENTE quando a página já divulgar valor a partir de. URL individual deve ser a página real do produto com aid=114979 preservado; testar se abre o produto correto. Não alegar comissão/atribuição validada sem evidência técnica. Se o link de afiliada individual não puder ser confirmado, exibir a URL-base CET e registrar o impedimento de modo explícito, sem fabricar link.",
   "CIVITATIS — AUSÊNCIA OU LIMITAÇÃO: se não houver acesso a pesquisa atual, não fingir que consultou o catálogo; sinalizar pesquisa pendente e quais experiências devem ser verificadas. Se nenhuma opção for adequada, explicar o motivo. Não trocar uma experiência solicitada (por exemplo almoço-cruzeiro) por outra de natureza diferente sem informar claramente a diferença. A ausência de acesso ao catálogo não autoriza declarar que não há produto. Identificar precisamente quais atividades e cidades ficaram sem pesquisa, e não apresentar outros fornecedores como primeira escolha sem registrar a limitação.",
-  "EXPERIÊNCIAS ESPECIAIS: respeitar pedidos distintos como almoço-cruzeiro e jantar-cruzeiro, atrações indispensáveis e bate-voltas. Não substituir silenciosamente um item por outro; avaliar deslocamentos, esforço, tempo de visita e custo realista.",
+  "PREFERÊNCIAS COMBINÁVEIS DE EXPERIÊNCIAS: interpretar as opções marcadas como cumulativas, nunca mutuamente exclusivas. Sem opções marcadas, propor experiências conforme o perfil do cliente. Quando marcada Experiências especiais e privativas, buscar na Civitatis CET produtos individuais privativos (somente viajantes e guia), experiências exclusivas ou diferenciadas, sem presumir luxo ou custo elevado; respeitar orçamento, modalidade efetiva e disponibilidade. Não chamar excursão em grupo de privativa. Respeitar pedidos distintos como almoço-cruzeiro e jantar-cruzeiro, atrações indispensáveis e bate-voltas. Não substituir silenciosamente um item por outro; avaliar deslocamentos, esforço, tempo de visita e custo realista.",
   "ORÇAMENTO DIÁRIO: ao final de cada dia, somar numericamente os custos das atividades e refeições efetivamente propostas para o grupo, sem duplicar itens incluídos em pacotes; discriminar custos opcionais e alternativas, e informar quando valores forem estimativas. Recalcular a soma dos itens listados no dia e conferir que o subtotal coincide exatamente com a soma; excluir opcionais não escolhidos. A tabela diária deve registrar cada gasto individualmente (quantidade × valor unitário), incluir ou excluir transporte de forma explícita, indicar moeda e não misturar valores opcionais com custos-base.",
   "ORÇAMENTO GERAL: apresentar total estimado para todo o grupo e, quando útil, por pessoa, com separação entre alimentação, ingressos/passeios e transportes. Explicitar exclusões como passagens aéreas, hospedagem, compras, refeições não programadas, taxas e traslados sem estimativa. Não somar opções mutuamente exclusivas como se ambas fossem contratadas. Conferir aritmeticamente que o total geral é igual à soma dos subtotais diários mais despesas adicionais não incluídas neles. Não contar duas vezes alimentação, transportes ou experiências; apresentar exclusões de modo explícito. Exigir DUAS conferências independentes: soma das linhas de cada dia = subtotal do dia; soma de todos os subtotais = total dos dias; total dos dias + transportes e outros extras não incluídos = total geral. Separar claramente valores opcionais. Não apresentar total com diferença aritmética, nem estimativa global de transporte sem informar premissas, trajetos e cobertura.",
   "FONTES E CONFIABILIDADE: identificar informações verificadas, estimativas e pendências; fornecer links somente quando conhecidos e validados. Não inventar endereço, funcionamento, preço oficial, promoção, disponibilidade, classificação Michelin, tempo de viagem ou condições de contratação. Separar sempre: INFORMAÇÃO DO BRIEFING, INFORMAÇÃO VERIFICADA (com fonte e data), ESTIMATIVA (com base) e NÃO VERIFICADO. Não escrever \"fonte oficial, novembro de 2026\" sem consulta real e URL rastreável. Não transformar ausência de pesquisa em confirmação.",
   "COERÊNCIA: revisar a programação quanto a datas e dias da semana, deslocamentos entre locais, horários de funcionamento, duração, descanso, restrições, custo compatível com orçamento e ausência de sobreposição. Se houver conflito, reorganizar antes de apresentar. Verificar também unicidade dos estabelecimentos ao longo de TODOS os dias; restaurante fechado no dia ou fora do horário de cozinha não pode ser indicação principal. Uma opção alternativa deve ter nome e endereço reais, nunca \"bistrô na região\".",
-  "CONFERÊNCIA DE COMPLETUDE: antes de finalizar, revisar TODOS os locais e garantir descrição, endereço/ponto de encontro, duração, horário, deslocamento, preço numérico por pessoa e grupo quando houver consumo ou ingresso, e status de verificação. Revisar também Civitatis conforme a preferência, dress code, reservas, subtotais e total geral. Não considerar a entrega completa se houver omissões silenciosas. AUDITORIA CIVITATIS OBRIGATÓRIA POR PARADA E POR CIDADE: cada passeio, excursão, atração com visita guiada possível, atividade e experiência deve ter resultado da busca Civitatis CET, produto individual ou motivo documentado de ausência/inadequação, preço público numérico se disponível, preço do grupo e link com aid=114979; nenhuma cidade pode ser ignorada.",
+  "CONFERÊNCIA DE COMPLETUDE: antes de finalizar, revisar TODOS os locais e garantir descrição, endereço/ponto de encontro, duração, horário, deslocamento, preço numérico por pessoa e grupo quando houver consumo ou ingresso, e status de verificação. Revisar também Civitatis como regra comercial obrigatória, independentemente das preferências do cliente, dress code, reservas, subtotais e total geral. Não considerar a entrega completa se houver omissões silenciosas. AUDITORIA CIVITATIS OBRIGATÓRIA POR PARADA E POR CIDADE: cada passeio, excursão, atração com visita guiada possível, atividade e experiência deve ter resultado da busca Civitatis CET, produto individual ou motivo documentado de ausência/inadequação, preço público numérico se disponível, preço do grupo e link com aid=114979; nenhuma cidade pode ser ignorada.",
   "LACUNAS: quando não for possível cumprir um campo obrigatório com informação confiável, escrever PENDENTE DE VERIFICAÇÃO, especificar exatamente o que falta e manter o item visível para revisão da empresa Partner; nunca ocultar a ausência ou fabricar um dado para preencher o campo.",
   "VALIDAÇÃO ANTES DA PROGRAMAÇÃO: antes de definir um horário para atrações pagas, restaurantes que exijam reserva e experiências com vagas limitadas, consultar a data exata, a modalidade, o horário e a quantidade de viajantes em fonte capaz de mostrar disponibilidade. Uma página institucional, uma tarifa genérica ou um produto anunciado não comprovam vagas. Se não houver consulta efetiva, NÃO apresentar o item como compromisso viável ou confirmado: manter em seção separada de opções PENDENTES DE VERIFICAÇÃO e indicar uma alternativa sem reserva ou outra opção efetivamente verificada. Não inventar consultas ou disponibilidade.",
   "ESTADOS DE DISPONIBILIDADE: classificar cada atividade sujeita a reserva como DISPONIBILIDADE CONSULTADA (com data, horário, modalidade, grupo, fonte e momento da consulta), ÚLTIMOS INGRESSOS (risco de esgotamento), INDISPONÍVEL (não inserir naquele horário) ou NÃO VERIFICADO (fora da programação principal até checagem). DISPONIBILIDADE CONSULTADA e ÚLTIMOS INGRESSOS nunca significam compra ou reserva garantida. Não chamar uma experiência de confirmada antes da contratação efetiva.",
