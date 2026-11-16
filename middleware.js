@@ -1,17 +1,19 @@
 /**
- * Curadoria Elite Travel — Agenda Cultural, pesquisa experimental.
- * Destino: middleware.js na RAIZ do repositório (substituir conteúdo).
- * Vercel Routing Middleware (Node.js). Não modifica pasta api/.
- * Consulta resultados públicos do Bing e extrai dados Event JSON-LD.
- * NÃO garante resultados, ingressos, preços nem cobertura completa.
- * NÃO aplica ainda o limite de 1 consulta/e-mail/24h (etapa Supabase).
- * NÃO está conectado ainda ao partner/agenda-cultural.html.
+ * Curadoria Elite Travel — Agenda Cultural.
+ * Arquivo: middleware.js na raiz do repositório.
+ * Middleware Edge para evitar acrescentar uma função Node.js ao limite Hobby.
+ * Pesquisa experimental de eventos públicos; não altera arquivos api/.
+ * Ainda não integra o HTML nem controla pesquisas por e-mail no Supabase.
  */
 
 export const config = {
   matcher: ['/agenda-cultural/pesquisar'],
-  runtime: 'nodejs',
 };
+
+const MAX_RESULTS = 5;
+const SEARCH_TIMEOUT_MS = 4500;
+const PAGE_TIMEOUT_MS = 3500;
+const USER_AGENT = 'Mozilla/5.0 (compatible; CuradoriaEliteTravelResearch/0.1)';
 
 function respostaJSON(dados, status = 200) {
   return new Response(JSON.stringify(dados), {
@@ -24,50 +26,49 @@ function respostaJSON(dados, status = 200) {
   });
 }
 
-const MAX_RESULTS = 5;
-const SEARCH_TIMEOUT_MS = 5500;
-const PAGE_TIMEOUT_MS = 4200;
-const USER_AGENT = 'Mozilla/5.0 (compatible; CuradoriaEliteTravelResearch/0.1)';
-
-function plain(value) {
-  return String(value ?? '').replace(/<[^>]*>/g, ' ').replace(/&amp;/g, '&')
-    .replace(/&quot;/g, '"').replace(/&#39;/g, "'").replace(/\s+/g, ' ').trim();
+function texto(value) {
+  return String(value ?? '').replace(/<[^>]*>/g, ' ')
+    .replace(/&amp;/g, '&').replace(/&quot;/g, '"')
+    .replace(/&#39;/g, "'").replace(/\s+/g, ' ').trim();
 }
 
-function safeHttpUrl(value) {
+function urlPublica(value) {
   try {
     const url = new URL(value);
-    if (!['https:', 'http:'].includes(url.protocol)) return null;
+    if (url.protocol !== 'https:') return null;
     if (url.username || url.password) return null;
     const host = url.hostname.toLowerCase();
-    if (host === 'localhost' || host.endsWith('.localhost') || host.endsWith('.local') ||
-        host.endsWith('.internal') || host === '0.0.0.0' || host === '::1' ||
-        /^127\./.test(host) || /^10\./.test(host) || /^192\.168\./.test(host) ||
-        /^169\.254\./.test(host) || /^172\.(1[6-9]|2\d|3[01])\./.test(host) ||
-        /^0\./.test(host) || /^224\./.test(host) || /^\d+$/.test(host)) return null;
+    if (host === 'localhost' || host.endsWith('.localhost') ||
+        host.endsWith('.local') || host.endsWith('.internal') ||
+        host === '0.0.0.0' || host === '[::1]' ||
+        /^\d+\.\d+\.\d+\.\d+$/.test(host) ||
+        host.includes(':') || !host.includes('.')) return null;
     return url;
-  } catch { return null; }
+  } catch {
+    return null;
+  }
 }
 
-async function fetchPublic(url, timeoutMs) {
-  const parsed = safeHttpUrl(url);
+async function buscarHTML(url, timeoutMs) {
+  const parsed = urlPublica(url);
   if (!parsed) throw new Error('URL não permitida');
-  // Não segue redirecionamentos automaticamente: evita alcançar endereços internos.
-  const response = await fetch(parsed, {
+  const response = await fetch(parsed.href, {
     redirect: 'manual',
     signal: AbortSignal.timeout(timeoutMs),
-    headers: { 'User-Agent': USER_AGENT, 'Accept': 'text/html,application/xhtml+xml' }
+    headers: {
+      'Accept': 'text/html,application/xhtml+xml',
+      'User-Agent': USER_AGENT,
+    },
   });
   if (!response.ok) throw new Error(`HTTP ${response.status}`);
-  const type = response.headers.get('content-type') || '';
-  if (!/html|xml/i.test(type)) throw new Error('Conteúdo não HTML');
-  const len = Number(response.headers.get('content-length') || 0);
-  if (len > 1_500_000) throw new Error('Página grande demais');
-  const text = await response.text();
-  return text.slice(0, 1_500_000);
+  const tipo = response.headers.get('content-type') || '';
+  if (!/html|xml/i.test(tipo)) throw new Error('Resposta não HTML');
+  const tamanho = Number(response.headers.get('content-length') || 0);
+  if (tamanho > 1_500_000) throw new Error('Página muito grande');
+  return (await response.text()).slice(0, 1_500_000);
 }
 
-function decodeEntities(text) {
+function decodificar(text) {
   return text.replace(/&amp;/g, '&').replace(/&quot;/g, '"')
     .replace(/&#(?:x([\da-f]+)|(\d+));/gi, (_, hex, dec) => {
       try { return String.fromCodePoint(parseInt(hex || dec, hex ? 16 : 10)); }
@@ -75,126 +76,127 @@ function decodeEntities(text) {
     });
 }
 
-function extractSearchLinks(html) {
-  // Extrai apenas links explícitos dos resultados orgânicos do Bing.
+function linksDaPesquisa(html) {
   const links = [];
-  const blocks = html.match(/<li\b[^>]*class=["'][^"']*\bb_algo\b[^"']*["'][\s\S]*?<\/li>/gi) || [];
-  for (const block of blocks) {
-    const m = block.match(/<h2\b[^>]*>[\s\S]*?<a\b[^>]*href=["']([^"']+)["']/i);
-    if (!m) continue;
-    const url = safeHttpUrl(decodeEntities(m[1]));
-    if (url && !/bing\.com$/.test(url.hostname) && !links.includes(url.href)) links.push(url.href);
+  const blocos = html.match(/<li\b[^>]*class=["'][^"']*\bb_algo\b[^"']*["'][\s\S]*?<\/li>/gi) || [];
+  for (const bloco of blocos) {
+    const match = bloco.match(/<h2\b[^>]*>[\s\S]*?<a\b[^>]*href=["']([^"']+)["']/i);
+    if (!match) continue;
+    const url = urlPublica(decodificar(match[1]));
+    if (url && !url.hostname.endsWith('bing.com') && !links.includes(url.href)) {
+      links.push(url.href);
+    }
   }
-  return links.slice(0, 12);
+  return links.slice(0, 8);
 }
 
-function collectEvents(node, output = []) {
+function coletarEventos(node, output = []) {
   if (!node || typeof node !== 'object') return output;
   if (Array.isArray(node)) {
-    for (const item of node) collectEvents(item, output);
+    for (const item of node) coletarEventos(item, output);
     return output;
   }
-  const type = node['@type'];
-  const types = Array.isArray(type) ? type : [type];
-  if (types.some(t => typeof t === 'string' && /(^|\/)Event$|Event$/i.test(t))) output.push(node);
-  if (node['@graph']) collectEvents(node['@graph'], output);
-  if (node.mainEntity) collectEvents(node.mainEntity, output);
-  if (node.itemListElement) collectEvents(node.itemListElement, output);
-  return output;
-}
-
-function extractStructuredEvents(html) {
-  const output = [];
-  const scripts = html.matchAll(/<script\b[^>]*type=["']application\/ld\+json["'][^>]*>([\s\S]*?)<\/script>/gi);
-  for (const match of scripts) {
-    try { collectEvents(JSON.parse(match[1].trim()), output); }
-    catch { /* ignorar JSON-LD inválido */ }
+  const tipo = node['@type'];
+  const tipos = Array.isArray(tipo) ? tipo : [tipo];
+  if (tipos.some(item => typeof item === 'string' && /Event$/i.test(item))) {
+    output.push(node);
   }
+  if (node['@graph']) coletarEventos(node['@graph'], output);
+  if (node.mainEntity) coletarEventos(node.mainEntity, output);
+  if (node.itemListElement) coletarEventos(node.itemListElement, output);
   return output;
 }
 
-function asText(v) {
-  if (typeof v === 'string') return plain(v);
-  if (v && typeof v === 'object') return plain(v.name || v.text || '');
+function eventosEstruturados(html) {
+  const encontrados = [];
+  const scripts = html.matchAll(/<script\b[^>]*type=["']application\/ld\+json["'][^>]*>([\s\S]*?)<\/script>/gi);
+  for (const script of scripts) {
+    try { coletarEventos(JSON.parse(script[1].trim()), encontrados); }
+    catch { /* ignorar dados inválidos */ }
+  }
+  return encontrados;
+}
+
+function textoCampo(value) {
+  if (typeof value === 'string') return texto(value);
+  if (value && typeof value === 'object') return texto(value.name || value.text || '');
   return '';
 }
 
-function asUrl(v) {
-  const item = Array.isArray(v) ? v[0] : v;
+function enderecoURL(value) {
+  const item = Array.isArray(value) ? value[0] : value;
   return typeof item === 'string' ? item : item?.url || item?.contentUrl || '';
 }
 
-function normalizedEvent(event, pageUrl, city, date, category) {
-  const start = String(event.startDate || '');
-  if (!/^\d{4}-\d{2}-\d{2}/.test(start) || start.slice(0, 10) !== date) return null;
-  const title = asText(event.name);
-  if (!title) return null;
-  const location = Array.isArray(event.location) ? event.location[0] : event.location;
-  const place = asText(location);
-  const addressObject = location?.address;
-  const address = typeof addressObject === 'string' ? plain(addressObject) :
-    [addressObject?.streetAddress, addressObject?.addressLocality, addressObject?.addressRegion,
-      addressObject?.addressCountry].filter(Boolean).map(plain).join(', ');
-  const locationText = `${place} ${address}`.toLocaleLowerCase();
-  // Só aceita localização que mencione a cidade consultada. Isso reduz falsos positivos.
-  if (!locationText.includes(city.toLocaleLowerCase())) return null;
-  const offer = Array.isArray(event.offers) ? event.offers[0] : event.offers;
-  const priceNumber = offer?.price ?? offer?.lowPrice ?? null;
-  const price = priceNumber === null ? null : String(priceNumber);
-  const currency = typeof offer?.priceCurrency === 'string' ? offer.priceCurrency : null;
-  const ticketUrl = safeHttpUrl(asUrl(offer?.url))?.href || null;
-  const eventUrl = safeHttpUrl(asUrl(event.url))?.href || pageUrl;
-  const imageUrl = safeHttpUrl(asUrl(event.image))?.href || null;
-  const description = asText(event.description).slice(0, 260);
-  const eventType = Array.isArray(event['@type']) ? event['@type'].join(', ') : String(event['@type'] || '');
-  // Categoria é uma preferência de busca, não uma classificação confirmada.
+function normalizarEvento(evento, pagina, cidade, data, categoria) {
+  const inicio = String(evento.startDate || '');
+  if (inicio.slice(0, 10) !== data) return null;
+  const nome = textoCampo(evento.name);
+  if (!nome) return null;
+  const local = Array.isArray(evento.location) ? evento.location[0] : evento.location;
+  const estabelecimento = textoCampo(local);
+  const enderecoBruto = local?.address;
+  const endereco = typeof enderecoBruto === 'string' ? texto(enderecoBruto) :
+    [enderecoBruto?.streetAddress, enderecoBruto?.addressLocality,
+      enderecoBruto?.addressRegion, enderecoBruto?.addressCountry]
+      .filter(Boolean).map(texto).join(', ');
+  const localizacao = `${estabelecimento} ${endereco}`.toLocaleLowerCase();
+  if (!localizacao.includes(cidade.toLocaleLowerCase())) return null;
+  const oferta = Array.isArray(evento.offers) ? evento.offers[0] : evento.offers;
+  const preco = oferta?.price ?? oferta?.lowPrice ?? null;
   return {
-    id: `${title}|${start}|${place}`.toLocaleLowerCase(),
-    title, starts_at: start, city, category_requested: category || 'todos',
-    description: description || null, venue: place || null, address: address || null,
-    image_url: imageUrl, event_url: eventUrl, ticket_url: ticketUrl,
-    price: price, currency, half_price: null,
-    availability: null, event_type: eventType,
-    source_url: pageUrl, verification: 'dados extraídos de JSON-LD público; não confirmados com bilheteria'
+    id: `${nome}|${inicio}|${estabelecimento}`.toLocaleLowerCase(),
+    title: nome,
+    starts_at: inicio,
+    city: cidade,
+    category_requested: categoria || 'todos',
+    description: textoCampo(evento.description).slice(0, 260) || null,
+    venue: estabelecimento || null,
+    address: endereco || null,
+    image_url: urlPublica(enderecoURL(evento.image))?.href || null,
+    event_url: urlPublica(enderecoURL(evento.url))?.href || pagina,
+    ticket_url: urlPublica(enderecoURL(oferta?.url))?.href || null,
+    price: preco === null ? null : String(preco),
+    currency: typeof oferta?.priceCurrency === 'string' ? oferta.priceCurrency : null,
+    half_price: null,
+    availability: null,
+    event_type: Array.isArray(evento['@type']) ? evento['@type'].join(', ') : String(evento['@type'] || ''),
+    source_url: pagina,
+    verification: 'Dados estruturados públicos; preços e ingressos não confirmados com a bilheteria',
   };
 }
 
-async function discoverEvents({ city, date, category = '' }) {
-  if (typeof city !== 'string' || !city.trim() || city.length > 90) throw new Error('Cidade inválida');
-  if (typeof date !== 'string' || !/^\d{4}-\d{2}-\d{2}$/.test(date) ||
-      Number.isNaN(new Date(`${date}T12:00:00Z`).getTime()) ||
-      new Date(`${date}T12:00:00Z`).toISOString().slice(0, 10) !== date) throw new Error('Data inválida');
-  if (typeof category !== 'string' || category.length > 60) throw new Error('Categoria inválida');
-  const cleanCity = city.trim();
-  const query = [category.trim() || 'eventos', 'em', cleanCity, date, 'ingressos'].join(' ');
-  const searchUrl = `https://www.bing.com/search?q=${encodeURIComponent(query)}&count=20`;
-  const warnings = [];
+async function pesquisarEventos({ cidade, data, categoria }) {
+  const consulta = [categoria || 'eventos', 'em', cidade, data, 'ingressos'].join(' ');
+  const busca = `https://www.bing.com/search?q=${encodeURIComponent(consulta)}&count=20`;
+  const avisos = [];
   let links = [];
-  try { links = extractSearchLinks(await fetchPublic(searchUrl, SEARCH_TIMEOUT_MS)); }
-  catch (error) { warnings.push(`Pesquisa indisponível: ${error.message}`); }
-  if (!links.length) warnings.push('Nenhum link público recuperado; o buscador pode bloquear scraping.');
-  // Limita o trabalho total e consulta páginas em paralelo para reduzir latência.
-  const candidates = await Promise.all(links.slice(0, 6).map(async link => {
+  try { links = linksDaPesquisa(await buscarHTML(busca, SEARCH_TIMEOUT_MS)); }
+  catch (erro) { avisos.push(`Busca pública indisponível: ${erro.message}`); }
+  if (!links.length) avisos.push('Nenhum link recuperado; o buscador pode bloquear consultas automatizadas.');
+  const candidatos = await Promise.all(links.slice(0, 5).map(async link => {
     try {
-      const html = await fetchPublic(link, PAGE_TIMEOUT_MS);
-      return extractStructuredEvents(html)
-        .map(raw => normalizedEvent(raw, link, cleanCity, date, category))
+      const html = await buscarHTML(link, PAGE_TIMEOUT_MS);
+      return eventosEstruturados(html)
+        .map(item => normalizarEvento(item, link, cidade, data, categoria))
         .filter(Boolean);
     } catch { return []; }
   }));
-  const results = [];
-  for (const event of candidates.flat()) {
-    if (!results.some(item => item.id === event.id)) results.push(event);
-    if (results.length >= MAX_RESULTS) break;
+  const eventos = [];
+  for (const item of candidatos.flat()) {
+    if (!eventos.some(outro => outro.id === item.id)) eventos.push(item);
+    if (eventos.length >= MAX_RESULTS) break;
   }
   return {
-    ok: true, query: { city: cleanCity, date, category },
-    count: results.length, events: results,
-    warnings, experimental: true,
-    note: 'Pesquisa experimental. Resultados não representam cobertura completa da cidade; preços e ingressos exigem confirmação no site oficial.'
+    ok: true,
+    query: { city: cidade, date: data, category: categoria },
+    count: eventos.length,
+    events: eventos,
+    warnings: avisos,
+    experimental: true,
+    note: 'Pesquisa experimental; a ausência de resultados não comprova ausência de eventos.',
   };
 }
-
 
 export default async function middleware(request) {
   const url = new URL(request.url);
@@ -209,8 +211,10 @@ export default async function middleware(request) {
   const categoria = (url.searchParams.get('categoria') || '').trim();
   if (!cidade && !data && !categoria) {
     return respostaJSON({
-      ok: true, ferramenta: 'Agenda Cultural CET', etapa: 'pesquisa-experimental',
-      mensagem: 'A Vercel está respondendo. Informe cidade e data para pesquisar.',
+      ok: true,
+      ferramenta: 'Agenda Cultural CET',
+      etapa: 'pesquisa-experimental-edge',
+      mensagem: 'Conexão ativa. Informe cidade e data para pesquisar.',
       pesquisa_ativa: true,
     });
   }
@@ -220,15 +224,16 @@ export default async function middleware(request) {
   }
   const [ano, mes, dia] = data.split('-').map(Number);
   const verificada = new Date(Date.UTC(ano, mes - 1, dia));
-  if (verificada.getUTCFullYear() !== ano || verificada.getUTCMonth() !== mes - 1 || verificada.getUTCDate() !== dia) {
+  if (verificada.getUTCFullYear() !== ano || verificada.getUTCMonth() !== mes - 1 ||
+      verificada.getUTCDate() !== dia) {
     return respostaJSON({ ok: false, erro: 'Data inválida.' }, 400);
   }
   try {
-    const result = await discoverEvents({ city: cidade, date: data, category: categoria });
-    return respostaJSON({ ferramenta: 'Agenda Cultural CET', etapa: 'pesquisa-experimental',
-      pesquisa_ativa: true, ...result });
-  } catch (error) {
+    const resultado = await pesquisarEventos({ cidade, data, categoria });
+    return respostaJSON({ ferramenta: 'Agenda Cultural CET',
+      etapa: 'pesquisa-experimental-edge', pesquisa_ativa: true, ...resultado });
+  } catch (erro) {
     return respostaJSON({ ok: false, erro: 'Não foi possível concluir a pesquisa.',
-      detalhe: String(error?.message || 'Falha desconhecida').slice(0, 120) }, 503);
+      detalhe: String(erro?.message || 'Falha desconhecida').slice(0, 120) }, 503);
   }
 }
