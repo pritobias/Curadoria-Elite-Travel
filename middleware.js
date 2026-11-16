@@ -1,25 +1,17 @@
 /**
- * Curadoria Elite Travel — conexão inicial da Agenda Cultural com a Vercel.
+ * Curadoria Elite Travel — teste de conexão da Agenda Cultural.
+ * Arquivo: middleware.js (raiz do repositório).
  *
- * Arquivo de destino no GitHub: middleware.js (RAIZ do repositório).
- * NÃO substituir partner/agenda-cultural.html.
- * NÃO criar pasta api ou editar funções existentes.
- *
- * Teste após publicação:
- * https://curadoriaelitetravel.com/agenda-cultural/pesquisar
- *
- * Esta primeira etapa comprova a execução e o endereço da função.
- * Ainda NÃO pesquisa eventos, NÃO aplica limite de e-mail e NÃO altera o HTML.
+ * IMPORTANTE: o matcher precisa ser uma string literal para que
+ * a Vercel consiga analisar a configuração durante o build.
+ * Esta etapa não realiza scraping e não altera outras rotas.
  */
 
-const CAMINHO = '/agenda-cultural/pesquisar';
-
-// Restringe a execução a um único endereço: não intercepta compras nem outras páginas.
 export const config = {
-  matcher: [CAMINHO],
+  matcher: ['/agenda-cultural/pesquisar'],
 };
 
-function json(dados, status = 200) {
+function respostaJSON(dados, status = 200) {
   return new Response(JSON.stringify(dados), {
     status,
     headers: {
@@ -33,21 +25,20 @@ function json(dados, status = 200) {
 export default function middleware(request) {
   const url = new URL(request.url);
 
-  if (url.pathname !== CAMINHO) {
-    return json({ ok: false, erro: 'Endereço não reconhecido.' }, 404);
+  if (url.pathname !== '/agenda-cultural/pesquisar') {
+    return respostaJSON({ ok: false, erro: 'Endereço não reconhecido.' }, 404);
   }
 
   if (request.method !== 'GET') {
-    return json({ ok: false, erro: 'Método não permitido.' }, 405);
+    return respostaJSON({ ok: false, erro: 'Método não permitido.' }, 405);
   }
 
   const cidade = (url.searchParams.get('cidade') || '').trim();
   const data = (url.searchParams.get('data') || '').trim();
   const categoria = (url.searchParams.get('categoria') || '').trim();
 
-  // Acessar sem parâmetros é o teste inicial de conexão.
   if (!cidade && !data && !categoria) {
-    return json({
+    return respostaJSON({
       ok: true,
       ferramenta: 'Agenda Cultural CET',
       etapa: 'conexao-vercel',
@@ -57,7 +48,7 @@ export default function middleware(request) {
   }
 
   if (!cidade || cidade.length > 100 || !/^\d{4}-\d{2}-\d{2}$/.test(data) || categoria.length > 60) {
-    return json({
+    return respostaJSON({
       ok: false,
       erro: 'Informe cidade (até 100 caracteres), data (AAAA-MM-DD) e categoria opcional.',
     }, 400);
@@ -66,10 +57,10 @@ export default function middleware(request) {
   const [ano, mes, dia] = data.split('-').map(Number);
   const verificada = new Date(Date.UTC(ano, mes - 1, dia));
   if (verificada.getUTCFullYear() !== ano || verificada.getUTCMonth() !== mes - 1 || verificada.getUTCDate() !== dia) {
-    return json({ ok: false, erro: 'Data inválida.' }, 400);
+    return respostaJSON({ ok: false, erro: 'Data inválida.' }, 400);
   }
 
-  return json({
+  return respostaJSON({
     ok: true,
     ferramenta: 'Agenda Cultural CET',
     etapa: 'conexao-vercel',
