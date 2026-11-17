@@ -1563,6 +1563,16 @@ textarea {
 .sheet.tourism-opening.gastro-opening .opening-arrow { top: 463px; left: 60px; }
 .sheet.tourism-opening.gastro-opening .opening-copy { top: 555px; left: 60px; right: 57px; height: 236px; font-size: 11.5px; line-height: 1.45; }
 .sheet.tourism-opening.gastro-opening .opening-copy p { margin-bottom: 14px; }
+
+/* VIDA NOTURNA — PÁGINA 3 / ÍCONE DO INDEX
+   Escopo restrito: não altera Atrações Turísticas ou Gastronomia. */
+.tourism-index .nightlife-index-icon {
+  width: 37px;
+  height: 23px;
+  object-fit: contain;
+  display: block;
+  flex: none;
+}
 </style>
  </head>
  <body>
@@ -2061,6 +2071,18 @@ function render(){const p=current();$('documentTitle').textContent=p?p.category+
   '<div class="gastro-index-feature second"><div class="gastro-index-feature-title">Os mais disputados</div><p>Para experiências gastronômicas únicas e bastante disputadas</p></div>' +
   '<div class="gastro-index-feature third"><div class="gastro-index-feature-title">É sobre comida</div><p>O verdadeiro luxo está no sabor, não na ostentação</p></div>' +
   '<div class="gastro-index-photos">' + [0,1,2].map(i=>{const src=(p.gastroIndexPhotos||[])[i];return src?'<img class="gastro-index-photo" src="'+src+'" alt="Fotografia '+(i+1)+' do Index de Gastronomia">':'<div class="gastro-index-photo gastro-index-placeholder">Fotografia '+(i+1)+' pendente</div>'}).join('') + '</div>' +
+  '<div class="index-social">◎ @curadoriaelitetravel</div>'
+  : p.category==='Vida Noturna' ?
+  // VIDA NOTURNA — PÁGINA 3: somente identidade do cabeçalho.
+  '<div class="index-brand"><img src="../images/rosa-dos-ventos.png" alt="Rosa dos Ventos" onerror="this.style.visibility=\'hidden\'"><div class="index-brand-name">CURADORIA<br>ELITE TRAVEL</div><small>O seu mundo, bem indicado.</small></div>' +
+  '<div class="index-category">VIDA NOTURNA <img class="nightlife-index-icon" src="' + NIGHTLIFE_CROWD_IMAGE + '" alt="Símbolo dourado de Vida Noturna"></div>' +
+  '<div class="index-kicker">Index</div>' +
+  '<div class="index-watermark w1" aria-hidden="true">CURADORIA<br>ELITE TRAVEL</div>' +
+  '<div class="index-watermark w2" aria-hidden="true">CURADORIA<br>ELITE TRAVEL</div>' +
+  '<div class="index-watermark w3" aria-hidden="true">CURADORIA<br>ELITE TRAVEL</div>' +
+  '<h1 class="index-heading">Aqui, cada detalhe foi pensado para você.</h1>' +
+  '<p class="index-copy">Desfrute de pontos turísticos icônicos com um olhar que revela sua beleza única e ressoa em sua alma. Cada experiência é cuidadosamente pensada para tornar sua viagem não apenas um passeio, mas uma história que merece ser lembrada.</p>' +
+  (p.indexPhoto ? '<img class="index-photo" src="'+p.indexPhoto+'" alt="Fotografia do Index">' : '<div class="index-photo-placeholder">Fotografia do Index pendente</div>') +
   '<div class="index-social">◎ @curadoriaelitetravel</div>'
   : 
   '<div class="index-brand"><img src="../images/rosa-dos-ventos.png" alt="Rosa dos Ventos" onerror="this.style.visibility=\'hidden\'"><div class="index-brand-name">CURADORIA<br>ELITE TRAVEL</div><small>O seu mundo, bem indicado.</small></div>' +
